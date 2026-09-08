@@ -1,18 +1,41 @@
-# taowen workspace
+# taowen 工作区
 
-Personal workspace for version-controlled source code, scripts, configuration, and documentation.
+这是 taowen 的个人工作区，用于存放需要通过 Git 进行版本控制的源代码、脚本、配置文件和项目文档。
 
-## Data location
+## 原始数据位置
 
-Shared raw data is stored outside this Git repository at:
+共享原始数据存放在本 Git 仓库之外：
 
 `/root/workspace/raw_data`
 
-Raw data, generated outputs, caches, logs, secrets, and virtual environments should not be committed to this repository.
+请不要把原始数据复制或提交到本仓库。程序需要读取原始数据时，应通过配置文件或命令行参数引用上述路径。
 
-## Basic workflow
+## 版本控制范围
 
-1. Create a branch for a task.
-2. Make and test changes.
-3. Review staged changes before committing.
-4. Push the branch to the configured remote repository when one is available.
+建议提交：
+
+- 源代码和脚本
+- 配置文件示例
+- 项目说明和技术文档
+- 可复现分析所需的小型辅助文件
+
+默认不提交：
+
+- 原始数据和大体积数据文件
+- 程序运行结果
+- 日志、缓存和临时文件
+- Python 虚拟环境
+- 密钥、密码和本地环境变量文件
+
+具体忽略规则请查看 `.gitignore`。
+
+## 基本工作流程
+
+1. 开始任务前创建独立分支。
+2. 在分支中修改并测试代码。
+3. 提交前使用 `git status` 和 `git diff --cached` 检查变更。
+4. 确认无误后提交，并在配置远程仓库后推送分支。
+
+## 文档约定
+
+本工作区内面向使用者的 README 文档统一使用中文编写。
