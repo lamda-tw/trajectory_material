@@ -1,0 +1,1 @@
+"""Reuse-warehouse artifact contracts."""

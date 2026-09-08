@@ -1,0 +1,124 @@
+{
+  "policy": "5-fold grouped cross-validation by task_family",
+  "all_families": [
+    "0006",
+    "0007",
+    "0008",
+    "0009",
+    "0010"
+  ],
+  "recommended_default_single_split": "fold_05_holdout_0010",
+  "note": "One fold is one independent run from the same base checkpoint, not one epoch.",
+  "folds": [
+    {
+      "fold_id": "fold_01_holdout_0006",
+      "path": "folds/fold_01_holdout_0006",
+      "holdout_family": "0006",
+      "train_families": [
+        "0007",
+        "0008",
+        "0009",
+        "0010"
+      ],
+      "train_trajectory_count": 6,
+      "validation_trajectory_count": 1,
+      "train_sample_count": 1461,
+      "validation_sample_count": 166,
+      "validation_task_count": 1,
+      "recommended_default_single_split": false,
+      "data_sha256": {
+        "train.jsonl": "23328182146cfdf9f903f201b5e3854e591aa1a3f245008017305368b83fa6ca",
+        "validation.jsonl": "b4a27cb6b7166e4385b7bbc56af46e529be43208b9826101dda03159d024e216",
+        "validation_tasks.jsonl": "286c11df1e3606fa6c0ffc23b0d6eb02af8441e3f1b1d876c0ec155b8c113749"
+      }
+    },
+    {
+      "fold_id": "fold_02_holdout_0007",
+      "path": "folds/fold_02_holdout_0007",
+      "holdout_family": "0007",
+      "train_families": [
+        "0006",
+        "0008",
+        "0009",
+        "0010"
+      ],
+      "train_trajectory_count": 6,
+      "validation_trajectory_count": 1,
+      "train_sample_count": 1497,
+      "validation_sample_count": 130,
+      "validation_task_count": 1,
+      "recommended_default_single_split": false,
+      "data_sha256": {
+        "train.jsonl": "8b0265154115a28af19e0d06372abc8231f4790aa109a3a3b85f7cdbe00cac90",
+        "validation.jsonl": "b3c65ab06d1bf9725806d784ad5c62b01420a640a355fb98bc60ec36045c32cf",
+        "validation_tasks.jsonl": "ef3459d760e1c758de72e2874803cc32c49af2ad947fd743811d101267fb9085"
+      }
+    },
+    {
+      "fold_id": "fold_03_holdout_0008",
+      "path": "folds/fold_03_holdout_0008",
+      "holdout_family": "0008",
+      "train_families": [
+        "0006",
+        "0007",
+        "0009",
+        "0010"
+      ],
+      "train_trajectory_count": 5,
+      "validation_trajectory_count": 2,
+      "train_sample_count": 1193,
+      "validation_sample_count": 434,
+      "validation_task_count": 2,
+      "recommended_default_single_split": false,
+      "data_sha256": {
+        "train.jsonl": "b7a88ab2b7a60a5e1dd765e0496105472d47a64cd8e427d9718eeb0ea578cb03",
+        "validation.jsonl": "a18e4145811f987ff9c265a05521ef98def2f7af789d6000acb927945cf67bec",
+        "validation_tasks.jsonl": "15432d8e5a6c9a71326f1d487e1d8b39e653cf5241db0ee45d2840a1d245e8cc"
+      }
+    },
+    {
+      "fold_id": "fold_04_holdout_0009",
+      "path": "folds/fold_04_holdout_0009",
+      "holdout_family": "0009",
+      "train_families": [
+        "0006",
+        "0007",
+        "0008",
+        "0010"
+      ],
+      "train_trajectory_count": 6,
+      "validation_trajectory_count": 1,
+      "train_sample_count": 1405,
+      "validation_sample_count": 222,
+      "validation_task_count": 1,
+      "recommended_default_single_split": false,
+      "data_sha256": {
+        "train.jsonl": "a51e6d9cf82175a598dbe4bad6b6ace1ff4b494e1d7ab3a509288a90165c9d26",
+        "validation.jsonl": "6bd746f134bc45c7c6054a58606285332bebc24d7daf29d5853e704308ae90ba",
+        "validation_tasks.jsonl": "908cfcee5eeeb3afeba4a1ae7a4414d27a394b66799f13ecb8112debb962250a"
+      }
+    },
+    {
+      "fold_id": "fold_05_holdout_0010",
+      "path": "folds/fold_05_holdout_0010",
+      "holdout_family": "0010",
+      "train_families": [
+        "0006",
+        "0007",
+        "0008",
+        "0009"
+      ],
+      "train_trajectory_count": 5,
+      "validation_trajectory_count": 2,
+      "train_sample_count": 952,
+      "validation_sample_count": 675,
+      "validation_task_count": 2,
+      "recommended_default_single_split": true,
+      "data_sha256": {
+        "train.jsonl": "c3c5b1f53debc46aa0325ca19ba35fb6fcddd0c50d6ba5ed39895dc06bb617e3",
+        "validation.jsonl": "6d06dc3b1131683b8248ad8ea28fd49669b00cd6f95cdb179267b125fa5dc499",
+        "validation_tasks.jsonl": "9f4f1cf87d2efc6ea95bafc03b9e112c3e7a6b03d789498ab70611909f39e7f4"
+      }
+    }
+  ]
+}

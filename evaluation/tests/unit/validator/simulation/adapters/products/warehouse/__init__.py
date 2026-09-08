@@ -1,0 +1,1 @@
+"""Shared warehouse normalization contracts."""

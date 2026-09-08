@@ -1,0 +1,1 @@
+"""Adapter corpus tests."""

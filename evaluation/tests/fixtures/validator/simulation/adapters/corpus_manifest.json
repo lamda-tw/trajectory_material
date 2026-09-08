@@ -1,0 +1,339 @@
+{
+  "snapshot": {
+    "root": "eval_results",
+    "captured_on": "2026-08-07",
+    "run_directories": 283,
+    "standard_artifact_files": 2174,
+    "method": "All run directories were walked. scores*, validator_scores*, trajectory, reference_answer, virtual environments and VCS directories were excluded. Every configured standard filename was inventoried; CSV headers and the first 200 data rows of every matching file were inspected. XLSX sheet names, headers and first rows were inspected separately.",
+    "alternate_serializations": {
+      "xlsx_non_site_plan": 66,
+      "json": 7
+    }
+  },
+  "primary_discovery_topology":
+    {
+      "id": "data_pipeline_model_output",
+      "path": "56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_plan.csv",
+      "expected": "discoverable",
+      "source": "eval_results/EI-56TESTPK-v1.2_cowork_dsv4fp-maas_0723skill_0727C/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_plan.csv"
+    },
+  "wide_and_ledger_products": {
+    "gap": {
+      "schema": "ei.gap-wide",
+      "observed_files": 277,
+      "header_signatures": 66,
+      "schema_options": {
+        "exact_columns": ["region", "item_code", "device", "category", "total_dismantled", "initial_inventory", "totalArrive", "totalReuse", "totalDemand", "totalGap", "week", "WK5", "WK6", "WK7", "WK8", "WK9", "WK10", "WK11", "WK12", "WK13", "WK14", "WK15", "WK16", "WK17", "WK18", "WK19", "WK20", "WK21", "WK22", "WK23", "WK24", "WK25", "WK26", "WK27", "WK28", "WK29", "WK30", "WK31", "WK32", "WK33"]
+      },
+      "value_dialects": ["header:WKn", "header:Wn", "header:YYYYWK", "header:YYYY-W", "header:derived", "row:Date", "row:business_metric", "quantity:negative_integer", "physical:row_width_mismatch"],
+      "families": [
+        {"id": "exact_wk5_wk33", "files": 172, "signatures": 1, "case": "exact_wk5_wk33", "source": "eval_results/EI-56TESTPK0005-v1.2_cowork_dsv4fp-maas_0723skill_0727C/56TESTPK/MaterialCycleEI/data-pipeline/model_output/gap.csv"},
+        {"id": "variable_wkn_horizon", "files": 39, "signatures": 25, "case": "variable_wkn_horizon", "source": "eval_results/EI-56TESTPK0002-v1.2_claude_dsv4fp_noskill_0727B/56TESTPK/MaterialCycleEI/data-pipeline/model_output/gap.csv"},
+        {"id": "mixed_year_wk_horizon", "files": 18, "signatures": 13, "case": "mixed_year_wk_horizon", "source": "eval_results/EI-56TESTPK-v1.2_cowork_dsv4fp-maas_0723skill_0727C/56TESTPK/MaterialCycleEI/data-pipeline/model_output/gap.csv"},
+        {"id": "iso_year_week_horizon", "files": 17, "signatures": 13, "case": "iso_year_week_horizon", "source": "eval_results/EI-56TESTTH-v1.2_claude_fable5_noskill_0727A/56TESTTH/BKKMaterialReuse/data-pipeline/model_output/gap.csv"},
+        {"id": "wk5_wk32_missing_tail", "files": 7, "signatures": 1, "case": "wk5_wk32_missing_tail", "source": "eval_results/EI-56TESTPK0005-v1.2_cowork_dsv4fp-maas_0730skill_0731A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/gap.csv"},
+        {"id": "wide_no_week_columns", "files": 7, "signatures": 2, "case": "wide_no_week_columns", "source": "eval_results/EI-56TESTTH-v1.2_claude_dsv4fp_noskill_0726C/BKKMaterialReuse/data-pipeline/model_output/gap.csv"},
+        {"id": "wk5_wk34_extra_tail", "files": 5, "signatures": 1, "case": "wk5_wk34_extra_tail", "source": "eval_results/EI-56TESTPK0005-v1.2_cowork_dsv4fp-maas_0723skill_0731A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/gap.csv"},
+        {"id": "other_schema", "files": 5, "signatures": 4, "case": "derived_columns", "source": "eval_results/EI-56TESTTH-v1.2_claude_qwen36-27b_noskill_0731A/56TESTTH/BKKMaterialReuse/data-pipeline/model_output/gap.csv"},
+        {"id": "wn_horizon", "files": 2, "signatures": 1, "case": "wn_horizon", "source": "eval_results/EI-56TESTTH-v1.2_claude_hy3_noskill_0726C/BKKMaterialReuse/data-pipeline/model_output/gap.csv"},
+        {"id": "derived_or_sparse_week_columns", "files": 2, "signatures": 2, "case": "derived_columns", "source": "eval_results/EI-56TESTTH-v1.2_claude_hy3_noskill_0731A/56TESTTH/BKKMaterialReuse/data-pipeline/model_output/gap.csv"},
+        {"id": "long_gap_qty", "files": 1, "signatures": 1, "case": "long_gap_qty", "source": "eval_results/EI-56TESTPK0005-v1.2_cowork_dsv4fp_0716skill_0717A/56TESTPK/MaterialCycleEI/model_output/gap.csv"},
+        {"id": "metric_wide", "files": 1, "signatures": 1, "case": "metric_wide", "source": "eval_results/EI-56TESTPK0006-hard-v1.2_cowork_dsv4fp_0723skill_0724A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/gap.csv"},
+        {"id": "inserted_wk2", "files": 1, "signatures": 1, "case": "inserted_wk2", "source": "eval_results/EI-56TESTPK0007-medium-v1.2_cowork_hy3_0723skill_0724B/56TESTPK/MaterialCycleEI/data-pipeline/model_output/gap.csv"}
+      ],
+      "cases": [
+        {"id": "exact_wk5_wk33", "filename": "gap.csv", "headers": ["region", "item_code", "device", "category", "total_dismantled", "initial_inventory", "totalArrive", "totalReuse", "totalDemand", "totalGap", "week", "WK5", "WK6", "WK7", "WK8", "WK9", "WK10", "WK11", "WK12", "WK13", "WK14", "WK15", "WK16", "WK17", "WK18", "WK19", "WK20", "WK21", "WK22", "WK23", "WK24", "WK25", "WK26", "WK27", "WK28", "WK29", "WK30", "WK31", "WK32", "WK33"], "rows": [{"week": "Date", "WK5": "2/1/2027-2/7/2027", "WK6": "2/8/2027-2/14/2027"}, {"region": "Region-1", "item_code": "12XFDDCELL", "week": "GAP", "totalGap": "-6", "WK5": "0", "WK6": "-1", "WK33": "-6"}], "covers": ["header:WKn", "row:Date", "row:business_metric", "quantity:negative_integer"]},
+        {"id": "wk5_wk32_missing_tail", "filename": "gap.csv", "headers": ["region", "item_code", "device", "category", "total_dismantled", "initial_inventory", "totalArrive", "totalReuse", "totalDemand", "totalGap", "week", "WK5", "WK6", "WK7", "WK8", "WK9", "WK10", "WK11", "WK12", "WK13", "WK14", "WK15", "WK16", "WK17", "WK18", "WK19", "WK20", "WK21", "WK22", "WK23", "WK24", "WK25", "WK26", "WK27", "WK28", "WK29", "WK30", "WK31", "WK32"], "rows": [{"region": "R1", "item_code": "A", "week": "GAP", "WK5": "0"}], "expected": {"issue_codes": ["EXACT_COLUMNS_MISMATCH"]}, "covers": []},
+        {"id": "wk5_wk34_extra_tail", "filename": "gap.csv", "headers": ["region", "item_code", "device", "category", "total_dismantled", "initial_inventory", "totalArrive", "totalReuse", "totalDemand", "totalGap", "week", "WK5", "WK6", "WK7", "WK8", "WK9", "WK10", "WK11", "WK12", "WK13", "WK14", "WK15", "WK16", "WK17", "WK18", "WK19", "WK20", "WK21", "WK22", "WK23", "WK24", "WK25", "WK26", "WK27", "WK28", "WK29", "WK30", "WK31", "WK32", "WK33", "WK34"], "rows": [{"region": "R1", "item_code": "A", "week": "GAP", "WK34": "-1"}], "expected": {"issue_codes": ["EXACT_COLUMNS_MISMATCH"]}, "covers": []},
+        {"id": "variable_wkn_horizon", "filename": "gap.csv", "headers": ["region", "item_code", "device", "category", "total_dismantled", "initial_inventory", "totalArrive", "totalReuse", "totalDemand", "totalGap", "week", "WK1", "WK2", "WK3", "WK4", "WK5", "WK6", "WK7", "WK8", "WK9", "WK10", "WK11", "WK12", "WK13", "WK14", "WK15", "WK16", "WK17", "WK18", "WK19", "WK20", "WK21", "WK22", "WK23", "WK24", "WK25", "WK26", "WK27", "WK28", "WK29", "WK30", "WK31"], "rows": [{"region": "R1", "item_code": "A", "week": "Demand", "WK1": "1"}], "expected": {"issue_codes": ["EXACT_COLUMNS_MISMATCH"]}, "covers": []},
+        {"id": "mixed_year_wk_horizon", "filename": "gap.csv", "headers": ["region", "item_code", "device", "category", "total_dismantled", "initial_inventory", "totalArrive", "totalReuse", "totalDemand", "totalGap", "week", "2023WK51", "2023WK52", "WK1", "WK2"], "rows": [{"region": "R1", "item_code": "A", "week": "Demand", "2023WK51": "1"}], "expected": {"issue_codes": ["EXACT_COLUMNS_MISMATCH"]}, "covers": ["header:YYYYWK"]},
+        {"id": "iso_year_week_horizon", "filename": "gap.csv", "headers": ["region", "item_code", "device", "category", "total_dismantled", "initial_inventory", "totalArrive", "totalReuse", "totalDemand", "totalGap", "week", "2023-W27", "2023-W28", "2024-W01"], "rows": [{"region": "R1", "item_code": "A", "week": "Demand", "2023-W27": "1"}], "expected": {"issue_codes": ["EXACT_COLUMNS_MISMATCH"]}, "covers": ["header:YYYY-W"]},
+        {"id": "wn_horizon", "filename": "gap.csv", "headers": ["region", "item_code", "device", "category", "total_dismantled", "initial_inventory", "totalArrive", "totalReuse", "totalDemand", "totalGap", "week", "W1", "W2", "W3"], "rows": [{"region": "R1", "item_code": "A", "week": "Demand", "W1": "1"}], "expected": {"issue_codes": ["EXACT_COLUMNS_MISMATCH"]}, "covers": ["header:Wn"]},
+        {"id": "wide_no_week_columns", "filename": "gap.csv", "headers": ["region", "item_code", "device", "category", "total_dismantled", "initial_inventory", "totalArrive", "totalReuse", "totalDemand", "totalGap", "week"], "rows": [{"region": "R1", "item_code": "A", "week": "GAP", "totalGap": "-1"}], "expected": {"issue_codes": ["EXACT_COLUMNS_MISMATCH"]}, "covers": []},
+        {"id": "inserted_wk2", "filename": "gap.csv", "headers": ["region", "item_code", "device", "category", "total_dismantled", "initial_inventory", "totalArrive", "totalReuse", "totalDemand", "totalGap", "week", "WK2", "WK5", "WK6", "WK7", "WK8", "WK9", "WK10", "WK11", "WK12", "WK13", "WK14", "WK15", "WK16", "WK17", "WK18", "WK19", "WK20", "WK21", "WK22", "WK23", "WK24", "WK25", "WK26", "WK27", "WK28", "WK29", "WK30", "WK31", "WK32", "WK33"], "rows": [{"region": "R1", "item_code": "A", "week": "GAP", "WK2": "0"}], "expected": {"issue_codes": ["EXACT_COLUMNS_MISMATCH"]}, "covers": []},
+        {"id": "derived_columns", "filename": "gap.csv", "headers": ["region", "item_code", "device", "category", "total_dismantled", "initial_inventory", "totalArrive", "totalReuse", "totalDemand", "totalGap", "week", "2023W27_arrive", "2023W27_newUse", "2023W27_reuseUse"], "rows": [{"region": "R1", "item_code": "A", "week": "Demand", "2023W27_arrive": "1"}], "expected": {"issue_codes": ["EXACT_COLUMNS_MISMATCH"]}, "covers": ["header:derived"]},
+        {"id": "long_gap_qty", "filename": "gap.csv", "candidate_path": "56TESTPK/MaterialCycleEI/model_output/gap.csv", "canonical_path": "56TESTPK/MaterialCycleEI/data-pipeline/model_output/gap.csv", "headers": ["week", "item_code", "category", "gap_qty"], "rows": [["WK27", "A", "RRU", "-1"]], "expected": {"status": "SELECTED_FALLBACK", "issue_codes": ["EXACT_COLUMNS_MISMATCH"]}, "covers": []},
+        {"id": "metric_wide", "filename": "gap.csv", "headers": ["item_code", "region", "metric", "WK01", "WK02", "WK03"], "rows": [["A", "R1", "gap", "-1", "-2", "-3"]], "expected": {"issue_codes": ["EXACT_COLUMNS_MISMATCH"]}, "covers": []},
+        {"id": "row_width_mismatch", "filename": "gap.csv", "raw_csv": "region,item_code,device,category,total_dismantled,initial_inventory,totalArrive,totalReuse,totalDemand,totalGap,week,WK5,WK6,WK7,WK8,WK9,WK10,WK11,WK12,WK13,WK14,WK15,WK16,WK17,WK18,WK19,WK20,WK21,WK22,WK23,WK24,WK25,WK26,WK27,WK28,WK29,WK30,WK31,WK32,WK33\nR1,A,,,,,,,,,GAP,0,0\n", "expected": {"status": "PARSE_ERROR"}, "covers": ["physical:row_width_mismatch"]}
+      ]
+    },
+    "initial_warehouse": {
+      "schema": "ei.warehouse",
+      "observed_files": 132,
+      "header_signatures": 14,
+      "value_dialects": ["week:WK", "week:integer", "week:YYYYWK", "type:canonical", "materials:none", "materials:dynamic", "total:before", "total:after", "total:absent", "shape:long_quantity"],
+      "families": [
+        {"id": "no_material", "files": 64, "case": "no_material", "source": "eval_results/EI-56TESTPK-v1.2_cowork_dsv4fp-maas_0723skill_0727C/56TESTPK/MaterialCycleEI/data-pipeline/model_output/weekly_initial_warehouse.csv"},
+        {"id": "wide_total_after", "files": 62, "case": "wide_week_dialects", "source": "eval_results/EI-56TESTPK0006-easy-v1.2_cowork_dsv4fp_0723skill_0724A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/weekly_initial_warehouse.csv"},
+        {"id": "wide_total_before", "files": 3, "case": "total_before", "source": "eval_results/EI-56TESTPK0006-hard-v1.2_claude_qwen36-27b_noskill_0725B/56TESTPK/MaterialCycleEI/data-pipeline/model_output/weekly_initial_warehouse.csv"},
+        {"id": "long_quantity", "files": 1, "case": "long_quantity", "source": "eval_results/EI-56TESTPK0006-hard-v1.2_cowork_dsv4fp_0715Bskill_0724B/56TESTPK/MaterialCycleEI/data-pipeline/model_output/weekly_initial_warehouse.csv"},
+        {"id": "wide_no_total", "files": 2, "case": "wide_no_total", "source": "eval_results/EI-56TESTPK0008-hard-v1.2_claude_k3_noskill_0727B/56TESTPK/MaterialCycleEI/data-pipeline/model_output/weekly_initial_warehouse.csv"}
+      ],
+      "cases": [
+        {"id": "no_material", "filename": "weekly_initial_warehouse.csv", "headers": ["month", "week", "type", "total"], "rows": [["Feb", "WK5", "Inbound", "0"], ["Feb", "WK5", "Outbound", "0"], ["Feb", "WK5", "Inventory", "0"]], "expected": {"issue_codes": ["NO_UNAMBIGUOUS_MATERIAL_COLUMN"]}, "covers": ["week:WK", "type:canonical", "materials:none", "total:after"]},
+        {"id": "wide_week_dialects", "filename": "weekly_initial_warehouse.csv", "headers": ["month", "week", "type", "RRU5905(900M)", "REGION-1__ANT__1800+2100__1H", "total"], "rows": [["Feb", "27", "Inbound", "2", "1", "3"], ["Feb", "27", "Outbound", "1", "0", "1"], ["Feb", "27", "Inventory", "1", "1", "2"], ["Feb", "2027WK28", "Inbound", "0", "0", "0"], ["Feb", "2027WK28", "Outbound", "0", "0", "0"], ["Feb", "2027WK28", "Inventory", "1", "1", "2"]], "covers": ["week:integer", "week:YYYYWK", "materials:dynamic"]},
+        {"id": "total_before", "filename": "weekly_initial_warehouse.csv", "headers": ["month", "week", "type", "total", "RRU5905(900M)"], "rows": [["Feb", "WK5", "Inbound", "2", "2"], ["Feb", "WK5", "Outbound", "1", "1"], ["Feb", "WK5", "Inventory", "1", "1"]], "covers": ["total:before"]},
+        {"id": "wide_no_total", "filename": "weekly_initial_warehouse.csv", "headers": ["month", "week", "type", "RRU5905(900M)"], "rows": [["Feb", "WK5", "Inbound", "2"], ["Feb", "WK5", "Outbound", "1"], ["Feb", "WK5", "Inventory", "1"]], "covers": ["total:absent"]},
+        {"id": "long_quantity", "filename": "weekly_initial_warehouse.csv", "headers": ["week", "type", "item_code", "quantity"], "rows": [["WK14", "Inbound", "A", "2"], ["WK14", "Outbound", "A", "1"], ["WK14", "Inventory", "A", "1"]], "expected": {"normalized_keys": [["a", 14]], "known_gap": "the observed item_code/quantity ledger is interpreted as a wide table whose material is named quantity"}, "covers": ["shape:long_quantity"]}
+      ]
+    },
+    "new_warehouse": {
+      "schema": "ei.warehouse",
+      "observed_files": 201,
+      "header_signatures": 78,
+      "value_dialects": ["filename:long", "filename:wide", "shape:long_scope", "shape:wide", "week:WK", "week:integer", "week:YYYYWK", "week:ISO", "type:canonical", "materials:duplicate_logical", "materials:large_dynamic", "total:before", "total:after", "total:absent"],
+      "families": [
+        {"id": "wide_small_total_after", "files": 123, "case": "wide_week_dialects", "source": "eval_results/EI-56TESTPK-v1.2_cowork_dsv4fp-maas_0723skill_0727C/56TESTPK/MaterialCycleEI/data-pipeline/model_output/weekly_new_warehouse.csv"},
+        {"id": "wide_medium_total_after", "files": 32, "case": "wide_iso", "source": "eval_results/EI-56TESTPK0002-v1.2_claude_glm52_noskill_0727A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/weekly_new_warehouse.csv"},
+        {"id": "wide_duplicate_small", "files": 16, "case": "duplicate_material", "source": "eval_results/EI-56TESTPK0007-hard-v1.2_claude_dsv4pp_noskill_0725B/56TESTPK/MaterialCycleEI/data-pipeline/model_output/weekly_new_warehouse.csv"},
+        {"id": "wide_large", "files": 9, "case": "wide_iso", "source": "eval_results/Opt-56A09AQ0002-v1.2_claude_dsv4fp_noskill_0727A/56A09AQ/MaterialCycleAnalysis/data-pipeline/model_output/weekly_new_warehouse.csv"},
+        {"id": "long_scope", "files": 8, "case": "long_scope", "source": "eval_results/EI-56TESTPK-v1.2_claude_dsv4fp_noskill_0731A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/new_warehouse_weekly_outflow.csv"},
+        {"id": "wide_duplicate_large", "files": 7, "case": "duplicate_material", "source": "eval_results/EI-56TESTTH-v1.2_claude_dsv4pp_noskill_0731A/56TESTTH/BKKMaterialReuse/data-pipeline/model_output/weekly_new_warehouse.csv"},
+        {"id": "wide_total_before", "files": 3, "case": "total_before", "source": "eval_results/EI-56TESTPK0006-hard-v1.2_claude_qwen36-27b_noskill_0725B/56TESTPK/MaterialCycleEI/data-pipeline/model_output/weekly_new_warehouse.csv"},
+        {"id": "wide_no_total", "files": 2, "case": "wide_no_total", "source": "eval_results/EI-56TESTPK0005-v1.2_cowork_dsv4fp_0716skill_0717A/56TESTPK/MaterialCycleEI/model_output/weekly_new_warehouse.csv"},
+        {"id": "alternate_long_filename_wide_shape", "files": 1, "case": "alternate_long_filename_wide_shape", "source": "eval_results/EI-56TESTPK-v1.2_cowork_dsv4fp-maas_0723skill_0727C/56TESTPK/MaterialCycleEI/data-pipeline/model_output/new_warehouse_weekly_outflow.csv"}
+      ],
+      "cases": [
+        {"id": "long_scope", "filename": "new_warehouse_weekly_outflow.csv", "filenames": ["new_warehouse_weekly_outflow.csv", "weekly_new_warehouse.csv"], "headers": ["scope", "item_code", "project_week", "opening", "inbound", "outbound", "closing"], "rows": [["North", "A", "WK5", "0", "2", "1", "1"], ["North", "A", "WK6", "1", "0", "1", "0"]], "covers": ["filename:long", "shape:long_scope", "week:WK", "type:canonical"]},
+        {"id": "wide_week_dialects", "filename": "weekly_new_warehouse.csv", "headers": ["month", "week", "type", "RRU5905(900M)", "total"], "rows": [["Feb", "27", "Inbound", "2", "2"], ["Feb", "27", "Outbound", "1", "1"], ["Feb", "27", "Inventory", "1", "1"], ["Feb", "2027WK28", "Inbound", "0", "0"], ["Feb", "2027WK28", "Outbound", "0", "0"], ["Feb", "2027WK28", "Inventory", "1", "1"]], "covers": ["filename:wide", "shape:wide", "week:integer", "week:YYYYWK", "total:after"]},
+        {"id": "wide_iso", "filename": "weekly_new_warehouse.csv", "headers": ["month", "week", "type", "AAU5726E(1800M&2100M)", "BBU5900", "REGION-1__ANT__1800+2100__1H", "total"], "rows": [["Feb", "2027-W05", "Inbound", "1", "1", "1", "3"], ["Feb", "2027-W05", "Outbound", "0", "1", "0", "1"], ["Feb", "2027-W05", "Inventory", "1", "0", "1", "2"]], "covers": ["week:ISO", "materials:large_dynamic"]},
+        {"id": "duplicate_material", "filename": "weekly_new_warehouse.csv", "headers": ["month", "week", "type", "FDD MM", "FDDMM", "total"], "rows": [["Feb", "WK5", "Inbound", "0", "0", "0"], ["Feb", "WK5", "Outbound", "1.0", "22.0", "23"], ["Feb", "WK5", "Inventory", "-1.0", "-22.0", "-23"]], "expected": {"issue_codes": ["DUPLICATE_MATERIAL_COLUMN"], "known_gap": "space-variant material columns from the corpus are treated as distinct identities"}, "covers": ["materials:duplicate_logical"]},
+        {"id": "total_before", "filename": "weekly_new_warehouse.csv", "headers": ["month", "week", "type", "total", "A"], "rows": [["Feb", "WK5", "Inbound", "2", "2"], ["Feb", "WK5", "Outbound", "1", "1"], ["Feb", "WK5", "Inventory", "1", "1"]], "covers": ["total:before"]},
+        {"id": "wide_no_total", "filename": "weekly_new_warehouse.csv", "headers": ["month", "week", "type", "A"], "rows": [["Feb", "WK5", "Inbound", "2"], ["Feb", "WK5", "Outbound", "1"], ["Feb", "WK5", "Inventory", "1"]], "covers": ["total:absent"]},
+        {"id": "alternate_long_filename_wide_shape", "filename": "new_warehouse_weekly_outflow.csv", "filenames": ["new_warehouse_weekly_outflow.csv", "weekly_new_warehouse.csv"], "headers": ["month", "week", "type", "A"], "rows": [["Feb", "WK5", "Inbound", "2"], ["Feb", "WK5", "Outbound", "1"], ["Feb", "WK5", "Inventory", "1"]], "covers": []}
+      ]
+    },
+    "reuse_warehouse": {
+      "schema": "ei.warehouse",
+      "observed_files": 189,
+      "header_signatures": 88,
+      "value_dialects": ["filename:long", "filename:wide", "shape:long_scope", "shape:wide", "week:WK", "week:integer", "week:YYYYWK", "week:ISO", "type:canonical", "type:lowercase_stock", "materials:none", "materials:duplicate_logical", "materials:large_dynamic", "total:before", "total:after", "total:absent", "physical:empty_file"],
+      "families": [
+        {"id": "wide_medium_total_after", "files": 114, "case": "wide_week_dialects", "source": "eval_results/EI-56TESTPK0002-v1.2_claude_dsv4fp_noskill_0727B/56TESTPK/MaterialCycleEI/data-pipeline/model_output/weekly_dismantle_warehouse.csv"},
+        {"id": "wide_duplicate_large", "files": 20, "case": "duplicate_material", "source": "eval_results/EI-56TESTTH-v1.2_claude_dsv4pp_noskill_0731A/56TESTTH/BKKMaterialReuse/data-pipeline/model_output/weekly_dismantle_warehouse.csv"},
+        {"id": "wide_duplicate_medium", "files": 14, "case": "duplicate_material", "source": "eval_results/EI-56TESTPK0007-hard-v1.2_cowork_dsv4fp_0715Bskill_0724B/56TESTPK/MaterialCycleEI/data-pipeline/model_output/weekly_dismantle_warehouse.csv"},
+        {"id": "wide_small_total_after", "files": 11, "case": "wide_iso", "source": "eval_results/EI-56TESTPK-v1.2_cowork_dsv4fp-maas_0723skill_0727C/56TESTPK/MaterialCycleEI/data-pipeline/model_output/weekly_dismantle_warehouse.csv"},
+        {"id": "wide_no_material", "files": 9, "case": "no_material", "source": "eval_results/Opt-56A09AQ0002-v1.2_cowork_dsv4fp-maas_0723skill_0727A/56A09AQ/MaterialCycleAnalysis/data-pipeline/model_output/weekly_dismantle_warehouse.csv"},
+        {"id": "long_scope", "files": 8, "case": "long_scope", "source": "eval_results/EI-56TESTPK-v1.2_claude_dsv4fp_noskill_0731A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/dismantle_warehouse_weekly_flow.csv"},
+        {"id": "wide_large", "files": 4, "case": "wide_iso", "source": "eval_results/EI-56TESTTH-v1.2_claude_dsv4fp_noskill_0726C/BKKMaterialReuse/data-pipeline/model_output/weekly_dismantle_warehouse.csv"},
+        {"id": "wide_total_before", "files": 3, "case": "total_before", "source": "eval_results/EI-56TESTPK0006-hard-v1.2_claude_qwen36-27b_noskill_0725B/56TESTPK/MaterialCycleEI/data-pipeline/model_output/weekly_dismantle_warehouse.csv"},
+        {"id": "empty_file", "files": 3, "case": "empty_file", "source": "eval_results/Opt-56A09AQ0002-v1.2_cowork_dsv4fp_0716skill_0719A/56A09AQ/MaterialCycleAnalysis/data-pipeline/model_output/weekly_dismantle_warehouse.csv"},
+        {"id": "wide_no_total", "files": 2, "case": "wide_no_total", "source": "eval_results/EI-56TESTPK0005-v1.2_cowork_dsv4fp_0716skill_0717A/56TESTPK/MaterialCycleEI/model_output/weekly_dismantle_warehouse.csv"},
+        {"id": "alternate_long_filename_wide_shape", "files": 1, "case": "lowercase_stock", "source": "eval_results/EI-56TESTPK-v1.2_cowork_dsv4fp-maas_0723skill_0727C/56TESTPK/MaterialCycleEI/data-pipeline/model_output/dismantle_warehouse_weekly_flow.csv"}
+      ],
+      "cases": [
+        {"id": "long_scope", "filename": "dismantle_warehouse_weekly_flow.csv", "filenames": ["dismantle_warehouse_weekly_flow.csv", "weekly_dismantle_warehouse.csv"], "headers": ["scope", "item_code", "project_week", "opening", "inbound", "outbound", "closing"], "rows": [["North", "A", "WK5", "0", "2", "1", "1"], ["North", "A", "WK6", "1", "0", "1", "0"]], "covers": ["filename:long", "shape:long_scope", "week:WK", "type:canonical"]},
+        {"id": "wide_week_dialects", "filename": "weekly_dismantle_warehouse.csv", "headers": ["month", "week", "type", "RRU5905(900M)", "total"], "rows": [["4", "27", "Inbound", "2", "2"], ["4", "27", "Outbound", "1", "1"], ["4", "27", "Inventory", "1", "1"], ["4", "2027WK28", "Inbound", "0", "0"], ["4", "2027WK28", "Outbound", "0", "0"], ["4", "2027WK28", "Inventory", "1", "1"]], "covers": ["filename:wide", "shape:wide", "week:integer", "week:YYYYWK", "total:after"]},
+        {"id": "wide_iso", "filename": "weekly_dismantle_warehouse.csv", "headers": ["month", "week", "type", "AAU5726E(1800M&2100M)", "BBU5900", "total"], "rows": [["4", "2027-W05", "Inbound", "1", "1", "2"], ["4", "2027-W05", "Outbound", "0", "1", "1"], ["4", "2027-W05", "Inventory", "1", "0", "1"]], "covers": ["week:ISO", "materials:large_dynamic"]},
+        {"id": "duplicate_material", "filename": "weekly_dismantle_warehouse.csv", "headers": ["month", "week", "type", "FDD MM", "FDDMM", "total"], "rows": [["4", "WK14", "Inbound", "0", "0", "0"], ["4", "WK14", "Outbound", "0", "0", "0"], ["4", "WK14", "Inventory", "0", "0", "0"]], "expected": {"issue_codes": ["DUPLICATE_MATERIAL_COLUMN"], "known_gap": "space-variant material columns from the corpus are treated as distinct identities"}, "covers": ["materials:duplicate_logical"]},
+        {"id": "no_material", "filename": "weekly_dismantle_warehouse.csv", "headers": ["month", "week", "type", "total"], "rows": [["4", "WK14", "Inbound", "0"], ["4", "WK14", "Outbound", "0"], ["4", "WK14", "Inventory", "0"]], "expected": {"issue_codes": ["NO_UNAMBIGUOUS_MATERIAL_COLUMN"]}, "covers": ["materials:none"]},
+        {"id": "total_before", "filename": "weekly_dismantle_warehouse.csv", "headers": ["month", "week", "type", "total", "A"], "rows": [["4", "WK14", "Inbound", "2", "2"], ["4", "WK14", "Outbound", "1", "1"], ["4", "WK14", "Inventory", "1", "1"]], "covers": ["total:before"]},
+        {"id": "wide_no_total", "filename": "weekly_dismantle_warehouse.csv", "headers": ["month", "week", "type", "A"], "rows": [["4", "WK14", "Inbound", "2"], ["4", "WK14", "Outbound", "1"], ["4", "WK14", "Inventory", "1"]], "covers": ["total:absent"]},
+        {"id": "lowercase_stock", "filename": "dismantle_warehouse_weekly_flow.csv", "filenames": ["dismantle_warehouse_weekly_flow.csv", "weekly_dismantle_warehouse.csv"], "headers": ["month", "week", "type", "A"], "rows": [["4", "WK14", "inbound", "2"], ["4", "WK14", "outbound", "1"], ["4", "WK14", "stock", "1"]], "expected": {"forbidden_issue_codes": ["MISSING_TYPE"], "normalized_keys": [["a", 14]], "known_gap": "the observed stock label is not treated as the closing-inventory row"}, "covers": ["type:lowercase_stock"]},
+        {"id": "empty_file", "filename": "weekly_dismantle_warehouse.csv", "raw_csv": "", "expected": {"status": "PARSE_ERROR"}, "covers": ["physical:empty_file"]}
+      ]
+    }
+  },
+  "discovery_topologies": [
+    {
+      "id": "data_pipeline_intermediate",
+      "path": "56TESTPK/MaterialCycleEI/data-pipeline/intermediate/site_plan.csv",
+      "expected": "discoverable",
+      "source": "eval_results/EI-56TESTPK0006-hard-v1.2_cowork_glm52_0723skill_0724B/56TESTPK/MaterialCycleEI/data-pipeline/intermediate/site_plan.csv"
+    },
+    {
+      "id": "script_output",
+      "path": "56TESTPK/MaterialCycleEI/data-pipeline/script/site_plan/output/site_plan.csv",
+      "expected": "discoverable",
+      "source": "eval_results/EI-56TESTPK-v1.2_cowork_dsv4fp-maas_0723skill_0727C/56TESTPK/MaterialCycleEI/data-pipeline/script/site_plan/output/site_plan.csv"
+    },
+    {
+      "id": "project_model_output",
+      "path": "56TESTPK/MaterialCycleEI/model_output/site_plan.csv",
+      "expected": "discoverable",
+      "source": "eval_results/EI-56TESTPK0005-v1.2_cowork_dsv4fp_0716skill_0717A/56TESTPK/MaterialCycleEI/model_output/site_plan.csv"
+    },
+    {
+      "id": "project_input",
+      "path": "56TESTPK/MaterialCycleEI/input/site_plan.csv",
+      "expected": "discoverable",
+      "source": "eval_results/EI-56TESTPK0002-v1.2_claude_dsv4fp_noskill_0727B/56TESTPK/MaterialCycleEI/input/site_plan.csv"
+    },
+    {
+      "id": "intermediate_artifact_cache",
+      "path": "intermediate_files/artifacts/94/cache/site_plan.csv",
+      "expected": "ignored_outside_root",
+      "source": "eval_results/EI-56TESTPK0006-easy-v1.2_claude_dsv4fp_noskill_0725B/intermediate_files/artifacts/94/cache-entry/site_final_bom.csv"
+    },
+    {
+      "id": "score_output",
+      "path": "56TESTPK/MaterialCycleEI/scores/0803A/site_plan.csv",
+      "expected": "ignored_score_tree",
+      "source": "eval_results/*/scores/{score_batch_id}/validator_*.json"
+    }
+  ],
+  "products": {
+    "site_plan": {
+      "schema": "ei.site-plan",
+      "observed_files": 420,
+      "header_signatures": 10,
+      "value_dialects": [
+        "week:YYYYW",
+        "week:WK",
+        "week:ISO",
+        "week:integer",
+        "action:install_dismantle",
+        "action:both",
+        "format:xlsx"
+      ],
+      "families": [
+        {"id": "standard_six", "files": 334, "signatures": 1, "case": "standard_six", "source": "eval_results/EI-56TESTPK-v1.2_cowork_dsv4fp-maas_0723skill_0727C/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_plan.csv"},
+        {"id": "opt_po_six", "files": 24, "signatures": 1, "case": "opt_po_six", "source": "eval_results/Opt-56A0US7-v1.2_claude_dsv4fp_noskill_0726C/MaterialGapSimulation/data-pipeline/data/site_plan.csv"},
+        {"id": "opt_contract_ten", "files": 18, "signatures": 1, "case": "opt_contract_ten", "source": "eval_results/Opt-56A09AQ0003-v1.2_claude_dsv4fp_noskill_0726C/56A09AQ/MaterialCycleAnalysis/data-pipeline/model_output/site_plan.csv"},
+        {"id": "standard_five_csv", "files": 12, "signatures": 1, "case": "standard_five_csv", "source": "eval_results/EI-56TESTPK0005-v1.2_claude_dsv4fp_noskill_0731A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_plan.csv"},
+        {"id": "standard_five_xlsx", "files": 11, "signatures": 1, "case": "standard_five_xlsx", "source": "eval_results/EI-56TESTPK0005-v1.2_claude_dsv4fp_noskill_0727A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_plan.xlsx"},
+        {"id": "delivery_week_seven", "files": 9, "signatures": 1, "case": "delivery_week_seven", "source": "eval_results/Opt-56A0Q2Z-v1.2_claude_dsv4fp_noskill_0726C/56A0Q2Z/SiteSimulation/data-pipeline/model_output/site_plan.csv"},
+        {"id": "project_week_eight", "files": 8, "signatures": 1, "case": "project_week_eight", "source": "eval_results/EI-56TESTPK-v1.2_claude_dsv4fp_noskill_0731A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_plan.csv"},
+        {"id": "legacy_install_dismantle", "files": 2, "signatures": 1, "case": "legacy_install_dismantle", "source": "eval_results/EI-56TESTPK0005-v1.2_cowork_dsv4fp_0716skill_0717A/56TESTPK/MaterialCycleEI/data-pipeline/script/site_plan/output/site_plan.csv"},
+        {"id": "standard_plus_site_type", "files": 1, "signatures": 1, "case": "standard_plus_site_type", "source": "eval_results/EI-56TESTPK0005-v1.2_cowork_dsv4fp-maas_0730skill_0731A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_plan.csv"},
+        {"id": "legacy_action_nine", "files": 1, "signatures": 1, "case": "legacy_action_nine", "source": "eval_results/EI-56TESTTH-v1.2_cowork_dsv4fp_0716skill_0717A/56TESTTH/MaterialSimulation/data-pipeline/model_output/site_plan.csv"}
+      ],
+      "cases": [
+        {"id": "standard_six", "filename": "site_plan.csv", "headers": ["site_name", "site_action", "mos_weekly_plan", "week_num", "region", "site_count"], "rows": [["SITE-A", "install", "2023WK27", "27", "Region-1", "1"], ["SITE-B", "dismantle", "WK28", "28", "Region-2", "1"]], "covers": ["week:YYYYW", "week:WK", "week:integer", "action:install_dismantle"]},
+        {"id": "standard_five_csv", "filename": "site_plan.csv", "headers": ["site_name", "site_action", "mos_weekly_plan", "week_num", "region"], "rows": [["SITE-A", "install", "2023-W27", "WK27", "Region-1"]], "covers": ["week:ISO"]},
+        {"id": "standard_five_xlsx", "filename": "site_plan.xlsx", "format": "xlsx", "filenames": ["site_plan.csv", "site_plan.xlsx"], "headers": ["site_name", "site_action", "mos_weekly_plan", "week_num", "region"], "rows": [["SITE-A", "install", "WK2", 2, "Region-4"]], "covers": ["format:xlsx"]},
+        {"id": "project_week_eight", "filename": "site_plan.csv", "headers": ["site_name", "region", "mocn_batch", "site_action", "project_week", "week_start", "status", "site_count"], "rows": [["SITE-A", "Region-1", "B1", "install", "27", "2023-07-03", "planned", "1"]], "covers": []},
+        {"id": "opt_po_six", "filename": "site_plan.csv", "headers": ["site_name", "site_action", "mos_weekly_plan", "week_num", "region", "po"], "rows": [["SITE-A", "install", "2026WK24", "24", "R1", "PO-1"]], "covers": []},
+        {"id": "opt_contract_ten", "filename": "site_plan.csv", "headers": ["site_name", "site_type", "mos_weekly_plan", "week_num", "delivery_region", "warehouse", "dependency", "status_category", "po_status", "project_category"], "rows": [["SITE-A", "Macro", "2026WK27", "27", "R1", "WH1", "", "ready", "open", "swap"]], "expected": {"issue_codes": ["MISSING_REQUIRED_COLUMN"]}, "covers": []},
+        {"id": "delivery_week_seven", "filename": "site_plan.csv", "headers": ["site_name", "site_action", "mos_weekly_plan", "week_num", "delivery_week", "region", "site_count"], "rows": [["SITE-A", "install", "2026WK24", "24", "2026WK25", "R1", "1"]], "covers": []},
+        {"id": "legacy_install_dismantle", "filename": "site_plan.csv", "candidate_path": "56TESTPK/MaterialCycleEI/data-pipeline/script/site_plan/output/site_plan.csv", "canonical_path": "56TESTPK/MaterialCycleEI/data-pipeline/intermediate/site_plan.csv", "headers": ["site_name", "region", "batch_id", "install_week", "dismantle_week", "site_type"], "rows": [["SITE-A", "Region-1", "B1", "WK27", "WK28", "Macro"]], "expected": {"status": "SELECTED_FALLBACK", "issue_codes": ["MISSING_REQUIRED_COLUMN"]}, "covers": []},
+        {"id": "standard_plus_site_type", "filename": "site_plan.csv", "headers": ["site_name", "site_action", "mos_weekly_plan", "week_num", "region", "site_count", "site_type"], "rows": [["SITE-A", "install", "2027WK5", "5", "Region-1", "1", "Macro"]], "covers": []},
+        {"id": "legacy_action_nine", "filename": "site_plan.csv", "headers": ["site_name", "cluster_ID", "region", "site_type", "mos_weekly_plan", "install_week", "dismantle_week", "mocn_week", "action"], "rows": [["SITE-A", "C1", "R1", "Macro", "2023WK27", "2023WK27", "2023WK28", "2023WK29", "both"]], "covers": ["action:both"]}
+      ]
+    },
+    "site_material_timeline": {
+      "schema": "ei.timeline",
+      "observed_files": 181,
+      "header_signatures": 16,
+      "value_dialects": ["week:integer", "week:WK", "week:YYYYWK", "week:blank", "quantity:integer", "quantity:fractional", "action:install_dismantle"],
+      "families": [
+        {"id": "standard", "files": 164, "signatures": 1, "case": "standard_integer", "source": "eval_results/EI-56TESTPK-v1.2_cowork_dsv4fp-maas_0723skill_0727C/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_material_timeline.csv"},
+        {"id": "install_dismantle_labels", "files": 2, "signatures": 1, "case": "install_dismantle_labels", "source": "eval_results/EI-56TESTPK0006-hard-v1.2_cowork_dsv4fp_0715Bskill_0724B/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_material_timeline.csv"},
+        {"id": "reordered_standard", "files": 2, "signatures": 1, "case": "reordered_standard", "source": "eval_results/EI-56TESTPK0007-hard-v1.2_cowork_dsv4fp-maas_0723skill_0731A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_material_timeline.csv"},
+        {"id": "week_quantity", "files": 1, "signatures": 1, "case": "week_quantity", "source": "eval_results/EI-56TESTPK0002-v1.2_cowork_dsv4fp-maas_0723skill_0727C/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_material_timeline.csv"},
+        {"id": "site_action_qty", "files": 1, "signatures": 1, "case": "site_action_qty", "source": "eval_results/EI-56TESTPK0002-v1.2_cowork_dsv4fp-maas_0730skill_0731A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_material_timeline.csv"},
+        {"id": "final_material_shape", "files": 1, "signatures": 1, "case": "final_material_shape", "source": "eval_results/EI-56TESTPK0002-v1.2_cowork_qwen36-27b-maas_0723skill_0727A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_material_timeline.csv"},
+        {"id": "region_plan", "files": 1, "signatures": 1, "case": "region_plan", "source": "eval_results/EI-56TESTPK0005-v1.2_cowork_dsv4fp-maas_0730skill_0731A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_material_timeline.csv"},
+        {"id": "week_label_qty", "files": 1, "signatures": 1, "case": "week_label_qty", "source": "eval_results/EI-56TESTPK0006-hard-v1.2_cowork_dsv4fp_0723skill_0724B/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_material_timeline.csv"},
+        {"id": "wk_label_week_num", "files": 1, "signatures": 1, "case": "wk_label_week_num", "source": "eval_results/EI-56TESTPK0006-hard-v1.2_cowork_qwen36-27b-maas_0723skill_0727B/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_material_timeline.csv"},
+        {"id": "timeline_action", "files": 1, "signatures": 1, "case": "timeline_action", "source": "eval_results/EI-56TESTPK0006-hell-v1.2_cowork_dsv4fp-maas_noskill_0727B/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_material_timeline.csv"},
+        {"id": "site_action_quantity", "files": 1, "signatures": 1, "case": "site_action_quantity", "source": "eval_results/EI-56TESTPK0007-hard-v1.2_cowork_qwen36-27b-maas_0723skill_0727B/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_material_timeline.csv"},
+        {"id": "install_dismantle_week", "files": 1, "signatures": 1, "case": "install_dismantle_week", "source": "eval_results/EI-56TESTPK0008-hard-v1.2_cowork_qwen36-27b-maas_0723skill_0727B/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_material_timeline.csv"},
+        {"id": "standard_site_action", "files": 1, "signatures": 1, "case": "standard_site_action", "source": "eval_results/EI-56TESTTH-v1.2_cowork_dsv4fp-maas_0723skill_0727A/56TESTTH/BKKMaterialReuse/data-pipeline/model_output/site_material_timeline.csv"},
+        {"id": "hybrid_sixteen", "files": 1, "signatures": 1, "case": "hybrid_sixteen", "source": "eval_results/EI-56TESTTH-v1.2_cowork_dsv4fp-maas_0723skill_0731A/56TESTTH/BKKMaterialReuse/data-pipeline/model_output/site_material_timeline.csv"},
+        {"id": "hybrid_fourteen", "files": 1, "signatures": 1, "case": "hybrid_fourteen", "source": "eval_results/EI-56TESTTH-v1.2_cowork_dsv4fp-maas_0730skill_0731A/56TESTTH/BKKMaterialReuse/data-pipeline/model_output/site_material_timeline.csv"},
+        {"id": "opt_po", "files": 1, "signatures": 1, "case": "opt_po", "source": "eval_results/Opt-56A0US7-v1.2_cowork_dsv4fp-maas_0723skill_0727A/56A0US7/MaterialGapSimulation/data-pipeline/model_output/site_material_timeline.csv"}
+      ],
+      "cases": [
+        {"id": "standard_integer", "filename": "site_material_timeline.csv", "headers": ["site_name", "item_code", "required_qty", "action", "region", "mos_weekly_plan", "week_num"], "rows": [["SITE-A", "RRU5905(900M)", "2", "install", "Region-1", "2027WK27", "27"], ["SITE-B", "RRU5905(900M)", "3", "dismantle", "Region-2", "2027WK28", "28"]], "covers": ["week:integer", "quantity:integer", "action:install_dismantle"]},
+        {"id": "standard_week_tokens", "filename": "site_material_timeline.csv", "headers": ["site_name", "item_code", "required_qty", "action", "region", "mos_weekly_plan", "week_num"], "rows": [["SITE-A", "A", "1", "install", "R1", "WK27", "WK27"], ["SITE-B", "A", "1", "dismantle", "R2", "2027WK28", "2027WK28"], ["SITE-C", "A", "1", "install", "", "", ""]], "covers": ["week:WK", "week:YYYYWK", "week:blank"]},
+        {"id": "standard_fractional", "filename": "site_material_timeline.csv", "headers": ["site_name", "item_code", "required_qty", "action", "region", "mos_weekly_plan", "week_num"], "rows": [["SITE-A", "NEW_RRU_1800M", "0.5", "install", "Region-3", "2027WK19", "19"]], "expected": {"issue_codes": ["NON_INTEGER_QUANTITY"], "quantity_error_count": 1}, "covers": ["quantity:fractional"]},
+        {"id": "install_dismantle_labels", "filename": "site_material_timeline.csv", "headers": ["site_name", "item_code", "action", "region", "install_wk_label", "dismantle_wk_label", "required_qty"], "rows": [["SITE-A", "A", "install", "R1", "2027WK19", "", "1"]], "expected": {"issue_codes": ["MISSING_REQUIRED_COLUMN"]}, "covers": []},
+        {"id": "reordered_standard", "filename": "site_material_timeline.csv", "headers": ["site_name", "item_code", "required_qty", "region", "action", "mos_weekly_plan", "week_num"], "rows": [["SITE-A", "A", "1", "R1", "install", "2027WK19", "19"]], "covers": []},
+        {"id": "week_quantity", "filename": "site_material_timeline.csv", "headers": ["site_name", "item_code", "action", "week", "quantity"], "rows": [["SITE-A", "A", "install", "WK19", "1"]], "expected": {"issue_codes": ["MISSING_REQUIRED_COLUMN"]}, "covers": []},
+        {"id": "site_action_qty", "filename": "site_material_timeline.csv", "headers": ["site_name", "site_action", "item_code", "qty", "region", "week_label"], "rows": [["SITE-A", "install", "A", "1", "R1", "2027WK19"]], "expected": {"issue_codes": ["MISSING_REQUIRED_COLUMN"]}, "covers": []},
+        {"id": "final_material_shape", "filename": "site_material_timeline.csv", "headers": ["site_name", "install_month", "install_wk_label", "dismantle_month", "dismantle_wk_label", "item_code", "required_qty", "original_bom", "original_bom_qty", "region", "action"], "rows": [["SITE-A", "2027WK19", "2027WK19", "", "", "A", "1", "B", "1", "R1", "install"]], "expected": {"issue_codes": ["MISSING_REQUIRED_COLUMN"]}, "covers": []},
+        {"id": "region_plan", "filename": "site_material_timeline.csv", "headers": ["site_name", "site_action", "week_num", "region_plan", "item_code", "required_qty", "action"], "rows": [["SITE-A", "install", "19", "R1", "A", "1", "install"]], "covers": []},
+        {"id": "week_label_qty", "filename": "site_material_timeline.csv", "headers": ["site_name", "item_code", "action", "week_label", "region", "qty"], "rows": [["SITE-A", "A", "install", "WK19", "R1", "1"]], "expected": {"issue_codes": ["MISSING_REQUIRED_COLUMN"]}, "covers": []},
+        {"id": "wk_label_week_num", "filename": "site_material_timeline.csv", "headers": ["site_name", "item_code", "action", "region", "wk_label", "week_num", "required_qty"], "rows": [["SITE-A", "A", "install", "R1", "2027WK19", "19", "1"]], "covers": []},
+        {"id": "timeline_action", "filename": "site_material_timeline.csv", "headers": ["site_name", "item_code", "required_qty", "region", "action", "site_action", "mos_weekly_plan", "week_num", "timeline_action"], "rows": [["SITE-A", "A", "1", "R1", "install", "install", "2027WK19", "19", "install"]], "covers": []},
+        {"id": "site_action_quantity", "filename": "site_material_timeline.csv", "headers": ["site_name", "item_code", "week_label", "site_action", "quantity"], "rows": [["SITE-A", "A", "WK19", "install", "1"]], "expected": {"issue_codes": ["MISSING_REQUIRED_COLUMN"]}, "covers": []},
+        {"id": "install_dismantle_week", "filename": "site_material_timeline.csv", "headers": ["site_name", "region", "item_code", "required_qty", "action", "install_wk", "dismantle_wk"], "rows": [["SITE-A", "R1", "A", "1", "install", "2027WK19", ""]], "expected": {"issue_codes": ["MISSING_REQUIRED_COLUMN"]}, "covers": []},
+        {"id": "standard_site_action", "filename": "site_material_timeline.csv", "headers": ["site_name", "item_code", "required_qty", "region", "action", "mos_weekly_plan", "week_num", "site_action"], "rows": [["SITE-A", "A", "1", "R1", "install", "2027WK19", "19", "install"]], "covers": []},
+        {"id": "hybrid_sixteen", "filename": "site_material_timeline.csv", "headers": ["site_name", "item_code", "action", "required_qty", "mos_weekly_plan", "week_num", "region", "install_month", "install_wk_label", "dismantle_month", "dismantle_wk_label", "original_bom", "original_bom_qty", "region_bom", "region_plan", "site_count"], "rows": [["SITE-A", "A", "install", "1", "2027WK19", "19", "R1", "2027WK19", "2027WK19", "", "", "B", "1", "R1", "R1", "1"]], "covers": []},
+        {"id": "hybrid_fourteen", "filename": "site_material_timeline.csv", "headers": ["site_name", "install_month", "install_wk_label", "dismantle_month", "dismantle_wk_label", "item_code", "required_qty", "original_bom", "original_bom_qty", "region", "action", "week_num", "mos_weekly_plan", "site_action"], "rows": [["SITE-A", "2027WK19", "2027WK19", "", "", "A", "1", "B", "1", "R1", "install", "19", "2027WK19", "install"]], "covers": []},
+        {"id": "opt_po", "filename": "site_material_timeline.csv", "headers": ["site_name", "item_code", "required_qty", "action", "region", "po", "mos_weekly_plan", "week_num"], "rows": [["SITE-A", "A", "1", "install", "R1", "PO-1", "2026WK24", "24"]], "covers": []}
+      ]
+    },
+    "final_material": {
+      "schema": "ei.final-material",
+      "observed_files": 284,
+      "header_signatures": 7,
+      "value_dialects": ["week:YYYYWK", "week:WK", "week:blank", "quantity:integer", "quantity:integral_decimal", "quantity:fractional", "quantity:negative_fractional", "action:install_dismantle"],
+      "families": [
+        {"id": "original_bom_eleven", "files": 200, "signatures": 1, "case": "original_bom_integer", "source": "eval_results/EI-56TESTPK-v1.2_cowork_dsv4fp-maas_0723skill_0727C/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_final_bom.csv"},
+        {"id": "base_nine", "files": 64, "signatures": 1, "case": "base_nine", "source": "eval_results/EI-56TESTPK0002-v1.2_claude_dsv4fp_noskill_0727B/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_final_bom.csv"},
+        {"id": "site_action_six", "files": 8, "signatures": 1, "case": "site_action_six", "source": "eval_results/EI-56TESTPK-v1.2_claude_dsv4fp_noskill_0731A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_final_bom.csv"},
+        {"id": "cluster_source_eleven", "files": 8, "signatures": 1, "case": "cluster_source_eleven", "source": "eval_results/EI-56TESTPK0005-v1.2_claude_dsv4fp_noskill_0731A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/site_final_bom.csv"},
+        {"id": "cluster_ten", "files": 2, "signatures": 1, "case": "cluster_ten", "source": "eval_results/EI-56TESTTH-v1.2_claude_qwen36-27b_noskill_0726C/BKKMaterialReuse/data-pipeline/model_output/site_final_bom.csv"},
+        {"id": "legacy_eight", "files": 1, "signatures": 1, "case": "legacy_eight", "source": "eval_results/EI-56TESTPK0005-v1.2_cowork_dsv4fp_0716skill_0717A/56TESTPK/MaterialCycleEI/model_output/site_final_bom.csv"},
+        {"id": "cluster_case_variant", "files": 1, "signatures": 1, "case": "cluster_case_variant", "source": "eval_results/EI-56TESTTH-v1.2_cowork_dsv4fp_0716skill_0717A/56TESTTH/MaterialSimulation/data-pipeline/model_output/site_final_bom.csv"}
+      ],
+      "cases": [
+        {"id": "original_bom_integer", "filename": "site_final_bom.csv", "headers": ["site_name", "install_month", "install_wk_label", "dismantle_month", "dismantle_wk_label", "item_code", "required_qty", "original_bom", "original_bom_qty", "region", "action"], "rows": [["SITE-A", "2027WK19", "2027WK19", "", "", "NEW_RRU_1800M", "1", "2X80(1800M)", "1.0", "Region-3", "install"], ["SITE-B", "", "", "2027WK22", "2027WK22", "RRU5905(900M)", "3", "RRU5905(900M)", "3", "Region-4", "dismantle"]], "covers": ["week:YYYYWK", "week:blank", "quantity:integer", "quantity:integral_decimal", "action:install_dismantle"]},
+        {"id": "original_bom_fractional", "filename": "site_final_bom.csv", "headers": ["site_name", "install_month", "install_wk_label", "dismantle_month", "dismantle_wk_label", "item_code", "required_qty", "original_bom", "original_bom_qty", "region", "action"], "rows": [["SITE-A", "2027WK19", "2027WK19", "", "", "NEW_RRU_1800M", "0.5", "2X80(1800M)", "1.0", "Region-3", "install"], ["SITE-B", "", "", "2", "WK7", "RRU5905(900M)", "-2.7", "RRU5905(900M)", "3.0", "Region-4", "dismantle"]], "expected": {"issue_codes": ["NON_INTEGER_QUANTITY"], "quantity_error_count": 2}, "covers": ["week:WK", "quantity:fractional", "quantity:negative_fractional"]},
+        {"id": "base_nine", "filename": "site_final_bom.csv", "headers": ["site_name", "install_month", "install_wk_label", "dismantle_month", "dismantle_wk_label", "item_code", "required_qty", "region", "action"], "rows": [["SITE-A", "2027WK19", "2027WK19", "", "", "A", "1", "R1", "install"]], "covers": []},
+        {"id": "site_action_six", "filename": "site_final_bom.csv", "headers": ["site_name", "region", "site_action", "item_code", "required_qty", "project_week"], "rows": [["SITE-A", "R1", "install", "A", "1", "27"]], "covers": []},
+        {"id": "cluster_source_eleven", "filename": "site_final_bom.csv", "headers": ["site_name", "cluster_id", "install_month", "install_wk_label", "dismantle_month", "dismantle_wk_label", "item_code", "required_qty", "region", "action", "material_source"], "rows": [["SITE-A", "C1", "2027WK19", "2027WK19", "", "", "A", "1", "R1", "install", "new"]], "covers": []},
+        {"id": "cluster_ten", "filename": "site_final_bom.csv", "headers": ["site_name", "cluster_id", "install_month", "install_wk_label", "dismantle_month", "dismantle_wk_label", "item_code", "required_qty", "region", "action"], "rows": [["SITE-A", "C1", "2027WK19", "2027WK19", "", "", "A", "1", "R1", "install"]], "covers": []},
+        {"id": "legacy_eight", "filename": "site_final_bom.csv", "candidate_path": "56TESTPK/MaterialCycleEI/model_output/site_final_bom.csv", "headers": ["site_name", "item_code", "category", "install_qty", "dismantle_qty", "source", "region", "install_week"], "rows": [["SITE-A", "A", "RRU", "1", "0", "new", "R1", "WK19"]], "expected": {"issue_codes": ["MISSING_REQUIRED_COLUMN"]}, "covers": []},
+        {"id": "cluster_case_variant", "filename": "site_final_bom.csv", "headers": ["site_name", "cluster_ID", "install_month", "install_wk_label", "dismantle_month", "dismantle_wk_label", "item_code", "required_qty", "region", "action"], "rows": [["SITE-A", "C1", "2027WK19", "2027WK19", "", "", "A", "1", "R1", "install"]], "covers": []}
+      ]
+    },
+    "material_substitution": {
+      "schema": "ei.material-substitution",
+      "observed_files": 232,
+      "header_signatures": 2,
+      "value_dialects": ["quantity:integer", "quantity:integral_decimal", "quantity:fractional", "quantity:blank", "quantity:text", "new_issue:blank"],
+      "families": [
+        {"id": "seven_columns", "files": 223, "signatures": 1, "case": "seven_columns", "source": "eval_results/EI-56TESTPK0002-v1.2_claude_dsv4fp_noskill_0727B/56TESTPK/MaterialCycleEI/data-pipeline/model_output/material_substitution.csv"},
+        {"id": "six_columns", "files": 9, "signatures": 1, "case": "six_columns", "source": "eval_results/EI-56TESTPK0005-v1.2_claude_dsv4fp_noskill_0731A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/material_substitution.csv"}
+      ],
+      "cases": [
+        {"id": "seven_columns", "filename": "material_substitution.csv", "headers": ["solution_id", "priority", "target_item_code", "target_qty", "sub_item_code", "sub_qty", "new_issue_item_code"], "rows": [["S1", "1", "A", "2", "B", "2.0", ""], ["S2", "2", "A", "", "C", "N/A", "D"]], "expected": {"issue_codes": ["NON_INTEGER_QUANTITY"], "quantity_error_count": 2}, "covers": ["quantity:integer", "quantity:integral_decimal", "quantity:blank", "quantity:text", "new_issue:blank"]},
+        {"id": "six_columns", "filename": "material_substitution.csv", "headers": ["solution_id", "priority", "target_item_code", "target_qty", "sub_item_code", "sub_qty"], "rows": [["S1", "1", "A", "1.5", "B", "1"]], "expected": {"issue_codes": ["NON_INTEGER_QUANTITY"], "quantity_error_count": 1}, "covers": ["quantity:fractional"]}
+      ]
+    },
+    "recovered_supply": {
+      "schema": "ei.recovered-supply",
+      "observed_files": 9,
+      "header_signatures": 2,
+      "value_dialects": ["week:integer", "week:WK", "week:YYYYWK", "quantity:integer"],
+      "families": [
+        {"id": "standard_six", "files": 8, "signatures": 1, "case": "standard_six", "source": "eval_results/EI-56TESTPK-v1.2_claude_dsv4fp_noskill_0731A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/recovered_supply.csv"},
+        {"id": "legacy_three", "files": 1, "signatures": 1, "case": "legacy_three", "source": "eval_results/EI-56TESTPK-v1.2_cowork_dsv4fp-maas_0723skill_0727C/56TESTPK/MaterialCycleEI/data-pipeline/model_output/recovered_supply.csv"}
+      ],
+      "cases": [
+        {"id": "standard_six", "filename": "recovered_supply.csv", "headers": ["source_region", "source_site_name", "item_code", "dismantle_week", "available_week", "available_qty"], "rows": [["R1", "SITE-A", "A", "26", "27", "3"]], "covers": ["week:integer", "quantity:integer"]},
+        {"id": "legacy_three", "filename": "recovered_supply.csv", "headers": ["week", "item_code", "recovered_qty"], "rows": [["WK27", "A", "3"], ["2027WK28", "A", "2"]], "expected": {"issue_codes": ["MISSING_REQUIRED_COLUMN"]}, "covers": ["week:WK", "week:YYYYWK"]}
+      ]
+    },
+    "reuse_by_region": {
+      "schema": "ei.reuse-summary",
+      "observed_files": 249,
+      "header_signatures": 9,
+      "value_dialects": ["regions:four", "regions:one", "regions:BMA", "regions:Region-BMA", "regions:three", "regions:vietnam", "metric:quantity", "metric:rate", "item:grand_summary", "item:numeric", "value:blank", "value:text_rate"],
+      "families": [
+        {"id": "four_regions", "files": 211, "signatures": 1, "case": "four_regions", "source": "eval_results/EI-56TESTPK-v1.2_claude_dsv4fp_noskill_0731A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/reuse_by_region.csv"},
+        {"id": "one_region", "files": 16, "signatures": 1, "case": "one_region", "source": "eval_results/EI-56TESTTH-v1.2_claude_dsv4pp_noskill_0726C/BKKMaterialReuse/data-pipeline/model_output/reuse_by_region.csv"},
+        {"id": "uppercase_regions", "files": 8, "signatures": 1, "case": "four_regions", "source": "eval_results/EI-56TESTPK0005-v1.2_claude_dsv4fp_noskill_0731A/56TESTPK/MaterialCycleEI/data-pipeline/model_output/reuse_by_region.csv"},
+        {"id": "bma", "files": 6, "signatures": 1, "case": "bma", "source": "eval_results/EI-56TESTTH-v1.2_claude_dsv4fp_noskill_0726C/BKKMaterialReuse/data-pipeline/model_output/reuse_by_region.csv"},
+        {"id": "region_bma", "files": 3, "signatures": 1, "case": "region_bma", "source": "eval_results/EI-56TESTTH-v1.2_claude_qwen36-27b_noskill_0726C/BKKMaterialReuse/data-pipeline/model_output/reuse_by_region.csv"},
+        {"id": "three_regions", "files": 2, "signatures": 1, "case": "three_regions", "source": "eval_results/Opt-56A09AQ0002-v1.2_cowork_dsv4fp-maas_0723skill_0727A/56A09AQ/MaterialCycleAnalysis/data-pipeline/model_output/reuse_by_region.csv"},
+        {"id": "aggregate", "files": 1, "signatures": 1, "case": "aggregate", "source": "eval_results/EI-56TESTPK0005-v1.2_cowork_dsv4fp_0716skill_0717A/56TESTPK/MaterialCycleEI/model_output/reuse_by_region.csv"},
+        {"id": "potential", "files": 1, "signatures": 1, "case": "potential", "source": "eval_results/EI-56TESTTH-v1.2_cowork_dsv4fp_0716skill_0717A/56TESTTH/MaterialSimulation/data-pipeline/model_output/reuse_by_region.csv"},
+        {"id": "vietnam_regions", "files": 1, "signatures": 1, "case": "vietnam_regions", "source": "eval_results/Opt-56A0US7-v1.2_cowork_dsv4fp_0716skill_0719A/56A0US7/MaterialSimulation/data-pipeline/model_output/reuse_by_region.csv"}
+      ],
+      "cases": [
+        {"id": "four_regions", "filename": "reuse_by_region.csv", "headers": ["item_code", "metric", "Region-1", "Region-2", "Region-3", "Region-4", "Total"], "rows": [["A", "Dismantled", "1", "2", "3", "4", "10"], ["A", "Inter-Site Reuse", "1", "1", "1", "1", "4"], ["Grand Summary", "reuse rate (拆除重部署率)", "25%", "50%", "", "N/A", "37.5%"]], "covers": ["regions:four", "metric:quantity", "metric:rate", "item:grand_summary", "value:blank", "value:text_rate"]},
+        {"id": "one_region", "filename": "reuse_by_region.csv", "headers": ["item_code", "metric", "Region-1", "Total"], "rows": [["1001", "New Proposal", "2", "2"]], "covers": ["regions:one", "item:numeric"]},
+        {"id": "bma", "filename": "reuse_by_region.csv", "headers": ["item_code", "metric", "BMA", "Total"], "rows": [["A", "Dismantled", "2", "2"]], "covers": ["regions:BMA"]},
+        {"id": "region_bma", "filename": "reuse_by_region.csv", "headers": ["item_code", "metric", "Region-BMA", "Total"], "rows": [["A", "Dismantled", "2", "2"]], "covers": ["regions:Region-BMA"]},
+        {"id": "three_regions", "filename": "reuse_by_region.csv", "headers": ["item_code", "metric", "Region-1", "Region-2", "Region-3", "Total"], "rows": [["A", "Dismantled", "1", "1", "1", "3"]], "covers": ["regions:three"]},
+        {"id": "vietnam_regions", "filename": "reuse_by_region.csv", "headers": ["item_code", "metric", "HaNoi", "Middle", "North", "South", "Total"], "rows": [["A", "Dismantled", "1", "1", "1", "1", "4"]], "covers": ["regions:vietnam"]},
+        {"id": "aggregate", "filename": "reuse_by_region.csv", "headers": ["region", "reuse_qty", "new_qty", "dismantle_qty", "reuse_rate"], "rows": [["R1", "1", "2", "3", "0.333"]], "expected": {"issue_codes": ["MISSING_REQUIRED_COLUMN", "AMBIGUOUS_SUMMARY_CONTROL_COLUMN"]}, "covers": []},
+        {"id": "potential", "filename": "reuse_by_region.csv", "headers": ["region", "item_code", "dismantled_qty", "reuse_potential"], "rows": [["R1", "A", "3", "2"]], "expected": {"issue_codes": ["MISSING_REQUIRED_COLUMN", "AMBIGUOUS_SUMMARY_CONTROL_COLUMN"]}, "covers": []}
+      ]
+    }
+  }
+}

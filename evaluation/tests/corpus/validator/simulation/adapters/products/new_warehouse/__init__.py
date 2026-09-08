@@ -1,0 +1,1 @@
+"""New-warehouse corpus tests."""

@@ -1,0 +1,111 @@
+contract:
+  id: simulation.ei
+  schema_revision: 2
+  document_type: ruleset
+release: "4.13.0"
+semantic_baseline: "20260829-release-and-source-path-contract"
+description: >-
+  Prompt-first Simulation scoring with one artifact resolver, in-process EI rules,
+  rule-local integer material quantities, explicit Cluster/MOCN delivery batches,
+  scoped warehouse ledgers, per-item reuse rates, rule-local evidence dependencies,
+  explicit not-applicable results, independent 0..100 leaf scores, release-bound
+  five-metric aggregation, no runtime GT-derived target score, and O2
+  time coordinates, Drop-pool scope, action-scoped authority, distribution or
+  completion target curves, batch/site/not-applicable install-to-dismantle
+  anchors, seeded Drop identity replay, complete GAP/warehouse/SiteRollout week
+  axes, blackout and zero-business contracts, prepared-master hard gating,
+  Grand Summary reuse-rate contracts, non-blocking candidate artifact-format
+  evidence, material-source missing-data effects, explicit schedule-week year
+  identity, and final-BOM action/quantity-sign semantics frozen by question-level
+  contracts, with year-aware O1/O2 pacing, O2 hard monthly-capacity admission,
+  curve loss counting each cross-period redistribution once, same-material
+  one-to-one direct fulfillment, diagnostic unscheduled actions, Year-scoped
+  authority filtering, and candidate-independent cross-input Region preflight.
+checks:
+  - scheduling.C1
+  - scheduling.C2
+  - scheduling.C3
+  - scheduling.C4
+  - scheduling.C5
+  - scheduling.C6a
+  - scheduling.C6b
+  - scheduling-pacing.O1
+  - effective-delivery.O2
+  - simulation.S1
+  - simulation.S2
+  - simulation.S3
+  - simulation.S4
+  - simulation.S5
+  - simulation.S6
+  - reuse-accounting.R3
+  - reuse-accounting.R5
+  - reuse-accounting.R6
+aggregation:
+  policy_id: ei-five-metric-aggregate
+  effectiveness:
+    metric_id: effectiveness.o2
+    check_id: effective-delivery.O2
+  key:
+    unsupported_rule: full_credit
+    rules:
+      scheduling.C2:
+        weight: 1
+        ladder:
+          - {max_deduction: 5, score: 90}
+          - {max_deduction: 10, score: 80}
+          - {max_deduction: 20, score: 60}
+          - {max_deduction: 40, score: 40}
+          - {max_deduction: 100, score: 0}
+      scheduling.C6a:
+        weight: 1
+        ladder:
+          - {max_deduction: 5, score: 90}
+          - {max_deduction: 10, score: 80}
+          - {max_deduction: 20, score: 60}
+          - {max_deduction: 40, score: 40}
+          - {max_deduction: 100, score: 0}
+      scheduling-pacing.O1:
+        weight: 1
+        ladder:
+          - {max_deduction: 5, score: 90}
+          - {max_deduction: 10, score: 80}
+          - {max_deduction: 20, score: 60}
+          - {max_deduction: 40, score: 40}
+          - {max_deduction: 100, score: 0}
+      simulation.S1:
+        weight: 1
+        ladder:
+          - {max_deduction: 5, score: 90}
+          - {max_deduction: 10, score: 80}
+          - {max_deduction: 20, score: 60}
+          - {max_deduction: 40, score: 40}
+          - {max_deduction: 100, score: 0}
+      simulation.S5:
+        weight: 1
+        ladder:
+          - {max_deduction: 5, score: 90}
+          - {max_deduction: 10, score: 80}
+          - {max_deduction: 20, score: 60}
+          - {max_deduction: 40, score: 40}
+          - {max_deduction: 100, score: 0}
+  all:
+    metric_id: all.raw
+    unsupported_rule: excluded
+    rules:
+      scheduling.C1: {weight: 1}
+      scheduling.C2: {weight: 1}
+      scheduling.C3: {weight: 1}
+      scheduling.C4: {weight: 1}
+      scheduling.C5: {weight: 1}
+      scheduling.C6a: {weight: 1}
+      scheduling.C6b: {weight: 1}
+      scheduling-pacing.O1: {weight: 1}
+      simulation.S1: {weight: 1}
+      simulation.S2: {weight: 1}
+      simulation.S3: {weight: 1}
+      simulation.S4: {weight: 1}
+      simulation.S5: {weight: 1}
+      simulation.S6: {weight: 1}
+      reuse-accounting.R3: {weight: 1}
+      reuse-accounting.R5: {weight: 1}
+      reuse-accounting.R6: {weight: 1}

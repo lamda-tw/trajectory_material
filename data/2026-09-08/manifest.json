@@ -1,0 +1,667 @@
+{
+  "dataset_name": "ei-high-o2-qwen3-8b-grouped-cv",
+  "dataset_date": "2026-09-08",
+  "target_model": "Qwen/Qwen3-8B",
+  "source_root": "/root/autodl-tmp/data/raw_data/simulation_0731-YunChou-0827_skill0813_0829",
+  "output_root": "/root/autodl-tmp/workspace-tw/data/2026-09-08",
+  "source_policy": "read_only",
+  "quality_field": "result.aggregates[id=effectiveness.o2].score",
+  "selection_policy": "seven user-selected high-O2 trajectories; status ignored",
+  "source_trajectory_count": 7,
+  "task_families": [
+    "0006",
+    "0007",
+    "0008",
+    "0009",
+    "0010"
+  ],
+  "split_policy": "5-fold grouped cross-validation by task_family",
+  "recommended_default_single_split": "fold_05_holdout_0010",
+  "reasoning_policy": "drop_source_thinking",
+  "loss_policy": "completion_only",
+  "context_char_budget": 24000,
+  "root_user_char_limit": 16000,
+  "tool_result_char_limit": 10000,
+  "completion_char_limit": 16000,
+  "tool_schema_policy": "inferred from all seven trajectories; verify against runtime",
+  "score_ruleset_releases": [
+    "4.11.1"
+  ],
+  "provided_rules_document": {
+    "path": "/root/autodl-tmp/data/raw_data/simulation_0731-YunChou-0827_skill0813_0829/rules.md",
+    "exists": true,
+    "sha256": "8f4997615318a7a5dbfc94faf5db29af4027d1dc749174759017539726072ffa",
+    "declared_releases": [
+      "4.12.0"
+    ]
+  },
+  "tokenizer_validation": {
+    "status": "NOT_RUN_MISSING_DEPENDENCY",
+    "model_path": "/root/autodl-tmp/models/Qwen3-8B",
+    "model_files_present": true,
+    "transformers_installed": false,
+    "tokenizers_installed": false,
+    "reason": "Existing model/tokenizer files were found, but /root/miniconda3 lacks transformers and tokenizers; nothing was installed or downloaded."
+  },
+  "counts": {
+    "full_trajectories": 7,
+    "decision_samples": 1627,
+    "rejected_samples": 0,
+    "observed_tools": 11,
+    "thinking_blocks_dropped": 1155,
+    "thinking_chars_dropped": 2721501,
+    "tool_calls_kept": 1813,
+    "tool_results_kept": 1813,
+    "tool_results_truncated": 44,
+    "tool_result_chars_omitted": 385440
+  },
+  "normalization_counters": {
+    "assistant_text_blocks_kept": 546,
+    "source_system_messages_replaced": 7,
+    "thinking_blocks_dropped": 1155,
+    "thinking_chars_dropped": 2721501,
+    "tool_calls_kept": 1813,
+    "tool_result_chars_omitted": 385440,
+    "tool_results_kept": 1813,
+    "tool_results_truncated": 44
+  },
+  "sample_statistics": {
+    "all": {
+      "sample_count": 1627,
+      "by_trajectory": {
+        "EI-56TESTPK0006-easy-v1.2": 166,
+        "EI-56TESTPK0007-medium-v1.2": 130,
+        "EI-56TESTPK0008-easy-v1.2": 169,
+        "EI-56TESTPK0008-medium-v1.2": 265,
+        "EI-56TESTPK0009-medium-v1.2": 222,
+        "EI-56TESTPK0010-easy-v1.2": 455,
+        "EI-56TESTPK0010-medium-v1.2": 220
+      },
+      "target_tag_counts": {
+        "assistant_text": 546,
+        "final_answer": 7,
+        "recovery_after_tool_error": 54,
+        "tool_call": 1620,
+        "verification": 415
+      },
+      "target_tool_call_counts": {
+        "AskUserQuestion": 19,
+        "Bash": 1054,
+        "Edit": 122,
+        "Glob": 4,
+        "Grep": 23,
+        "Read": 412,
+        "Skill": 11,
+        "TodoWrite": 77,
+        "Write": 84,
+        "get_goal": 1,
+        "present_files": 6
+      },
+      "history_truncated_samples": 1596,
+      "prompt_chars": {
+        "min": 6072,
+        "p50": 23825,
+        "p95": 23987,
+        "max": 24000
+      },
+      "completion_chars": {
+        "min": 152,
+        "p50": 446,
+        "p95": 2150,
+        "max": 14132
+      }
+    },
+    "by_family": {
+      "0006": {
+        "sample_count": 166,
+        "by_trajectory": {
+          "EI-56TESTPK0006-easy-v1.2": 166
+        },
+        "target_tag_counts": {
+          "assistant_text": 87,
+          "final_answer": 1,
+          "recovery_after_tool_error": 3,
+          "tool_call": 165,
+          "verification": 46
+        },
+        "target_tool_call_counts": {
+          "AskUserQuestion": 3,
+          "Bash": 99,
+          "Edit": 15,
+          "Grep": 4,
+          "Read": 47,
+          "Skill": 1,
+          "TodoWrite": 12,
+          "Write": 13
+        },
+        "history_truncated_samples": 162,
+        "prompt_chars": {
+          "min": 6072,
+          "p50": 23827,
+          "p95": 23993,
+          "max": 24000
+        },
+        "completion_chars": {
+          "min": 224,
+          "p50": 439,
+          "p95": 3144,
+          "max": 7920
+        }
+      },
+      "0007": {
+        "sample_count": 130,
+        "by_trajectory": {
+          "EI-56TESTPK0007-medium-v1.2": 130
+        },
+        "target_tag_counts": {
+          "assistant_text": 64,
+          "final_answer": 1,
+          "recovery_after_tool_error": 7,
+          "tool_call": 129,
+          "verification": 27
+        },
+        "target_tool_call_counts": {
+          "AskUserQuestion": 2,
+          "Bash": 82,
+          "Edit": 15,
+          "Read": 31,
+          "TodoWrite": 6,
+          "Write": 12,
+          "present_files": 1
+        },
+        "history_truncated_samples": 126,
+        "prompt_chars": {
+          "min": 7812,
+          "p50": 23732,
+          "p95": 23975,
+          "max": 23997
+        },
+        "completion_chars": {
+          "min": 214,
+          "p50": 561,
+          "p95": 2890,
+          "max": 7393
+        }
+      },
+      "0008": {
+        "sample_count": 434,
+        "by_trajectory": {
+          "EI-56TESTPK0008-easy-v1.2": 169,
+          "EI-56TESTPK0008-medium-v1.2": 265
+        },
+        "target_tag_counts": {
+          "assistant_text": 105,
+          "final_answer": 2,
+          "recovery_after_tool_error": 17,
+          "tool_call": 432,
+          "verification": 122
+        },
+        "target_tool_call_counts": {
+          "AskUserQuestion": 4,
+          "Bash": 286,
+          "Edit": 48,
+          "Grep": 1,
+          "Read": 111,
+          "Skill": 3,
+          "TodoWrite": 15,
+          "Write": 26,
+          "present_files": 2
+        },
+        "history_truncated_samples": 428,
+        "prompt_chars": {
+          "min": 6072,
+          "p50": 23807,
+          "p95": 23982,
+          "max": 24000
+        },
+        "completion_chars": {
+          "min": 195,
+          "p50": 437,
+          "p95": 2278,
+          "max": 14132
+        }
+      },
+      "0009": {
+        "sample_count": 222,
+        "by_trajectory": {
+          "EI-56TESTPK0009-medium-v1.2": 222
+        },
+        "target_tag_counts": {
+          "assistant_text": 38,
+          "final_answer": 1,
+          "recovery_after_tool_error": 8,
+          "tool_call": 221,
+          "verification": 47
+        },
+        "target_tool_call_counts": {
+          "AskUserQuestion": 3,
+          "Bash": 147,
+          "Edit": 18,
+          "Grep": 1,
+          "Read": 41,
+          "Skill": 1,
+          "TodoWrite": 12,
+          "Write": 9,
+          "present_files": 1
+        },
+        "history_truncated_samples": 216,
+        "prompt_chars": {
+          "min": 7853,
+          "p50": 23789,
+          "p95": 23979,
+          "max": 23998
+        },
+        "completion_chars": {
+          "min": 215,
+          "p50": 443,
+          "p95": 1845,
+          "max": 8910
+        }
+      },
+      "0010": {
+        "sample_count": 675,
+        "by_trajectory": {
+          "EI-56TESTPK0010-easy-v1.2": 455,
+          "EI-56TESTPK0010-medium-v1.2": 220
+        },
+        "target_tag_counts": {
+          "assistant_text": 252,
+          "final_answer": 2,
+          "recovery_after_tool_error": 19,
+          "tool_call": 673,
+          "verification": 173
+        },
+        "target_tool_call_counts": {
+          "AskUserQuestion": 7,
+          "Bash": 440,
+          "Edit": 26,
+          "Glob": 4,
+          "Grep": 17,
+          "Read": 182,
+          "Skill": 6,
+          "TodoWrite": 32,
+          "Write": 24,
+          "get_goal": 1,
+          "present_files": 2
+        },
+        "history_truncated_samples": 664,
+        "prompt_chars": {
+          "min": 6145,
+          "p50": 23855,
+          "p95": 23988,
+          "max": 24000
+        },
+        "completion_chars": {
+          "min": 152,
+          "p50": 439,
+          "p95": 1733,
+          "max": 8651
+        }
+      }
+    }
+  },
+  "folds": [
+    {
+      "fold_id": "fold_01_holdout_0006",
+      "path": "folds/fold_01_holdout_0006",
+      "holdout_family": "0006",
+      "train_families": [
+        "0007",
+        "0008",
+        "0009",
+        "0010"
+      ],
+      "train_trajectory_count": 6,
+      "validation_trajectory_count": 1,
+      "train_sample_count": 1461,
+      "validation_sample_count": 166,
+      "validation_task_count": 1,
+      "recommended_default_single_split": false,
+      "data_sha256": {
+        "train.jsonl": "23328182146cfdf9f903f201b5e3854e591aa1a3f245008017305368b83fa6ca",
+        "validation.jsonl": "b4a27cb6b7166e4385b7bbc56af46e529be43208b9826101dda03159d024e216",
+        "validation_tasks.jsonl": "286c11df1e3606fa6c0ffc23b0d6eb02af8441e3f1b1d876c0ec155b8c113749"
+      }
+    },
+    {
+      "fold_id": "fold_02_holdout_0007",
+      "path": "folds/fold_02_holdout_0007",
+      "holdout_family": "0007",
+      "train_families": [
+        "0006",
+        "0008",
+        "0009",
+        "0010"
+      ],
+      "train_trajectory_count": 6,
+      "validation_trajectory_count": 1,
+      "train_sample_count": 1497,
+      "validation_sample_count": 130,
+      "validation_task_count": 1,
+      "recommended_default_single_split": false,
+      "data_sha256": {
+        "train.jsonl": "8b0265154115a28af19e0d06372abc8231f4790aa109a3a3b85f7cdbe00cac90",
+        "validation.jsonl": "b3c65ab06d1bf9725806d784ad5c62b01420a640a355fb98bc60ec36045c32cf",
+        "validation_tasks.jsonl": "ef3459d760e1c758de72e2874803cc32c49af2ad947fd743811d101267fb9085"
+      }
+    },
+    {
+      "fold_id": "fold_03_holdout_0008",
+      "path": "folds/fold_03_holdout_0008",
+      "holdout_family": "0008",
+      "train_families": [
+        "0006",
+        "0007",
+        "0009",
+        "0010"
+      ],
+      "train_trajectory_count": 5,
+      "validation_trajectory_count": 2,
+      "train_sample_count": 1193,
+      "validation_sample_count": 434,
+      "validation_task_count": 2,
+      "recommended_default_single_split": false,
+      "data_sha256": {
+        "train.jsonl": "b7a88ab2b7a60a5e1dd765e0496105472d47a64cd8e427d9718eeb0ea578cb03",
+        "validation.jsonl": "a18e4145811f987ff9c265a05521ef98def2f7af789d6000acb927945cf67bec",
+        "validation_tasks.jsonl": "15432d8e5a6c9a71326f1d487e1d8b39e653cf5241db0ee45d2840a1d245e8cc"
+      }
+    },
+    {
+      "fold_id": "fold_04_holdout_0009",
+      "path": "folds/fold_04_holdout_0009",
+      "holdout_family": "0009",
+      "train_families": [
+        "0006",
+        "0007",
+        "0008",
+        "0010"
+      ],
+      "train_trajectory_count": 6,
+      "validation_trajectory_count": 1,
+      "train_sample_count": 1405,
+      "validation_sample_count": 222,
+      "validation_task_count": 1,
+      "recommended_default_single_split": false,
+      "data_sha256": {
+        "train.jsonl": "a51e6d9cf82175a598dbe4bad6b6ace1ff4b494e1d7ab3a509288a90165c9d26",
+        "validation.jsonl": "6bd746f134bc45c7c6054a58606285332bebc24d7daf29d5853e704308ae90ba",
+        "validation_tasks.jsonl": "908cfcee5eeeb3afeba4a1ae7a4414d27a394b66799f13ecb8112debb962250a"
+      }
+    },
+    {
+      "fold_id": "fold_05_holdout_0010",
+      "path": "folds/fold_05_holdout_0010",
+      "holdout_family": "0010",
+      "train_families": [
+        "0006",
+        "0007",
+        "0008",
+        "0009"
+      ],
+      "train_trajectory_count": 5,
+      "validation_trajectory_count": 2,
+      "train_sample_count": 952,
+      "validation_sample_count": 675,
+      "validation_task_count": 2,
+      "recommended_default_single_split": true,
+      "data_sha256": {
+        "train.jsonl": "c3c5b1f53debc46aa0325ca19ba35fb6fcddd0c50d6ba5ed39895dc06bb617e3",
+        "validation.jsonl": "6d06dc3b1131683b8248ad8ea28fd49669b00cd6f95cdb179267b125fa5dc499",
+        "validation_tasks.jsonl": "9f4f1cf87d2efc6ea95bafc03b9e112c3e7a6b03d789498ab70611909f39e7f4"
+      }
+    }
+  ],
+  "trajectories": [
+    {
+      "trajectory_id": "EI-56TESTPK0006-easy-v1.2",
+      "task_family": "0006",
+      "o2": 98.513181,
+      "ruleset_release": "4.11.1",
+      "ruleset_bundle_sha256": "803c5cf5e12e5654b0b4f6f28adba16c55038f71dc0f94e287c49ae951a2dad6",
+      "source_schema_version": "evalrouter.conversation_trajectory.v2",
+      "source_model": "DeepSeek-V4-Flash-0731-YunChou-0827_iter15",
+      "source_num_turns": 166,
+      "source_message_count": 513,
+      "normalized_message_count": 362,
+      "source_trajectory": "/root/autodl-tmp/data/raw_data/simulation_0731-YunChou-0827_skill0813_0829/EI-56TESTPK0006-easy-v1.2/EI-56TESTPK0006-easy-v1.2_cowork_dsv4f_SFT_0731_yunchou_0827_15_0813skill_0831/trajectory/conversation_trajectory.json",
+      "source_score": "/root/autodl-tmp/data/raw_data/simulation_0731-YunChou-0827_skill0813_0829/EI-56TESTPK0006-easy-v1.2/EI-56TESTPK0006-easy-v1.2_cowork_dsv4f_SFT_0731_yunchou_0827_15_0813skill_0831/scores/20260831092042/score.json",
+      "source_trajectory_sha256": "a00af2459fb697fbf6135e90ab3085761bed3d9d4e598fc227a2b990587c1306",
+      "source_score_sha256": "53f1f63a618834f39012bfc1b0d5f7009d1885652df238aed38eb7b5c67cdd54",
+      "normalization_counters": {
+        "source_system_messages_replaced": 1,
+        "thinking_blocks_dropped": 119,
+        "thinking_chars_dropped": 194058,
+        "assistant_text_blocks_kept": 87,
+        "tool_calls_kept": 194,
+        "tool_results_kept": 194,
+        "tool_result_chars_omitted": 44359,
+        "tool_results_truncated": 4
+      },
+      "decision_sample_count": 166,
+      "rejected_sample_count": 0
+    },
+    {
+      "trajectory_id": "EI-56TESTPK0007-medium-v1.2",
+      "task_family": "0007",
+      "o2": 89.444495,
+      "ruleset_release": "4.11.1",
+      "ruleset_bundle_sha256": "803c5cf5e12e5654b0b4f6f28adba16c55038f71dc0f94e287c49ae951a2dad6",
+      "source_schema_version": "evalrouter.conversation_trajectory.v2",
+      "source_model": "DeepSeek-V4-Flash-0731-YunChou-0827_iter15",
+      "source_num_turns": 130,
+      "source_message_count": 400,
+      "normalized_message_count": 281,
+      "source_trajectory": "/root/autodl-tmp/data/raw_data/simulation_0731-YunChou-0827_skill0813_0829/EI-56TESTPK0007-medium-v1.2/EI-56TESTPK0007-medium-v1.2_cowork_dsv4f_SFT_0731_yunchou_0827_15_0813skill_0831/trajectory/conversation_trajectory.json",
+      "source_score": "/root/autodl-tmp/data/raw_data/simulation_0731-YunChou-0827_skill0813_0829/EI-56TESTPK0007-medium-v1.2/EI-56TESTPK0007-medium-v1.2_cowork_dsv4f_SFT_0731_yunchou_0827_15_0813skill_0831/scores/20260831092042/score.json",
+      "source_trajectory_sha256": "5a386ee0c98859366a0d0a54bc8d151280b2146db943d1dff499ebe3396b8ca0",
+      "source_score_sha256": "5faa094879fcf9d4a0372e0a7c181bd08b282f81a15131dadff11b9c30b5087d",
+      "normalization_counters": {
+        "source_system_messages_replaced": 1,
+        "thinking_blocks_dropped": 97,
+        "thinking_chars_dropped": 207021,
+        "tool_calls_kept": 149,
+        "tool_results_kept": 149,
+        "assistant_text_blocks_kept": 64,
+        "tool_result_chars_omitted": 36904,
+        "tool_results_truncated": 4
+      },
+      "decision_sample_count": 130,
+      "rejected_sample_count": 0
+    },
+    {
+      "trajectory_id": "EI-56TESTPK0008-easy-v1.2",
+      "task_family": "0008",
+      "o2": 98.416022,
+      "ruleset_release": "4.11.1",
+      "ruleset_bundle_sha256": "803c5cf5e12e5654b0b4f6f28adba16c55038f71dc0f94e287c49ae951a2dad6",
+      "source_schema_version": "evalrouter.conversation_trajectory.v2",
+      "source_model": "DeepSeek-V4-Flash-0731-YunChou-0827_iter15",
+      "source_num_turns": 169,
+      "source_message_count": 533,
+      "normalized_message_count": 374,
+      "source_trajectory": "/root/autodl-tmp/data/raw_data/simulation_0731-YunChou-0827_skill0813_0829/EI-56TESTPK0008-easy-v1.2/EI-56TESTPK0008-easy-v1.2_cowork_dsv4f_SFT_0731_yunchou_0827_15_0813skill_0831/trajectory/conversation_trajectory.json",
+      "source_score": "/root/autodl-tmp/data/raw_data/simulation_0731-YunChou-0827_skill0813_0829/EI-56TESTPK0008-easy-v1.2/EI-56TESTPK0008-easy-v1.2_cowork_dsv4f_SFT_0731_yunchou_0827_15_0813skill_0831/scores/20260831092042/score.json",
+      "source_trajectory_sha256": "34f7f41ae75866b605bf41a3cbb62a39213b35e3659553a3a932ec8b44394da3",
+      "source_score_sha256": "3ce06515c0f5d7d88489edfa56e58cc0b70483c9068a54adcb7bbda7f439d063",
+      "normalization_counters": {
+        "source_system_messages_replaced": 1,
+        "thinking_blocks_dropped": 123,
+        "thinking_chars_dropped": 214134,
+        "tool_calls_kept": 203,
+        "tool_results_kept": 203,
+        "assistant_text_blocks_kept": 59,
+        "tool_result_chars_omitted": 10061,
+        "tool_results_truncated": 2
+      },
+      "decision_sample_count": 169,
+      "rejected_sample_count": 0
+    },
+    {
+      "trajectory_id": "EI-56TESTPK0008-medium-v1.2",
+      "task_family": "0008",
+      "o2": 87.948952,
+      "ruleset_release": "4.11.1",
+      "ruleset_bundle_sha256": "803c5cf5e12e5654b0b4f6f28adba16c55038f71dc0f94e287c49ae951a2dad6",
+      "source_schema_version": "evalrouter.conversation_trajectory.v2",
+      "source_model": "DeepSeek-V4-Flash-0731-YunChou-0827_iter15",
+      "source_num_turns": 265,
+      "source_message_count": 766,
+      "normalized_message_count": 560,
+      "source_trajectory": "/root/autodl-tmp/data/raw_data/simulation_0731-YunChou-0827_skill0813_0829/EI-56TESTPK0008-medium-v1.2/EI-56TESTPK0008-medium-v1.2_cowork_dsv4f_SFT_0731_yunchou_0827_15_0813skill_0831/trajectory/conversation_trajectory.json",
+      "source_score": "/root/autodl-tmp/data/raw_data/simulation_0731-YunChou-0827_skill0813_0829/EI-56TESTPK0008-medium-v1.2/EI-56TESTPK0008-medium-v1.2_cowork_dsv4f_SFT_0731_yunchou_0827_15_0813skill_0831/scores/20260831092042/score.json",
+      "source_trajectory_sha256": "fda90996ec7f4b6a59bb5ddc33e10c9e5a9a43cdf4775f1149589cf13280f9ed",
+      "source_score_sha256": "ebd0051a5f179a263bf6d9da7b38cd2e5e1e17b3d5acc76e7bf42c56c69583f7",
+      "normalization_counters": {
+        "source_system_messages_replaced": 1,
+        "thinking_blocks_dropped": 175,
+        "thinking_chars_dropped": 352865,
+        "tool_calls_kept": 293,
+        "tool_results_kept": 293,
+        "assistant_text_blocks_kept": 46,
+        "tool_result_chars_omitted": 36066,
+        "tool_results_truncated": 5
+      },
+      "decision_sample_count": 265,
+      "rejected_sample_count": 0
+    },
+    {
+      "trajectory_id": "EI-56TESTPK0009-medium-v1.2",
+      "task_family": "0009",
+      "o2": 98.176015,
+      "ruleset_release": "4.11.1",
+      "ruleset_bundle_sha256": "803c5cf5e12e5654b0b4f6f28adba16c55038f71dc0f94e287c49ae951a2dad6",
+      "source_schema_version": "evalrouter.conversation_trajectory.v2",
+      "source_model": "DeepSeek-V4-Flash-0731-YunChou-0827_iter15",
+      "source_num_turns": 222,
+      "source_message_count": 629,
+      "normalized_message_count": 457,
+      "source_trajectory": "/root/autodl-tmp/data/raw_data/simulation_0731-YunChou-0827_skill0813_0829/EI-56TESTPK0009-medium-v1.2/EI-56TESTPK0009-medium-v1.2_cowork_dsv4f_SFT_0731_yunchou_0827_15_0813skill_0831/trajectory/conversation_trajectory.json",
+      "source_score": "/root/autodl-tmp/data/raw_data/simulation_0731-YunChou-0827_skill0813_0829/EI-56TESTPK0009-medium-v1.2/EI-56TESTPK0009-medium-v1.2_cowork_dsv4f_SFT_0731_yunchou_0827_15_0813skill_0831/scores/20260831092042/score.json",
+      "source_trajectory_sha256": "a0d382b593cc7687d2a6104b98f89e2ac9726e4eecf2fdfb9d3e65b095c7023c",
+      "source_score_sha256": "eed28c4808fc5ec6379eb4daa4dbd5e4d6c43a7b19fa06d55986a7fc6b9f03b7",
+      "normalization_counters": {
+        "source_system_messages_replaced": 1,
+        "thinking_blocks_dropped": 158,
+        "thinking_chars_dropped": 322374,
+        "tool_calls_kept": 233,
+        "tool_results_kept": 233,
+        "assistant_text_blocks_kept": 38,
+        "tool_result_chars_omitted": 18642,
+        "tool_results_truncated": 3
+      },
+      "decision_sample_count": 222,
+      "rejected_sample_count": 0
+    },
+    {
+      "trajectory_id": "EI-56TESTPK0010-easy-v1.2",
+      "task_family": "0010",
+      "o2": 99.62967,
+      "ruleset_release": "4.11.1",
+      "ruleset_bundle_sha256": "803c5cf5e12e5654b0b4f6f28adba16c55038f71dc0f94e287c49ae951a2dad6",
+      "source_schema_version": "evalrouter.conversation_trajectory.v2",
+      "source_model": "DeepSeek-V4-Flash-0731-YunChou-0827_iter15",
+      "source_num_turns": 455,
+      "source_message_count": 1345,
+      "normalized_message_count": 964,
+      "source_trajectory": "/root/autodl-tmp/data/raw_data/simulation_0731-YunChou-0827_skill0813_0829/EI-56TESTPK0010-easy-v1.2/EI-56TESTPK0010-easy-v1.2_cowork_dsv4f_SFT_0731_yunchou_0827_15_0813skill_0831/trajectory/conversation_trajectory.json",
+      "source_score": "/root/autodl-tmp/data/raw_data/simulation_0731-YunChou-0827_skill0813_0829/EI-56TESTPK0010-easy-v1.2/EI-56TESTPK0010-easy-v1.2_cowork_dsv4f_SFT_0731_yunchou_0827_15_0813skill_0831/scores/20260831092042/score.json",
+      "source_trajectory_sha256": "154406237322eaf8cc24fd08f237cf75372c1335f6e40b2803c0d80ce6de3a12",
+      "source_score_sha256": "510c67725850cd1e8ad4fc7e918cd8d1f56a15007dfddf036d7843dfafa16c22",
+      "normalization_counters": {
+        "source_system_messages_replaced": 1,
+        "thinking_blocks_dropped": 324,
+        "thinking_chars_dropped": 1174568,
+        "tool_calls_kept": 507,
+        "tool_results_kept": 507,
+        "assistant_text_blocks_kept": 155,
+        "tool_result_chars_omitted": 116955,
+        "tool_results_truncated": 15
+      },
+      "decision_sample_count": 455,
+      "rejected_sample_count": 0
+    },
+    {
+      "trajectory_id": "EI-56TESTPK0010-medium-v1.2",
+      "task_family": "0010",
+      "o2": 89.007634,
+      "ruleset_release": "4.11.1",
+      "ruleset_bundle_sha256": "803c5cf5e12e5654b0b4f6f28adba16c55038f71dc0f94e287c49ae951a2dad6",
+      "source_schema_version": "evalrouter.conversation_trajectory.v2",
+      "source_model": "DeepSeek-V4-Flash-0731-YunChou-0827_iter15",
+      "source_num_turns": 220,
+      "source_message_count": 634,
+      "normalized_message_count": 456,
+      "source_trajectory": "/root/autodl-tmp/data/raw_data/simulation_0731-YunChou-0827_skill0813_0829/EI-56TESTPK0010-medium-v1.2/EI-56TESTPK0010-medium-v1.2_cowork_dsv4f_SFT_0731_yunchou_0827_15_0813skill_0831/trajectory/conversation_trajectory.json",
+      "source_score": "/root/autodl-tmp/data/raw_data/simulation_0731-YunChou-0827_skill0813_0829/EI-56TESTPK0010-medium-v1.2/EI-56TESTPK0010-medium-v1.2_cowork_dsv4f_SFT_0731_yunchou_0827_15_0813skill_0831/scores/20260831092042/score.json",
+      "source_trajectory_sha256": "60f3e2290035ced8c993e20c6ec4654b84bd9825703a5a47eb6e79f3656345d2",
+      "source_score_sha256": "be07e329873c0e279280b21ef795b1d6670b83d68c58a7fad0dbd0348afb1af9",
+      "normalization_counters": {
+        "source_system_messages_replaced": 1,
+        "thinking_blocks_dropped": 159,
+        "thinking_chars_dropped": 256481,
+        "tool_calls_kept": 234,
+        "tool_results_kept": 234,
+        "assistant_text_blocks_kept": 97,
+        "tool_result_chars_omitted": 122453,
+        "tool_results_truncated": 11
+      },
+      "decision_sample_count": 220,
+      "rejected_sample_count": 0
+    }
+  ],
+  "output_sha256": {
+    "README.md": "dc7be34d01237acc7e005ead13931f04692244ddd4be39462edb31e6ce7a3c72",
+    "canonical/decision_samples.jsonl": "ac383626a6a21ee82ba5a14f10f24ef9452aae0bf60a369f6589504d0f271939",
+    "canonical/family_0006.jsonl": "714e2934275269fd0f661016392092169a0ca249a8910493e78c17c77356eca7",
+    "canonical/family_0007.jsonl": "2fd5a6005bffb296d0966c91da2e0218ad14df9269609914534e6379678dde2a",
+    "canonical/family_0008.jsonl": "00280f034c18b402b6711ac1d481a16f754a5fe59075423c4b68abff7bae30d2",
+    "canonical/family_0009.jsonl": "948e3ec5fd16b0c9d0750c449ba84eba5672f2be0d1a0670edf1b629c1330927",
+    "canonical/family_0010.jsonl": "bb199dc3990f025c67790be9303a3d9dd34b966e58f9c3a012e1b94e5bbdd05c",
+    "canonical/full_trajectories.jsonl": "d17456fa0d81697038c9f40e3968324e2d6fbecd63cbf5effc29f57aebb1de7b",
+    "canonical/rejected_samples.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "canonical/rollout_tasks.jsonl": "e3c72d340302d6bfffae86707e9bd43dfd3f36bde78bfa03ad85ab0b9442d13a",
+    "fold_registry.json": "1e041bdf6af1624e4e1cedde71406080d3d87ec0914c2d1e8a74e78decf70744",
+    "folds/fold_01_holdout_0006/README.md": "cdad8816b5c0eaa8c6caa431e245e67b74704c1496433f8e170267cbf2d8207d",
+    "folds/fold_01_holdout_0006/split.json": "228d81e958207359d7555d20ba1b1c5c7c880c703579b566f5b5c470df9930a6",
+    "folds/fold_01_holdout_0006/train.jsonl": "23328182146cfdf9f903f201b5e3854e591aa1a3f245008017305368b83fa6ca",
+    "folds/fold_01_holdout_0006/validation.jsonl": "b4a27cb6b7166e4385b7bbc56af46e529be43208b9826101dda03159d024e216",
+    "folds/fold_01_holdout_0006/validation_tasks.jsonl": "286c11df1e3606fa6c0ffc23b0d6eb02af8441e3f1b1d876c0ec155b8c113749",
+    "folds/fold_02_holdout_0007/README.md": "dcdbf7524eae66b6cd1bd28e014ec2d09f269e8375339d1d1edf3aa1b8519090",
+    "folds/fold_02_holdout_0007/split.json": "29f348af01d25b87eec66569b58d075a1fb2048662f3b24f18ba2abb3081f317",
+    "folds/fold_02_holdout_0007/train.jsonl": "8b0265154115a28af19e0d06372abc8231f4790aa109a3a3b85f7cdbe00cac90",
+    "folds/fold_02_holdout_0007/validation.jsonl": "b3c65ab06d1bf9725806d784ad5c62b01420a640a355fb98bc60ec36045c32cf",
+    "folds/fold_02_holdout_0007/validation_tasks.jsonl": "ef3459d760e1c758de72e2874803cc32c49af2ad947fd743811d101267fb9085",
+    "folds/fold_03_holdout_0008/README.md": "a0071987d8efc144a26be7db87021780f1997db6f24a33dba9021d966a96ddca",
+    "folds/fold_03_holdout_0008/split.json": "286299cad4cc67697bb2e2261129b779add1e1e3a731554370f582e4eb2bc2f6",
+    "folds/fold_03_holdout_0008/train.jsonl": "b7a88ab2b7a60a5e1dd765e0496105472d47a64cd8e427d9718eeb0ea578cb03",
+    "folds/fold_03_holdout_0008/validation.jsonl": "a18e4145811f987ff9c265a05521ef98def2f7af789d6000acb927945cf67bec",
+    "folds/fold_03_holdout_0008/validation_tasks.jsonl": "15432d8e5a6c9a71326f1d487e1d8b39e653cf5241db0ee45d2840a1d245e8cc",
+    "folds/fold_04_holdout_0009/README.md": "978811eb2195b5d1371588b361617fb731b7084b038d973b694c109ebcb789d2",
+    "folds/fold_04_holdout_0009/split.json": "f6a2d8a9db3b21d57e0f84ac4a504d131036cf39596e04d762911365993dd2b9",
+    "folds/fold_04_holdout_0009/train.jsonl": "a51e6d9cf82175a598dbe4bad6b6ace1ff4b494e1d7ab3a509288a90165c9d26",
+    "folds/fold_04_holdout_0009/validation.jsonl": "6bd746f134bc45c7c6054a58606285332bebc24d7daf29d5853e704308ae90ba",
+    "folds/fold_04_holdout_0009/validation_tasks.jsonl": "908cfcee5eeeb3afeba4a1ae7a4414d27a394b66799f13ecb8112debb962250a",
+    "folds/fold_05_holdout_0010/README.md": "a356100456b2f87148ea3d808927fac041f3b65476a6d5b43250aaa1879377c8",
+    "folds/fold_05_holdout_0010/split.json": "227d78c39c2ba0a2664becafdcbf110059f4c41f4ed9e8814981989555d63932",
+    "folds/fold_05_holdout_0010/train.jsonl": "c3c5b1f53debc46aa0325ca19ba35fb6fcddd0c50d6ba5ed39895dc06bb617e3",
+    "folds/fold_05_holdout_0010/validation.jsonl": "6d06dc3b1131683b8248ad8ea28fd49669b00cd6f95cdb179267b125fa5dc499",
+    "folds/fold_05_holdout_0010/validation_tasks.jsonl": "9f4f1cf87d2efc6ea95bafc03b9e112c3e7a6b03d789498ab70611909f39e7f4",
+    "requirements-tokenizer.txt": "1bc0e7a6f1049f35857b7f8e71d4ffcd24f4b09b77e4adf4a6df6d0ab57c7ef1",
+    "scripts/conversion_core.py": "01c877f538a4b85cc65d8d59d9490b9118c0df2e77fb2c069bfc0c5eb1d4f185",
+    "scripts/convert_trajectories.py": "99e56c79daf249d7ccbf008f9a8e696c501df003df2135b2a90e531553e36aa6",
+    "scripts/validate_dataset.py": "c8d56f0da83e816abcd84c659912d510146dbc5856c986514be20ffc05520bae",
+    "tools.inferred.json": "468bdd73359657f83a9a96d6a2331c3fd2f84434e02599bbf7e85730eb328400"
+  },
+  "structural_validation": {
+    "status": "PASS",
+    "validator": "scripts/validate_dataset.py",
+    "scope": [
+      "JSONL parsing and ids",
+      "five-fold family isolation and coverage",
+      "Qwen message/tool structure",
+      "character budgets",
+      "output SHA-256"
+    ]
+  }
+}

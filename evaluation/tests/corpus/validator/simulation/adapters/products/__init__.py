@@ -1,0 +1,1 @@
+"""Standard product corpus tests."""

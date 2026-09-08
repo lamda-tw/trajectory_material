@@ -9,6 +9,7 @@ __pycache__/
 
 # Virtual environments
 .venv/
+.venv-*/
 venv/
 env/
 
@@ -27,6 +28,12 @@ cache/
 outputs/
 checkpoints/
 *.log
+
+# Large generated training datasets
+/data/**/*.jsonl
+
+# Local evaluation inputs and run outputs
+/o2-*/
 
 # IDE and operating-system files
 .vscode/

@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "eval4opt-evaluation"
+version = "3.0.0"
+description = "Composable scoring framework for Eval4OptAgent"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "openpyxl>=3.1,<4",
+  "pandas>=2,<3",
+  "PyYAML>=6,<7",
+]
+
+[project.scripts]
+eval = "simulation.cli:main"
+eval4trajectory = "eval4trajectory.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/simulation", "src/eval4trajectory"]

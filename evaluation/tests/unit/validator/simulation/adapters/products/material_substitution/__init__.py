@@ -1,0 +1,1 @@
+"""Material-substitution artifact contracts."""

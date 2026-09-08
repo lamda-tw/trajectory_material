@@ -1,0 +1,1 @@
+"""Recovered-supply artifact contracts."""

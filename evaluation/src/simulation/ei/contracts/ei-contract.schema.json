@@ -1,0 +1,1109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ei-contract.schema.json",
+  "title": "Simulation EI contract",
+  "description": "Unified structural contract for Simulation EI rulesets, question profiles, run scores, and component results.",
+  "oneOf": [
+    {"$ref": "#/$defs/rulesetDocument"},
+    {"$ref": "#/$defs/questionProfileDocument"},
+    {"$ref": "#/$defs/runScoreDocument"},
+    {"$ref": "#/$defs/componentResultDocument"},
+    {"$ref": "#/$defs/questionContractSnapshotDocument"},
+    {"$ref": "#/$defs/reportAggregationDocument"},
+    {"$ref": "#/$defs/reportManifestDocument"}
+  ],
+  "$defs": {
+    "contractHeader": {
+      "type": "object",
+      "required": ["id", "schema_revision", "document_type"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"const": "simulation.ei"},
+        "schema_revision": {"const": 2},
+        "document_type": {
+          "enum": [
+            "ruleset",
+            "question-profile",
+            "run-score",
+            "component-result",
+            "question-contract-snapshot",
+            "report-aggregation",
+            "report-manifest"
+          ]
+        }
+      }
+    },
+    "rulesetContractHeader": {
+      "allOf": [
+        {"$ref": "#/$defs/contractHeader"},
+        {
+          "properties": {
+            "document_type": {"const": "ruleset"}
+          }
+        }
+      ]
+    },
+    "questionProfileContractHeader": {
+      "allOf": [
+        {"$ref": "#/$defs/contractHeader"},
+        {
+          "properties": {
+            "document_type": {"const": "question-profile"}
+          }
+        }
+      ]
+    },
+    "runScoreContractHeader": {
+      "allOf": [
+        {"$ref": "#/$defs/contractHeader"},
+        {
+          "properties": {
+            "document_type": {"const": "run-score"}
+          }
+        }
+      ]
+    },
+    "componentResultContractHeader": {
+      "allOf": [
+        {"$ref": "#/$defs/contractHeader"},
+        {
+          "properties": {
+            "document_type": {"const": "component-result"}
+          }
+        }
+      ]
+    },
+    "questionContractSnapshotHeader": {
+      "allOf": [
+        {"$ref": "#/$defs/contractHeader"},
+        {
+          "properties": {
+            "document_type": {"const": "question-contract-snapshot"}
+          }
+        }
+      ]
+    },
+    "reportAggregationContractHeader": {
+      "allOf": [
+        {"$ref": "#/$defs/contractHeader"},
+        {
+          "properties": {
+            "document_type": {"const": "report-aggregation"}
+          }
+        }
+      ]
+    },
+    "reportManifestContractHeader": {
+      "allOf": [
+        {"$ref": "#/$defs/contractHeader"},
+        {
+          "properties": {
+            "document_type": {"const": "report-manifest"}
+          }
+        }
+      ]
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "not": {
+        "anyOf": [
+          {"pattern": "^(?:[A-Za-z]:)?[/\\\\]"},
+          {"pattern": "(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$)"}
+        ]
+      }
+    },
+    "release": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "checkId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*\\.[A-Za-z0-9_.-]+$"
+    },
+    "rawRule": {
+      "type": "object",
+      "required": ["weight"],
+      "additionalProperties": false,
+      "properties": {
+        "weight": {"type": "integer", "minimum": 1, "maximum": 100}
+      }
+    },
+    "ladderStep": {
+      "type": "object",
+      "required": ["max_deduction", "score"],
+      "additionalProperties": false,
+      "properties": {
+        "max_deduction": {"type": "number", "minimum": 0, "maximum": 100},
+        "score": {"type": "number", "minimum": 0, "maximum": 100}
+      }
+    },
+    "keyRule": {
+      "type": "object",
+      "required": ["weight", "ladder"],
+      "additionalProperties": false,
+      "properties": {
+        "weight": {"type": "integer", "minimum": 1, "maximum": 100},
+        "ladder": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/ladderStep"}
+        }
+      }
+    },
+    "aggregationPolicy": {
+      "type": "object",
+      "required": ["policy_id", "effectiveness", "key", "all"],
+      "additionalProperties": false,
+      "properties": {
+        "policy_id": {"$ref": "#/$defs/nonEmptyString"},
+        "description": {"type": "string"},
+        "effectiveness": {
+          "type": "object",
+          "required": ["metric_id", "check_id"],
+          "additionalProperties": false,
+          "properties": {
+            "metric_id": {"const": "effectiveness.o2"},
+            "check_id": {"const": "effective-delivery.O2"}
+          }
+        },
+        "key": {
+          "type": "object",
+          "required": ["unsupported_rule", "rules"],
+          "additionalProperties": false,
+          "properties": {
+            "unsupported_rule": {"const": "full_credit"},
+            "rules": {
+              "type": "object",
+              "minProperties": 5,
+              "maxProperties": 5,
+              "propertyNames": {"$ref": "#/$defs/checkId"},
+              "additionalProperties": {"$ref": "#/$defs/keyRule"}
+            }
+          }
+        },
+        "all": {
+          "type": "object",
+          "required": ["metric_id", "unsupported_rule", "rules"],
+          "additionalProperties": false,
+          "properties": {
+            "metric_id": {"const": "all.raw"},
+            "unsupported_rule": {"const": "excluded"},
+            "rules": {
+              "type": "object",
+              "minProperties": 1,
+              "propertyNames": {"$ref": "#/$defs/checkId"},
+              "additionalProperties": {"$ref": "#/$defs/rawRule"}
+            }
+          }
+        }
+      }
+    },
+    "rulesetDocument": {
+      "type": "object",
+      "required": [
+        "contract",
+        "release",
+        "semantic_baseline",
+        "checks",
+        "aggregation"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "contract": {"$ref": "#/$defs/rulesetContractHeader"},
+        "release": {"$ref": "#/$defs/release"},
+        "semantic_baseline": {"$ref": "#/$defs/nonEmptyString"},
+        "description": {"type": "string"},
+        "checks": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/checkId"}
+        },
+        "aggregation": {"$ref": "#/$defs/aggregationPolicy"}
+      }
+    },
+    "artifactSpec": {
+      "type": "object",
+      "required": ["source", "path", "schema", "required"],
+      "additionalProperties": false,
+      "properties": {
+        "source": {"enum": ["candidate", "question"]},
+        "path": {"$ref": "#/$defs/relativePath"},
+        "schema": {"$ref": "#/$defs/nonEmptyString"},
+        "required": {"type": "boolean"},
+        "schema_options": {"type": "object"},
+        "filenames": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/nonEmptyString"}
+        }
+      }
+    },
+    "checkConfiguration": {
+      "type": "object",
+      "required": ["prompt_refs"],
+      "additionalProperties": false,
+      "properties": {
+        "prompt_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/nonEmptyString"}
+        }
+      }
+    },
+    "componentConfiguration": {
+      "type": "object",
+      "required": ["scorer", "checks"],
+      "additionalProperties": false,
+      "properties": {
+        "scorer": {
+          "enum": [
+            "ei.scheduling",
+            "ei.pacing",
+            "ei.simulation",
+            "ei.reuse",
+            "ei.effective-delivery"
+          ]
+        },
+        "parameters": {"type": "object"},
+        "checks": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {"$ref": "#/$defs/checkConfiguration"}
+        }
+      }
+    },
+    "questionProfileDocument": {
+      "type": "object",
+      "required": [
+        "contract",
+        "question_id",
+        "ruleset_release",
+        "artifact_roots",
+        "artifacts",
+        "components"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "contract": {"$ref": "#/$defs/questionProfileContractHeader"},
+        "question_id": {"$ref": "#/$defs/nonEmptyString"},
+        "ruleset_release": {"$ref": "#/$defs/release"},
+        "release_status": {
+          "enum": ["active", "question-contract-incomplete"]
+        },
+        "blocking_reasons": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/nonEmptyString"}
+        },
+        "artifact_roots": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/relativePath"}
+        },
+        "artifacts": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {"$ref": "#/$defs/artifactSpec"}
+        },
+        "components": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {"$ref": "#/$defs/componentConfiguration"}
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "release_status": {"const": "question-contract-incomplete"}
+            },
+            "required": ["release_status"]
+          },
+          "then": {"required": ["blocking_reasons"]}
+        }
+      ]
+    },
+    "rulesetRunIdentity": {
+      "type": "object",
+      "required": ["release", "semantic_baseline"],
+      "additionalProperties": false,
+      "properties": {
+        "release": {"$ref": "#/$defs/release"},
+        "semantic_baseline": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    },
+    "questionInputIdentity": {
+      "type": "object",
+      "required": ["role", "path"],
+      "additionalProperties": false,
+      "properties": {
+        "role": {"$ref": "#/$defs/nonEmptyString"},
+        "path": {"$ref": "#/$defs/relativePath"}
+      }
+    },
+    "questionContractIdentity": {
+      "type": "object",
+      "required": [
+        "question_id",
+        "question_kind",
+        "question_root",
+        "files",
+        "question_inputs"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "question_id": {"$ref": "#/$defs/nonEmptyString"},
+        "question_kind": {"$ref": "#/$defs/nonEmptyString"},
+        "question_root": {"$ref": "#/$defs/relativePath"},
+        "files": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/contractFileSource"}
+        },
+        "question_inputs": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/questionInputIdentity"}
+        }
+      }
+    },
+    "artifactCandidate": {
+      "type": "object",
+      "required": [
+        "path",
+        "required_coverage",
+        "prompt_filename",
+        "common_parent_suffix",
+        "usable",
+        "error",
+        "canonical"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "oneOf": [
+            {"$ref": "#/$defs/relativePath"},
+            {"type": "null"}
+          ]
+        },
+        "required_coverage": {"type": "number", "minimum": 0, "maximum": 1},
+        "prompt_filename": {"type": "boolean"},
+        "common_parent_suffix": {"type": "integer", "minimum": 0},
+        "usable": {"type": "boolean"},
+        "error": {"type": "string"},
+        "canonical": {"type": "boolean"}
+      }
+    },
+    "artifactResolution": {
+      "type": "object",
+      "required": [
+        "role",
+        "source",
+        "status",
+        "selected_path",
+        "error",
+        "validation_issue_count",
+        "validation_issues",
+        "quantity_error_count",
+        "quantity_errors",
+        "resolution_diagnostics",
+        "candidates"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "role": {"$ref": "#/$defs/nonEmptyString"},
+        "source": {"enum": ["candidate", "question"]},
+        "status": {"$ref": "#/$defs/nonEmptyString"},
+        "selected_path": {
+          "oneOf": [
+            {"$ref": "#/$defs/relativePath"},
+            {"type": "null"}
+          ]
+        },
+        "error": {"type": "string"},
+        "validation_issue_count": {"type": "integer", "minimum": 0},
+        "validation_issues": {"type": "array"},
+        "quantity_error_count": {"type": "integer", "minimum": 0},
+        "quantity_errors": {"type": "array"},
+        "resolution_diagnostics": {"type": "array"},
+        "candidates": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/artifactCandidate"}
+        }
+      }
+    },
+    "aggregateStatus": {
+      "enum": [
+        "SCORED",
+        "INVALID_CANDIDATE",
+        "EVALUATOR_ERROR",
+        "QUESTION_CONTRACT_INCOMPLETE",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "ruleContribution": {
+      "type": "object",
+      "required": [
+        "check_id",
+        "raw_score",
+        "transformed_score",
+        "weight",
+        "supported",
+        "filled"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "check_id": {"$ref": "#/$defs/checkId"},
+        "raw_score": {"type": "number", "minimum": 0, "maximum": 100},
+        "transformed_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "weight": {"type": "integer", "minimum": 1, "maximum": 100},
+        "supported": {"type": "boolean"},
+        "filled": {"type": "boolean"}
+      }
+    },
+    "aggregateResult": {
+      "type": "object",
+      "required": [
+        "id",
+        "group",
+        "score",
+        "max_score",
+        "status",
+        "error",
+        "contributions"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "enum": [
+            "effectiveness.o2",
+            "key.raw",
+            "key.discrete",
+            "key.piecewise",
+            "all.raw"
+          ]
+        },
+        "group": {"enum": ["effectiveness", "key", "all"]},
+        "score": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "max_score": {"const": 100},
+        "status": {"$ref": "#/$defs/aggregateStatus"},
+        "error": {"type": "string"},
+        "contributions": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/ruleContribution"}
+        }
+      }
+    },
+    "checkResult": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "score",
+        "status",
+        "reason_code",
+        "explanation",
+        "prompt_refs",
+        "evidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/checkId"},
+        "name": {"$ref": "#/$defs/nonEmptyString"},
+        "score": {"type": "number", "minimum": 0, "maximum": 100},
+        "status": {"$ref": "#/$defs/nonEmptyString"},
+        "reason_code": {"type": "string"},
+        "explanation": {"type": "string"},
+        "prompt_refs": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/nonEmptyString"}
+        },
+        "evidence": {}
+      }
+    },
+    "componentSummary": {
+      "type": "object",
+      "required": ["id", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/nonEmptyString"},
+        "status": {"$ref": "#/$defs/aggregateStatus"},
+        "error": {"type": "string"}
+      }
+    },
+    "runResult": {
+      "type": "object",
+      "required": ["status", "error", "aggregates", "components", "checks"],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "SCORED",
+            "INVALID_CANDIDATE",
+            "EVALUATOR_ERROR",
+            "QUESTION_CONTRACT_INCOMPLETE"
+          ]
+        },
+        "error": {"type": "string"},
+        "aggregates": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": {"$ref": "#/$defs/aggregateResult"}
+        },
+        "components": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/componentSummary"}
+        },
+        "checks": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/checkResult"}
+        }
+      }
+    },
+    "runScoreDocument": {
+      "type": "object",
+      "required": [
+        "contract",
+        "provider_id",
+        "question",
+        "ruleset",
+        "question_contract",
+        "artifacts",
+        "result",
+        "score_id",
+        "created_at",
+        "run"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "contract": {"$ref": "#/$defs/runScoreContractHeader"},
+        "provider_id": {"const": "simulation.ei"},
+        "question": {"$ref": "#/$defs/nonEmptyString"},
+        "ruleset": {"$ref": "#/$defs/rulesetRunIdentity"},
+        "question_contract": {"$ref": "#/$defs/questionContractIdentity"},
+        "artifacts": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/artifactResolution"}
+        },
+        "result": {"$ref": "#/$defs/runResult"},
+        "score_id": {
+          "type": "string",
+          "pattern": "^[0-9]{14}(?:-[0-9]{2})?$"
+        },
+        "created_at": {"$ref": "#/$defs/nonEmptyString"},
+        "run": {"type": "object"}
+      }
+    },
+    "componentResultPayload": {
+      "type": "object",
+      "required": ["status", "error"],
+      "additionalProperties": false,
+      "properties": {
+        "status": {"$ref": "#/$defs/aggregateStatus"},
+        "total_score": {"type": ["number", "null"]},
+        "total_max": {"type": "number", "minimum": 0},
+        "error": {"type": "string"},
+        "aggregates": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/aggregateResult"}
+        },
+        "checks": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/checkResult"}
+        },
+        "components": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/componentSummary"}
+        }
+      },
+      "oneOf": [
+        {
+          "required": ["checks"],
+          "not": {
+            "anyOf": [
+              {"required": ["total_score"]},
+              {"required": ["total_max"]},
+              {"required": ["aggregates"]},
+              {"required": ["components"]}
+            ]
+          }
+        },
+        {
+          "required": ["total_score", "total_max", "aggregates", "components"],
+          "not": {"required": ["checks"]}
+        }
+      ]
+    },
+    "componentResultDocument": {
+      "type": "object",
+      "required": ["contract", "meta", "result"],
+      "additionalProperties": false,
+      "properties": {
+        "contract": {"$ref": "#/$defs/componentResultContractHeader"},
+        "meta": {
+          "type": "object",
+          "required": [
+            "question_id",
+            "component",
+            "ruleset_release",
+            "runtime_gt_access"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "question_id": {"$ref": "#/$defs/nonEmptyString"},
+            "component": {"$ref": "#/$defs/nonEmptyString"},
+            "ruleset_release": {"$ref": "#/$defs/release"},
+            "runtime_gt_access": {"const": false}
+          }
+        },
+        "artifacts": {"type": "array"},
+        "result": {"$ref": "#/$defs/componentResultPayload"}
+      }
+    },
+    "contractFileSource": {
+      "type": "object",
+      "required": ["path"],
+      "additionalProperties": false,
+      "properties": {
+        "path": {"$ref": "#/$defs/relativePath"}
+      }
+    },
+    "questionContractSnapshotDocument": {
+      "type": "object",
+      "required": [
+        "contract",
+        "question_id",
+        "question_kind",
+        "question_root",
+        "files",
+        "question_inputs"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "contract": {"$ref": "#/$defs/questionContractSnapshotHeader"},
+        "question_id": {"$ref": "#/$defs/nonEmptyString"},
+        "question_kind": {"$ref": "#/$defs/nonEmptyString"},
+        "question_root": {"$ref": "#/$defs/relativePath"},
+        "files": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/contractFileSource"}
+        },
+        "question_inputs": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/questionInputIdentity"}
+        }
+      }
+    },
+    "metricId": {
+      "enum": [
+        "effectiveness.o2",
+        "key.raw",
+        "key.discrete",
+        "key.piecewise",
+        "all.raw"
+      ]
+    },
+    "metricOrder": {
+      "type": "array",
+      "prefixItems": [
+        {"const": "effectiveness.o2"},
+        {"const": "key.raw"},
+        {"const": "key.discrete"},
+        {"const": "key.piecewise"},
+        {"const": "all.raw"}
+      ],
+      "minItems": 5,
+      "maxItems": 5
+    },
+    "nullableScore": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 100
+    },
+    "metricScores": {
+      "type": "object",
+      "required": [
+        "effectiveness.o2",
+        "key.raw",
+        "key.discrete",
+        "key.piecewise",
+        "all.raw"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "effectiveness.o2": {"$ref": "#/$defs/nullableScore"},
+        "key.raw": {"$ref": "#/$defs/nullableScore"},
+        "key.discrete": {"$ref": "#/$defs/nullableScore"},
+        "key.piecewise": {"$ref": "#/$defs/nullableScore"},
+        "all.raw": {"$ref": "#/$defs/nullableScore"}
+      }
+    },
+    "metricStatusMap": {
+      "type": "object",
+      "required": [
+        "effectiveness.o2",
+        "key.raw",
+        "key.discrete",
+        "key.piecewise",
+        "all.raw"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "effectiveness.o2": {"$ref": "#/$defs/nonEmptyString"},
+        "key.raw": {"$ref": "#/$defs/nonEmptyString"},
+        "key.discrete": {"$ref": "#/$defs/nonEmptyString"},
+        "key.piecewise": {"$ref": "#/$defs/nonEmptyString"},
+        "all.raw": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    },
+    "statusList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/nonEmptyString"}
+    },
+    "metricStatusLists": {
+      "type": "object",
+      "required": [
+        "effectiveness.o2",
+        "key.raw",
+        "key.discrete",
+        "key.piecewise",
+        "all.raw"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "effectiveness.o2": {"$ref": "#/$defs/statusList"},
+        "key.raw": {"$ref": "#/$defs/statusList"},
+        "key.discrete": {"$ref": "#/$defs/statusList"},
+        "key.piecewise": {"$ref": "#/$defs/statusList"},
+        "all.raw": {"$ref": "#/$defs/statusList"}
+      }
+    },
+    "reportModelRow": {
+      "type": "object",
+      "required": ["identity", "question_count", "metrics"],
+      "additionalProperties": false,
+      "properties": {
+        "identity": {"$ref": "#/$defs/nonEmptyString"},
+        "question_count": {"type": "integer", "minimum": 1},
+        "metrics": {"$ref": "#/$defs/metricScores"}
+      }
+    },
+    "reportQuestionRow": {
+      "type": "object",
+      "required": [
+        "task",
+        "question",
+        "model",
+        "harness",
+        "skill",
+        "identity",
+        "repeat_count",
+        "metrics",
+        "result_statuses",
+        "result_errors",
+        "metric_statuses"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "task": {"type": "string"},
+        "question": {"$ref": "#/$defs/nonEmptyString"},
+        "model": {"type": "string"},
+        "harness": {"type": "string"},
+        "skill": {"type": "string"},
+        "identity": {"$ref": "#/$defs/nonEmptyString"},
+        "repeat_count": {"type": "integer", "minimum": 1},
+        "metrics": {"$ref": "#/$defs/metricScores"},
+        "result_statuses": {"$ref": "#/$defs/statusList"},
+        "result_errors": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string"}
+        },
+        "metric_statuses": {"$ref": "#/$defs/metricStatusLists"}
+      }
+    },
+    "reportKeyRow": {
+      "type": "object",
+      "required": [
+        "question",
+        "identity",
+        "check_id",
+        "raw",
+        "discrete",
+        "piecewise",
+        "weight",
+        "supported",
+        "filled"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "question": {"$ref": "#/$defs/nonEmptyString"},
+        "identity": {"$ref": "#/$defs/nonEmptyString"},
+        "check_id": {"$ref": "#/$defs/checkId"},
+        "raw": {"type": "number", "minimum": 0, "maximum": 100},
+        "discrete": {"type": "number", "minimum": 0, "maximum": 100},
+        "piecewise": {"type": "number", "minimum": 0, "maximum": 100},
+        "weight": {"type": "integer", "minimum": 1},
+        "supported": {"type": "boolean"},
+        "filled": {"type": "boolean"}
+      }
+    },
+    "reportAllRow": {
+      "type": "object",
+      "required": ["question", "identity", "check_id", "raw", "weight"],
+      "additionalProperties": false,
+      "properties": {
+        "question": {"$ref": "#/$defs/nonEmptyString"},
+        "identity": {"$ref": "#/$defs/nonEmptyString"},
+        "check_id": {"$ref": "#/$defs/checkId"},
+        "raw": {"type": "number", "minimum": 0, "maximum": 100},
+        "weight": {"type": "integer", "minimum": 1}
+      }
+    },
+    "reportRunRow": {
+      "type": "object",
+      "required": [
+        "run",
+        "run_dir",
+        "question",
+        "identity",
+        "score_id",
+        "metrics",
+        "result_status",
+        "result_error",
+        "metric_statuses"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "run": {"$ref": "#/$defs/nonEmptyString"},
+        "run_dir": {"$ref": "#/$defs/nonEmptyString"},
+        "question": {"$ref": "#/$defs/nonEmptyString"},
+        "identity": {"$ref": "#/$defs/nonEmptyString"},
+        "score_id": {"type": "string"},
+        "metrics": {"$ref": "#/$defs/metricScores"},
+        "result_status": {"$ref": "#/$defs/nonEmptyString"},
+        "result_error": {"type": "string"},
+        "metric_statuses": {"$ref": "#/$defs/metricStatusMap"}
+      }
+    },
+    "reportLadderSheet": {
+      "type": "object",
+      "required": [
+        "name",
+        "kind",
+        "metric_id",
+        "models",
+        "questions",
+        "values",
+        "row_averages",
+        "column_averages",
+        "overall_average"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"$ref": "#/$defs/nonEmptyString"},
+        "kind": {"const": "ladder"},
+        "metric_id": {"$ref": "#/$defs/metricId"},
+        "models": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/nonEmptyString"}
+        },
+        "questions": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/nonEmptyString"}
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {"$ref": "#/$defs/nullableScore"}
+          }
+        },
+        "row_averages": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/nullableScore"}
+        },
+        "column_averages": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/nullableScore"}
+        },
+        "overall_average": {"$ref": "#/$defs/nullableScore"}
+      }
+    },
+    "reportDetailSheet": {
+      "type": "object",
+      "required": [
+        "name",
+        "kind",
+        "score_field",
+        "models",
+        "rows",
+        "model_averages",
+        "overall_average"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"$ref": "#/$defs/nonEmptyString"},
+        "kind": {"const": "detail"},
+        "score_field": {"enum": ["raw", "discrete", "piecewise"]},
+        "models": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/nonEmptyString"}
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "check_id",
+              "question",
+              "values",
+              "average",
+              "group_start"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "check_id": {"$ref": "#/$defs/checkId"},
+              "question": {"$ref": "#/$defs/nonEmptyString"},
+              "values": {
+                "type": "array",
+                "items": {"$ref": "#/$defs/nullableScore"}
+              },
+              "average": {"$ref": "#/$defs/nullableScore"},
+              "group_start": {"type": "boolean"}
+            }
+          }
+        },
+        "model_averages": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/nullableScore"}
+        },
+        "overall_average": {"$ref": "#/$defs/nullableScore"}
+      }
+    },
+    "reportAggregationDocument": {
+      "type": "object",
+      "required": [
+        "contract",
+        "provider_id",
+        "ruleset",
+        "question_contracts",
+        "score_id",
+        "repeat",
+        "metric_order",
+        "model_rows",
+        "question_rows",
+        "key_rows",
+        "all_rows",
+        "per_run",
+        "workbook_sheets"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "contract": {"$ref": "#/$defs/reportAggregationContractHeader"},
+        "provider_id": {"const": "simulation.ei"},
+        "ruleset": {"$ref": "#/$defs/rulesetRunIdentity"},
+        "question_contracts": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/questionContractIdentity"}
+        },
+        "score_id": {"$ref": "#/$defs/nonEmptyString"},
+        "repeat": {"enum": ["latest", "average"]},
+        "metric_order": {"$ref": "#/$defs/metricOrder"},
+        "model_rows": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/reportModelRow"}
+        },
+        "question_rows": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/reportQuestionRow"}
+        },
+        "key_rows": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/reportKeyRow"}
+        },
+        "all_rows": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/reportAllRow"}
+        },
+        "per_run": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/reportRunRow"}
+        },
+        "workbook_sheets": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "items": {
+            "oneOf": [
+              {"$ref": "#/$defs/reportLadderSheet"},
+              {"$ref": "#/$defs/reportDetailSheet"}
+            ]
+          }
+        },
+        "report_id": {"$ref": "#/$defs/nonEmptyString"},
+        "generated_at": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    },
+    "reportManifestDocument": {
+      "type": "object",
+      "required": [
+        "contract",
+        "report_id",
+        "score_id",
+        "repeat",
+        "workbook",
+        "sheet_names",
+        "rendered_sheets",
+        "artifacts"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "contract": {"$ref": "#/$defs/reportManifestContractHeader"},
+        "report_id": {"$ref": "#/$defs/nonEmptyString"},
+        "score_id": {"$ref": "#/$defs/nonEmptyString"},
+        "repeat": {"enum": ["latest", "average"]},
+        "workbook": {"$ref": "#/$defs/nonEmptyString"},
+        "sheet_names": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/nonEmptyString"}
+        },
+        "rendered_sheets": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/nonEmptyString"}
+        },
+        "artifacts": {
+          "type": "object",
+          "required": ["workbook", "aggregation", "selection"],
+          "additionalProperties": false,
+          "properties": {
+            "workbook": {"$ref": "#/$defs/nonEmptyString"},
+            "aggregation": {"$ref": "#/$defs/nonEmptyString"},
+            "selection": {"$ref": "#/$defs/nonEmptyString"}
+          }
+        }
+      }
+    }
+  }
+}

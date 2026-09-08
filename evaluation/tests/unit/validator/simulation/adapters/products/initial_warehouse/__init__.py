@@ -1,0 +1,1 @@
+"""Initial-warehouse artifact contracts."""

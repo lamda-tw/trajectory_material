@@ -1,0 +1,1 @@
+"""Gap artifact contracts."""

@@ -1,0 +1,308 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "AskUserQuestion",
+      "description": "在缺少关键决策信息时向用户提问。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "questions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "header": {
+                  "type": "string"
+                },
+                "options": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "description": {
+                        "type": "string"
+                      },
+                      "label": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "description",
+                      "label"
+                    ],
+                    "additionalProperties": true
+                  }
+                },
+                "question": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "header",
+                "options",
+                "question"
+              ],
+              "additionalProperties": true
+            }
+          }
+        },
+        "required": [
+          "questions"
+        ],
+        "additionalProperties": true
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "Bash",
+      "description": "在工作区内运行 shell 命令并返回输出。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "timeout": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "command",
+          "description"
+        ],
+        "additionalProperties": true
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "Edit",
+      "description": "编辑工作区内已有文件。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "file_path": {
+            "type": "string"
+          },
+          "new_string": {
+            "type": "string"
+          },
+          "old_string": {
+            "type": "string"
+          },
+          "replace_all": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "file_path",
+          "new_string",
+          "old_string"
+        ],
+        "additionalProperties": true
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_goal",
+      "description": "源轨迹中观察到的 get_goal 工具；参数结构由高 O2 轨迹归纳。",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "Glob",
+      "description": "按照 glob 模式查找工作区文件。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "pattern": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "pattern"
+        ],
+        "additionalProperties": true
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "Grep",
+      "description": "在工作区文件中搜索文本。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "integer"
+          },
+          "glob": {
+            "type": "string"
+          },
+          "head_limit": {
+            "type": "integer"
+          },
+          "path": {
+            "type": "string"
+          },
+          "pattern": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "pattern"
+        ],
+        "additionalProperties": true
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "present_files",
+      "description": "向用户呈现已生成的最终文件。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "file_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "file_paths"
+        ],
+        "additionalProperties": true
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "Read",
+      "description": "读取工作区内指定文件的内容。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "file_path": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "offset": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "file_path"
+        ],
+        "additionalProperties": true
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "Skill",
+      "description": "加载并执行与当前任务匹配的工作流技能。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "args": {
+            "type": "string"
+          },
+          "skill": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "args",
+          "skill"
+        ],
+        "additionalProperties": true
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "TodoWrite",
+      "description": "创建或更新当前任务的进度列表。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "todos": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "active_form": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "active_form",
+                "content",
+                "status"
+              ],
+              "additionalProperties": true
+            }
+          }
+        },
+        "required": [
+          "todos"
+        ],
+        "additionalProperties": true
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "Write",
+      "description": "在工作区内写入指定文件。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "file_path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "content",
+          "file_path"
+        ],
+        "additionalProperties": true
+      }
+    }
+  }
+]

@@ -1,0 +1,1 @@
+"""Final-material artifact contracts."""
