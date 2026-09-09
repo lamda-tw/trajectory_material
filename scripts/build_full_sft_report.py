@@ -107,7 +107,7 @@ NCCL world size 为 {metrics['distributed']['world_size']}，训练指标记录�
 
 - 可训练参数：{metrics['model']['trainable_parameters']:,} / {metrics['model']['total_parameters']:,}（{fmt(metrics['model']['trainable_percent'], 4)}%）
 - 优化步：{metrics['training']['global_steps']}
-- 训练阶段用时：{fmt(metrics['training']['duration_seconds'], 2)} 秒
+- 训练 + 全量验证阶段用时：{fmt(metrics['training']['duration_seconds'], 2)} 秒
 - 验证 completion target tokens：{metrics['validation']['completion_target_tokens']}
 - 验证 loss：{fmt(metrics['validation']['loss'], 6)}
 - 验证 perplexity：{fmt(metrics['validation']['perplexity'], 4)}
@@ -180,6 +180,7 @@ bash scripts/run_full_fold05_sft.sh experiments/2026-09-09_full_qwen3-8b_lora_2g
 4. 当前验证只有 teacher-forced completion loss 与非空生成，尚未做 tool-call JSON 结构正确率、工具名准确率、端到端 rollout 或 O2。
 5. 轨迹归一权重字段本次未启用；正式 fold 训练应对是否使用该权重做明确选择。
 6. 下一阶段应在冻结的推理 harness 中执行两个 holdout validation tasks，验证 tool-call 结构、CSV 合同和端到端 O2；之后再决定是否增加 epoch 或跑其余四折。
+7. torchrun 结束时 PyTorch 输出了未显式调用 destroy_process_group() 的资源清理警告；主进程退出码为 0，指标、adapter、报告及后续重载均成功，因此不影响本次结果。后续脚本应增加显式清理以消除该警告。
 
 ## 12. 最终验收清单
 
