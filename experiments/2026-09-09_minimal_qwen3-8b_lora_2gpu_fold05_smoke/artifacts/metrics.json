@@ -1,0 +1,250 @@
+{
+  "status": "SUCCESS",
+  "finished_at_utc": "2026-09-09T01:44:01.976626+00:00",
+  "hostname": "autodl-container-65d14488ce-cd05d5ef",
+  "arguments": {
+    "model": "/root/autodl-tmp/models/Qwen3-8B",
+    "train_json": "/root/autodl-tmp/workspace-tw/experiments/2026-09-09_minimal_qwen3-8b_lora_2gpu_fold05_smoke/data/train.jsonl",
+    "validation_json": "/root/autodl-tmp/workspace-tw/experiments/2026-09-09_minimal_qwen3-8b_lora_2gpu_fold05_smoke/data/validation.jsonl",
+    "output_dir": "/root/autodl-tmp/workspace-tw/experiments/2026-09-09_minimal_qwen3-8b_lora_2gpu_fold05_smoke/artifacts",
+    "max_length": 8192,
+    "epochs": 1,
+    "learning_rate": 0.0002,
+    "weight_decay": 0.0,
+    "lora_r": 8,
+    "lora_alpha": 16,
+    "seed": 20260909
+  },
+  "distributed": {
+    "backend": "nccl",
+    "world_size": 2,
+    "ranks": [
+      {
+        "rank": 0,
+        "local_rank": 0,
+        "device_name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "device_capability": [
+          12,
+          0
+        ],
+        "peak_allocated_gib": 29.100680351257324,
+        "peak_reserved_gib": 39.955078125
+      },
+      {
+        "rank": 1,
+        "local_rank": 1,
+        "device_name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "device_capability": [
+          12,
+          0
+        ],
+        "peak_allocated_gib": 27.966245651245117,
+        "peak_reserved_gib": 46.123046875
+      }
+    ]
+  },
+  "model": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "dtype": "bfloat16",
+    "attention": "sdpa",
+    "method": "LoRA",
+    "trainable_parameters": 21823488,
+    "total_parameters": 8212558848,
+    "trainable_percent": 0.2657331095449582
+  },
+  "data": {
+    "train": {
+      "count": 8,
+      "samples": [
+        {
+          "id": "EI-56TESTPK0006-easy-v1.2::assistant-0001",
+          "tokens": 4140,
+          "prompt_tokens": 4067,
+          "completion_tokens": 73,
+          "original_tokens": 4140,
+          "truncated_prompt_tokens": 0
+        },
+        {
+          "id": "EI-56TESTPK0007-medium-v1.2::assistant-0001",
+          "tokens": 5155,
+          "prompt_tokens": 4796,
+          "completion_tokens": 359,
+          "original_tokens": 5155,
+          "truncated_prompt_tokens": 0
+        },
+        {
+          "id": "EI-56TESTPK0008-easy-v1.2::assistant-0001",
+          "tokens": 4179,
+          "prompt_tokens": 4067,
+          "completion_tokens": 112,
+          "original_tokens": 4179,
+          "truncated_prompt_tokens": 0
+        },
+        {
+          "id": "EI-56TESTPK0008-medium-v1.2::assistant-0001",
+          "tokens": 5157,
+          "prompt_tokens": 4796,
+          "completion_tokens": 361,
+          "original_tokens": 5157,
+          "truncated_prompt_tokens": 0
+        },
+        {
+          "id": "EI-56TESTPK0009-medium-v1.2::assistant-0001",
+          "tokens": 5173,
+          "prompt_tokens": 4817,
+          "completion_tokens": 356,
+          "original_tokens": 5173,
+          "truncated_prompt_tokens": 0
+        },
+        {
+          "id": "EI-56TESTPK0006-easy-v1.2::assistant-0002",
+          "tokens": 6193,
+          "prompt_tokens": 5725,
+          "completion_tokens": 468,
+          "original_tokens": 6193,
+          "truncated_prompt_tokens": 0
+        },
+        {
+          "id": "EI-56TESTPK0007-medium-v1.2::assistant-0002",
+          "tokens": 6761,
+          "prompt_tokens": 6591,
+          "completion_tokens": 170,
+          "original_tokens": 6761,
+          "truncated_prompt_tokens": 0
+        },
+        {
+          "id": "EI-56TESTPK0008-easy-v1.2::assistant-0002",
+          "tokens": 6198,
+          "prompt_tokens": 5823,
+          "completion_tokens": 375,
+          "original_tokens": 6198,
+          "truncated_prompt_tokens": 0
+        }
+      ],
+      "tokens": {
+        "min": 4140,
+        "max": 6761,
+        "mean": 5369.5
+      },
+      "prompt_tokens": {
+        "min": 4067,
+        "max": 6591,
+        "mean": 5085.25
+      },
+      "completion_tokens": {
+        "min": 73,
+        "max": 468,
+        "mean": 284.25
+      },
+      "original_tokens": {
+        "min": 4140,
+        "max": 6761,
+        "mean": 5369.5
+      },
+      "truncated_samples": 0,
+      "truncated_prompt_tokens_total": 0
+    },
+    "validation": {
+      "count": 4,
+      "samples": [
+        {
+          "id": "EI-56TESTPK0010-easy-v1.2::assistant-0001",
+          "tokens": 4171,
+          "prompt_tokens": 4108,
+          "completion_tokens": 63,
+          "original_tokens": 4171,
+          "truncated_prompt_tokens": 0
+        },
+        {
+          "id": "EI-56TESTPK0010-medium-v1.2::assistant-0001",
+          "tokens": 4877,
+          "prompt_tokens": 4808,
+          "completion_tokens": 69,
+          "original_tokens": 4877,
+          "truncated_prompt_tokens": 0
+        },
+        {
+          "id": "EI-56TESTPK0010-easy-v1.2::assistant-0002",
+          "tokens": 5585,
+          "prompt_tokens": 5459,
+          "completion_tokens": 126,
+          "original_tokens": 5585,
+          "truncated_prompt_tokens": 0
+        },
+        {
+          "id": "EI-56TESTPK0010-medium-v1.2::assistant-0002",
+          "tokens": 6301,
+          "prompt_tokens": 6171,
+          "completion_tokens": 130,
+          "original_tokens": 6301,
+          "truncated_prompt_tokens": 0
+        }
+      ],
+      "tokens": {
+        "min": 4171,
+        "max": 6301,
+        "mean": 5233.5
+      },
+      "prompt_tokens": {
+        "min": 4108,
+        "max": 6171,
+        "mean": 5136.5
+      },
+      "completion_tokens": {
+        "min": 63,
+        "max": 130,
+        "mean": 97.0
+      },
+      "original_tokens": {
+        "min": 4171,
+        "max": 6301,
+        "mean": 5233.5
+      },
+      "truncated_samples": 0,
+      "truncated_prompt_tokens_total": 0
+    }
+  },
+  "training": {
+    "optimizer": "AdamW",
+    "global_steps": 4,
+    "duration_seconds": 13.45812201499939,
+    "history": [
+      {
+        "epoch": 1,
+        "step": 1,
+        "train_loss": 1.3887534141540527,
+        "elapsed_seconds": 3.0259017944335938
+      },
+      {
+        "epoch": 1,
+        "step": 2,
+        "train_loss": 1.3564432859420776,
+        "elapsed_seconds": 6.605055809020996
+      },
+      {
+        "epoch": 1,
+        "step": 3,
+        "train_loss": 1.0753713846206665,
+        "elapsed_seconds": 8.913280725479126
+      },
+      {
+        "epoch": 1,
+        "step": 4,
+        "train_loss": 0.9191020727157593,
+        "elapsed_seconds": 12.014997720718384
+      }
+    ]
+  },
+  "validation": {
+    "loss": 1.284304531579165,
+    "perplexity": 3.612154943763439,
+    "completion_target_tokens": 388
+  },
+  "artifacts": {
+    "adapter_dir": "/root/autodl-tmp/workspace-tw/experiments/2026-09-09_minimal_qwen3-8b_lora_2gpu_fold05_smoke/artifacts/adapter"
+  },
+  "software": {
+    "torch": "2.8.0+cu128",
+    "cuda_runtime": "12.8"
+  }
+}
