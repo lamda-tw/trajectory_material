@@ -1,0 +1,13 @@
+diff --git a/src/marshmallow/schema.py b/src/marshmallow/schema.py
+index 085c509..0de6672 100644
+--- a/src/marshmallow/schema.py
++++ b/src/marshmallow/schema.py
+@@ -504,7 +504,7 @@ class BaseSchema(base.SchemaABC):
+         if not errors:
+             if update_fields:
+                 obj_type = type(processed_obj)
+-                if obj_type not in self._types_seen:
++                if obj_type not in self._types_seen or not many:
+                     self._update_fields(processed_obj, many=many)
+                     if not isinstance(processed_obj, Mapping):
+                         self._types_seen.add(obj_type)

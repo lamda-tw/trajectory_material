@@ -1,0 +1,5 @@
+.conda-training/bin/python experiments/2026-09-10_qwen3-8b_swebench_lite_zeroshot_smoke/scripts/prepare_worktrees.py
+
+env HF_HOME=experiments/2026-09-10_qwen3-8b_swebench_lite_zeroshot_smoke/cache/huggingface XDG_CACHE_HOME=experiments/2026-09-10_qwen3-8b_swebench_lite_zeroshot_smoke/cache/xdg HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 TOKENIZERS_PARALLELISM=false CUDA_VISIBLE_DEVICES=0 PYTHONDONTWRITEBYTECODE=1 .conda-training/bin/python experiments/2026-09-10_qwen3-8b_swebench_lite_zeroshot_smoke/scripts/run_inference.py
+
+env PYTHONPATH=/root/autodl-tmp/data/swebench/.tools/python PYTHONDONTWRITEBYTECODE=1 XDG_CACHE_HOME=experiments/2026-09-10_qwen3-8b_swebench_lite_zeroshot_smoke/cache/xdg .conda-training/bin/python experiments/2026-09-10_qwen3-8b_swebench_lite_zeroshot_smoke/scripts/run_checks.py
