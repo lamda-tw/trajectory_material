@@ -1,0 +1,23 @@
+{
+  "authoritative": false,
+  "marshmallow-code__marshmallow-1343": {
+    "kind": "issue_reproduction_with_process-local_python312_compatibility_aliases",
+    "result": "FAIL",
+    "observed_exception": "TypeError: 'NoneType' object is not subscriptable",
+    "interpretation": "The model patch did not fix the reported failure."
+  },
+  "marshmallow-code__marshmallow-1359": {
+    "kind": "strict_patch_audit",
+    "result": "NO_EFFECT",
+    "interpretation": "The generated minus and plus lines were identical; final model_patch is empty."
+  },
+  "pvlib__pvlib-python-1072": {
+    "kind": "format_only_diagnostic",
+    "strict_result": "INVALID_PATCH",
+    "git_apply_recount_check": "PASS",
+    "git_apply_recount_application": "PASS",
+    "functional_reproduction": "NOT_RUN",
+    "functional_reproduction_blocker": "pandas is not installed in .conda-training",
+    "interpretation": "The raw model output had incorrect hunk counts. The derived diagnostic patch is excluded from predictions.jsonl."
+  }
+}

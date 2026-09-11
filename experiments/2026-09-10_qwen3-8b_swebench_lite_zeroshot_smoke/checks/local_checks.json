@@ -1,0 +1,87 @@
+{
+  "finished_at_utc": "2026-09-10T02:55:33.151965+00:00",
+  "authoritative": false,
+  "reason": "Official per-instance Docker images/harness are unavailable on this host.",
+  "results": [
+    {
+      "instance_id": "marshmallow-code__marshmallow-1343",
+      "authoritative": false,
+      "environment": "shared host Python 3.12, not the official SWE-bench Docker image",
+      "model_patch_nonempty": true,
+      "test_patch_applied": true,
+      "fail_to_pass": {
+        "command": [
+          "/root/autodl-tmp/workspace-tw/.conda-training/bin/python",
+          "-m",
+          "pytest",
+          "-q",
+          "tests/test_marshalling.py::TestUnmarshaller::test_deserialize_wrong_nested_type_with_validates_method"
+        ],
+        "started_at_utc": "2026-09-10T02:55:32.991161+00:00",
+        "exit_code": 1,
+        "timed_out": false,
+        "output_log": "logs/marshmallow-code__marshmallow-1343.fail_to_pass.log"
+      },
+      "pass_to_pass": {
+        "command": [
+          "/root/autodl-tmp/workspace-tw/.conda-training/bin/python",
+          "-m",
+          "pytest",
+          "-q",
+          "tests/test_marshalling.py::test_missing_is_falsy",
+          "tests/test_marshalling.py::TestMarshaller::test_prefix",
+          "tests/test_marshalling.py::TestMarshaller::test_marshalling_generator",
+          "tests/test_marshalling.py::TestMarshaller::test_default_to_missing",
+          "tests/test_marshalling.py::TestMarshaller::test_serialize_fields_with_load_only_param",
+          "tests/test_marshalling.py::TestMarshaller::test_missing_data_are_skipped",
+          "tests/test_marshalling.py::TestMarshaller::test_serialize_with_load_only_doesnt_validate",
+          "tests/test_marshalling.py::TestMarshaller::test_serialize_fields_with_dump_to_param",
+          "tests/test_marshalling.py::TestMarshaller::test_serialize_fields_with_dump_to_and_prefix_params",
+          "tests/test_marshalling.py::TestMarshaller::test_stores_indices_of_errors_when_many_equals_true",
+          "tests/test_marshalling.py::TestMarshaller::test_doesnt_store_errors_when_index_errors_equals_false",
+          "tests/test_marshalling.py::TestUnmarshaller::test_extra_data_is_ignored",
+          "tests/test_marshalling.py::TestUnmarshaller::test_stores_errors",
+          "tests/test_marshalling.py::TestUnmarshaller::test_stores_indices_of_errors_when_many_equals_true",
+          "tests/test_marshalling.py::TestUnmarshaller::test_doesnt_store_errors_when_index_errors_equals_false",
+          "tests/test_marshalling.py::TestUnmarshaller::test_deserialize",
+          "tests/test_marshalling.py::TestUnmarshaller::test_extra_fields",
+          "tests/test_marshalling.py::TestUnmarshaller::test_deserialize_many",
+          "tests/test_marshalling.py::TestUnmarshaller::test_deserialize_stores_errors",
+          "tests/test_marshalling.py::TestUnmarshaller::test_deserialize_fields_with_attribute_param",
+          "tests/test_marshalling.py::TestUnmarshaller::test_deserialize_fields_with_load_from_param",
+          "tests/test_marshalling.py::TestUnmarshaller::test_deserialize_fields_with_dump_only_param",
+          "tests/test_marshalling.py::TestUnmarshaller::test_deserialize_wrong_type_root_data",
+          "tests/test_marshalling.py::TestUnmarshaller::test_deserialize_wrong_type_nested_data"
+        ],
+        "started_at_utc": "2026-09-10T02:55:33.081175+00:00",
+        "exit_code": 1,
+        "timed_out": false,
+        "output_log": "logs/marshmallow-code__marshmallow-1343.pass_to_pass.log"
+      },
+      "smoke_resolved": false,
+      "note": "Local checks failed or hit an environment incompatibility; inspect the logs."
+    },
+    {
+      "instance_id": "marshmallow-code__marshmallow-1359",
+      "authoritative": false,
+      "environment": "shared host Python 3.12, not the official SWE-bench Docker image",
+      "model_patch_nonempty": false,
+      "test_patch_applied": false,
+      "fail_to_pass": null,
+      "pass_to_pass": null,
+      "smoke_resolved": false,
+      "note": "No applicable model patch was produced; tests skipped."
+    },
+    {
+      "instance_id": "pvlib__pvlib-python-1072",
+      "authoritative": false,
+      "environment": "shared host Python 3.12, not the official SWE-bench Docker image",
+      "model_patch_nonempty": false,
+      "test_patch_applied": false,
+      "fail_to_pass": null,
+      "pass_to_pass": null,
+      "smoke_resolved": false,
+      "note": "No applicable model patch was produced; tests skipped."
+    }
+  ]
+}

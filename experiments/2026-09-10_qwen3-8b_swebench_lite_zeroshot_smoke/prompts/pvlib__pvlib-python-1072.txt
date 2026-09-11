@@ -1,0 +1,2780 @@
+<|im_start|>system
+You are a software engineer fixing a real bug in a checked-out Git repository.
+
+You are given the issue and a deterministic selection of repository files. Diagnose the root cause and produce the smallest complete source-code patch that fixes the issue while preserving unrelated behavior.
+
+Rules:
+1. Do not modify tests, generated files, dependency locks, or documentation.
+2. Do not invent files or APIs that are not supported by the supplied code.
+3. Do not merely explain the solution: return a patch.
+4. Return only a valid unified git diff beginning with `diff --git`.
+5. Do not wrap the diff in Markdown fences and do not add prose before or after it.
+<|im_end|>
+<|im_start|>user
+Resolve this repository issue.
+
+Instance ID: pvlib__pvlib-python-1072
+Repository: pvlib/pvlib-python
+Base commit: 04a523fafbd61bc2e49420963b84ed8e2bd1b3cf
+
+<issue>
+temperature.fuentes errors when given tz-aware inputs on pandas>=1.0.0
+**Describe the bug**
+When the weather timeseries inputs to `temperature.fuentes` have tz-aware index, an internal call to `np.diff(index)` returns an array of `Timedelta` objects instead of an array of nanosecond ints, throwing an error immediately after.  The error only happens when using pandas>=1.0.0; using 0.25.3 runs successfully, but emits the warning:
+
+```
+  /home/kevin/anaconda3/envs/pvlib-dev/lib/python3.7/site-packages/numpy/lib/function_base.py:1243: FutureWarning: Converting timezone-aware DatetimeArray to timezone-naive ndarray with 'datetime64[ns]' dtype. In the future, this will return an ndarray with 'object' dtype where each element is a 'pandas.Timestamp' with the correct 'tz'.
+  	To accept the future behavior, pass 'dtype=object'.
+  	To keep the old behavior, pass 'dtype="datetime64[ns]"'.
+    a = asanyarray(a)
+```
+
+**To Reproduce**
+```python
+In [1]: import pvlib
+   ...: import pandas as pd
+   ...: 
+   ...: index_naive = pd.date_range('2019-01-01', freq='h', periods=3)
+   ...: 
+   ...: kwargs = {
+   ...:     'poa_global': pd.Series(1000, index_naive),
+   ...:     'temp_air': pd.Series(20, index_naive),
+   ...:     'wind_speed': pd.Series(1, index_naive),
+   ...:     'noct_installed': 45
+   ...: }
+   ...: 
+
+In [2]: print(pvlib.temperature.fuentes(**kwargs))
+2019-01-01 00:00:00    47.85
+2019-01-01 01:00:00    50.85
+2019-01-01 02:00:00    50.85
+Freq: H, Name: tmod, dtype: float64
+
+In [3]: kwargs['poa_global'].index = index_naive.tz_localize('UTC')
+   ...: print(pvlib.temperature.fuentes(**kwargs))
+   ...: 
+Traceback (most recent call last):
+
+  File "<ipython-input-3-ff99badadc91>", line 2, in <module>
+    print(pvlib.temperature.fuentes(**kwargs))
+
+  File "/home/kevin/anaconda3/lib/python3.7/site-packages/pvlib/temperature.py", line 602, in fuentes
+    timedelta_hours = np.diff(poa_global.index).astype(float) / 1e9 / 60 / 60
+
+TypeError: float() argument must be a string or a number, not 'Timedelta'
+```
+
+**Expected behavior**
+`temperature.fuentes` should work with both tz-naive and tz-aware inputs.
+
+
+**Versions:**
+ - ``pvlib.__version__``: 0.8.0
+ - ``pandas.__version__``: 1.0.0+
+ - python: 3.7.4 (default, Aug 13 2019, 20:35:49) \n[GCC 7.3.0]
+
+
+
+</issue>
+
+The following files were selected from the repository at the base commit:
+
+<file path="pvlib/temperature.py">
+"""
+The ``temperature`` module contains functions for modeling temperature of
+PV modules and cells.
+"""
+
+import numpy as np
+import pandas as pd
+from pvlib.tools import sind
+
+TEMPERATURE_MODEL_PARAMETERS = {
+    'sapm': {
+        'open_rack_glass_glass': {'a': -3.47, 'b': -.0594, 'deltaT': 3},
+        'close_mount_glass_glass': {'a': -2.98, 'b': -.0471, 'deltaT': 1},
+        'open_rack_glass_polymer': {'a': -3.56, 'b': -.0750, 'deltaT': 3},
+        'insulated_back_glass_polymer': {'a': -2.81, 'b': -.0455, 'deltaT': 0},
+    },
+    'pvsyst': {'freestanding': {'u_c': 29.0, 'u_v': 0},
+               'insulated': {'u_c': 15.0, 'u_v': 0}}
+}
+"""Dictionary of temperature parameters organized by model.
+
+There are keys for each model at the top level. Currently there are two models,
+``'sapm'`` for the Sandia Array Performance Model, and ``'pvsyst'``. Each model
+has a dictionary of configurations; a value is itself a dictionary containing
+model parameters. Retrieve parameters by indexing the model and configuration
+by name. Note: the keys are lower-cased and case sensitive.
+
+Example
+-------
+Retrieve the open rack glass-polymer configuration for SAPM::
+
+    from pvlib.temperature import TEMPERATURE_MODEL_PARAMETERS
+    temperature_model_parameters = (
+        TEMPERATURE_MODEL_PARAMETERS['sapm']['open_rack_glass_polymer'])
+    # {'a': -3.56, 'b': -0.075, 'deltaT': 3}
+"""
+
+
+def _temperature_model_params(model, parameter_set):
+    try:
+        params = TEMPERATURE_MODEL_PARAMETERS[model]
+        return params[parameter_set]
+    except KeyError:
+        msg = ('{} is not a named set of parameters for the {} cell'
+               ' temperature model.'
+               ' See pvlib.temperature.TEMPERATURE_MODEL_PARAMETERS'
+               ' for names'.format(parameter_set, model))
+        raise KeyError(msg)
+
+
+def sapm_cell(poa_global, temp_air, wind_speed, a, b, deltaT,
+              irrad_ref=1000):
+    r'''
+    Calculate cell temperature per the Sandia Array Performance Model.
+
+    See [1]_ for details on the Sandia Array Performance Model.
+
+    Parameters
+    ----------
+    poa_global : numeric
+        Total incident irradiance [W/m^2].
+
+    temp_air : numeric
+        Ambient dry bulb temperature [C].
+
+    wind_speed : numeric
+        Wind speed at a height of 10 meters [m/s].
+
+    a : float
+        Parameter :math:`a` in :eq:`sapm1`.
+
+    b : float
+        Parameter :math:`b` in :eq:`sapm1`.
+
+    deltaT : float
+        Parameter :math:`\Delta T` in :eq:`sapm2` [C].
+
+    irrad_ref : float, default 1000
+        Reference irradiance, parameter :math:`E_{0}` in
+        :eq:`sapm2` [W/m^2].
+
+    Returns
+    -------
+    numeric, values in degrees C.
+
+    Notes
+    -----
+    The model for cell temperature :math:`T_{C}` is given by a pair of
+    equations (Eq. 11 and 12 in [1]_).
+
+    .. math::
+       :label: sapm1
+
+       T_{m} = E \times \exp (a + b \times WS) + T_{a}
+
+    .. math::
+       :label: sapm2
+
+       T_{C} = T_{m} + \frac{E}{E_{0}} \Delta T
+
+    The module back surface temperature :math:`T_{m}` is implemented in
+    :py:func:`~pvlib.temperature.sapm_module`.
+
+    Inputs to the model are plane-of-array irradiance :math:`E` (W/m2) and
+    ambient air temperature :math:`T_{a}` (C). Model parameters depend both on
+    the module construction and its mounting. Parameter sets are provided in
+    [1]_ for representative modules and mounting, and are coded for convenience
+    in :data:`~pvlib.temperature.TEMPERATURE_MODEL_PARAMETERS`.
+
+    +---------------+----------------+-------+---------+---------------------+
+    | Module        | Mounting       | a     | b       | :math:`\Delta T [C]`|
+    +===============+================+=======+=========+=====================+
+    | glass/glass   | open rack      | -3.47 | -0.0594 | 3                   |
+    +---------------+----------------+-------+---------+---------------------+
+    | glass/glass   | close roof     | -2.98 | -0.0471 | 1                   |
+    +---------------+----------------+-------+---------+---------------------+
+    | glass/polymer | open rack      | -3.56 | -0.075  | 3                   |
+    +---------------+----------------+-------+---------+---------------------+
+    | glass/polymer | insulated back | -2.81 | -0.0455 | 0                   |
+    +---------------+----------------+-------+---------+---------------------+
+
+    References
+    ----------
+    .. [1] King, D. et al, 2004, "Sandia Photovoltaic Array Performance
+       Model", SAND Report 3535, Sandia National Laboratories, Albuquerque,
+       NM.
+
+    See also
+    --------
+    sapm_cell_from_module
+    sapm_module
+
+    Examples
+    --------
+    >>> from pvlib.temperature import sapm_cell, TEMPERATURE_MODEL_PARAMETERS
+    >>> params = TEMPERATURE_MODEL_PARAMETERS['sapm']['open_rack_glass_glass']
+    >>> sapm_cell(1000, 10, 0, **params)
+    44.11703066106086
+    '''
+    module_temperature = sapm_module(poa_global, temp_air, wind_speed,
+                                     a, b)
+    return sapm_cell_from_module(module_temperature, poa_global, deltaT,
+                                 irrad_ref)
+
+
+def sapm_module(poa_global, temp_air, wind_speed, a, b):
+    r'''
+    Calculate module back surface temperature per the Sandia Array
+    Performance Model.
+
+    See [1]_ for details on the Sandia Array Performance Model.
+
+    Parameters
+    ----------
+    poa_global : numeric
+        Total incident irradiance [W/m^2].
+
+    temp_air : numeric
+        Ambient dry bulb temperature [C].
+
+    wind_speed : numeric
+        Wind speed at a height of 10 meters [m/s].
+
+    a : float
+        Parameter :math:`a` in :eq:`sapm1mod`.
+
+    b : float
+        Parameter :math:`b` in :eq:`sapm1mod`.
+
+    Returns
+    -------
+    numeric, values in degrees C.
+
+    Notes
+    -----
+    The model for module temperature :math:`T_{m}` is given by Eq. 11 in [1]_.
+
+    .. math::
+       :label: sapm1mod
+
+       T_{m} = E \times \exp (a + b \times WS) + T_{a}
+
+    Inputs to the model are plane-of-array irradiance :math:`E` (W/m2) and
+    ambient air temperature :math:`T_{a}` (C). Model outputs are surface
+    temperature at the back of the module :math:`T_{m}` and cell temperature
+    :math:`T_{C}`. Model parameters depend both on the module construction and
+    its mounting. Parameter sets are provided in [1]_ for representative
+    modules and mounting, and are coded for convenience in
+    :data:`~pvlib.temperature.TEMPERATURE_MODEL_PARAMETERS`.
+
+    +---------------+----------------+-------+---------+---------------------+
+    | Module        | Mounting       | a     | b       | :math:`\Delta T [C]`|
+    +===============+================+=======+=========+=====================+
+    | glass/glass   | open rack      | -3.47 | -0.0594 | 3                   |
+    +---------------+----------------+-------+---------+---------------------+
+    | glass/glass   | close roof     | -2.98 | -0.0471 | 1                   |
+    +---------------+----------------+-------+---------+---------------------+
+    | glass/polymer | open rack      | -3.56 | -0.075  | 3                   |
+    +---------------+----------------+-------+---------+---------------------+
+    | glass/polymer | insulated back | -2.81 | -0.0455 | 0                   |
+    +---------------+----------------+-------+---------+---------------------+
+
+    References
+    ----------
+    .. [1] King, D. et al, 2004, "Sandia Photovoltaic Array Performance
+       Model", SAND Report 3535, Sandia National Laboratories, Albuquerque,
+       NM.
+
+    See also
+    --------
+    sapm_cell
+    sapm_cell_from_module
+    '''
+    return poa_global * np.exp(a + b * wind_speed) + temp_air
+
+
+def sapm_cell_from_module(module_temperature, poa_global, deltaT,
+                          irrad_ref=1000):
+    r'''
+    Calculate cell temperature from module temperature using the Sandia Array
+    Performance Model.
+
+    See [1]_ for details on the Sandia Array Performance Model.
+
+    Parameters
+    ----------
+    module_temperature : numeric
+        Temperature of back of module surface [C].
+
+    poa_global : numeric
+        Total incident irradiance [W/m^2].
+
+    deltaT : float
+        Parameter :math:`\Delta T` in :eq:`sapm2_cell_from_mod` [C].
+
+    irrad_ref : float, default 1000
+        Reference irradiance, parameter :math:`E_{0}` in
+        :eq:`sapm2` [W/m^2].
+
+    Returns
+    -------
+    numeric, values in degrees C.
+
+    Notes
+    -----
+    The model for cell temperature :math:`T_{C}` is given by Eq. 12 in [1]_.
+
+    .. math::
+       :label: sapm2_cell_from_mod
+
+       T_{C} = T_{m} + \frac{E}{E_{0}} \Delta T
+
+    The module back surface temperature :math:`T_{m}` is implemented in
+    :py:func:`~pvlib.temperature.sapm_module`.
+
+    Model parameters depend both on the module construction and its mounting.
+    Parameter sets are provided in [1]_ for representative modules and
+    mounting, and are coded for convenience in
+    :data:`~pvlib.temperature.TEMPERATURE_MODEL_PARAMETERS`.
+
+    +---------------+----------------+-------+---------+---------------------+
+    | Module        | Mounting       | a     | b       | :math:`\Delta T [C]`|
+    +===============+================+=======+=========+=====================+
+    | glass/glass   | open rack      | -3.47 | -0.0594 | 3                   |
+    +---------------+----------------+-------+---------+---------------------+
+    | glass/glass   | close roof     | -2.98 | -0.0471 | 1                   |
+    +---------------+----------------+-------+---------+---------------------+
+    | glass/polymer | open rack      | -3.56 | -0.075  | 3                   |
+    +---------------+----------------+-------+---------+---------------------+
+    | glass/polymer | insulated back | -2.81 | -0.0455 | 0                   |
+    +---------------+----------------+-------+---------+---------------------+
+
+    References
+    ----------
+    .. [1] King, D. et al, 2004, "Sandia Photovoltaic Array Performance
+       Model", SAND Report 3535, Sandia National Laboratories, Albuquerque,
+       NM.
+
+    See also
+    --------
+    sapm_cell
+    sapm_module
+    '''
+    return module_temperature + (poa_global / irrad_ref) * deltaT
+
+
+def pvsyst_cell(poa_global, temp_air, wind_speed=1.0, u_c=29.0, u_v=0.0,
+                eta_m=0.1, alpha_absorption=0.9):
+    r"""
+    Calculate cell temperature using an empirical heat loss factor model
+    as implemented in PVsyst.
+
+    Parameters
+    ----------
+    poa_global : numeric
+        Total incident irradiance [W/m^2].
+
+    temp_air : numeric
+        Ambient dry bulb temperature [C].
+
+    wind_speed : numeric, default 1.0
+        Wind speed in m/s measured at the same height for which the wind loss
+        factor was determined.  The default value 1.0 m/2 is the wind
+        speed at module height used to determine NOCT. [m/s]
+
+    u_c : float, default 29.0
+        Combined heat loss factor coefficient. The default value is
+        representative of freestanding modules with the rear surfaces exposed
+        to open air (e.g., rack mounted). Parameter :math:`U_{c}` in
+        :eq:`pvsyst`.
+        :math:`\left[\frac{\text{W}/{\text{m}^2}}{\text{C}}\right]`
+
+    u_v : float, default 0.0
+        Combined heat loss factor influenced by wind. Parameter :math:`U_{v}`
+        in :eq:`pvsyst`.
+        :math:`\left[ \frac{\text{W}/\text{m}^2}{\text{C}\ \left( \text{m/s} \right)} \right]`
+
+    eta_m : numeric, default 0.1
+        Module external efficiency as a fraction, i.e., DC power / poa_global.
+        Parameter :math:`\eta_{m}` in :eq:`pvsyst`.
+
+    alpha_absorption : numeric, default 0.9
+        Absorption coefficient. Parameter :math:`\alpha` in :eq:`pvsyst`.
+
+    Returns
+    -------
+    numeric, values in degrees Celsius
+
+    Notes
+    -----
+    The Pvsyst model for cell temperature :math:`T_{C}` is given by
+
+    .. math::
+       :label: pvsyst
+
+        T_{C} = T_{a} + \frac{\alpha E (1 - \eta_{m})}{U_{c} + U_{v} \times WS}
+
+    Inputs to the model are plane-of-array irradiance :math:`E` (W/m2), ambient
+    air temperature :math:`T_{a}` (C) and wind speed :math:`WS` (m/s). Model
+    output is cell temperature :math:`T_{C}`. Model parameters depend both on
+    the module construction and its mounting. Parameters are provided in
+    [1]_ for open (freestanding) and close (insulated) mounting configurations,
+    , and are coded for convenience in
+    :data:`~pvlib.temperature.TEMPERATURE_MODEL_PARAMETERS`. The heat loss
+    factors provided represent the combined effect of convection, radiation and
+    conduction, and their values are experimentally determined.
+
+    +--------------+---------------+---------------+
+    | Mounting     | :math:`U_{c}` | :math:`U_{v}` |
+    +==============+===============+===============+
+    | freestanding | 29.0          | 0.0           |
+    +--------------+---------------+---------------+
+    | insulated    | 15.0          | 0.0           |
+    +--------------+---------------+---------------+
+
+    References
+    ----------
+    .. [1] "PVsyst 6 Help", Files.pvsyst.com, 2018. [Online]. Available:
+       http://files.pvsyst.com/help/index.html. [Accessed: 10- Dec- 2018].
+
+    .. [2] Faiman, D. (2008). "Assessing the outdoor operating temperature of
+       photovoltaic modules." Progress in Photovoltaics 16(4): 307-315.
+
+    Examples
+    --------
+    >>> from pvlib.temperature import pvsyst_cell, TEMPERATURE_MODEL_PARAMETERS
+    >>> params = TEMPERATURE_MODEL_PARAMETERS['pvsyst']['freestanding']
+    >>> pvsyst_cell(1000, 10, **params)
+    37.93103448275862
+    """
+
+    total_loss_factor = u_c + u_v * wind_speed
+    heat_input = poa_global * alpha_absorption * (1 - eta_m)
+    temp_difference = heat_input / total_loss_factor
+    return temp_air + temp_difference
+
+
+def faiman(poa_global, temp_air, wind_speed=1.0, u0=25.0, u1=6.84):
+    r'''
+    Calculate cell or module temperature using the Faiman model.  The Faiman
+    model uses an empirical heat loss factor model [1]_ and is adopted in the
+    IEC 61853 standards [2]_ and [3]_.
+
+    Usage of this model in the IEC 61853 standard does not distinguish
+    between cell and module temperature.
+
+    Parameters
+    ----------
+    poa_global : numeric
+        Total incident irradiance [W/m^2].
+
+    temp_air : numeric
+        Ambient dry bulb temperature [C].
+
+    wind_speed : numeric, default 1.0
+        Wind speed in m/s measured at the same height for which the wind loss
+        factor was determined.  The default value 1.0 m/s is the wind
+        speed at module height used to determine NOCT. [m/s]
+
+    u0 : numeric, default 25.0
+        Combined heat loss factor coefficient. The default value is one
+        determined by Faiman for 7 silicon modules.
+        :math:`\left[\frac{\text{W}/{\text{m}^2}}{\text{C}}\right]`
+
+    u1 : numeric, default 6.84
+        Combined heat loss factor influenced by wind. The default value is one
+        determined by Faiman for 7 silicon modules.
+        :math:`\left[ \frac{\text{W}/\text{m}^2}{\text{C}\ \left( \text{m/s} \right)} \right]`
+
+    Returns
+    -------
+    numeric, values in degrees Celsius
+
+    Notes
+    -----
+    All arguments may be scalars or vectors. If multiple arguments
+    are vectors they must be the same length.
+
+    References
+    ----------
+    .. [1] Faiman, D. (2008). "Assessing the outdoor operating temperature of
+       photovoltaic modules." Progress in Photovoltaics 16(4): 307-315.
+
+    .. [2] "IEC 61853-2 Photovoltaic (PV) module performance testing and energy
+       rating - Part 2: Spectral responsivity, incidence angle and module
+       operating temperature measurements". IEC, Geneva, 2018.
+
+    .. [3] "IEC 61853-3 Photovoltaic (PV) module performance testing and energy
+       rating - Part 3: Energy rating of PV modules". IEC, Geneva, 2018.
+
+    '''
+    # Contributed by Anton Driesse (@adriesse), PV Performance Labs. Dec., 2019
+
+    # The following lines may seem odd since u0 & u1 are probably scalar,
+    # but it serves an indirect and easy way of allowing lists and
+    # tuples for the other function arguments.
+    u0 = np.asanyarray(u0)
+    u1 = np.asanyarray(u1)
+
+    total_loss_factor = u0 + u1 * wind_speed
+    heat_input = poa_global
+    temp_difference = heat_input / total_loss_factor
+    return temp_air + temp_difference
+
+
+def _fuentes_hconv(tave, windmod, tinoct, temp_delta, xlen, tilt,
+                   check_reynold):
+    # Calculate the convective coefficient as in Fuentes 1987 -- a mixture of
+    # free, laminar, and turbulent convection.
+    densair = 0.003484 * 101325.0 / tave  # density
+    visair = 0.24237e-6 * tave**0.76 / densair  # kinematic viscosity
+    condair = 2.1695e-4 * tave**0.84  # thermal conductivity
+    reynold = windmod * xlen / visair
+    # the boundary between laminar and turbulent is modeled as an abrupt
+    # change at Re = 1.2e5:
+    if check_reynold and reynold > 1.2e5:
+        # turbulent convection
+        hforce = 0.0282 / reynold**0.2 * densair * windmod * 1007 / 0.71**0.4
+    else:
+        # laminar convection
+        hforce = 0.8600 / reynold**0.5 * densair * windmod * 1007 / 0.71**0.67
+    # free convection via Grashof number
+    # NB: Fuentes hardwires sind(tilt) as 0.5 for tilt=30
+    grashof = 9.8 / tave * temp_delta * xlen**3 / visair**2 * sind(tilt)
+    # product of Nusselt number and (k/l)
+    hfree = 0.21 * (grashof * 0.71)**0.32 * condair / xlen
+    # combine free and forced components
+    hconv = (hfree**3 + hforce**3)**(1/3)
+    return hconv
+
+
+def _hydraulic_diameter(width, height):
+    # calculate the hydraulic diameter of a rectangle
+    return 2 * (width * height) / (width + height)
+
+
+def fuentes(poa_global, temp_air, wind_speed, noct_installed, module_height=5,
+            wind_height=9.144, emissivity=0.84, absorption=0.83,
+            surface_tilt=30, module_width=0.31579, module_length=1.2):
+    """
+    Calculate cell or module temperature using the Fuentes model.
+
+    The Fuentes model is a first-principles heat transfer energy balance
+    model [1]_ that is used in PVWatts for cell temperature modeling [2]_.
+
+    Parameters
+    ----------
+    poa_global : pandas Series
+        Total incident irradiance [W/m^2]
+
+    temp_air : pandas Series
+        Ambient dry bulb temperature [C]
+
+    wind_speed : pandas Series
+        Wind speed [m/s]
+
+    noct_installed : float
+        The "installed" nominal operating cell temperature as defined in [1]_.
+        PVWatts assumes this value to be 45 C for rack-mounted arrays and
+        49 C for roof mount systems with restricted air flow around the
+        module.  [C]
+
+    module_height : float, default 5.0
+        The height above ground of the center of the module. The PVWatts
+        default is 5.0 [m]
+
+    wind_height : float, default 9.144
+        The height above ground at which ``wind_speed`` is measured. The
+        PVWatts defauls is 9.144 [m]
+
+    emissivity : float, default 0.84
+        The effectiveness of the module at radiating thermal energy. [unitless]
+
+    absorption : float, default 0.83
+        The fraction of incident irradiance that is converted to thermal
+        energy in the module. [unitless]
+
+    surface_tilt : float, default 30
+        Module tilt from horizontal. If not provided, the default value
+        of 30 degrees from [1]_ and [2]_ is used. [degrees]
+
+    module_width : float, default 0.31579
+        Module width. The default value of 0.31579 meters in combination with
+        the default `module_length` gives a hydraulic diameter of 0.5 as
+        assumed in [1]_ and [2]_. [m]
+
+    module_length : float, default 1.2
+        Module length. The default value of 1.2 meters in combination with
+        the default `module_width` gives a hydraulic diameter of 0.5 as
+        assumed in [1]_ and [2]_. [m]
+
+    Returns
+    -------
+    temperature_cell : pandas Series
+        The modeled cell temperature [C]
+
+    Notes
+    -----
+    This function returns slightly different values from PVWatts at night
+    and just after dawn. This is because the SAM SSC assumes that module
+    temperature equals ambient temperature when irradiance is zero so it can
+    skip the heat balance calculation at night.
+
+    References
+    ----------
+    .. [1] Fuentes, M. K., 1987, "A Simplifed Thermal Model for Flat-Plate
+           Photovoltaic Arrays", SAND85-0330, Sandia National Laboratories,
+           Albuquerque NM.
+           http://prod.sandia.gov/techlib/access-control.cgi/1985/850330.pdf
+    .. [2] Dobos, A. P., 2014, "PVWatts Version 5 Manual", NREL/TP-6A20-62641,
+           National Renewable Energy Laboratory, Golden CO.
+           doi:10.2172/1158421.
+    """
+    # ported from the FORTRAN77 code provided in Appendix A of Fuentes 1987;
+    # nearly all variable names are kept the same for ease of comparison.
+
+    boltz = 5.669e-8
+    emiss = emissivity
+    absorp = absorption
+    xlen = _hydraulic_diameter(module_width, module_length)
+    # cap0 has units of [J / (m^2 K)], equal to mass per unit area times
+    # specific heat of the module.
+    cap0 = 11000
+    tinoct = noct_installed + 273.15
+
+    # convective coefficient of top surface of module at NOCT
+    windmod = 1.0
+    tave = (tinoct + 293.15) / 2
+    hconv = _fuentes_hconv(tave, windmod, tinoct, tinoct - 293.15, xlen,
+                           surface_tilt, False)
+
+    # determine the ground temperature ratio and the ratio of the total
+    # convection to the top side convection
+    hground = emiss * boltz * (tinoct**2 + 293.15**2) * (tinoct + 293.15)
+    backrat = (
+        absorp * 800.0
+        - emiss * boltz * (tinoct**4 - 282.21**4)
+        - hconv * (tinoct - 293.15)
+    ) / ((hground + hconv) * (tinoct - 293.15))
+    tground = (tinoct**4 - backrat * (tinoct**4 - 293.15**4))**0.25
+    tground = np.clip(tground, 293.15, tinoct)
+
+    tgrat = (tground - 293.15) / (tinoct - 293.15)
+    convrat = (absorp * 800 - emiss * boltz * (
+        2 * tinoct**4 - 282.21**4 - tground**4)) / (hconv * (tinoct - 293.15))
+
+    # adjust the capacitance (thermal mass) of the module based on the INOCT.
+    # It is a function of INOCT because high INOCT implies thermal coupling
+    # with the racking (e.g. roofmount), so the thermal mass is increased.
+    # `cap` has units J/(m^2 C) -- see Table 3, Equations 26 & 27
+    cap = cap0
+    if tinoct > 321.15:
+        cap = cap * (1 + (tinoct - 321.15) / 12)
+
+    # iterate through timeseries inputs
+    sun0 = 0
+    tmod0 = 293.15
+
+    # n.b. the way Fuentes calculates the first timedelta makes it seem like
+    # the value doesn't matter -- rather than recreate it here, just assume
+    # it's the same as the second timedelta:
+    timedelta_hours = np.diff(poa_global.index).astype(float) / 1e9 / 60 / 60
+    timedelta_hours = np.append([timedelta_hours[0]], timedelta_hours)
+
+    tamb_array = temp_air + 273.15
+    sun_array = poa_global * absorp
+
+    # Two of the calculations are easily vectorized, so precalculate them:
+    # sky temperature -- Equation 24
+    tsky_array = 0.68 * (0.0552 * tamb_array**1.5) + 0.32 * tamb_array
+    # wind speed at module height -- Equation 22
+    # not sure why the 1e-4 factor is included -- maybe the equations don't
+    # behave well if wind == 0?
+    windmod_array = wind_speed * (module_height/wind_height)**0.2 + 1e-4
+
+    tmod0 = 293.15
+    tmod_array = np.zeros_like(poa_global)
+
+    iterator = zip(tamb_array, sun_array, windmod_array, tsky_array,
+                   timedelta_hours)
+    for i, (tamb, sun, windmod, tsky, dtime) in enumerate(iterator):
+        # solve the heat transfer equation, iterating because the heat loss
+        # terms depend on tmod. NB Fuentes doesn't show that 10 iterations is
+        # sufficient for convergence.
+        tmod = tmod0
+        for j in range(10):
+            # overall convective coefficient
+            tave = (tmod + tamb) / 2
+            hconv = convrat * _fuentes_hconv(tave, windmod, tinoct,
+                                             abs(tmod-tamb), xlen,
+                                             surface_tilt, True)
+            # sky radiation coefficient (Equation 3)
+            hsky = emiss * boltz * (tmod**2 + tsky**2) * (tmod + tsky)
+            # ground radiation coeffieicient (Equation 4)
+            tground = tamb + tgrat * (tmod - tamb)
+            hground = emiss * boltz * (tmod**2 + tground**2) * (tmod + tground)
+            # thermal lag -- Equation 8
+            eigen = - (hconv + hsky + hground) / cap * dtime * 3600
+            # not sure why this check is done, maybe as a speed optimization?
+            if eigen > -10:
+                ex = np.exp(eigen)
+            else:
+                ex = 0
+            # Equation 7 -- note that `sun` and `sun0` already account for
+            # absorption (alpha)
+            tmod = tmod0 * ex + (
+                (1 - ex) * (
+                    hconv * tamb
+                    + hsky * tsky
+                    + hground * tground
+                    + sun0
+                    + (sun - sun0) / eigen
+                ) + sun - sun0
+            ) / (hconv + hsky + hground)
+        tmod_array[i] = tmod
+        tmod0 = tmod
+        sun0 = sun
+
+    return pd.Series(tmod_array - 273.15, index=poa_global.index, name='tmod')
+
+</file>
+
+<file path="benchmarks/benchmarks/temperature.py">
+"""
+ASV benchmarks for irradiance.py
+"""
+
+import pandas as pd
+import pvlib
+from pkg_resources import parse_version
+from functools import partial
+
+
+def set_weather_data(obj):
+    obj.times = pd.date_range(start='20180601', freq='1min',
+                              periods=14400)
+    obj.poa = pd.Series(1000, index=obj.times)
+    obj.tamb = pd.Series(20, index=obj.times)
+    obj.wind_speed = pd.Series(2, index=obj.times)
+
+
+class SAPM:
+
+    def setup(self):
+        set_weather_data(self)
+        if parse_version(pvlib.__version__) >= parse_version('0.7.0'):
+            kwargs = pvlib.temperature.TEMPERATURE_MODEL_PARAMETERS['sapm']
+            kwargs = kwargs['open_rack_glass_glass']
+            self.sapm_cell_wrapper = partial(pvlib.temperature.sapm_cell,
+                                             **kwargs)
+        else:
+            sapm_celltemp = pvlib.pvsystem.sapm_celltemp
+
+            def sapm_cell_wrapper(poa_global, temp_air, wind_speed):
+                # just swap order; model params are provided by default
+                return sapm_celltemp(poa_global, wind_speed, temp_air)
+            self.sapm_cell_wrapper = sapm_cell_wrapper
+
+    def time_sapm_cell(self):
+        # use version-appropriate wrapper
+        self.sapm_cell_wrapper(self.poa, self.tamb, self.wind_speed)
+
+
+class Fuentes:
+
+    def setup(self):
+        if parse_version(pvlib.__version__) < parse_version('0.8.0'):
+            raise NotImplementedError
+
+        set_weather_data(self)
+
+    def time_fuentes(self):
+        pvlib.temperature.fuentes(self.poa, self.tamb, self.wind_speed,
+                                  noct_installed=45)
+
+</file>
+
+<file path="pvlib/tests/test_temperature.py">
+import pandas as pd
+import numpy as np
+
+import pytest
+from conftest import DATA_DIR, assert_series_equal
+from numpy.testing import assert_allclose
+
+from pvlib import temperature
+
+
+@pytest.fixture
+def sapm_default():
+    return temperature.TEMPERATURE_MODEL_PARAMETERS['sapm'][
+        'open_rack_glass_glass']
+
+
+def test_sapm_cell(sapm_default):
+    default = temperature.sapm_cell(900, 20, 5, sapm_default['a'],
+                                    sapm_default['b'], sapm_default['deltaT'])
+    assert_allclose(default, 43.509, 3)
+
+
+def test_sapm_module(sapm_default):
+    default = temperature.sapm_module(900, 20, 5, sapm_default['a'],
+                                      sapm_default['b'])
+    assert_allclose(default, 40.809, 3)
+
+
+def test_sapm_cell_from_module(sapm_default):
+    default = temperature.sapm_cell_from_module(50, 900,
+                                                sapm_default['deltaT'])
+    assert_allclose(default, 50 + 900 / 1000 * sapm_default['deltaT'])
+
+
+def test_sapm_ndarray(sapm_default):
+    temps = np.array([0, 10, 5])
+    irrads = np.array([0, 500, 0])
+    winds = np.array([10, 5, 0])
+    cell_temps = temperature.sapm_cell(irrads, temps, winds, sapm_default['a'],
+                                       sapm_default['b'],
+                                       sapm_default['deltaT'])
+    module_temps = temperature.sapm_module(irrads, temps, winds,
+                                           sapm_default['a'],
+                                           sapm_default['b'])
+    expected_cell = np.array([0., 23.06066166, 5.])
+    expected_module = np.array([0., 21.56066166, 5.])
+    assert_allclose(expected_cell, cell_temps, 3)
+    assert_allclose(expected_module, module_temps, 3)
+
+
+def test_sapm_series(sapm_default):
+    times = pd.date_range(start='2015-01-01', end='2015-01-02', freq='12H')
+    temps = pd.Series([0, 10, 5], index=times)
+    irrads = pd.Series([0, 500, 0], index=times)
+    winds = pd.Series([10, 5, 0], index=times)
+    cell_temps = temperature.sapm_cell(irrads, temps, winds, sapm_default['a'],
+                                       sapm_default['b'],
+                                       sapm_default['deltaT'])
+    module_temps = temperature.sapm_module(irrads, temps, winds,
+                                           sapm_default['a'],
+                                           sapm_default['b'])
+    expected_cell = pd.Series([0., 23.06066166, 5.], index=times)
+    expected_module = pd.Series([0., 21.56066166, 5.], index=times)
+    assert_series_equal(expected_cell, cell_temps)
+    assert_series_equal(expected_module, module_temps)
+
+
+def test_pvsyst_cell_default():
+    result = temperature.pvsyst_cell(900, 20, 5)
+    assert_allclose(result, 45.137, 0.001)
+
+
+def test_pvsyst_cell_kwargs():
+    result = temperature.pvsyst_cell(900, 20, wind_speed=5.0, u_c=23.5,
+                                     u_v=6.25, eta_m=0.1)
+    assert_allclose(result, 33.315, 0.001)
+
+
+def test_pvsyst_cell_ndarray():
+    temps = np.array([0, 10, 5])
+    irrads = np.array([0, 500, 0])
+    winds = np.array([10, 5, 0])
+    result = temperature.pvsyst_cell(irrads, temps, wind_speed=winds)
+    expected = np.array([0.0, 23.96551, 5.0])
+    assert_allclose(expected, result, 3)
+
+
+def test_pvsyst_cell_series():
+    times = pd.date_range(start="2015-01-01", end="2015-01-02", freq="12H")
+    temps = pd.Series([0, 10, 5], index=times)
+    irrads = pd.Series([0, 500, 0], index=times)
+    winds = pd.Series([10, 5, 0], index=times)
+
+    result = temperature.pvsyst_cell(irrads, temps, wind_speed=winds)
+    expected = pd.Series([0.0, 23.96551, 5.0], index=times)
+    assert_series_equal(expected, result)
+
+
+def test_faiman_default():
+    result = temperature.faiman(900, 20, 5)
+    assert_allclose(result, 35.203, 0.001)
+
+
+def test_faiman_kwargs():
+    result = temperature.faiman(900, 20, wind_speed=5.0, u0=22.0, u1=6.)
+    assert_allclose(result, 37.308, 0.001)
+
+
+def test_faiman_list():
+    temps = [0, 10, 5]
+    irrads = [0, 500, 0]
+    winds = [10, 5, 0]
+    result = temperature.faiman(irrads, temps, wind_speed=winds)
+    expected = np.array([0.0, 18.446, 5.0])
+    assert_allclose(expected, result, 3)
+
+
+def test_faiman_ndarray():
+    temps = np.array([0, 10, 5])
+    irrads = np.array([0, 500, 0])
+    winds = np.array([10, 5, 0])
+    result = temperature.faiman(irrads, temps, wind_speed=winds)
+    expected = np.array([0.0, 18.446, 5.0])
+    assert_allclose(expected, result, 3)
+
+
+def test_faiman_series():
+    times = pd.date_range(start="2015-01-01", end="2015-01-02", freq="12H")
+    temps = pd.Series([0, 10, 5], index=times)
+    irrads = pd.Series([0, 500, 0], index=times)
+    winds = pd.Series([10, 5, 0], index=times)
+
+    result = temperature.faiman(irrads, temps, wind_speed=winds)
+    expected = pd.Series([0.0, 18.446, 5.0], index=times)
+    assert_series_equal(expected, result)
+
+
+def test__temperature_model_params():
+    params = temperature._temperature_model_params('sapm',
+                                                   'open_rack_glass_glass')
+    assert params == temperature.TEMPERATURE_MODEL_PARAMETERS['sapm'][
+        'open_rack_glass_glass']
+    with pytest.raises(KeyError):
+        temperature._temperature_model_params('sapm', 'not_a_parameter_set')
+
+
+def _read_pvwatts_8760(filename):
+    df = pd.read_csv(filename,
+                     skiprows=17,  # ignore location/simulation metadata
+                     skipfooter=1,  # ignore "Totals" row
+                     engine='python')
+    df['Year'] = 2019
+    df.index = pd.to_datetime(df[['Year', 'Month', 'Day', 'Hour']])
+    return df
+
+
+@pytest.mark.parametrize('filename,inoct', [
+    ('pvwatts_8760_rackmount.csv', 45),
+    ('pvwatts_8760_roofmount.csv', 49),
+])
+def test_fuentes(filename, inoct):
+    # Test against data exported from pvwatts.nrel.gov
+    data = _read_pvwatts_8760(DATA_DIR / filename)
+    data = data.iloc[:24*7, :]  # just use one week
+    inputs = {
+        'poa_global': data['Plane of Array Irradiance (W/m^2)'],
+        'temp_air': data['Ambient Temperature (C)'],
+        'wind_speed': data['Wind Speed (m/s)'],
+        'noct_installed': inoct,
+    }
+    expected_tcell = data['Cell Temperature (C)']
+    expected_tcell.name = 'tmod'
+    actual_tcell = temperature.fuentes(**inputs)
+    # the SSC implementation of PVWatts diverges from the Fuentes model at
+    # at night by setting Tcell=Tamb when POA=0. This not only means that
+    # nighttime values are slightly different (Fuentes models cooling to sky
+    # at night), but because of the thermal inertia, there is a transient
+    # error after dawn as well. Test each case separately:
+    is_night = inputs['poa_global'] == 0
+    is_dawn = is_night.shift(1) & ~is_night
+    is_daytime = (inputs['poa_global'] > 0) & ~is_dawn
+    # the accuracy is probably higher than 3 digits here, but the PVWatts
+    # export data has low precision so can only test up to 3 digits
+    assert_series_equal(expected_tcell[is_daytime].round(3),
+                        actual_tcell[is_daytime].round(3))
+    # use lower precision for dawn times to accommodate the dawn transient
+    error = actual_tcell[is_dawn] - expected_tcell[is_dawn]
+    assert (error.abs() < 0.1).all()
+    # sanity check on night values -- Fuentes not much lower than PVWatts
+    night_difference = expected_tcell[is_night] - actual_tcell[is_night]
+    assert night_difference.max() < 6
+    assert night_difference.min() > 0
+
+</file>
+
+<file path="pvlib/_deprecation.py">
+"""Matplotlib license for the deprecation module.
+
+License agreement for matplotlib versions 1.3.0 and later
+=========================================================
+
+1. This LICENSE AGREEMENT is between the Matplotlib Development Team
+("MDT"), and the Individual or Organization ("Licensee") accessing and
+otherwise using matplotlib software in source or binary form and its
+associated documentation.
+
+2. Subject to the terms and conditions of this License Agreement, MDT
+hereby grants Licensee a nonexclusive, royalty-free, world-wide license
+to reproduce, analyze, test, perform and/or display publicly, prepare
+derivative works, distribute, and otherwise use matplotlib
+alone or in any derivative version, provided, however, that MDT's
+License Agreement and MDT's notice of copyright, i.e., "Copyright (c)
+2012- Matplotlib Development Team; All Rights Reserved" are retained in
+matplotlib  alone or in any derivative version prepared by
+Licensee.
+
+3. In the event Licensee prepares a derivative work that is based on or
+incorporates matplotlib or any part thereof, and wants to
+make the derivative work available to others as provided herein, then
+Licensee hereby agrees to include in any such work a brief summary of
+the changes made to matplotlib .
+
+4. MDT is making matplotlib available to Licensee on an "AS
+IS" basis.  MDT MAKES NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR
+IMPLIED.  BY WAY OF EXAMPLE, BUT NOT LIMITATION, MDT MAKES NO AND
+DISCLAIMS ANY REPRESENTATION OR WARRANTY OF MERCHANTABILITY OR FITNESS
+FOR ANY PARTICULAR PURPOSE OR THAT THE USE OF MATPLOTLIB
+WILL NOT INFRINGE ANY THIRD PARTY RIGHTS.
+
+5. MDT SHALL NOT BE LIABLE TO LICENSEE OR ANY OTHER USERS OF MATPLOTLIB
+ FOR ANY INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES OR
+LOSS AS A RESULT OF MODIFYING, DISTRIBUTING, OR OTHERWISE USING
+MATPLOTLIB , OR ANY DERIVATIVE THEREOF, EVEN IF ADVISED OF
+THE POSSIBILITY THEREOF.
+
+6. This License Agreement will automatically terminate upon a material
+breach of its terms and conditions.
+
+7. Nothing in this License Agreement shall be deemed to create any
+relationship of agency, partnership, or joint venture between MDT and
+Licensee.  This License Agreement does not grant permission to use MDT
+trademarks or trade name in a trademark sense to endorse or promote
+products or services of Licensee, or any third party.
+
+8. By copying, installing or otherwise using matplotlib ,
+Licensee agrees to be bound by the terms and conditions of this License
+Agreement.
+
+License agreement for matplotlib versions prior to 1.3.0
+========================================================
+
+1. This LICENSE AGREEMENT is between John D. Hunter ("JDH"), and the
+Individual or Organization ("Licensee") accessing and otherwise using
+matplotlib software in source or binary form and its associated
+documentation.
+
+2. Subject to the terms and conditions of this License Agreement, JDH
+hereby grants Licensee a nonexclusive, royalty-free, world-wide license
+to reproduce, analyze, test, perform and/or display publicly, prepare
+derivative works, distribute, and otherwise use matplotlib
+alone or in any derivative version, provided, however, that JDH's
+License Agreement and JDH's notice of copyright, i.e., "Copyright (c)
+2002-2011 John D. Hunter; All Rights Reserved" are retained in
+matplotlib  alone or in any derivative version prepared by
+Licensee.
+
+3. In the event Licensee prepares a derivative work that is based on or
+incorporates matplotlib  or any part thereof, and wants to
+make the derivative work available to others as provided herein, then
+Licensee hereby agrees to include in any such work a brief summary of
+the changes made to matplotlib.
+
+4. JDH is making matplotlib  available to Licensee on an "AS
+IS" basis.  JDH MAKES NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR
+IMPLIED.  BY WAY OF EXAMPLE, BUT NOT LIMITATION, JDH MAKES NO AND
+DISCLAIMS ANY REPRESENTATION OR WARRANTY OF MERCHANTABILITY OR FITNESS
+FOR ANY PARTICULAR PURPOSE OR THAT THE USE OF MATPLOTLIB
+WILL NOT INFRINGE ANY THIRD PARTY RIGHTS.
+
+5. JDH SHALL NOT BE LIABLE TO LICENSEE OR ANY OTHER USERS OF MATPLOTLIB
+ FOR ANY INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES OR
+LOSS AS A RESULT OF MODIFYING, DISTRIBUTING, OR OTHERWISE USING
+MATPLOTLIB , OR ANY DERIVATIVE THEREOF, EVEN IF ADVISED OF
+THE POSSIBILITY THEREOF.
+
+6. This License Agreement will automatically terminate upon a material
+breach of its terms and conditions.
+
+7. Nothing in this License Agreement shall be deemed to create any
+relationship of agency, partnership, or joint venture between JDH and
+Licensee.  This License Agreement does not grant permission to use JDH
+trademarks or trade name in a trademark sense to endorse or promote
+products or services of Licensee, or any third party.
+
+8. By copying, installing or otherwise using matplotlib,
+Licensee agrees to be bound by the terms and conditions of this License
+Agreement.
+"""
+
+# modified from Matplotlib b97cd2d (post 2.2.2) in the following ways:
+# 1. use module-level _projectName = 'pvlib' and
+#    _projectWarning = 'pvlibDeprecationWarning' in place of MPL specific
+#    string/Class.
+# 2. remove keyword only argument requirement for removal
+# 3. remove deprecated obj_type from deprecated function
+# 4. if removal is empty, say 'soon' instead of assuming two minor releases
+#    later.
+
+import functools
+import textwrap
+import warnings
+
+
+class pvlibDeprecationWarning(UserWarning):
+    """A class for issuing deprecation warnings for pvlib users.
+
+    In light of the fact that Python builtin DeprecationWarnings are ignored
+    by default as of Python 2.7 (see link below), this class was put in to
+    allow for the signaling of deprecation, but via UserWarnings which are not
+    ignored by default.
+
+    https://docs.python.org/dev/whatsnew/2.7.html#the-future-for-python-2-x
+    """
+
+    pass
+
+
+# make it easier for others to copy paste this code into their projects
+_projectName = 'pvlib'
+_projectWarning = pvlibDeprecationWarning
+
+
+def _generate_deprecation_message(
+        since, message='', name='', alternative='', pending=False,
+        obj_type='attribute', addendum='', removal=''):
+
+    if removal == "":
+        removal = "soon"
+    elif removal:
+        if pending:
+            raise ValueError(
+                "A pending deprecation cannot have a scheduled removal")
+        removal = "in {}".format(removal)
+
+    if not message:
+        message = (
+            "The %(name)s %(obj_type)s"
+            + (" will be deprecated in a future version"
+               if pending else
+               (" was deprecated in %(projectName)s %(since)s"
+                + (" and will be removed %(removal)s"
+                   if removal else
+                   "")))
+            + "."
+            + (" Use %(alternative)s instead." if alternative else "")
+            + (" %(addendum)s" if addendum else ""))
+
+    return message % dict(
+        func=name, name=name, obj_type=obj_type, since=since, removal=removal,
+        alternative=alternative, addendum=addendum, projectName=_projectName)
+
+
+def warn_deprecated(
+        since, message='', name='', alternative='', pending=False,
+        obj_type='attribute', addendum='', removal=''):
+    """
+    Used to display deprecation in a standard way.
+    Parameters
+    ----------
+    since : str
+        The release at which this API became deprecated.
+    message : str, optional
+        Override the default deprecation message.  The format
+        specifier `%(name)s` may be used for the name of the function,
+        and `%(alternative)s` may be used in the deprecation message
+        to insert the name of an alternative to the deprecated
+        function.  `%(obj_type)s` may be used to insert a friendly name
+        for the type of object being deprecated.
+    name : str, optional
+        The name of the deprecated object.
+    alternative : str, optional
+        An alternative API that the user may use in place of the deprecated
+        API.  The deprecation warning will tell the user about this alternative
+        if provided.
+    pending : bool, optional
+        If True, uses a PendingDeprecationWarning instead of a
+        DeprecationWarning.  Cannot be used together with *removal*.
+    removal : str, optional
+        The expected removal version.  With the default (an empty string), a
+        removal version is automatically computed from *since*.  Set to other
+        Falsy values to not schedule a removal date.  Cannot be used together
+        with *pending*.
+    obj_type : str, optional
+        The object type being deprecated.
+    addendum : str, optional
+        Additional text appended directly to the final message.
+    Examples
+    --------
+        Basic example::
+            # To warn of the deprecation of "matplotlib.name_of_module"
+            warn_deprecated('1.4.0', name='matplotlib.name_of_module',
+                            obj_type='module')
+    """
+    message = '\n' + _generate_deprecation_message(
+        since, message, name, alternative, pending, obj_type, addendum,
+        removal=removal)
+    category = (PendingDeprecationWarning if pending
+                else _projectWarning)
+    warnings.warn(message, category, stacklevel=2)
+
+
+def deprecated(since, message='', name='', alternative='', pending=False,
+               addendum='', removal=''):
+    """
+    Decorator to mark a function or a class as deprecated.
+    Parameters
+    ----------
+    since : str
+        The release at which this API became deprecated.  This is
+        required.
+    message : str, optional
+        Override the default deprecation message.  The format
+        specifier `%(name)s` may be used for the name of the object,
+        and `%(alternative)s` may be used in the deprecation message
+        to insert the name of an alternative to the deprecated
+        object.
+    name : str, optional
+        The name of the deprecated object; if not provided the name
+        is automatically determined from the passed in object,
+        though this is useful in the case of renamed functions, where
+        the new function is just assigned to the name of the
+        deprecated function.  For example::
+            def new_function():
+                ...
+            oldFunction = new_function
+    alternative : str, optional
+        An alternative API that the user may use in place of the deprecated
+        API.  The deprecation warning will tell the user about this alternative
+        if provided.
+    pending : bool, optional
+        If True, uses a PendingDeprecationWarning instead of a
+        DeprecationWarning.  Cannot be used together with *removal*.
+    removal : str, optional
+        The expected removal version.  With the default (an empty string), a
+        removal version is automatically computed from *since*.  Set to other
+        Falsy values to not schedule a removal date.  Cannot be used together
+        with *pending*.
+    addendum : str, optional
+        Additional text appended directly to the final message.
+    Examples
+    --------
+        Basic example::
+            @deprecated('1.4.0')
+            def the_function_to_deprecate():
+                pass
+    """
+
+    def deprecate(obj, message=message, name=name, alternative=alternative,
+                  pending=pending, addendum=addendum):
+
+        if not name:
+            name = obj.__name__
+
+        if isinstance(obj, type):
+            obj_type = "class"
+            old_doc = obj.__doc__
+            func = obj.__init__
+
+            def finalize(wrapper, new_doc):
+                obj.__doc__ = new_doc
+                obj.__init__ = wrapper
+                return obj
+        else:
+            obj_type = "function"
+            if isinstance(obj, classmethod):
+                func = obj.__func__
+                old_doc = func.__doc__
+
+                def finalize(wrapper, new_doc):
+                    wrapper = functools.wraps(func)(wrapper)
+                    wrapper.__doc__ = new_doc
+                    return classmethod(wrapper)
+            else:
+                func = obj
+                old_doc = func.__doc__
+
+                def finalize(wrapper, new_doc):
+                    wrapper = functools.wraps(func)(wrapper)
+                    wrapper.__doc__ = new_doc
+                    return wrapper
+
+        message = _generate_deprecation_message(
+            since, message, name, alternative, pending, obj_type, addendum,
+            removal=removal)
+        category = (PendingDeprecationWarning if pending
+                    else _projectWarning)
+
+        def wrapper(*args, **kwargs):
+            warnings.warn(message, category, stacklevel=2)
+            return func(*args, **kwargs)
+
+        old_doc = textwrap.dedent(old_doc or '').strip('\n')
+        message = message.strip()
+        new_doc = (('\n.. deprecated:: %(since)s'
+                    '\n    %(message)s\n\n' %
+                    {'since': since, 'message': message}) + old_doc)
+        if not old_doc:
+            # This is to prevent a spurious 'unexected unindent' warning from
+            # docutils when the original docstring was blank.
+            new_doc += r'\ '
+
+        return finalize(wrapper, new_doc)
+
+    return deprecate
+
+</file>
+
+<file path="pvlib/_version.py">
+
+# This file helps to compute a version number in source trees obtained from
+# git-archive tarball (such as those provided by githubs download-from-tag
+# feature). Distribution tarballs (built by setup.py sdist) and build
+# directories (produced by setup.py build) will contain a much shorter file
+# that just contains the computed version number.
+
+# This file is released into the public domain. Generated by
+# versioneer-0.16 (https://github.com/warner/python-versioneer)
+
+"""Git implementation of _version.py."""
+
+import errno
+import os
+import re
+import subprocess
+import sys
+
+
+def get_keywords():
+    """Get the keywords needed to look up the version information."""
+    # these strings will be replaced by git during git-archive.
+    # setup.py/versioneer.py will grep for the variable names, so they must
+    # each be defined on a line of their own. _version.py will just call
+    # get_keywords().
+    git_refnames = "$Format:%d$"
+    git_full = "$Format:%H$"
+    keywords = {"refnames": git_refnames, "full": git_full}
+    return keywords
+
+
+class VersioneerConfig:
+    """Container for Versioneer configuration parameters."""
+
+
+def get_config():
+    """Create, populate and return the VersioneerConfig() object."""
+    # these strings are filled in when 'setup.py versioneer' creates
+    # _version.py
+    cfg = VersioneerConfig()
+    cfg.VCS = "git"
+    cfg.style = "pep440"
+    cfg.tag_prefix = "v"
+    cfg.parentdir_prefix = "pvlib-python-"
+    cfg.versionfile_source = "pvlib/_version.py"
+    cfg.verbose = False
+    return cfg
+
+
+class NotThisMethod(Exception):
+    """Exception raised if a method is not valid for the current scenario."""
+
+
+LONG_VERSION_PY = {}
+HANDLERS = {}
+
+
+def register_vcs_handler(vcs, method):  # decorator
+    """Decorator to mark a method as the handler for a particular VCS."""
+    def decorate(f):
+        """Store f in HANDLERS[vcs][method]."""
+        if vcs not in HANDLERS:
+            HANDLERS[vcs] = {}
+        HANDLERS[vcs][method] = f
+        return f
+    return decorate
+
+
+def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False):
+    """Call the given command(s)."""
+    assert isinstance(commands, list)
+    p = None
+    for c in commands:
+        try:
+            dispcmd = str([c] + args)
+            # remember shell=False, so use git.cmd on windows, not just git
+            p = subprocess.Popen([c] + args, cwd=cwd, stdout=subprocess.PIPE,
+                                 stderr=(subprocess.PIPE if hide_stderr
+                                         else None))
+            break
+        except EnvironmentError:
+            e = sys.exc_info()[1]
+            if e.errno == errno.ENOENT:
+                continue
+            if verbose:
+                print("unable to run %s" % dispcmd)
+                print(e)
+            return None
+    else:
+        if verbose:
+            print("unable to find command, tried %s" % (commands,))
+        return None
+    stdout = p.communicate()[0].strip()
+    if sys.version_info[0] >= 3:
+        stdout = stdout.decode()
+    if p.returncode != 0:
+        if verbose:
+            print("unable to run %s (error)" % dispcmd)
+        return None
+    return stdout
+
+
+def versions_from_parentdir(parentdir_prefix, root, verbose):
+    """Try to determine the version from the parent directory name.
+
+    Source tarballs conventionally unpack into a directory that includes
+    both the project name and a version string.
+    """
+    dirname = os.path.basename(root)
+    if not dirname.startswith(parentdir_prefix):
+        if verbose:
+            print("guessing rootdir is '%s', but '%s' doesn't start with "
+                  "prefix '%s'" % (root, dirname, parentdir_prefix))
+        raise NotThisMethod("rootdir doesn't start with parentdir_prefix")
+    return {"version": dirname[len(parentdir_prefix):],
+            "full-revisionid": None,
+            "dirty": False, "error": None}
+
+
+@register_vcs_handler("git", "get_keywords")
+def git_get_keywords(versionfile_abs):
+    """Extract version information from the given file."""
+    # the code embedded in _version.py can just fetch the value of these
+    # keywords. When used from setup.py, we don't want to import _version.py,
+    # so we do it with a regexp instead. This function is not used from
+    # _version.py.
+    keywords = {}
+    try:
+        f = open(versionfile_abs, "r")
+        for line in f.readlines():
+            if line.strip().startswith("git_refnames ="):
+                mo = re.search(r'=\s*"(.*)"', line)
+                if mo:
+                    keywords["refnames"] = mo.group(1)
+            if line.strip().startswith("git_full ="):
+                mo = re.search(r'=\s*"(.*)"', line)
+                if mo:
+                    keywords["full"] = mo.group(1)
+        f.close()
+    except EnvironmentError:
+        pass
+    return keywords
+
+
+@register_vcs_handler("git", "keywords")
+def git_versions_from_keywords(keywords, tag_prefix, verbose):
+    """Get version information from git keywords."""
+    if not keywords:
+        raise NotThisMethod("no keywords at all, weird")
+    refnames = keywords["refnames"].strip()
+    if refnames.startswith("$Format"):
+        if verbose:
+            print("keywords are unexpanded, not using")
+        raise NotThisMethod("unexpanded keywords, not a git-archive tarball")
+    refs = set([r.strip() for r in refnames.strip("()").split(",")])
+    # starting in git-1.8.3, tags are listed as "tag: foo-1.0" instead of
+    # just "foo-1.0". If we see a "tag: " prefix, prefer those.
+    TAG = "tag: "
+    tags = set([r[len(TAG):] for r in refs if r.startswith(TAG)])
+    if not tags:
+        # Either we're using git < 1.8.3, or there really are no tags. We use
+        # a heuristic: assume all version tags have a digit. The old git %d
+        # expansion behaves like git log --decorate=short and strips out the
+        # refs/heads/ and refs/tags/ prefixes that would let us distinguish
+        # between branches and tags. By ignoring refnames without digits, we
+        # filter out many common branch names like "release" and
+        # "stabilization", as well as "HEAD" and "master".
+        tags = set([r for r in refs if re.search(r'\d', r)])
+        if verbose:
+            print("discarding '%s', no digits" % ",".join(refs-tags))
+    if verbose:
+        print("likely tags: %s" % ",".join(sorted(tags)))
+    for ref in sorted(tags):
+        # sorting will prefer e.g. "2.0" over "2.0rc1"
+        if ref.startswith(tag_prefix):
+            r = ref[len(tag_prefix):]
+            if verbose:
+                print("picking %s" % r)
+            return {"version": r,
+                    "full-revisionid": keywords["full"].strip(),
+                    "dirty": False, "error": None
+                    }
+    # no suitable tags, so version is "0+unknown", but full hex is still there
+    if verbose:
+        print("no suitable tags, using unknown + full revision id")
+    return {"version": "0+unknown",
+            "full-revisionid": keywords["full"].strip(),
+            "dirty": False, "error": "no suitable tags"}
+
+
+@register_vcs_handler("git", "pieces_from_vcs")
+def git_pieces_from_vcs(tag_prefix, root, verbose, run_command=run_command):
+    """Get version from 'git describe' in the root of the source tree.
+
+    This only gets called if the git-archive 'subst' keywords were *not*
+    expanded, and _version.py hasn't already been rewritten with a short
+    version string, meaning we're inside a checked out source tree.
+    """
+    if not os.path.exists(os.path.join(root, ".git")):
+        if verbose:
+            print("no .git in %s" % root)
+        raise NotThisMethod("no .git directory")
+
+    GITS = ["git"]
+    if sys.platform == "win32":
+        GITS = ["git.cmd", "git.exe"]
+    # if there is a tag matching tag_prefix, this yields TAG-NUM-gHEX[-dirty]
+    # if there isn't one, this yields HEX[-dirty] (no NUM)
+    describe_out = run_command(GITS, ["describe", "--tags", "--dirty",
+                                      "--always", "--long",
+                                      "--match", "%s*" % tag_prefix],
+                               cwd=root)
+    # --long was added in git-1.5.5
+    if describe_out is None:
+        raise NotThisMethod("'git describe' failed")
+    describe_out = describe_out.strip()
+    full_out = run_command(GITS, ["rev-parse", "HEAD"], cwd=root)
+    if full_out is None:
+        raise NotThisMethod("'git rev-parse' failed")
+    full_out = full_out.strip()
+
+    pieces = {}
+    pieces["long"] = full_out
+    pieces["short"] = full_out[:7]  # maybe improved later
+    pieces["error"] = None
+
+    # parse describe_out. It will be like TAG-NUM-gHEX[-dirty] or HEX[-dirty]
+    # TAG might have hyphens.
+    git_describe = describe_out
+
+    # look for -dirty suffix
+    dirty = git_describe.endswith("-dirty")
+    pieces["dirty"] = dirty
+    if dirty:
+        git_describe = git_describe[:git_describe.rindex("-dirty")]
+
+    # now we have TAG-NUM-gHEX or HEX
+
+    if "-" in git_describe:
+        # TAG-NUM-gHEX
+        mo = re.search(r'^(.+)-(\d+)-g([0-9a-f]+)$', git_describe)
+        if not mo:
+            # unparseable. Maybe git-describe is misbehaving?
+            pieces["error"] = ("unable to parse git-describe output: '%s'"
+                               % describe_out)
+            return pieces
+
+        # tag
+        full_tag = mo.group(1)
+        if not full_tag.startswith(tag_prefix):
+            if verbose:
+                fmt = "tag '%s' doesn't start with prefix '%s'"
+                print(fmt % (full_tag, tag_prefix))
+            pieces["error"] = ("tag '%s' doesn't start with prefix '%s'"
+                               % (full_tag, tag_prefix))
+            return pieces
+        pieces["closest-tag"] = full_tag[len(tag_prefix):]
+
+        # distance: number of commits since tag
+        pieces["distance"] = int(mo.group(2))
+
+        # commit: short hex revision ID
+        pieces["short"] = mo.group(3)
+
+    else:
+        # HEX: no tags
+        pieces["closest-tag"] = None
+        count_out = run_command(GITS, ["rev-list", "HEAD", "--count"],
+                                cwd=root)
+        pieces["distance"] = int(count_out)  # total number of commits
+
+    return pieces
+
+
+def plus_or_dot(pieces):
+    """Return a + if we don't already have one, else return a ."""
+    if "+" in pieces.get("closest-tag", ""):
+        return "."
+    return "+"
+
+
+def render_pep440(pieces):
+    """Build up version string, with post-release "local version identifier".
+
+    Our goal: TAG[+DISTANCE.gHEX[.dirty]] . Note that if you
+    get a tagged build and then dirty it, you'll get TAG+0.gHEX.dirty
+
+    Exceptions:
+    1: no tags. git_describe was just HEX. 0+untagged.DISTANCE.gHEX[.dirty]
+    """
+    if pieces["closest-tag"]:
+        rendered = pieces["closest-tag"]
+        if pieces["distance"] or pieces["dirty"]:
+            rendered += plus_or_dot(pieces)
+            rendered += "%d.g%s" % (pieces["distance"], pieces["short"])
+            if pieces["dirty"]:
+                rendered += ".dirty"
+    else:
+        # exception #1
+        rendered = "0+untagged.%d.g%s" % (pieces["distance"],
+                                          pieces["short"])
+        if pieces["dirty"]:
+            rendered += ".dirty"
+    return rendered
+
+
+def render_pep440_pre(pieces):
+    """TAG[.post.devDISTANCE] -- No -dirty.
+
+    Exceptions:
+    1: no tags. 0.post.devDISTANCE
+    """
+    if pieces["closest-tag"]:
+        rendered = pieces["closest-tag"]
+        if pieces["distance"]:
+            rendered += ".post.dev%d" % pieces["distance"]
+    else:
+        # exception #1
+        rendered = "0.post.dev%d" % pieces["distance"]
+    return rendered
+
+
+def render_pep440_post(pieces):
+    """TAG[.postDISTANCE[.dev0]+gHEX] .
+
+    The ".dev0" means dirty. Note that .dev0 sorts backwards
+    (a dirty tree will appear "older" than the corresponding clean one),
+    but you shouldn't be releasing software with -dirty anyways.
+
+    Exceptions:
+    1: no tags. 0.postDISTANCE[.dev0]
+    """
+    if pieces["closest-tag"]:
+        rendered = pieces["closest-tag"]
+        if pieces["distance"] or pieces["dirty"]:
+            rendered += ".post%d" % pieces["distance"]
+            if pieces["dirty"]:
+                rendered += ".dev0"
+            rendered += plus_or_dot(pieces)
+            rendered += "g%s" % pieces["short"]
+    else:
+        # exception #1
+        rendered = "0.post%d" % pieces["distance"]
+        if pieces["dirty"]:
+            rendered += ".dev0"
+        rendered += "+g%s" % pieces["short"]
+    return rendered
+
+
+def render_pep440_old(pieces):
+    """TAG[.postDISTANCE[.dev0]] .
+
+    The ".dev0" means dirty.
+
+    Eexceptions:
+    1: no tags. 0.postDISTANCE[.dev0]
+    """
+    if pieces["closest-tag"]:
+        rendered = pieces["closest-tag"]
+        if pieces["distance"] or pieces["dirty"]:
+            rendered += ".post%d" % pieces["distance"]
+            if pieces["dirty"]:
+                rendered += ".dev0"
+    else:
+        # exception #1
+        rendered = "0.post%d" % pieces["distance"]
+        if pieces["dirty"]:
+            rendered += ".dev0"
+    return rendered
+
+
+def render_git_describe(pieces):
+    """TAG[-DISTANCE-gHEX][-dirty].
+
+    Like 'git describe --tags --dirty --always'.
+
+    Exceptions:
+    1: no tags. HEX[-dirty]  (note: no 'g' prefix)
+    """
+    if pieces["closest-tag"]:
+        rendered = pieces["closest-tag"]
+        if pieces["distance"]:
+            rendered += "-%d-g%s" % (pieces["distance"], pieces["short"])
+    else:
+        # exception #1
+        rendered = pieces["short"]
+    if pieces["dirty"]:
+        rendered += "-dirty"
+    return rendered
+
+
+def render_git_describe_long(pieces):
+    """TAG-DISTANCE-gHEX[-dirty].
+
+    Like 'git describe --tags --dirty --always -long'.
+    The distance/hash is unconditional.
+
+    Exceptions:
+    1: no tags. HEX[-dirty]  (note: no 'g' prefix)
+    """
+    if pieces["closest-tag"]:
+        rendered = pieces["closest-tag"]
+        rendered += "-%d-g%s" % (pieces["distance"], pieces["short"])
+    else:
+        # exception #1
+        rendered = pieces["short"]
+    if pieces["dirty"]:
+        rendered += "-dirty"
+    return rendered
+
+
+def render(pieces, style):
+    """Render the given version pieces into the requested style."""
+    if pieces["error"]:
+        return {"version": "unknown",
+                "full-revisionid": pieces.get("long"),
+                "dirty": None,
+                "error": pieces["error"]}
+
+    if not style or style == "default":
+        style = "pep440"  # the default
+
+    if style == "pep440":
+        rendered = render_pep440(pieces)
+    elif style == "pep440-pre":
+        rendered = render_pep440_pre(pieces)
+    elif style == "pep440-post":
+        rendered = render_pep440_post(pieces)
+    elif style == "pep440-old":
+        rendered = render_pep440_old(pieces)
+    elif style == "git-describe":
+        rendered = render_git_describe(pieces)
+    elif style == "git-describe-long":
+        rendered = render_git_describe_long(pieces)
+    else:
+        raise ValueError("unknown style '%s'" % style)
+
+    return {"version": rendered, "full-revisionid": pieces["long"],
+            "dirty": pieces["dirty"], "error": None}
+
+
+def get_versions():
+    """Get version information or return default if unable to do so."""
+    # I am in _version.py, which lives at ROOT/VERSIONFILE_SOURCE. If we have
+    # __file__, we can work backwards from there to the root. Some
+    # py2exe/bbfreeze/non-CPython implementations don't do __file__, in which
+    # case we can only use expanded keywords.
+
+    cfg = get_config()
+    verbose = cfg.verbose
+
+    try:
+        return git_versions_from_keywords(get_keywords(), cfg.tag_prefix,
+                                          verbose)
+    except NotThisMethod:
+        pass
+
+    try:
+        root = os.path.realpath(__file__)
+        # versionfile_source is the relative path from the top of the source
+        # tree (where the .git directory might live) to this file. Invert
+        # this to find the root from __file__.
+        for i in cfg.versionfile_source.split('/'):
+            root = os.path.dirname(root)
+    except NameError:
+        return {"version": "0+unknown", "full-revisionid": None,
+                "dirty": None,
+                "error": "unable to find root of source tree"}
+
+    try:
+        pieces = git_pieces_from_vcs(cfg.tag_prefix, root, verbose)
+        return render(pieces, cfg.style)
+    except NotThisMethod:
+        pass
+
+    try:
+        if cfg.parentdir_prefix:
+            return versions_from_parentdir(cfg.parentdir_prefix, root, verbose)
+    except NotThisMethod:
+        pass
+
+    return {"version": "0+unknown", "full-revisionid": None,
+            "dirty": None,
+            "error": "unable to compute version"}
+
+</file>
+
+<file path="pvlib/atmosphere.py">
+"""
+The ``atmosphere`` module contains methods to calculate relative and
+absolute airmass and to determine pressure from altitude or vice versa.
+"""
+
+from warnings import warn
+
+import numpy as np
+import pandas as pd
+
+
+APPARENT_ZENITH_MODELS = ('simple', 'kasten1966', 'kastenyoung1989',
+                          'gueymard1993', 'pickering2002')
+TRUE_ZENITH_MODELS = ('youngirvine1967', 'young1994')
+AIRMASS_MODELS = APPARENT_ZENITH_MODELS + TRUE_ZENITH_MODELS
+
+
+def pres2alt(pressure):
+    '''
+    Determine altitude from site pressure.
+
+    Parameters
+    ----------
+    pressure : numeric
+        Atmospheric pressure. [Pa]
+
+    Returns
+    -------
+    altitude : numeric
+        Altitude above sea level. [m]
+
+    Notes
+    ------
+    The following assumptions are made
+
+    ============================   ================
+    Parameter                      Value
+    ============================   ================
+    Base pressure                  101325 Pa
+    Temperature at zero altitude   288.15 K
+    Gravitational acceleration     9.80665 m/s^2
+    Lapse rate                     -6.5E-3 K/m
+    Gas constant for air           287.053 J/(kg K)
+    Relative Humidity              0%
+    ============================   ================
+
+    References
+    -----------
+    .. [1] "A Quick Derivation relating altitude to air pressure" from
+       Portland State Aerospace Society, Version 1.03, 12/22/2004.
+    '''
+
+    alt = 44331.5 - 4946.62 * pressure ** (0.190263)
+
+    return alt
+
+
+def alt2pres(altitude):
+    '''
+    Determine site pressure from altitude.
+
+    Parameters
+    ----------
+    altitude : numeric
+        Altitude above sea level. [m]
+
+    Returns
+    -------
+    pressure : numeric
+        Atmospheric pressure. [Pa]
+
+    Notes
+    ------
+    The following assumptions are made
+
+    ============================   ================
+    Parameter                      Value
+    ============================   ================
+    Base pressure                  101325 Pa
+    Temperature at zero altitude   288.15 K
+    Gravitational acceleration     9.80665 m/s^2
+    Lapse rate                     -6.5E-3 K/m
+    Gas constant for air           287.053 J/(kg K)
+    Relative Humidity              0%
+    ============================   ================
+
+    References
+    -----------
+    .. [1] "A Quick Derivation relating altitude to air pressure" from
+       Portland State Aerospace Society, Version 1.03, 12/22/2004.
+    '''
+
+    press = 100 * ((44331.514 - altitude) / 11880.516) ** (1 / 0.1902632)
+
+    return press
+
+
+def get_absolute_airmass(airmass_relative, pressure=101325.):
+    r'''
+    Determine absolute (pressure-adjusted) airmass from relative
+    airmass and pressure.
+
+    The calculation for absolute airmass (:math:`AM_a`) is
+
+    .. math::
+        AM_a = AM_r \frac{P}{101325}
+
+    where :math:`AM_r` is relative air mass at sea level and :math:`P` is
+    atmospheric pressure.
+
+    Parameters
+    ----------
+    airmass_relative : numeric
+        The airmass at sea level. [unitless]
+
+    pressure : numeric, default 101325
+        Atmospheric pressure. [Pa]
+
+    Returns
+    -------
+    airmass_absolute : numeric
+        Absolute (pressure-adjusted) airmass
+
+    References
+    ----------
+    .. [1] C. Gueymard, "Critical analysis and performance assessment of
+       clear sky solar irradiance models using theoretical and measured
+       data," Solar Energy, vol. 51, pp. 121-138, 1993.
+    '''
+
+    airmass_absolute = airmass_relative * pressure / 101325.
+
+    return airmass_absolute
+
+
+def get_relative_airmass(zenith, model='kastenyoung1989'):
+    '''
+    Calculate relative (not pressure-adjusted) airmass at sea level.
+
+    Parameter ``model`` allows selection of different airmass models.
+
+    Parameters
+    ----------
+    zenith : numeric
+        Zenith angle of the sun. [degrees]
+
+    model : string, default 'kastenyoung1989'
+        Available models include the following:
+
+        * 'simple' - secant(apparent zenith angle) -
+          Note that this gives -Inf at zenith=90
+        * 'kasten1966' - See reference [1] -
+          requires apparent sun zenith
+        * 'youngirvine1967' - See reference [2] -
+          requires true sun zenith
+        * 'kastenyoung1989' (default) - See reference [3] -
+          requires apparent sun zenith
+        * 'gueymard1993' - See reference [4] -
+          requires apparent sun zenith
+        * 'young1994' - See reference [5] -
+          requries true sun zenith
+        * 'pickering2002' - See reference [6] -
+          requires apparent sun zenith
+
+    Returns
+    -------
+    airmass_relative : numeric
+        Relative airmass at sea level. Returns NaN values for any
+        zenith angle greater than 90 degrees. [unitless]
+
+    Notes
+    -----
+    Some models use apparent (refraction-adjusted) zenith angle while
+    other models use true (not refraction-adjusted) zenith angle. Apparent
+    zenith angles should be calculated at sea level.
+
+    References
+    ----------
+    .. [1] Fritz Kasten. "A New Table and Approximation Formula for the
+       Relative Optical Air Mass". Technical Report 136, Hanover, N.H.:
+       U.S. Army Material Command, CRREL.
+
+    .. [2] A. T. Young and W. M. Irvine, "Multicolor Photoelectric
+       Photometry of the Brighter Planets," The Astronomical Journal, vol.
+       72, pp. 945-950, 1967.
+
+    .. [3] Fritz Kasten and Andrew Young. "Revised optical air mass tables
+       and approximation formula". Applied Optics 28:4735-4738
+
+    .. [4] C. Gueymard, "Critical analysis and performance assessment of
+       clear sky solar irradiance models using theoretical and measured
+       data," Solar Energy, vol. 51, pp. 121-138, 1993.
+
+    .. [5] A. T. Young, "AIR-MASS AND REFRACTION," Applied Optics, vol. 33,
+       pp. 1108-1110, Feb 1994.
+
+    .. [6] Keith A. Pickering. "The Ancient Star Catalog". DIO 12:1, 20,
+
+    .. [7] Matthew J. Reno, Clifford W. Hansen and Joshua S. Stein, "Global
+       Horizontal Irradiance Clear Sky Models: Implementation and Analysis"
+       Sandia Report, (2012).
+    '''
+
+    # set zenith values greater than 90 to nans
+    z = np.where(zenith > 90, np.nan, zenith)
+    zenith_rad = np.radians(z)
+
+    model = model.lower()
+
+    if 'kastenyoung1989' == model:
+        am = (1.0 / (np.cos(zenith_rad) +
+              0.50572*((6.07995 + (90 - z)) ** - 1.6364)))
+    elif 'kasten1966' == model:
+        am = 1.0 / (np.cos(zenith_rad) + 0.15*((93.885 - z) ** - 1.253))
+    elif 'simple' == model:
+        am = 1.0 / np.cos(zenith_rad)
+    elif 'pickering2002' == model:
+        am = (1.0 / (np.sin(np.radians(90 - z +
+              244.0 / (165 + 47.0 * (90 - z) ** 1.1)))))
+    elif 'youngirvine1967' == model:
+        sec_zen = 1.0 / np.cos(zenith_rad)
+        am = sec_zen * (1 - 0.0012 * (sec_zen * sec_zen - 1))
+    elif 'young1994' == model:
+        am = ((1.002432*((np.cos(zenith_rad)) ** 2) +
+              0.148386*(np.cos(zenith_rad)) + 0.0096467) /
+              (np.cos(zenith_rad) ** 3 +
+              0.149864*(np.cos(zenith_rad) ** 2) +
+              0.0102963*(np.cos(zenith_rad)) + 0.000303978))
+    elif 'gueymard1993' == model:
+        am = (1.0 / (np.cos(zenith_rad) +
+              0.00176759*(z)*((94.37515 - z) ** - 1.21563)))
+    else:
+        raise ValueError('%s is not a valid model for relativeairmass', model)
+
+    if isinstance(zenith, pd.Series):
+        am = pd.Series(am, index=zenith.index)
+
+    return am
+
+
+def gueymard94_pw(temp_air, relative_humidity):
+    r"""
+    Calculates precipitable water (cm) from ambient air temperature (C)
+    and relatively humidity (%) using an empirical model. The
+    accuracy of this method is approximately 20% for moderate PW (1-3
+    cm) and less accurate otherwise.
+
+    The model was developed by expanding Eq. 1 in [2]_:
+
+    .. math::
+
+           Pw = 0.1 H_v \rho_v
+
+    using Eq. 2 in [2]_
+
+    .. math::
+
+           \rho_v = 216.7 R_H e_s /T
+
+    :math:`Pw` is the precipitable water (cm), :math:`H_v` is the apparent
+    water vapor scale height (km) and :math:`\rho_v` is the surface water
+    vapor density (g/m^3). . The expression for :math:`H_v` is Eq. 4 in [2]_:
+
+    .. math::
+
+           H_v = 0.4976 + 1.5265 \frac{T}{273.15}
+               + \exp \left(13.6897 \frac{T}{273.15}
+               - 14.9188 \left( \frac{T}{273.15} \right)^3 \right)
+
+    In the expression for :math:`\rho_v`, :math:`e_s` is the saturation water
+    vapor pressure (millibar). The expression for :math:`e_s` is Eq. 1 in [3]_
+
+    .. math::
+
+          e_s = \exp \left(22.330 - 49.140 \frac{100}{T} -
+              10.922 \left(\frac{100}{T}\right)^2 -
+              0.39015 \frac{T}{100} \right)
+
+    Parameters
+    ----------
+    temp_air : numeric
+        ambient air temperature :math:`T` at the surface. [C]
+    relative_humidity : numeric
+        relative humidity :math:`R_H` at the surface. [%]
+
+    Returns
+    -------
+    pw : numeric
+        precipitable water. [cm]
+
+    References
+    ----------
+    .. [1] W. M. Keogh and A. W. Blakers, Accurate Measurement, Using Natural
+       Sunlight, of Silicon Solar Cells, Prog. in Photovoltaics: Res.
+       and Appl. 2004, vol 12, pp. 1-19 (:doi:`10.1002/pip.517`)
+
+    .. [2] C. Gueymard, Analysis of Monthly Average Atmospheric Precipitable
+       Water and Turbidity in Canada and Northern United States,
+       Solar Energy vol 53(1), pp. 57-71, 1994.
+
+    .. [3] C. Gueymard, Assessment of the Accuracy and Computing Speed of
+       simplified saturation vapor equations using a new reference
+       dataset, J. of Applied Meteorology 1993, vol. 32(7), pp.
+       1294-1300.
+    """
+
+    T = temp_air + 273.15  # Convert to Kelvin                  # noqa: N806
+    RH = relative_humidity                                      # noqa: N806
+
+    theta = T / 273.15
+
+    # Eq. 1 from Keogh and Blakers
+    pw = (
+        0.1 *
+        (0.4976 + 1.5265*theta + np.exp(13.6897*theta - 14.9188*(theta)**3)) *
+        (216.7*RH/(100*T)*np.exp(22.330 - 49.140*(100/T) -
+         10.922*(100/T)**2 - 0.39015*T/100)))
+
+    pw = np.maximum(pw, 0.1)
+
+    return pw
+
+
+def first_solar_spectral_correction(pw, airmass_absolute,
+                                    module_type=None, coefficients=None,
+                                    min_pw=0.1, max_pw=8):
+    r"""
+    Spectral mismatch modifier based on precipitable water and absolute
+    (pressure-adjusted) airmass.
+
+    Estimates a spectral mismatch modifier :math:`M` representing the effect on
+    module short circuit current of variation in the spectral
+    irradiance. :math:`M`  is estimated from absolute (pressure currected) air
+    mass, :math:`AM_a`, and precipitable water, :math:`Pw`, using the following
+    function:
+
+    .. math::
+
+        M = c_1 + c_2 AM_a  + c_3 Pw  + c_4 AM_a^{0.5}
+            + c_5 Pw^{0.5} + c_6 \frac{AM_a} {Pw^{0.5}}
+
+    Default coefficients are determined for several cell types with
+    known quantum efficiency curves, by using the Simple Model of the
+    Atmospheric Radiative Transfer of Sunshine (SMARTS) [1]_. Using
+    SMARTS, spectrums are simulated with all combinations of AMa and
+    Pw where:
+
+       * :math:`0.5 \textrm{cm} <= Pw <= 5 \textrm{cm}`
+       * :math:`1.0 <= AM_a <= 5.0`
+       * Spectral range is limited to that of CMP11 (280 nm to 2800 nm)
+       * spectrum simulated on a plane normal to the sun
+       * All other parameters fixed at G173 standard
+
+    From these simulated spectra, M is calculated using the known
+    quantum efficiency curves. Multiple linear regression is then
+    applied to fit Eq. 1 to determine the coefficients for each module.
+
+    Based on the PVLIB Matlab function ``pvl_FSspeccorr`` by Mitchell
+    Lee and Alex Panchula of First Solar, 2016 [2]_.
+
+    Parameters
+    ----------
+    pw : array-like
+        atmospheric precipitable water. [cm]
+
+    airmass_absolute : array-like
+        absolute (pressure-adjusted) airmass. [unitless]
+
+    min_pw : float, default 0.1
+        minimum atmospheric precipitable water. Any pw value lower than min_pw
+        is set to min_pw to avoid model divergence. [cm]
+
+    max_pw : float, default 8
+        maximum atmospheric precipitable water. Any pw value higher than max_pw
+        is set to NaN to avoid model divergence. [cm]
+
+    module_type : None or string, default None
+        a string specifying a cell type. Values of 'cdte', 'monosi', 'xsi',
+        'multisi', and 'polysi' (can be lower or upper case). If provided,
+        module_type selects default coefficients for the following modules:
+
+            * 'cdte' - First Solar Series 4-2 CdTe module.
+            * 'monosi', 'xsi' - First Solar TetraSun module.
+            * 'multisi', 'polysi' - anonymous multi-crystalline silicon module.
+            * 'cigs' - anonymous copper indium gallium selenide module.
+            * 'asi' - anonymous amorphous silicon module.
+
+        The module used to calculate the spectral correction
+        coefficients corresponds to the Multi-crystalline silicon
+        Manufacturer 2 Model C from [3]_. The spectral response (SR) of CIGS
+        and a-Si modules used to derive coefficients can be found in [4]_
+
+    coefficients : None or array-like, default None
+        Allows for entry of user-defined spectral correction
+        coefficients. Coefficients must be of length 6. Derivation of
+        coefficients requires use of SMARTS and PV module quantum
+        efficiency curve. Useful for modeling PV module types which are
+        not included as defaults, or to fine tune the spectral
+        correction to a particular PV module. Note that the parameters for
+        modules with very similar quantum efficiency should be similar,
+        in most cases limiting the need for module specific coefficients.
+
+    Returns
+    -------
+    modifier: array-like
+        spectral mismatch factor (unitless) which is can be multiplied
+        with broadband irradiance reaching a module's cells to estimate
+        effective irradiance, i.e., the irradiance that is converted to
+        electrical current.
+
+    References
+    ----------
+    .. [1] Gueymard, Christian. SMARTS2: a simple model of the atmospheric
+       radiative transfer of sunshine: algorithms and performance
+       assessment. Cocoa, FL: Florida Solar Energy Center, 1995.
+    .. [2] Lee, Mitchell, and Panchula, Alex. "Spectral Correction for
+       Photovoltaic Module Performance Based on Air Mass and Precipitable
+       Water." IEEE Photovoltaic Specialists Conference, Portland, 2016
+    .. [3] Marion, William F., et al. User's Manual for Data for Validating
+       Models for PV Module Performance. National Renewable Energy
+       Laboratory, 2014. http://www.nrel.gov/docs/fy14osti/61610.pdf
+    .. [4] Schweiger, M. and Hermann, W, Influence of Spectral Effects
+       on Energy Yield of Different PV Modules: Comparison of Pwat and
+       MMF Approach, TUV Rheinland Energy GmbH report 21237296.003,
+       January 2017
+    """
+
+    # --- Screen Input Data ---
+
+    # *** Pw ***
+    # Replace Pw Values below 0.1 cm with 0.1 cm to prevent model from
+    # diverging"
+    pw = np.atleast_1d(pw)
+    pw = pw.astype('float64')
+    if np.min(pw) < min_pw:
+        pw = np.maximum(pw, min_pw)
+        warn(f'Exceptionally low pw values replaced with {min_pw} cm to '
+             'prevent model divergence')
+
+    # Warn user about Pw data that is exceptionally high
+    if np.max(pw) > max_pw:
+        pw[pw > max_pw] = np.nan
+        warn('Exceptionally high pw values replaced by np.nan: '
+             'check input data.')
+
+    # *** AMa ***
+    # Replace Extremely High AM with AM 10 to prevent model divergence
+    # AM > 10 will only occur very close to sunset
+    if np.max(airmass_absolute) > 10:
+        airmass_absolute = np.minimum(airmass_absolute, 10)
+
+    # Warn user about AMa data that is exceptionally low
+    if np.min(airmass_absolute) < 0.58:
+        warn('Exceptionally low air mass: ' +
+             'model not intended for extra-terrestrial use')
+        # pvl_absoluteairmass(1,pvl_alt2pres(4340)) = 0.58 Elevation of
+        # Mina Pirquita, Argentian = 4340 m. Highest elevation city with
+        # population over 50,000.
+
+    _coefficients = {}
+    _coefficients['cdte'] = (
+        0.86273, -0.038948, -0.012506, 0.098871, 0.084658, -0.0042948)
+    _coefficients['monosi'] = (
+        0.85914, -0.020880, -0.0058853, 0.12029, 0.026814, -0.0017810)
+    _coefficients['xsi'] = _coefficients['monosi']
+    _coefficients['polysi'] = (
+        0.84090, -0.027539, -0.0079224, 0.13570, 0.038024, -0.0021218)
+    _coefficients['multisi'] = _coefficients['polysi']
+    _coefficients['cigs'] = (
+        0.85252, -0.022314, -0.0047216, 0.13666, 0.013342, -0.0008945)
+    _coefficients['asi'] = (
+        1.12094, -0.047620, -0.0083627, -0.10443, 0.098382, -0.0033818)
+
+    if module_type is not None and coefficients is None:
+        coefficients = _coefficients[module_type.lower()]
+    elif module_type is None and coefficients is not None:
+        pass
+    elif module_type is None and coefficients is None:
+        raise TypeError('No valid input provided, both module_type and ' +
+                        'coefficients are None')
+    else:
+        raise TypeError('Cannot resolve input, must supply only one of ' +
+                        'module_type and coefficients')
+
+    # Evaluate Spectral Shift
+    coeff = coefficients
+    ama = airmass_absolute
+    modifier = (
+        coeff[0] + coeff[1]*ama + coeff[2]*pw + coeff[3]*np.sqrt(ama) +
+        coeff[4]*np.sqrt(pw) + coeff[5]*ama/np.sqrt(pw))
+
+    return modifier
+
+
+def bird_hulstrom80_aod_bb(aod380, aod500):
+    """
+    Approximate broadband aerosol optical depth.
+
+    Bird and Hulstrom developed a correlation for broadband aerosol optical
+    depth (AOD) using two wavelengths, 380 nm and 500 nm.
+
+    Parameters
+    ----------
+    aod380 : numeric
+        AOD measured at 380 nm. [unitless]
+    aod500 : numeric
+        AOD measured at 500 nm. [unitless]
+
+    Returns
+    -------
+    aod_bb : numeric
+        Broadband AOD.  [unitless]
+
+    See also
+    --------
+    pvlib.atmosphere.kasten96_lt
+
+    References
+    ----------
+    .. [1] Bird and Hulstrom, "Direct Insolation Models" (1980)
+       `SERI/TR-335-344 <http://www.nrel.gov/docs/legosti/old/344.pdf>`_
+
+    .. [2] R. E. Bird and R. L. Hulstrom, "Review, Evaluation, and Improvement
+       of Direct Irradiance Models", Journal of Solar Energy Engineering
+       103(3), pp. 182-192 (1981)
+       :doi:`10.1115/1.3266239`
+    """
+    # approximate broadband AOD using (Bird-Hulstrom 1980)
+    return 0.27583 * aod380 + 0.35 * aod500
+
+
+def kasten96_lt(airmass_absolute, precipitable_water, aod_bb):
+    """
+    Calculate Linke turbidity  using Kasten pyrheliometric formula.
+
+    Note that broadband aerosol optical depth (AOD) can be approximated by AOD
+    measured at 700 nm according to Molineaux [4] . Bird and Hulstrom offer an
+    alternate approximation using AOD measured at 380 nm and 500 nm.
+
+    Based on original implementation by Armel Oumbe.
+
+    .. warning::
+        These calculations are only valid for airmass less than 5 and
+        precipitable water less than 5 cm.
+
+    Parameters
+    ----------
+    airmass_absolute : numeric
+        Pressure-adjusted airmass. [unitless]
+    precipitable_water : numeric
+        Precipitable water. [cm]
+    aod_bb : numeric
+        broadband AOD. [unitless]
+
+    Returns
+    -------
+    lt : numeric
+        Linke turbidity. [unitless]
+
+    See also
+    --------
+    pvlib.atmosphere.bird_hulstrom80_aod_bb
+    pvlib.atmosphere.angstrom_aod_at_lambda
+
+    References
+    ----------
+    .. [1] F. Linke, "Transmissions-Koeffizient und Trubungsfaktor", Beitrage
+       zur Physik der Atmosphare, Vol 10, pp. 91-103 (1922)
+
+    .. [2] F. Kasten, "A simple parameterization of the pyrheliometric formula
+       for determining the Linke turbidity factor", Meteorologische Rundschau
+       33, pp. 124-127 (1980)
+
+    .. [3] Kasten, "The Linke turbidity factor based on improved values of the
+       integral Rayleigh optical thickness", Solar Energy, Vol. 56, No. 3,
+       pp. 239-244 (1996)
+       :doi:`10.1016/0038-092X(95)00114-7`
+
+    .. [4] B. Molineaux, P. Ineichen, N. O'Neill, "Equivalence of
+       pyrheliometric and monochromatic aerosol optical depths at a single key
+       wavelength", Applied Optics Vol. 37, issue 10, 7008-7018 (1998)
+       :doi:`10.1364/AO.37.007008`
+
+    .. [5] P. Ineichen, "Conversion function between the Linke turbidity and
+       the atmospheric water vapor and aerosol content", Solar Energy 82,
+       pp. 1095-1097 (2008)
+       :doi:`10.1016/j.solener.2008.04.010`
+
+    .. [6] P. Ineichen and R. Perez, "A new airmass independent formulation for
+       the Linke Turbidity coefficient", Solar Energy, Vol. 73, no. 3,
+       pp. 151-157 (2002)
+       :doi:`10.1016/S0038-092X(02)00045-2`
+    """
+    # "From numerically integrated spectral simulations done with Modtran
+    # (Berk, 1989), Molineaux (1998) obtained for the broadband optical depth
+    # of a clean and dry atmospshere (fictitious atmosphere that comprises only
+    # the effects of Rayleigh scattering and absorption by the atmosphere gases
+    # other than the water vapor) the following expression"
+    # - P. Ineichen (2008)
+    delta_cda = -0.101 + 0.235 * airmass_absolute ** (-0.16)
+    # "and the broadband water vapor optical depth where pwat is the integrated
+    # precipitable water vapor content of the atmosphere expressed in cm and am
+    # the optical air mass. The precision of these fits is better than 1% when
+    # compared with Modtran simulations in the range 1 < am < 5 and
+    # 0 < pwat < 5 cm at sea level" - P. Ineichen (2008)
+    delta_w = 0.112 * airmass_absolute ** (-0.55) * precipitable_water ** 0.34
+    # broadband AOD
+    delta_a = aod_bb
+    # "Then using the Kasten pyrheliometric formula (1980, 1996), the Linke
+    # turbidity at am = 2 can be written. The extension of the Linke turbidity
+    # coefficient to other values of air mass was published by Ineichen and
+    # Perez (2002)" - P. Ineichen (2008)
+    lt = -(9.4 + 0.9 * airmass_absolute) * np.log(
+        np.exp(-airmass_absolute * (delta_cda + delta_w + delta_a))
+    ) / airmass_absolute
+    # filter out of extrapolated values
+    return lt
+
+
+def angstrom_aod_at_lambda(aod0, lambda0, alpha=1.14, lambda1=700.0):
+    r"""
+    Get AOD at specified wavelength using Angstrom turbidity model.
+
+    Parameters
+    ----------
+    aod0 : numeric
+        Aerosol optical depth (AOD) measured at wavelength ``lambda0``.
+        [unitless]
+    lambda0 : numeric
+        Wavelength corresponding to ``aod0``. [nm]
+    alpha : numeric, default 1.14
+        Angstrom :math:`\alpha` exponent corresponding to ``aod0``. [unitless]
+    lambda1 : numeric, default 700
+        Desired wavelength. [nm]
+
+    Returns
+    -------
+    aod1 : numeric
+        AOD at desired wavelength ``lambda1``. [unitless]
+
+    See also
+    --------
+    pvlib.atmosphere.angstrom_alpha
+
+    References
+    ----------
+    .. [1] Anders Angstrom, "On the Atmospheric Transmission of Sun Radiation
+       and On Dust in the Air", Geografiska Annaler Vol. 11, pp. 156-166 (1929)
+       JSTOR
+       :doi:`10.2307/519399`
+
+    .. [2] Anders Angstrom, "Techniques of Determining the Turbidity of the
+       Atmosphere", Tellus 13:2, pp. 214-223 (1961) Taylor & Francis
+       :doi:`10.3402/tellusa.v13i2.9493` and Co-Action Publishing
+       :doi:`10.1111/j.2153-3490.1961.tb00078.x`
+    """
+    return aod0 * ((lambda1 / lambda0) ** (-alpha))
+
+
+def angstrom_alpha(aod1, lambda1, aod2, lambda2):
+    r"""
+    Calculate Angstrom alpha exponent.
+
+    Parameters
+    ----------
+    aod1 : numeric
+        Aerosol optical depth at wavelength ``lambda1``. [unitless]
+    lambda1 : numeric
+        Wavelength corresponding to ``aod1``. [nm]
+    aod2 : numeric
+        Aerosol optical depth  at wavelength ``lambda2``. [unitless]
+    lambda2 : numeric
+        Wavelength corresponding to ``aod2``. [nm]
+
+    Returns
+    -------
+    alpha : numeric
+        Angstrom :math:`\alpha` exponent for wavelength in
+        ``(lambda1, lambda2)``. [unitless]
+
+    See also
+    --------
+    pvlib.atmosphere.angstrom_aod_at_lambda
+    """
+    return - np.log(aod1 / aod2) / np.log(lambda1 / lambda2)
+
+</file>
+
+<file path="pvlib/bifacial.py">
+"""
+The ``bifacial`` module contains functions for modeling back surface
+plane-of-array irradiance under various conditions.
+"""
+
+import pandas as pd
+import numpy as np
+
+
+def pvfactors_timeseries(
+        solar_azimuth, solar_zenith, surface_azimuth, surface_tilt,
+        axis_azimuth, timestamps, dni, dhi, gcr, pvrow_height, pvrow_width,
+        albedo, n_pvrows=3, index_observed_pvrow=1,
+        rho_front_pvrow=0.03, rho_back_pvrow=0.05,
+        horizon_band_angle=15.):
+    """
+    Calculate front and back surface plane-of-array irradiance on
+    a fixed tilt or single-axis tracker PV array configuration, and using
+    the open-source "pvfactors" package.  pvfactors implements the model
+    described in [1]_.
+    Please refer to pvfactors online documentation for more details:
+    https://sunpower.github.io/pvfactors/
+
+    Parameters
+    ----------
+    solar_azimuth: numeric
+        Sun's azimuth angles using pvlib's azimuth convention (deg)
+    solar_zenith: numeric
+        Sun's zenith angles (deg)
+    surface_azimuth: numeric
+        Azimuth angle of the front surface of the PV modules, using pvlib's
+        convention (deg)
+    surface_tilt: numeric
+        Tilt angle of the PV modules, going from 0 to 180 (deg)
+    axis_azimuth: float
+        Azimuth angle of the rotation axis of the PV modules, using pvlib's
+        convention (deg). This is supposed to be fixed for all timestamps.
+    timestamps: datetime or DatetimeIndex
+        List of simulation timestamps
+    dni: numeric
+        Direct normal irradiance (W/m2)
+    dhi: numeric
+        Diffuse horizontal irradiance (W/m2)
+    gcr: float
+        Ground coverage ratio of the pv array
+    pvrow_height: float
+        Height of the pv rows, measured at their center (m)
+    pvrow_width: float
+        Width of the pv rows in the considered 2D plane (m)
+    albedo: float
+        Ground albedo
+    n_pvrows: int, default 3
+        Number of PV rows to consider in the PV array
+    index_observed_pvrow: int, default 1
+        Index of the PV row whose incident irradiance will be returned. Indices
+        of PV rows go from 0 to n_pvrows-1.
+    rho_front_pvrow: float, default 0.03
+        Front surface reflectivity of PV rows
+    rho_back_pvrow: float, default 0.05
+        Back surface reflectivity of PV rows
+    horizon_band_angle: float, default 15
+        Elevation angle of the sky dome's diffuse horizon band (deg)
+
+    Returns
+    -------
+    poa_front: numeric
+        Calculated incident irradiance on the front surface of the PV modules
+        (W/m2)
+    poa_back: numeric
+        Calculated incident irradiance on the back surface of the PV modules
+        (W/m2)
+    poa_front_absorbed: numeric
+        Calculated absorbed irradiance on the front surface of the PV modules
+        (W/m2), after AOI losses
+    poa_back_absorbed: numeric
+        Calculated absorbed irradiance on the back surface of the PV modules
+        (W/m2), after AOI losses
+
+    References
+    ----------
+    .. [1] Anoma, Marc Abou, et al. "View Factor Model and Validation for
+        Bifacial PV and Diffuse Shade on Single-Axis Trackers." 44th IEEE
+        Photovoltaic Specialist Conference. 2017.
+    """
+    # Convert pandas Series inputs (and some lists) to numpy arrays
+    if isinstance(solar_azimuth, pd.Series):
+        solar_azimuth = solar_azimuth.values
+    elif isinstance(solar_azimuth, list):
+        solar_azimuth = np.array(solar_azimuth)
+    if isinstance(solar_zenith, pd.Series):
+        solar_zenith = solar_zenith.values
+    elif isinstance(solar_zenith, list):
+        solar_zenith = np.array(solar_zenith)
+    if isinstance(surface_azimuth, pd.Series):
+        surface_azimuth = surface_azimuth.values
+    elif isinstance(surface_azimuth, list):
+        surface_azimuth = np.array(surface_azimuth)
+    if isinstance(surface_tilt, pd.Series):
+        surface_tilt = surface_tilt.values
+    elif isinstance(surface_tilt, list):
+        surface_tilt = np.array(surface_tilt)
+    if isinstance(dni, pd.Series):
+        dni = dni.values
+    elif isinstance(dni, list):
+        dni = np.array(dni)
+    if isinstance(dhi, pd.Series):
+        dhi = dhi.values
+    elif isinstance(dhi, list):
+        dhi = np.array(dhi)
+
+    # Import pvfactors functions for timeseries calculations.
+    from pvfactors.run import run_timeseries_engine
+
+    # Build up pv array configuration parameters
+    pvarray_parameters = {
+        'n_pvrows': n_pvrows,
+        'axis_azimuth': axis_azimuth,
+        'pvrow_height': pvrow_height,
+        'pvrow_width': pvrow_width,
+        'gcr': gcr
+    }
+
+    irradiance_model_params = {
+        'rho_front': rho_front_pvrow,
+        'rho_back': rho_back_pvrow,
+        'horizon_band_angle': horizon_band_angle
+    }
+
+    # Create report function
+    def fn_build_report(pvarray):
+        return {'total_inc_back': pvarray.ts_pvrows[index_observed_pvrow]
+                .back.get_param_weighted('qinc'),
+                'total_inc_front': pvarray.ts_pvrows[index_observed_pvrow]
+                .front.get_param_weighted('qinc'),
+                'total_abs_back': pvarray.ts_pvrows[index_observed_pvrow]
+                .back.get_param_weighted('qabs'),
+                'total_abs_front': pvarray.ts_pvrows[index_observed_pvrow]
+                .front.get_param_weighted('qabs')}
+
+    # Run pvfactors calculations
+    report = run_timeseries_engine(
+        fn_build_report, pvarray_parameters,
+        timestamps, dni, dhi, solar_zenith, solar_azimuth,
+        surface_tilt, surface_azimuth, albedo,
+        irradiance_model_params=irradiance_model_params)
+
+    # Turn report into dataframe
+    df_report = pd.DataFrame(report, index=timestamps)
+
+    return (df_report.total_inc_front, df_report.total_inc_back,
+            df_report.total_abs_front, df_report.total_abs_back)
+
+</file>
+
+<file path="pvlib/iotools/crn.py">
+"""Functions to read data from the US Climate Reference Network (CRN).
+"""
+
+import pandas as pd
+import numpy as np
+
+
+HEADERS = (
+    'WBANNO UTC_DATE UTC_TIME LST_DATE LST_TIME CRX_VN LONGITUDE LATITUDE '
+    'AIR_TEMPERATURE PRECIPITATION SOLAR_RADIATION SR_FLAG '
+    'SURFACE_TEMPERATURE ST_TYPE ST_FLAG RELATIVE_HUMIDITY RH_FLAG '
+    'SOIL_MOISTURE_5 SOIL_TEMPERATURE_5 WETNESS WET_FLAG WIND_1_5 WIND_FLAG'
+)
+
+VARIABLE_MAP = {
+    'LONGITUDE': 'longitude',
+    'LATITUDE': 'latitude',
+    'AIR_TEMPERATURE': 'temp_air',
+    'SOLAR_RADIATION': 'ghi',
+    'SR_FLAG': 'ghi_flag',
+    'RELATIVE_HUMIDITY': 'relative_humidity',
+    'RH_FLAG': 'relative_humidity_flag',
+    'WIND_1_5': 'wind_speed',
+    'WIND_FLAG': 'wind_speed_flag'
+}
+
+# as specified in CRN README.txt file. excludes 1 space between columns
+WIDTHS = [5, 8, 4, 8, 4, 6, 7, 7, 7, 7, 6, 1, 7, 1, 1, 5, 1, 7, 7, 5, 1, 6, 1]
+# add 1 to make fields contiguous (required by pandas.read_fwf)
+WIDTHS = [w + 1 for w in WIDTHS]
+# no space after last column
+WIDTHS[-1] -= 1
+
+# specify dtypes for potentially problematic values
+DTYPES = [
+    'int64', 'int64', 'int64', 'int64', 'int64', 'str', 'float64', 'float64',
+    'float64', 'float64', 'float64', 'int64', 'float64', 'O', 'int64',
+    'float64', 'int64', 'float64', 'float64', 'int64', 'int64', 'float64',
+    'int64'
+]
+
+
+def read_crn(filename):
+    """
+    Read a NOAA USCRN fixed-width file into pandas dataframe.  The CRN is
+    described in [1]_ and [2]_.
+
+    Parameters
+    ----------
+    filename: str, path object, or file-like
+        filepath or url to read for the fixed-width file.
+
+    Returns
+    -------
+    data: Dataframe
+        A dataframe with DatetimeIndex and all of the variables in the
+        file.
+
+    Notes
+    -----
+    CRN files contain 5 minute averages labeled by the interval ending
+    time. Here, missing data is flagged as NaN, rather than the lowest
+    possible integer for a field (e.g. -999 or -99). Air temperature in
+    deg C. Wind speed in m/s at a height of 1.5 m above ground level.
+
+    Variables corresponding to standard pvlib variables are renamed,
+    e.g. `SOLAR_RADIATION` becomes `ghi`. See the
+    `pvlib.iotools.crn.VARIABLE_MAP` dict for the complete mapping.
+
+    CRN files occasionally have a set of null characters on a line
+    instead of valid data. This function drops those lines. Sometimes
+    these null characters appear on a line of their own and sometimes
+    they occur on the same line as valid data. In the latter case, the
+    valid data will not be returned. Users may manually remove the null
+    characters and reparse the file if they need that line.
+
+    References
+    ----------
+    .. [1] U.S. Climate Reference Network
+       `https://www.ncdc.noaa.gov/crn/qcdatasets.html
+       <https://www.ncdc.noaa.gov/crn/qcdatasets.html>`_
+
+    .. [2] Diamond, H. J. et. al., 2013: U.S. Climate Reference Network
+       after one decade of operations: status and assessment. Bull.
+       Amer. Meteor. Soc., 94, 489-498. :doi:`10.1175/BAMS-D-12-00170.1`
+    """
+
+    # read in data. set fields with NUL characters to NaN
+    data = pd.read_fwf(filename, header=None, names=HEADERS.split(' '),
+                       widths=WIDTHS, na_values=['\x00\x00\x00\x00\x00\x00'])
+    # at this point we only have NaNs from NUL characters, not -999 etc.
+    # these bad rows need to be removed so that dtypes can be set.
+    # NaNs require float dtype so we run into errors if we don't do this.
+    data = data.dropna(axis=0)
+    # loop here because dtype kwarg not supported in read_fwf until 0.20
+    for (col, _dtype) in zip(data.columns, DTYPES):
+        data[col] = data[col].astype(_dtype)
+
+    # set index
+    # UTC_TIME does not have leading 0s, so must zfill(4) to comply
+    # with %H%M format
+    dts = data[['UTC_DATE', 'UTC_TIME']].astype(str)
+    dtindex = pd.to_datetime(dts['UTC_DATE'] + dts['UTC_TIME'].str.zfill(4),
+                             format='%Y%m%d%H%M', utc=True)
+    data = data.set_index(dtindex)
+    try:
+        # to_datetime(utc=True) does not work in older versions of pandas
+        data = data.tz_localize('UTC')
+    except TypeError:
+        pass
+
+    # Now we can set nans. This could be done a per column basis to be
+    # safer, since in principle a real -99 value could occur in a -9999
+    # column. Very unlikely to see that in the real world.
+    for val in [-99, -999, -9999]:
+        # consider replacing with .replace([-99, -999, -9999])
+        data = data.where(data != val, np.nan)
+
+    data = data.rename(columns=VARIABLE_MAP)
+
+    return data
+
+</file>
+
+Return only the unified git diff.<|im_end|>
+<|im_start|>assistant
+<think>
+
+</think>
+
