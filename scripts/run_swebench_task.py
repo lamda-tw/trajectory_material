@@ -100,6 +100,9 @@ def main() -> int:
     parser.add_argument("--gpu-id", type=int, required=True)
     parser.add_argument("--endpoint", required=True)
     parser.add_argument("--mini-source", type=Path, required=True)
+    parser.add_argument("--step-limit", type=int, default=40)
+    parser.add_argument("--max-tokens", type=int, default=2048)
+    parser.add_argument("--command-timeout-seconds", type=int, default=180)
     args = parser.parse_args()
 
     started_at = utc_now()
@@ -130,7 +133,7 @@ def main() -> int:
             "temperature": 0.6,
             "top_p": 0.95,
             "seed": 20260914,
-            "max_tokens": 2048,
+            "max_tokens": args.max_tokens,
             "extra_body": {"chat_template_kwargs": {"enable_thinking": False}},
         },
         cost_tracking="ignore_errors",
@@ -153,13 +156,13 @@ def main() -> int:
         "ALL_PROXY": "http://127.0.0.1:9",
         "NO_PROXY": "127.0.0.1,localhost",
     }
-    env = LocalEnvironment(cwd=str(worktree), env=command_env, timeout=180)
+    env = LocalEnvironment(cwd=str(worktree), env=command_env, timeout=args.command_timeout_seconds)
     agent = InteractiveAgent(
         model,
         env,
         system_template=SYSTEM_TEMPLATE,
         instance_template=builtin["agent"]["instance_template"],
-        step_limit=40,
+        step_limit=args.step_limit,
         cost_limit=0.0,
         wall_time_limit_seconds=0,
         max_consecutive_format_errors=3,
@@ -219,6 +222,9 @@ def main() -> int:
         "worker_id": args.worker_id,
         "gpu_id": args.gpu_id,
         "endpoint": args.endpoint,
+        "step_limit": args.step_limit,
+        "max_tokens": args.max_tokens,
+        "command_timeout_seconds": args.command_timeout_seconds,
         "started_at_utc": started_at,
         "finished_at_utc": finished_at,
         "elapsed_seconds": round(time.monotonic() - start_monotonic, 3),

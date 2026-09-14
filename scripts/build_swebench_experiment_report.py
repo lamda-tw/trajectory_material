@@ -59,6 +59,30 @@ def main() -> None:
         json.loads((experiment / "metadata/per-task" / f"{instance_id}.json").read_text())
         for instance_id in manifest["instance_ids_in_output_order"]
     ]
+    model_config = config["model"]
+    agent_config = config["agent"]
+    parallel_config = config["parallelism"]
+    workers = parallel_config["workers"]
+    replicas = parallel_config["replicas"]
+    max_model_len = model_config.get("max_model_len")
+    if max_model_len is None:
+        command = replicas[0]["command"]
+        max_model_len = int(command[command.index("--max-model-len") + 1])
+    step_limit = agent_config["step_limit"]
+    max_tokens = model_config["max_tokens"]
+    command_timeout = agent_config["command_timeout_seconds"]
+    gpu_memory_utilization = replicas[0].get("gpu_memory_utilization")
+    if gpu_memory_utilization is None:
+        command = replicas[0]["command"]
+        gpu_memory_utilization = float(command[command.index("--gpu-memory-utilization") + 1])
+    worker_gpu = {
+        state["worker_id"]: state["gpu_id"]
+        for state in states
+    }
+    worker_map = ", ".join(
+        f"worker {worker_id} -> GPU {worker_gpu[worker_id]}"
+        for worker_id in sorted(worker_gpu)
+    )
 
     active_wall = sum(float(segment["elapsed_seconds"]) for segment in segments)
     first_start = min(parse_time(segment["started_at_utc"]) for segment in segments)
@@ -77,13 +101,13 @@ def main() -> None:
     engine_concurrency = {}
     for gpu_id in (0, 1):
         text = (experiment / "logs" / f"vllm-gpu{gpu_id}.log").read_text(errors="replace")
-        memory = [float(value) for value in re.findall(r"Desired GPU memory utilization is \(0\.45, ([0-9.]+) GiB\)", text)]
-        concurrency = [float(value) for value in re.findall(r"Maximum concurrency for 32,768 tokens per request: ([0-9.]+)x", text)]
+        memory = [float(value) for value in re.findall(r"Desired GPU memory utilization is .*?, ([0-9.]+) GiB", text)]
+        concurrency = [float(value) for value in re.findall(r"Maximum concurrency for [0-9,]+ tokens per request: ([0-9.]+)x", text)]
         engine_memory[gpu_id] = max(memory) if memory else None
         engine_concurrency[gpu_id] = max(concurrency) if concurrency else None
 
     lines = [
-        "# Qwen3-8B + mini-SWE-agent SWE-bench Verified-50 baseline",
+        f"# Qwen3-8B + mini-SWE-agent SWE-bench Verified-50 {'baseline v2' if 'baseline_v2' in experiment.name else 'baseline'}",
         "",
         "## Outcome",
         "",
@@ -93,8 +117,8 @@ def main() -> None:
         "This server did not run the official SWE-bench evaluator, so this experiment has no resolved/pass score.",
         "",
         f"There were {submitted_count} `Submitted` exits, including {submitted_empty} submission(s) whose formal patch was empty; "
-        f"{statuses.get('LimitsExceeded', 0)} tasks reached the fixed 40-call limit and "
-        f"{statuses.get('ContextWindowExceeded', 0)} reached the fixed 32,768-token context boundary. "
+        f"{statuses.get('LimitsExceeded', 0)} tasks reached the fixed {step_limit}-call limit and "
+        f"{statuses.get('ContextWindowExceeded', 0)} reached the fixed {max_model_len:,}-token context boundary. "
         "Empty predictions were retained and no poor-quality model result was retried.",
         "",
         "## Frozen holdout",
@@ -119,34 +143,35 @@ def main() -> None:
             "",
             f"- Model checkpoint: `{config['model']['checkpoint']}` (`{config['model']['model_name_or_path']}`)",
             f"- mini-SWE-agent: {environment['mini_swe_agent_version']} at source commit `{environment['mini_swe_agent_source_commit']}`",
-            f"- vLLM: {environment['vllm_version']}; bfloat16; tensor parallel size 1; max model length 32,768",
-            "- Sampling: temperature 0.6, top_p 0.95, request seed 20260914, maximum 2,048 output tokens, thinking disabled",
-            "- Agent: text-based shell actions, 40-call limit, 180-second shell-command timeout, one formal attempt per task",
+            f"- vLLM: {environment['vllm_version']}; bfloat16; tensor parallel size 1; max model length {max_model_len:,}",
+            f"- Sampling: temperature {model_config['temperature']}, top_p {model_config['top_p']}, request seed "
+            f"{model_config['request_seed']}, maximum {max_tokens:,} output tokens, thinking disabled",
+            f"- Agent: text-based shell actions, {step_limit}-call limit, {command_timeout}-second shell-command timeout, "
+            "one formal attempt per task",
             "- Repositories: sanitized source exports at exact base commits; later repository history was not exposed to the agent",
             "- Network: model shell environment used invalid outbound proxies and the prompt prohibited clone, fetch, download, and network access",
             "",
             "## Parallel execution",
             "",
-            "Two identical vLLM replicas were used: GPU 0 on port 18080 and GPU 1 on port 18081. Each replica used "
-            "`max_num_seqs=2`; workers 0–1 used GPU 0 and workers 2–3 used GPU 1. Assignment was fixed as "
-            "`worker_id = task_index % 4`.",
+            f"Two identical vLLM replicas were used: GPU 0 on port {replicas[0]['port']} and GPU 1 on port "
+            f"{replicas[1]['port']}. Each replica used `max_num_seqs={replicas[0]['max_num_seqs']}`; {worker_map}. "
+            f"Assignment was fixed as `{parallel_config['assignment']}`.",
             "",
-            "Both four-request concurrency smoke tests passed. The run had two service segments because the first runner version "
-            "incorrectly classified a normal context-window terminal outcome as infrastructure failure. Execution stopped safely, "
-            "the classification was corrected, and the experiment resumed from index 8 without rerunning any of the first eight "
-            "formal model attempts. This was metadata/control-flow repair, not a model retry.",
+            f"The {workers}-request concurrency smoke test passed. The experiment completed in {len(segments)} vLLM service "
+            f"segment(s). No formal model result was retried.",
             "",
             f"- First formal start: `{first_start.isoformat()}`",
             f"- Final finish: `{last_finish.isoformat()}`",
-            f"- Active runner time across both segments: {duration(active_wall)}",
+            f"- Active runner time across {len(segments)} segment(s): {duration(active_wall)}",
             f"- End-to-end time including diagnosis/resume pause: {duration(elapsed_end_to_end)}",
             f"- Sum of per-task elapsed times: {duration(task_work)}",
             f"- Work-equivalent concurrency ratio (`sum(task time) / active runner time`): {speedup:.2f}×",
             f"- Formal retry count: {formal_retries}",
             "",
             "Exact peak `nvidia-smi` process memory was not sampled continuously, so no peak value is fabricated. Each vLLM "
-            f"engine reported a configured 0.45 memory allocation of {engine_memory[0]} GiB on GPU 0 and {engine_memory[1]} GiB "
-            f"on GPU 1; each reported full-context KV capacity of {engine_concurrency[0]}× and {engine_concurrency[1]}× respectively.",
+            f"engine used a configured {gpu_memory_utilization} GPU-memory utilization; it reported "
+            f"{engine_memory[0]} GiB on GPU 0 and {engine_memory[1]} GiB on GPU 1. Full-context KV capacities were "
+            f"{engine_concurrency[0]}× and {engine_concurrency[1]}× respectively.",
             "",
             "## Aggregate results",
             "",

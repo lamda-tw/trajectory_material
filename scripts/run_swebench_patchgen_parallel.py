@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Orchestrate the frozen 50-task baseline with two vLLM replicas and four workers."""
+"""Orchestrate a frozen 50-task baseline with configurable limits and workers."""
 
 from __future__ import annotations
 
@@ -20,6 +20,7 @@ import urllib.error
 import urllib.request
 from collections import Counter
 from datetime import datetime, timezone
+from math import ceil
 from pathlib import Path
 
 import yaml
@@ -108,7 +109,13 @@ def port_is_free(port: int) -> bool:
             return False
 
 
-def vllm_command(port: int) -> list[str]:
+def vllm_command(
+    port: int,
+    *,
+    max_model_len: int,
+    gpu_memory_utilization: float,
+    max_num_seqs: int,
+) -> list[str]:
     return [
         str(VLLM_EXECUTABLE),
         "serve",
@@ -130,13 +137,13 @@ def vllm_command(port: int) -> list[str]:
         "--seed",
         "20260914",
         "--max-model-len",
-        "32768",
+        str(max_model_len),
         "--served-model-name",
         SERVED_MODEL_NAME,
         "--gpu-memory-utilization",
-        "0.45",
+        str(gpu_memory_utilization),
         "--max-num-seqs",
-        "2",
+        str(max_num_seqs),
     ]
 
 
@@ -163,7 +170,13 @@ def wait_healthy(process: subprocess.Popen, port: int, timeout: float = 300) -> 
     raise TimeoutError(f"vLLM on port {port} did not become healthy: {last_error}")
 
 
-def concurrency_smoke() -> dict:
+def worker_target(worker_id: int, worker_count: int) -> tuple[int, int]:
+    workers_per_replica = ceil(worker_count / 2)
+    gpu_id = min(worker_id // workers_per_replica, 1)
+    return gpu_id, (18080, 18081)[gpu_id]
+
+
+def concurrency_smoke(worker_count: int) -> dict:
     release = threading.Event()
 
     def one(request_id: int, port: int) -> dict:
@@ -195,17 +208,20 @@ def concurrency_smoke() -> dict:
             "error": error,
         }
 
-    requests = [(0, 18080), (1, 18080), (2, 18081), (3, 18081)]
-    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+    requests = [(worker_id, worker_target(worker_id, worker_count)[1]) for worker_id in range(worker_count)]
+    with concurrent.futures.ThreadPoolExecutor(max_workers=worker_count) as executor:
         futures = [executor.submit(one, request_id, port) for request_id, port in requests]
         release.set()
         results = [future.result() for future in futures]
     overlap = {}
-    for port in (18080, 18081):
+    for port in sorted({port for _, port in requests}):
         matches = [result for result in results if result["port"] == port]
-        overlap[str(port)] = min(item["finished_at_unix"] for item in matches) > max(
+        overlap[str(port)] = len(matches) == 1 or min(item["finished_at_unix"] for item in matches) > max(
             item["started_at_unix"] for item in matches
         )
+    overlap["global"] = min(item["finished_at_unix"] for item in results) > max(
+        item["started_at_unix"] for item in results
+    )
     passed = all(result["error"] is None for result in results) and all(overlap.values())
     return {"schema_version": 1, "performed_at_utc": utc_now(), "passed": passed, "intervals_overlap": overlap, "requests": results}
 
@@ -253,10 +269,19 @@ def prepare_task(experiment: Path, task: dict, task_index: int) -> tuple[Path, P
     return worktree, task_env, baseline_head
 
 
-def launch_task(experiment: Path, task: dict, task_index: int) -> dict:
-    worker_id = task_index % 4
-    gpu_id = 0 if worker_id < 2 else 1
-    endpoint = "http://127.0.0.1:18080" if gpu_id == 0 else "http://127.0.0.1:18081"
+def launch_task(
+    experiment: Path,
+    task: dict,
+    task_index: int,
+    *,
+    worker_count: int,
+    step_limit: int,
+    max_tokens: int,
+    command_timeout_seconds: int,
+) -> dict:
+    worker_id = task_index % worker_count
+    gpu_id, port = worker_target(worker_id, worker_count)
+    endpoint = f"http://127.0.0.1:{port}"
     worktree, task_env, baseline_head = prepare_task(experiment, task, task_index)
     log_path = experiment / "logs" / f"{task['instance_id']}.log"
     log_handle = log_path.open("w", encoding="utf-8")
@@ -283,6 +308,12 @@ def launch_task(experiment: Path, task: dict, task_index: int) -> dict:
         endpoint,
         "--mini-source",
         str(MINI_SOURCE),
+        "--step-limit",
+        str(step_limit),
+        "--max-tokens",
+        str(max_tokens),
+        "--command-timeout-seconds",
+        str(command_timeout_seconds),
     ]
     process_env = os.environ.copy()
     process_env.update({"MSWEA_SILENT_STARTUP": "1", "PYTHONUNBUFFERED": "1"})
@@ -332,8 +363,27 @@ def finish_task(experiment: Path, running: dict) -> tuple[bool, dict | None]:
     return infrastructure_error, state
 
 
-def run_canary(experiment: Path, tasks: list[dict]) -> bool:
-    running = [launch_task(experiment, tasks[index], index) for index in range(4)]
+def run_canary(
+    experiment: Path,
+    tasks: list[dict],
+    *,
+    worker_count: int,
+    step_limit: int,
+    max_tokens: int,
+    command_timeout_seconds: int,
+) -> bool:
+    running = [
+        launch_task(
+            experiment,
+            tasks[index],
+            index,
+            worker_count=worker_count,
+            step_limit=step_limit,
+            max_tokens=max_tokens,
+            command_timeout_seconds=command_timeout_seconds,
+        )
+        for index in range(worker_count)
+    ]
     failed = False
     for item in running:
         infrastructure_error, _ = finish_task(experiment, item)
@@ -341,24 +391,40 @@ def run_canary(experiment: Path, tasks: list[dict]) -> bool:
     return not failed
 
 
-def run_remaining(experiment: Path, tasks: list[dict]) -> bool:
+def run_remaining(
+    experiment: Path,
+    tasks: list[dict],
+    *,
+    worker_count: int,
+    step_limit: int,
+    max_tokens: int,
+    command_timeout_seconds: int,
+) -> bool:
     queues = {
         worker: [
             index
-            for index in range(4, len(tasks))
-            if index % 4 == worker
+            for index in range(worker_count, len(tasks))
+            if index % worker_count == worker
             and not (experiment / "metadata/per-task" / f"{tasks[index]['instance_id']}.json").exists()
         ]
-        for worker in range(4)
+        for worker in range(worker_count)
     }
     active: dict[int, dict] = {}
     stop_dispatch = False
     while any(queues.values()) or active:
         if not stop_dispatch:
-            for worker in range(4):
+            for worker in range(worker_count):
                 if worker not in active and queues[worker]:
                     index = queues[worker].pop(0)
-                    active[worker] = launch_task(experiment, tasks[index], index)
+                    active[worker] = launch_task(
+                        experiment,
+                        tasks[index],
+                        index,
+                        worker_count=worker_count,
+                        step_limit=step_limit,
+                        max_tokens=max_tokens,
+                        command_timeout_seconds=command_timeout_seconds,
+                    )
         if not active:
             break
         time.sleep(1)
@@ -423,7 +489,20 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--experiment", type=Path, required=True)
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--workers", type=int, default=4)
+    parser.add_argument("--step-limit", type=int, default=40)
+    parser.add_argument("--max-model-len", type=int, default=32768)
+    parser.add_argument("--max-tokens", type=int, default=2048)
+    parser.add_argument("--command-timeout-seconds", type=int, default=180)
+    parser.add_argument("--gpu-memory-utilization", type=float, default=0.45)
+    parser.add_argument("--max-num-seqs", type=int, default=2)
     args = parser.parse_args()
+    if not 1 <= args.workers <= 4:
+        raise ValueError("--workers must be between 1 and 4")
+    if min(args.step_limit, args.max_model_len, args.max_tokens, args.command_timeout_seconds, args.max_num_seqs) <= 0:
+        raise ValueError("limits and sequence counts must be positive")
+    if not 0 < args.gpu_memory_utilization <= 1:
+        raise ValueError("--gpu-memory-utilization must be in (0, 1]")
     experiment = args.experiment.resolve(strict=True)
     selected_path = experiment / "data/selected_tasks.jsonl"
     tasks = [json.loads(line) for line in selected_path.read_text(encoding="utf-8").splitlines() if line.strip()]
@@ -490,9 +569,9 @@ def main() -> int:
         {
             "task_index": index,
             "instance_id": task["instance_id"],
-            "worker_id": index % 4,
-            "gpu_id": 0 if index % 4 < 2 else 1,
-            "endpoint": "http://127.0.0.1:18080" if index % 4 < 2 else "http://127.0.0.1:18081",
+            "worker_id": index % args.workers,
+            "gpu_id": worker_target(index % args.workers, args.workers)[0],
+            "endpoint": f"http://127.0.0.1:{worker_target(index % args.workers, args.workers)[1]}",
         }
         for index, task in enumerate(tasks)
     ]
@@ -506,26 +585,38 @@ def main() -> int:
             "checkpoint": str(MODEL_PATH),
             "model_name_or_path": MODEL_NAME,
             "served_model_name": SERVED_MODEL_NAME,
+            "max_model_len": args.max_model_len,
             "temperature": 0.6,
             "top_p": 0.95,
             "request_seed": 20260914,
-            "max_tokens": 2048,
+            "max_tokens": args.max_tokens,
             "enable_thinking": False,
         },
         "agent": {
             "system_template": SYSTEM_TEMPLATE,
             "instance_template": builtin["agent"]["instance_template"],
-            "step_limit": 40,
-            "command_timeout_seconds": 180,
+            "step_limit": args.step_limit,
+            "command_timeout_seconds": args.command_timeout_seconds,
             "mode": "yolo",
             "max_consecutive_format_errors": 3,
         },
         "parallelism": {
-            "workers": 4,
-            "assignment": "worker_id = task_index % 4",
+            "workers": args.workers,
+            "assignment": f"worker_id = task_index % {args.workers}",
             "replicas": [
-                {"gpu_id": 0, "port": 18080, "max_num_seqs": 2, "command": vllm_command(18080)},
-                {"gpu_id": 1, "port": 18081, "max_num_seqs": 2, "command": vllm_command(18081)},
+                {
+                    "gpu_id": gpu_id,
+                    "port": port,
+                    "max_num_seqs": args.max_num_seqs,
+                    "gpu_memory_utilization": args.gpu_memory_utilization,
+                    "command": vllm_command(
+                        port,
+                        max_model_len=args.max_model_len,
+                        gpu_memory_utilization=args.gpu_memory_utilization,
+                        max_num_seqs=args.max_num_seqs,
+                    ),
+                }
+                for gpu_id, port in ((0, 18080), (1, 18081))
             ],
         },
     }
@@ -543,7 +634,12 @@ def main() -> int:
             process_env = os.environ.copy()
             process_env.update({"CUDA_VISIBLE_DEVICES": str(gpu_id), "HF_HUB_OFFLINE": "1", "PYTHONUNBUFFERED": "1"})
             process = subprocess.Popen(
-                vllm_command(port),
+                vllm_command(
+                    port,
+                    max_model_len=args.max_model_len,
+                    gpu_memory_utilization=args.gpu_memory_utilization,
+                    max_num_seqs=args.max_num_seqs,
+                ),
                 stdout=log_handle,
                 stderr=subprocess.STDOUT,
                 env=process_env,
@@ -554,7 +650,7 @@ def main() -> int:
             print(f"VLLM_START gpu={gpu_id} port={port} pid={process.pid}", flush=True)
         health = [wait_healthy(process, port) for process, port in zip(vllm_processes, (18080, 18081), strict=True)]
         print("Both vLLM replicas are healthy", flush=True)
-        smoke = concurrency_smoke()
+        smoke = concurrency_smoke(args.workers)
         smoke["model_health"] = health
         smoke["vllm_processes_alive_after"] = [process.poll() is None for process in vllm_processes]
         smoke["passed"] = smoke["passed"] and all(smoke["vllm_processes_alive_after"])
@@ -562,15 +658,21 @@ def main() -> int:
         with (experiment / "metadata/concurrency_smoke_history.jsonl").open("a", encoding="utf-8") as handle:
             handle.write(json.dumps(smoke, ensure_ascii=False) + "\n")
         if not smoke["passed"]:
-            raise RuntimeError("Four-request concurrency smoke test failed")
-        print("Four-request concurrency smoke test passed", flush=True)
+            raise RuntimeError(f"{args.workers}-request concurrency smoke test failed")
+        print(f"{args.workers}-request concurrency smoke test passed", flush=True)
         canary_complete = all(
             (experiment / "metadata/per-task" / f"{tasks[index]['instance_id']}.json").exists()
-            for index in range(4)
+            for index in range(args.workers)
         )
-        if not canary_complete and not run_canary(experiment, tasks):
-            stop_reason = "Infrastructure failure in the four-task formal canary"
-        elif not run_remaining(experiment, tasks):
+        runner_kwargs = {
+            "worker_count": args.workers,
+            "step_limit": args.step_limit,
+            "max_tokens": args.max_tokens,
+            "command_timeout_seconds": args.command_timeout_seconds,
+        }
+        if not canary_complete and not run_canary(experiment, tasks, **runner_kwargs):
+            stop_reason = f"Infrastructure failure in the {args.workers}-task formal canary"
+        elif not run_remaining(experiment, tasks, **runner_kwargs):
             stop_reason = "Infrastructure failure during the remaining formal tasks"
         else:
             run_complete = True
