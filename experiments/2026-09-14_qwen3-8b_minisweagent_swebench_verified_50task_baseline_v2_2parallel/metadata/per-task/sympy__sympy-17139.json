@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "instance_id": "sympy__sympy-17139",
+  "repo": "sympy/sympy",
+  "base_commit": "1d3327b8e90a186df6972991963a5ae87053259d",
+  "task_index": 15,
+  "worker_id": 1,
+  "gpu_id": 1,
+  "endpoint": "http://127.0.0.1:18081",
+  "step_limit": 60,
+  "max_tokens": 2048,
+  "command_timeout_seconds": 180,
+  "started_at_utc": "2026-09-14T07:24:52.868435+00:00",
+  "finished_at_utc": "2026-09-14T07:27:31.819249+00:00",
+  "elapsed_seconds": 158.951,
+  "exit_status": "LimitsExceeded",
+  "api_calls": 60,
+  "submitted_patch": "/root/autodl-tmp/workspace-tw/experiments/2026-09-14_qwen3-8b_minisweagent_swebench_verified_50task_baseline_v2_2parallel/outputs/sympy__sympy-17139.submitted.patch",
+  "submitted_patch_bytes": 0,
+  "worktree_patch": "/root/autodl-tmp/workspace-tw/experiments/2026-09-14_qwen3-8b_minisweagent_swebench_verified_50task_baseline_v2_2parallel/outputs/sympy__sympy-17139.worktree.patch",
+  "worktree_patch_bytes": 0,
+  "empty_submission": true,
+  "worktree_deleted_by_agent": true,
+  "patch_apply_check": {
+    "attempted": false,
+    "applies": null,
+    "returncode": null,
+    "output": "empty patch; worktree deleted by model action"
+  },
+  "infrastructure_error": false,
+  "classification_note": "The model deleted its own task worktree at step 10; retained as a completed empty model outcome, not an infrastructure failure; no model rerun.",
+  "exception": {
+    "type": "FileNotFoundError",
+    "message": "[Errno 2] No such file or directory: PosixPath('/root/autodl-tmp/workspace-tw/experiments/2026-09-14_qwen3-8b_minisweagent_swebench_verified_50task_baseline_v2_2parallel/worktrees/sympy__sympy-17139')",
+    "traceback": "Traceback (most recent call last):\n  File \"/root/autodl-tmp/workspace-tw/scripts/run_swebench_task.py\", line 200, in main\n    worktree_bytes = write_worktree_patch(worktree, args.baseline_head, worktree_patch_path)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/autodl-tmp/workspace-tw/scripts/run_swebench_task.py\", line 60, in write_worktree_patch\n    result = run_capture([\"git\", \"diff\", \"--binary\", baseline_head, \"--\", \".\"], cwd=worktree)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/autodl-tmp/workspace-tw/scripts/run_swebench_task.py\", line 56, in run_capture\n    return subprocess.run(command, cwd=cwd, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/autodl-tmp/workspace-tw/.conda-training/lib/python3.12/subprocess.py\", line 548, in run\n    with Popen(*popenargs, **kwargs) as process:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/autodl-tmp/workspace-tw/.conda-training/lib/python3.12/subprocess.py\", line 1026, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n  File \"/root/autodl-tmp/workspace-tw/.conda-training/lib/python3.12/subprocess.py\", line 1955, in _execute_child\n    raise child_exception_type(errno_num, err_msg, err_filename)\nFileNotFoundError: [Errno 2] No such file or directory: PosixPath('/root/autodl-tmp/workspace-tw/experiments/2026-09-14_qwen3-8b_minisweagent_swebench_verified_50task_baseline_v2_2parallel/worktrees/sympy__sympy-17139')\n"
+  },
+  "attempt": 0,
+  "retry_count": 0
+}

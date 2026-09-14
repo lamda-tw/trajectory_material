@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "performed_at_utc": "2026-09-14T08:04:14.580806+00:00",
+  "passed": true,
+  "intervals_overlap": {
+    "18080": true,
+    "18081": true,
+    "global": true
+  },
+  "requests": [
+    {
+      "request_id": 0,
+      "port": 18080,
+      "started_at_unix": 1789373054.0716012,
+      "finished_at_unix": 1789373054.5801663,
+      "elapsed_seconds": 0.509,
+      "content": "OK",
+      "error": null
+    },
+    {
+      "request_id": 1,
+      "port": 18081,
+      "started_at_unix": 1789373054.0718505,
+      "finished_at_unix": 1789373054.5270576,
+      "elapsed_seconds": 0.455,
+      "content": "OK",
+      "error": null
+    }
+  ],
+  "model_health": [
+    {
+      "object": "list",
+      "data": [
+        {
+          "id": "qwen3-8b",
+          "object": "model",
+          "created": 1789373054,
+          "owned_by": "vllm",
+          "root": "/root/autodl-tmp/models/Qwen3-8B",
+          "parent": null,
+          "max_model_len": 40960,
+          "permission": [
+            {
+              "id": "modelperm-102301831bb4488a85cb08307e0e9314",
+              "object": "model_permission",
+              "created": 1789373054,
+              "allow_create_engine": false,
+              "allow_sampling": true,
+              "allow_logprobs": true,
+              "allow_search_indices": false,
+              "allow_view": true,
+              "allow_fine_tuning": false,
+              "organization": "*",
+              "group": null,
+              "is_blocking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "object": "list",
+      "data": [
+        {
+          "id": "qwen3-8b",
+          "object": "model",
+          "created": 1789373054,
+          "owned_by": "vllm",
+          "root": "/root/autodl-tmp/models/Qwen3-8B",
+          "parent": null,
+          "max_model_len": 40960,
+          "permission": [
+            {
+              "id": "modelperm-f4619628e3c446a6bd7197f1b167189c",
+              "object": "model_permission",
+              "created": 1789373054,
+              "allow_create_engine": false,
+              "allow_sampling": true,
+              "allow_logprobs": true,
+              "allow_search_indices": false,
+              "allow_view": true,
+              "allow_fine_tuning": false,
+              "organization": "*",
+              "group": null,
+              "is_blocking": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "vllm_processes_alive_after": [
+    true,
+    true
+  ]
+}
