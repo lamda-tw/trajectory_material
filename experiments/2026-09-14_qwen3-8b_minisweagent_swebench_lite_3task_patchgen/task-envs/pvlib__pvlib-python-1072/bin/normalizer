@@ -1,0 +1,10 @@
+#!/bin/sh
+'''exec' /root/autodl-tmp/workspace-tw/experiments/2026-09-14_qwen3-8b_minisweagent_swebench_lite_3task_patchgen/task-envs/pvlib__pvlib-python-1072/bin/python "$0" "$@"
+' '''
+# -*- coding: utf-8 -*-
+import re
+import sys
+from charset_normalizer.cli import cli_detect
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(cli_detect())
