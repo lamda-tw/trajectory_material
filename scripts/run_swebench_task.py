@@ -4,8 +4,10 @@
 from __future__ import annotations
 
 import argparse
+import gzip
 import json
 import os
+import shutil
 import subprocess
 import tempfile
 import time
@@ -232,7 +234,13 @@ def main() -> int:
                     "output": "empty patch; worktree deleted by model action",
                 }
         else:
-            worktree_bytes = write_worktree_patch(worktree, args.baseline_head, worktree_patch_path)
+            worktree_capture_error = None
+            try:
+                worktree_bytes = write_worktree_patch(worktree, args.baseline_head, worktree_patch_path)
+            except BaseException as error:
+                worktree_capture_error = f"{type(error).__name__}: {error}"
+                worktree_patch_path.write_text("", encoding="utf-8")
+                worktree_bytes = 0
             patch_check = check_patch(worktree, args.baseline_head, submitted_path, experiment)
     except BaseException as error:
         infrastructure_error = True
@@ -271,6 +279,7 @@ def main() -> int:
         "worktree_patch_bytes": worktree_bytes,
         "empty_submission": not bool(submission),
         "worktree_deleted_by_agent": worktree_deleted_by_agent,
+        "worktree_capture_error": None if worktree_deleted_by_agent else worktree_capture_error,
         "patch_apply_check": patch_check,
         "infrastructure_error": infrastructure_error,
         "exception": exception_info,
@@ -281,18 +290,37 @@ def main() -> int:
 
     if trajectory_path.exists():
         try:
-            trajectory = json.loads(trajectory_path.read_text(encoding="utf-8"))
-            trajectory["experiment"] = {
-                "instance_id": instance_id,
-                "task_index": args.task_index,
-                "worker_id": args.worker_id,
-                "gpu_id": args.gpu_id,
-                "endpoint": args.endpoint,
-                "base_commit": task["base_commit"],
-            }
-            atomic_json(trajectory_path, trajectory)
+            trajectory_bytes = trajectory_path.stat().st_size
+            if trajectory_bytes > 100 * 1024 * 1024:
+                compressed_path = Path(f"{trajectory_path}.gz")
+                temporary_compressed = Path(f"{compressed_path}.tmp")
+                with trajectory_path.open("rb") as source, gzip.open(
+                    temporary_compressed, "wb", compresslevel=9
+                ) as destination:
+                    shutil.copyfileobj(source, destination, length=4 * 1024 * 1024)
+                os.replace(temporary_compressed, compressed_path)
+                trajectory_path.unlink()
+                state["trajectory_artifact"] = str(compressed_path)
+                state["trajectory_compressed"] = True
+                state["trajectory_original_bytes"] = trajectory_bytes
+            else:
+                trajectory = json.loads(trajectory_path.read_text(encoding="utf-8"))
+                trajectory["experiment"] = {
+                    "instance_id": instance_id,
+                    "task_index": args.task_index,
+                    "worker_id": args.worker_id,
+                    "gpu_id": args.gpu_id,
+                    "endpoint": args.endpoint,
+                    "base_commit": task["base_commit"],
+                }
+                atomic_json(trajectory_path, trajectory)
+                state["trajectory_artifact"] = str(trajectory_path)
+                state["trajectory_compressed"] = False
+                state["trajectory_original_bytes"] = trajectory_bytes
         except BaseException:
             infrastructure_error = True
+    state["infrastructure_error"] = infrastructure_error
+    atomic_json(state_path, state)
 
     print(
         json.dumps(

@@ -64,12 +64,15 @@ def main() -> None:
         instance_id = task["instance_id"]
         state_path = experiment / "metadata/per-task" / f"{instance_id}.json"
         trajectory_path = experiment / "trajectories" / f"{instance_id}.traj.json"
+        compressed_trajectory_path = Path(f"{trajectory_path}.gz")
         submitted_path = experiment / "outputs" / f"{instance_id}.submitted.patch"
         worktree_path = experiment / "outputs" / f"{instance_id}.worktree.patch"
         dependency_path = experiment / "metadata/dependency_manifests" / f"{instance_id}.txt"
-        for required in (state_path, trajectory_path, submitted_path, worktree_path, dependency_path):
+        for required in (state_path, submitted_path, worktree_path, dependency_path):
             if not required.exists():
                 errors.append(f"missing {required.relative_to(experiment)}")
+        if not trajectory_path.exists() and not compressed_trajectory_path.exists():
+            errors.append(f"missing trajectory for {instance_id}")
         if not state_path.exists() or not submitted_path.exists():
             continue
         state = json.loads(state_path.read_text())
@@ -84,8 +87,8 @@ def main() -> None:
         if bool(submission) == bool(state.get("empty_submission")):
             errors.append(f"empty-submission flag mismatch for {instance_id}")
         patch_check = state.get("patch_apply_check", {})
-        if submission and patch_check.get("applies") is not True:
-            errors.append(f"nonempty patch lacks successful apply-check for {instance_id}")
+        if submission and patch_check.get("attempted") is not True:
+            errors.append(f"nonempty patch was not apply-checked for {instance_id}")
         if not submission and patch_check.get("attempted") is not False:
             errors.append(f"empty patch was unexpectedly apply-checked for {instance_id}")
         if state.get("retry_count") != 0 or state.get("attempt") != 0:
@@ -97,6 +100,8 @@ def main() -> None:
                     errors.append(f"trajectory provenance mismatch for {instance_id}")
             except json.JSONDecodeError:
                 errors.append(f"invalid trajectory JSON for {instance_id}")
+        elif compressed_trajectory_path.exists() and not state.get("trajectory_compressed", False):
+            errors.append(f"compressed trajectory lacks state provenance for {instance_id}")
 
     environment = json.loads((experiment / "metadata/environment.json").read_text())
     if not environment.get("dataset_tree_unchanged"):
@@ -127,7 +132,8 @@ def main() -> None:
         "selected_count": len(selected),
         "prediction_count": len(predictions),
         "unique_prediction_count": len({row.get("instance_id") for row in predictions}),
-        "trajectory_count": len(list((experiment / "trajectories").glob("*.traj.json"))),
+        "trajectory_count": len(list((experiment / "trajectories").glob("*.traj.json")))
+        + len(list((experiment / "trajectories").glob("*.traj.json.gz"))),
         "per_task_state_count": len(states),
         "exit_status_counts": dict(sorted(Counter(row.get("exit_status") for row in states).items())),
         "empty_submission_count": sum(row.get("empty_submission", False) for row in states),

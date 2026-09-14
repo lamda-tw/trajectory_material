@@ -341,13 +341,15 @@ def finish_task(experiment: Path, running: dict) -> tuple[bool, dict | None]:
     state = json.loads(state_path.read_text(encoding="utf-8")) if state_path.exists() else None
     infrastructure_error = returncode != 0 or state is None or bool(state.get("infrastructure_error"))
     if not infrastructure_error:
+        trajectory = experiment / "trajectories" / f"{instance_id}.traj.json"
         required = [
-            experiment / "trajectories" / f"{instance_id}.traj.json",
             experiment / "outputs" / f"{instance_id}.submitted.patch",
             experiment / "outputs" / f"{instance_id}.worktree.patch",
             experiment / "metadata/dependency_manifests" / f"{instance_id}.txt",
         ]
-        if not all(path.exists() for path in required):
+        if not (trajectory.exists() or Path(f"{trajectory}.gz").exists()) or not all(
+            path.exists() for path in required
+        ):
             infrastructure_error = True
     if infrastructure_error:
         print(f"INFRASTRUCTURE_ERROR index={running['task_index']} instance={instance_id} returncode={returncode}", flush=True)
@@ -520,13 +522,15 @@ def main() -> int:
             state = json.loads(state_path.read_text(encoding="utf-8"))
             if state.get("infrastructure_error"):
                 raise RuntimeError(f"Cannot resume past unresolved infrastructure error for {instance_id}")
+            trajectory = experiment / "trajectories" / f"{instance_id}.traj.json"
             required = [
-                experiment / "trajectories" / f"{instance_id}.traj.json",
                 experiment / "outputs" / f"{instance_id}.submitted.patch",
                 experiment / "outputs" / f"{instance_id}.worktree.patch",
                 experiment / "metadata/dependency_manifests" / f"{instance_id}.txt",
             ]
-            if not all(path.exists() for path in required):
+            if not (trajectory.exists() or Path(f"{trajectory}.gz").exists()) or not all(
+                path.exists() for path in required
+            ):
                 raise RuntimeError(f"Existing task result is incomplete for {instance_id}")
             shutil.rmtree(experiment / "task-envs" / instance_id, ignore_errors=True)
             shutil.rmtree(experiment / "worktrees" / instance_id, ignore_errors=True)
