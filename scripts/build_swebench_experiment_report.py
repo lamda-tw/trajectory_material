@@ -1,0 +1,209 @@
+#!/usr/bin/env python3
+"""Build the human-readable report for the frozen Verified-50 baseline."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import re
+import subprocess
+import tempfile
+from collections import Counter
+from datetime import datetime
+from pathlib import Path
+
+
+def atomic_write(path: Path, text: str) -> None:
+    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write(text)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+    except BaseException:
+        try:
+            os.unlink(temporary)
+        except FileNotFoundError:
+            pass
+        raise
+
+
+def duration(seconds: float) -> str:
+    minutes, remainder = divmod(seconds, 60)
+    hours, minutes = divmod(int(minutes), 60)
+    if hours:
+        return f"{hours} h {minutes} min {remainder:.1f} s"
+    return f"{minutes} min {remainder:.1f} s"
+
+
+def parse_time(value: str) -> datetime:
+    return datetime.fromisoformat(value)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--experiment", type=Path, required=True)
+    args = parser.parse_args()
+    experiment = args.experiment.resolve(strict=True)
+    manifest = json.loads((experiment / "data/selection_manifest.json").read_text())
+    config = json.loads((experiment / "config.json").read_text())
+    validation = json.loads((experiment / "metadata/final_validation.json").read_text())
+    environment = json.loads((experiment / "metadata/environment.json").read_text())
+    final_run = json.loads((experiment / "metadata/run_status.json").read_text())
+    initial_status_path = experiment / "metadata/run_status.segment0.json"
+    segments = [json.loads(initial_status_path.read_text())] if initial_status_path.exists() else []
+    segments.append(final_run)
+    states = [
+        json.loads((experiment / "metadata/per-task" / f"{instance_id}.json").read_text())
+        for instance_id in manifest["instance_ids_in_output_order"]
+    ]
+
+    active_wall = sum(float(segment["elapsed_seconds"]) for segment in segments)
+    first_start = min(parse_time(segment["started_at_utc"]) for segment in segments)
+    last_finish = max(parse_time(segment["finished_at_utc"]) for segment in segments)
+    elapsed_end_to_end = (last_finish - first_start).total_seconds()
+    task_work = sum(float(state["elapsed_seconds"]) for state in states)
+    speedup = task_work / active_wall if active_wall else 0.0
+    repo_counts = manifest["selected_repository_quotas"]
+    statuses = Counter(state["exit_status"] for state in states)
+    submitted_count = statuses.get("Submitted", 0)
+    submitted_empty = sum(state["exit_status"] == "Submitted" and state["empty_submission"] for state in states)
+    formal_retries = sum(state["retry_count"] for state in states)
+    disk_bytes = int(subprocess.check_output(["du", "-sb", str(experiment)], text=True).split()[0])
+
+    engine_memory = {}
+    engine_concurrency = {}
+    for gpu_id in (0, 1):
+        text = (experiment / "logs" / f"vllm-gpu{gpu_id}.log").read_text(errors="replace")
+        memory = [float(value) for value in re.findall(r"Desired GPU memory utilization is \(0\.45, ([0-9.]+) GiB\)", text)]
+        concurrency = [float(value) for value in re.findall(r"Maximum concurrency for 32,768 tokens per request: ([0-9.]+)x", text)]
+        engine_memory[gpu_id] = max(memory) if memory else None
+        engine_concurrency[gpu_id] = max(concurrency) if concurrency else None
+
+    lines = [
+        "# Qwen3-8B + mini-SWE-agent SWE-bench Verified-50 baseline",
+        "",
+        "## Outcome",
+        "",
+        f"The patch-generation run completed all **{len(states)}/50** frozen tasks. It produced "
+        f"**{validation['nonempty_submission_count']} non-empty formal patches**, and all "
+        f"**{validation['applicable_nonempty_count']}** passed `git apply --check` against their exact base commit. "
+        "This server did not run the official SWE-bench evaluator, so this experiment has no resolved/pass score.",
+        "",
+        f"There were {submitted_count} `Submitted` exits, including {submitted_empty} submission(s) whose formal patch was empty; "
+        f"{statuses.get('LimitsExceeded', 0)} tasks reached the fixed 40-call limit and "
+        f"{statuses.get('ContextWindowExceeded', 0)} reached the fixed 32,768-token context boundary. "
+        "Empty predictions were retained and no poor-quality model result was retried.",
+        "",
+        "## Frozen holdout",
+        "",
+        f"Source: `{manifest['source_path']}`  ",
+        f"Source SHA-256: `{manifest['source_sha256']}`  ",
+        f"Selection seed: `{manifest['seed']}`  ",
+        "Selection: one task per repository followed by proportional largest-remainder allocation; within each repository and "
+        "for final ordering, tasks were sorted by `sha256(seed + \"\\0\" + instance_id)`.",
+        "",
+        "| Repository | Tasks |",
+        "| --- | ---: |",
+    ]
+    lines.extend(f"| `{repository}` | {count} |" for repository, count in sorted(repo_counts.items()))
+    lines.extend(
+        [
+            "",
+            "These 50 instances are a permanent evaluation holdout. They, their gold/test patches, official tests, and derived "
+            "answers must be excluded from all later SFT, validation, distillation, and trajectory data.",
+            "",
+            "## Reproducible configuration",
+            "",
+            f"- Model checkpoint: `{config['model']['checkpoint']}` (`{config['model']['model_name_or_path']}`)",
+            f"- mini-SWE-agent: {environment['mini_swe_agent_version']} at source commit `{environment['mini_swe_agent_source_commit']}`",
+            f"- vLLM: {environment['vllm_version']}; bfloat16; tensor parallel size 1; max model length 32,768",
+            "- Sampling: temperature 0.6, top_p 0.95, request seed 20260914, maximum 2,048 output tokens, thinking disabled",
+            "- Agent: text-based shell actions, 40-call limit, 180-second shell-command timeout, one formal attempt per task",
+            "- Repositories: sanitized source exports at exact base commits; later repository history was not exposed to the agent",
+            "- Network: model shell environment used invalid outbound proxies and the prompt prohibited clone, fetch, download, and network access",
+            "",
+            "## Parallel execution",
+            "",
+            "Two identical vLLM replicas were used: GPU 0 on port 18080 and GPU 1 on port 18081. Each replica used "
+            "`max_num_seqs=2`; workers 0–1 used GPU 0 and workers 2–3 used GPU 1. Assignment was fixed as "
+            "`worker_id = task_index % 4`.",
+            "",
+            "Both four-request concurrency smoke tests passed. The run had two service segments because the first runner version "
+            "incorrectly classified a normal context-window terminal outcome as infrastructure failure. Execution stopped safely, "
+            "the classification was corrected, and the experiment resumed from index 8 without rerunning any of the first eight "
+            "formal model attempts. This was metadata/control-flow repair, not a model retry.",
+            "",
+            f"- First formal start: `{first_start.isoformat()}`",
+            f"- Final finish: `{last_finish.isoformat()}`",
+            f"- Active runner time across both segments: {duration(active_wall)}",
+            f"- End-to-end time including diagnosis/resume pause: {duration(elapsed_end_to_end)}",
+            f"- Sum of per-task elapsed times: {duration(task_work)}",
+            f"- Work-equivalent concurrency ratio (`sum(task time) / active runner time`): {speedup:.2f}×",
+            f"- Formal retry count: {formal_retries}",
+            "",
+            "Exact peak `nvidia-smi` process memory was not sampled continuously, so no peak value is fabricated. Each vLLM "
+            f"engine reported a configured 0.45 memory allocation of {engine_memory[0]} GiB on GPU 0 and {engine_memory[1]} GiB "
+            f"on GPU 1; each reported full-context KV capacity of {engine_concurrency[0]}× and {engine_concurrency[1]}× respectively.",
+            "",
+            "## Aggregate results",
+            "",
+            "| Measure | Count |",
+            "| --- | ---: |",
+            f"| Completed task records | {len(states)} |",
+            f"| Submitted exits | {submitted_count} |",
+            f"| LimitsExceeded | {statuses.get('LimitsExceeded', 0)} |",
+            f"| ContextWindowExceeded | {statuses.get('ContextWindowExceeded', 0)} |",
+            f"| Empty formal patches | {validation['empty_submission_count']} |",
+            f"| Non-empty formal patches | {validation['nonempty_submission_count']} |",
+            f"| Non-empty patches passing apply-check | {validation['applicable_nonempty_count']} |",
+            "| Unresolved infrastructure failures | 0 |",
+            f"| Formal model retries | {formal_retries} |",
+            "",
+            "`git apply --check` validates patch syntax and applicability only. It is not a correctness test.",
+            "",
+            "## Per-task results",
+            "",
+            "| # | Instance | Worker/GPU | Seconds | Exit | Formal bytes | Apply-check |",
+            "| ---: | --- | --- | ---: | --- | ---: | --- |",
+        ]
+    )
+    for state in states:
+        applies = state["patch_apply_check"]["applies"]
+        apply_label = "pass" if applies is True else ("fail" if applies is False else "not run (empty)")
+        lines.append(
+            f"| {state['task_index']} | `{state['instance_id']}` | {state['worker_id']}/{state['gpu_id']} | "
+            f"{state['elapsed_seconds']:.3f} | `{state['exit_status']}` | {state['submitted_patch_bytes']} | {apply_label} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Integrity and storage",
+            "",
+            f"- Final validation: `{'passed' if validation['passed'] else 'failed'}`",
+            f"- Shared SWE-bench snapshot unchanged: `{environment['dataset_tree_unchanged']}`",
+            f"- `/root/autodl-tmp/envs` top-level entries unchanged: `{environment['env_entries_unchanged']}`",
+            "- Completed task worktrees and task environments were removed after artifacts were verified.",
+            f"- Experiment directory size while building this report: {disk_bytes / (1024 * 1024):.2f} MiB",
+            "- Important retained files are covered by `artifacts.sha256`.",
+            "",
+            "## External official evaluation",
+            "",
+            "Transfer `predictions.jsonl` unchanged to a machine with the official SWE-bench evaluation environment and run it "
+            "against the matching SWE-bench Verified split. Preserve this experiment's model identifier and frozen instance list. "
+            "Record the official harness version, image versions, command, and per-instance grading output beside the copied "
+            "predictions. Do not merge scorer output back into this generation baseline in a way that obscures provenance.",
+            "",
+            "This 50-task fixed holdout is intended for a minimal before/after SFT comparison. It must not be presented as the "
+            "model's score on the complete 500-task SWE-bench Verified benchmark.",
+            "",
+        ]
+    )
+    atomic_write(experiment / "report.md", "\n".join(lines))
+    print(experiment / "report.md")
+
+
+if __name__ == "__main__":
+    main()

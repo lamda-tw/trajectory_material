@@ -1,0 +1,252 @@
+{
+  "django__django-12155": {
+    "instance_id": "django__django-12155",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": "diff --git a/django/contrib/admindocs/utils.py b/django/contrib/admindocs/utils.py\nindex 4c0e7e2..aeec9fa 100644\n--- a/django/contrib/admindocs/utils.py\n+++ b/django/contrib/admindocs/utils.py\n@@ -34,7 +34,7 @@ def trim_docstring(docstring):\n         return ''\n     # Convert tabs to spaces and split into lines\n     lines = docstring.expandtabs().splitlines()\n-    indent = min(len(line) - len(line.lstrip()) for line in lines if line.lstrip())\n+    indent = min(len(line) - len(line.lstrip()) for line in lines[1:] if line.lstrip())\n     trimmed = [lines[0].lstrip()] + [line[indent:].rstrip() for line in lines[1:]]\n     return \"\\n\".join(trimmed).strip()\n \n"
+  },
+  "scikit-learn__scikit-learn-13142": {
+    "instance_id": "scikit-learn__scikit-learn-13142",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "scikit-learn__scikit-learn-11310": {
+    "instance_id": "scikit-learn__scikit-learn-11310",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "django__django-15973": {
+    "instance_id": "django__django-15973",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "pydata__xarray-4695": {
+    "instance_id": "pydata__xarray-4695",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "scikit-learn__scikit-learn-25931": {
+    "instance_id": "scikit-learn__scikit-learn-25931",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "pydata__xarray-6992": {
+    "instance_id": "pydata__xarray-6992",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "matplotlib__matplotlib-22871": {
+    "instance_id": "matplotlib__matplotlib-22871",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "matplotlib__matplotlib-24026": {
+    "instance_id": "matplotlib__matplotlib-24026",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "astropy__astropy-14182": {
+    "instance_id": "astropy__astropy-14182",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "django__django-14855": {
+    "instance_id": "django__django-14855",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "sympy__sympy-21596": {
+    "instance_id": "sympy__sympy-21596",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "matplotlib__matplotlib-24970": {
+    "instance_id": "matplotlib__matplotlib-24970",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": "diff --git a/lib/matplotlib/colors.py b/lib/matplotlib/colors.py\nindex 2d3072d..32d4d30 100644\n--- a/lib/matplotlib/colors.py\n+++ b/lib/matplotlib/colors.py\n@@ -709,7 +709,7 @@ class Colormap:\n         # Take the bad mask from a masked array, or in all other cases defer\n         # np.isnan() to after we have converted to an array.\n         mask_bad = X.mask if np.ma.is_masked(X) else None\n-        xa = np.array(X, copy=True)\n+        xa = np.array(X).astype(np.uint8)\n         if mask_bad is None:\n             mask_bad = np.isnan(xa)\n         if not xa.dtype.isnative:\n"
+  },
+  "matplotlib__matplotlib-26113": {
+    "instance_id": "matplotlib__matplotlib-26113",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": "diff --git a/lib/matplotlib/axes/_axes.py b/lib/matplotlib/axes/_axes.py\nindex 5369ead..46fb698 100644\n--- a/lib/matplotlib/axes/_axes.py\n+++ b/lib/matplotlib/axes/_axes.py\n@@ -5014,7 +5014,7 @@ default: :rc:`scatter.edgecolors`\n             if mincnt is None:\n                 mincnt = 0\n             accum = np.array(\n-                [reduce_C_function(acc) if len(acc) > mincnt else np.nan\n+                [reduce_C_function(acc) if len(acc) >= mincnt else np.nan\n                  for Cs_at_i in [Cs_at_i1, Cs_at_i2]\n                  for acc in Cs_at_i[1:]],  # [1:] drops out-of-range points.\n                 float)\n"
+  },
+  "sphinx-doc__sphinx-9320": {
+    "instance_id": "sphinx-doc__sphinx-9320",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "sympy__sympy-17139": {
+    "instance_id": "sympy__sympy-17139",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": "diff --git a/sympy/simplify/fu.py b/sympy/simplify/fu.py\nindex ad1130e..c541ca5 100644\n--- a/sympy/simplify/fu.py\n+++ b/sympy/simplify/fu.py\n@@ -501,9 +501,9 @@ def _f(rv):\n         if not (rv.is_Pow and rv.base.func == f):\n             return rv\n \n-        if (rv.exp < 0) == True:\n+        if rv.exp.is_real and rv.exp < 0:\n             return rv\n-        if (rv.exp > max) == True:\n+        if rv.exp.is_real and rv.exp > max:\n             return rv\n         if rv.exp == 2:\n             return h(g(rv.base.args[0])**2)\n"
+  },
+  "django__django-11087": {
+    "instance_id": "django__django-11087",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "pydata__xarray-2905": {
+    "instance_id": "pydata__xarray-2905",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "django__django-15380": {
+    "instance_id": "django__django-15380",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "astropy__astropy-7166": {
+    "instance_id": "astropy__astropy-7166",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "django__django-12663": {
+    "instance_id": "django__django-12663",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "sphinx-doc__sphinx-9367": {
+    "instance_id": "sphinx-doc__sphinx-9367",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "django__django-16595": {
+    "instance_id": "django__django-16595",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "sphinx-doc__sphinx-8459": {
+    "instance_id": "sphinx-doc__sphinx-8459",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "sympy__sympy-23534": {
+    "instance_id": "sympy__sympy-23534",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "sympy__sympy-19346": {
+    "instance_id": "sympy__sympy-19346",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "django__django-15732": {
+    "instance_id": "django__django-15732",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "sympy__sympy-16597": {
+    "instance_id": "sympy__sympy-16597",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "django__django-15987": {
+    "instance_id": "django__django-15987",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": "diff --git a/django/core/management/commands/loaddata.py b/django/core/management/commands/loaddata.py\nindex ac97f13..d1a6124 100644\n--- a/django/core/management/commands/loaddata.py\n+++ b/django/core/management/commands/loaddata.py\n@@ -362,7 +362,7 @@ class Command(BaseCommand):\n         \"\"\"\n         dirs = []\n         fixture_dirs = settings.FIXTURE_DIRS\n-        if len(fixture_dirs) != len(set(fixture_dirs)):\n+        if len(set(fixture_dirs)) != len(fixture_dirs):\n             raise ImproperlyConfigured(\"settings.FIXTURE_DIRS contains duplicates.\")\n         for app_config in apps.get_app_configs():\n             app_label = app_config.label\n"
+  },
+  "django__django-12741": {
+    "instance_id": "django__django-12741",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": "diff --git a/django/core/management/commands/flush.py b/django/core/management/commands/flush.py\nindex e8ed396..bc8021c 100644\n--- a/django/core/management/commands/flush.py\n+++ b/django/core/management/commands/flush.py\n@@ -60,7 +60,7 @@ Are you sure you want to do this?\n \n         if confirm == 'yes':\n             try:\n-                connection.ops.execute_sql_flush(database, sql_list)\n+                connection.ops.execute_sql_flush(sql_list)\n             except Exception as exc:\n                 raise CommandError(\n                     \"Database %s couldn't be flushed. Possible reasons:\\n\"\ndiff --git a/django/db/backends/base/operations.py b/django/db/backends/base/operations.py\nindex 70ac07a..02f2084 100644\n--- a/django/db/backends/base/operations.py\n+++ b/django/db/backends/base/operations.py\n@@ -400,7 +400,7 @@ class BaseDatabaseOperations:\n         \"\"\"\n         raise NotImplementedError('subclasses of BaseDatabaseOperations must provide a sql_flush() method')\n \n-    def execute_sql_flush(self, using, sql_list):\n+    def execute_sql_flush(self, sql_list):\n         \"\"\"Execute a list of SQL statements to flush the database.\"\"\"\n         with transaction.atomic(using=using, savepoint=self.connection.features.can_rollback_ddl):\n             with self.connection.cursor() as cursor:\ndiff --git a/tests/backends/base/test_operations.py b/tests/backends/base/test_operations.py\nindex 0485fe8..b0ffe95 100644\n--- a/tests/backends/base/test_operations.py\n+++ b/tests/backends/base/test_operations.py\n@@ -172,7 +172,7 @@ class SqlFlushTests(TransactionTestCase):\n             reset_sequences=True,\n             allow_cascade=True,\n         )\n-        connection.ops.execute_sql_flush(connection.alias, sql_list)\n+        connection.ops.execute_sql_flush(sql_list)\n \n         with transaction.atomic():\n             self.assertIs(Author.objects.exists(), False)\n"
+  },
+  "django__django-11490": {
+    "instance_id": "django__django-11490",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "django__django-13195": {
+    "instance_id": "django__django-13195",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": "diff --git a/django/http/response.py b/django/http/response.py\nindex e00bcac..2b8d331 100644\n--- a/django/http/response.py\n+++ b/django/http/response.py\n@@ -209,12 +209,14 @@ class HttpResponseBase:\n     def set_signed_cookie(self, key, value, salt='', **kwargs):\n         value = signing.get_cookie_signer(salt=key + salt).sign(value)\n         return self.set_cookie(key, value, **kwargs)\n+            samesite=settings.SESSION_COOKIE_SAMESITE,\n \n     def delete_cookie(self, key, path='/', domain=None):\n         # Most browsers ignore the Set-Cookie header if the cookie name starts\n         # with __Host- or __Secure- and the cookie doesn't use the secure flag.\n         secure = key.startswith(('__Secure-', '__Host-'))\n         self.set_cookie(\n+            samesite=settings.SESSION_COOKIE_SAMESITE,\n             key, max_age=0, path=path, domain=domain, secure=secure,\n             expires='Thu, 01 Jan 1970 00:00:00 GMT',\n         )\n"
+  },
+  "sympy__sympy-14248": {
+    "instance_id": "sympy__sympy-14248",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "django__django-11603": {
+    "instance_id": "django__django-11603",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": "diff --git a/django/db/models/aggregates.py b/django/db/models/aggregates.py\nindex da4ff92..759e864 100644\n--- a/django/db/models/aggregates.py\n+++ b/django/db/models/aggregates.py\n@@ -97,6 +97,7 @@ class Aggregate(Func):\n \n \n class Avg(FixDurationInputMixin, NumericOutputFieldMixin, Aggregate):\n+    allow_distinct = True\n     function = 'AVG'\n     name = 'Avg'\n \n@@ -140,6 +141,7 @@ class StdDev(NumericOutputFieldMixin, Aggregate):\n \n \n class Sum(FixDurationInputMixin, Aggregate):\n+    allow_distinct = True\n     function = 'SUM'\n     name = 'Sum'\n \n"
+  },
+  "django__django-13023": {
+    "instance_id": "django__django-13023",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "django__django-11133": {
+    "instance_id": "django__django-11133",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "django__django-14534": {
+    "instance_id": "django__django-14534",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "django__django-16255": {
+    "instance_id": "django__django-16255",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": "diff --git a/django/contrib/sitemaps/__init__.py b/django/contrib/sitemaps/__init__.py\nindex 27756d9..998a28d 100644\n--- a/django/contrib/sitemaps/__init__.py\n+++ b/django/contrib/sitemaps/__init__.py\n@@ -162,97 +162,3 @@ class Sitemap:\n         domain = self.get_domain(site)\n         return self._urls(page, protocol, domain)\n \n-    def get_latest_lastmod(self):\n-        if not hasattr(self, \"lastmod\"):\n-            return None\n-        if callable(self.lastmod):\n-            try:\n-                return max([self.lastmod(item) for item in self.items()])\n-            except TypeError:\n-                return None\n-        else:\n-            return self.lastmod\n-\n-    def _urls(self, page, protocol, domain):\n-        urls = []\n-        latest_lastmod = None\n-        all_items_lastmod = True  # track if all items have a lastmod\n-\n-        paginator_page = self.paginator.page(page)\n-        for item in paginator_page.object_list:\n-            loc = f\"{protocol}://{domain}{self._location(item)}\"\n-            priority = self._get(\"priority\", item)\n-            lastmod = self._get(\"lastmod\", item)\n-\n-            if all_items_lastmod:\n-                all_items_lastmod = lastmod is not None\n-                if all_items_lastmod and (\n-                    latest_lastmod is None or lastmod > latest_lastmod\n-                ):\n-                    latest_lastmod = lastmod\n-\n-            url_info = {\n-                \"item\": item,\n-                \"location\": loc,\n-                \"lastmod\": lastmod,\n-                \"changefreq\": self._get(\"changefreq\", item),\n-                \"priority\": str(priority if priority is not None else \"\"),\n-                \"alternates\": [],\n-            }\n-\n-            if self.i18n and self.alternates:\n-                for lang_code in self._languages():\n-                    loc = f\"{protocol}://{domain}{self._location(item, lang_code)}\"\n-                    url_info[\"alternates\"].append(\n-                        {\n-                            \"location\": loc,\n-                            \"lang_code\": lang_code,\n-                        }\n-                    )\n-                if self.x_default:\n-                    lang_code = settings.LANGUAGE_CODE\n-                    loc = f\"{protocol}://{domain}{self._location(item, lang_code)}\"\n-                    loc = loc.replace(f\"/{lang_code}/\", \"/\", 1)\n-                    url_info[\"alternates\"].append(\n-                        {\n-                            \"location\": loc,\n-                            \"lang_code\": \"x-default\",\n-                        }\n-                    )\n-\n-            urls.append(url_info)\n-\n-        if all_items_lastmod and latest_lastmod:\n-            self.latest_lastmod = latest_lastmod\n-\n-        return urls\n-\n-\n-class GenericSitemap(Sitemap):\n-    priority = None\n-    changefreq = None\n-\n-    def __init__(self, info_dict, priority=None, changefreq=None, protocol=None):\n-        self.queryset = info_dict[\"queryset\"]\n-        self.date_field = info_dict.get(\"date_field\")\n-        self.priority = self.priority or priority\n-        self.changefreq = self.changefreq or changefreq\n-        self.protocol = self.protocol or protocol\n-\n-    def items(self):\n-        # Make sure to return a clone; we don't want premature evaluation.\n-        return self.queryset.filter()\n-\n-    def lastmod(self, item):\n-        if self.date_field is not None:\n-            return getattr(item, self.date_field)\n-        return None\n-\n-    def get_latest_lastmod(self):\n-        if self.date_field is not None:\n-            return (\n-                self.queryset.order_by(\"-\" + self.date_field)\n-                .values_list(self.date_field, flat=True)\n-                .first()\n-            )\n-        return None\n"
+  },
+  "django__django-14311": {
+    "instance_id": "django__django-14311",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "sympy__sympy-18189": {
+    "instance_id": "sympy__sympy-18189",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "pylint-dev__pylint-7080": {
+    "instance_id": "pylint-dev__pylint-7080",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "sphinx-doc__sphinx-9461": {
+    "instance_id": "sphinx-doc__sphinx-9461",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "astropy__astropy-14539": {
+    "instance_id": "astropy__astropy-14539",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "psf__requests-1921": {
+    "instance_id": "psf__requests-1921",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "pytest-dev__pytest-7432": {
+    "instance_id": "pytest-dev__pytest-7432",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "pytest-dev__pytest-10356": {
+    "instance_id": "pytest-dev__pytest-10356",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "pylint-dev__pylint-6386": {
+    "instance_id": "pylint-dev__pylint-6386",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "psf__requests-6028": {
+    "instance_id": "psf__requests-6028",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "mwaskom__seaborn-3187": {
+    "instance_id": "mwaskom__seaborn-3187",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": ""
+  },
+  "pallets__flask-5014": {
+    "instance_id": "pallets__flask-5014",
+    "model_name_or_path": "openai/qwen3-8b",
+    "model_patch": "diff --git a/src/flask/blueprints.py b/src/flask/blueprints.py\nindex eb50585..04decef 100644\n--- a/src/flask/blueprints.py\n+++ b/src/flask/blueprints.py\n@@ -74,6 +74,8 @@ class BlueprintSetupState:\n         #: blueprint.\n         self.url_prefix = url_prefix\n \n+        if not name:\n+            raise ValueError(\"Blueprint name cannot be empty.\")\n         self.name = self.options.get(\"name\", blueprint.name)\n         self.name_prefix = self.options.get(\"name_prefix\", \"\")\n \n"
+  }
+}

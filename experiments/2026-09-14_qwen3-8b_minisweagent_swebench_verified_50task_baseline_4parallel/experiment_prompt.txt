@@ -1,0 +1,245 @@
+请在 `/root/autodl-tmp/workspace-tw` 中完成一次 SWE-bench Verified/test 50 题的 Qwen3-8B 未微调基线实验。目标是生成候选补丁，供以后在另一台具备官方判题环境的机器上评分。本次不要运行官方判题。
+
+一、目录边界
+
+共享数据目录只用于以下用途：
+
+- `/root/autodl-tmp/data/swebench/`：读取现有 SWE-bench 数据快照，不修改其中任何文件。
+- `/root/autodl-tmp/data/swebench-repos/`：存放或更新本实验所需的 Git bare mirror 缓存。需要从 GitHub 下载仓库或 commit 时，只能放在这里。
+
+重要、可复用的运行脚本放在现有目录：
+
+- `/root/autodl-tmp/workspace-tw/scripts/`
+
+本次实验的所有其他生成文件放入一个新目录，以下简称 `<EXP>`：
+
+- `<EXP> = /root/autodl-tmp/workspace-tw/experiments/<日期>_qwen3-8b_minisweagent_swebench_verified_50task_baseline_4parallel`
+
+下文提到的 `data/`、`logs/`、`outputs/`、`metadata/`、`worktrees/`、`task-envs/` 等相对路径，全部指 `<EXP>` 内的子目录，绝不是 `/root/autodl-tmp/data/` 下的新内容。
+
+不得覆盖旧实验，不得在 `/root/autodl-tmp/envs/` 中新建环境。
+
+二、数据源和固定留出集
+
+只从以下 sanitized 数据文件选题：
+
+`/root/autodl-tmp/data/swebench/tasks/verified/78f471bf655a3137b2e8a75af1501690ec009ec3/test.jsonl`
+
+先确认该文件恰好有 500 条记录，`instance_id` 唯一，且每条记录只含：
+
+- `instance_id`
+- `repo`
+- `base_commit`
+- `problem_statement`
+
+从中选出并冻结 50 题，作为训练前后共用的 holdout。后续 SFT 的训练集、验证集、蒸馏数据及训练轨迹都不得包含这 50 个 instance，也不得包含其 gold patch、测试补丁或由答案派生的数据。
+
+选题使用按仓库分层的确定性随机抽样，种子为 `20260914`：
+
+1. 每个仓库先分配 1 题。
+2. 余下 38 个名额按各仓库在 500 题中的原始数量比例，用 largest-remainder method 分配；余数相同则按仓库名排序打破平局。
+3. 仓库内按 `sha256("20260914\0" + instance_id)` 升序选题；哈希相同则按 `instance_id` 排序。
+4. 最终恰好选择 50 个不同 instance，不得因任务难、失败或补丁为空而换题。
+
+当前数据按上述算法得到的预期配额为：
+
+- django/django：18
+- sympy/sympy：7
+- sphinx-doc/sphinx：4
+- matplotlib/matplotlib：4
+- scikit-learn/scikit-learn：3
+- astropy/astropy：3
+- pydata/xarray：3
+- pytest-dev/pytest：2
+- pylint-dev/pylint：2
+- psf/requests：2
+- mwaskom/seaborn：1
+- pallets/flask：1
+
+将选择结果写入以下三个明确路径：
+
+- `<EXP>/data/selected_tasks.jsonl`
+- `<EXP>/data/selected_instance_ids.txt`
+- `<EXP>/data/selection_manifest.json`
+
+manifest 记录源文件路径和 SHA-256、算法、种子、仓库配额、50 个 instance ID、输出顺序和生成时间。选定后不得修改选择清单。之后训练模型复测时必须复用这份清单，不能重新抽样。
+
+三、防止答案泄漏
+
+选题、准备和推理不得读取或向模型暴露：
+
+- gold patch、test patch、FAIL_TO_PASS、PASS_TO_PASS
+- 官方答案或评测结果
+- 对应 PR 的最终修改和 GitHub PR/issue 页面
+- 仓库中 base commit 之后可能包含答案的提交历史
+
+任务工作目录必须准确对应记录中的 `base_commit`。不要把能轻易访问后续答案提交的 Git 历史暴露给 agent。mini-swe-agent 运行任务时禁止联网、搜索答案、clone 或 fetch。仓库下载与缺失 commit 的准备工作只由任务启动前的准备脚本完成。
+
+四、模型与 agent 设置
+
+复用已经验证的原始模型和配置：
+
+- checkpoint：`/root/autodl-tmp/models/Qwen3-8B`
+- mini-swe-agent 环境：`/root/autodl-tmp/envs/mini-swe-agent`
+- mini-swe-agent：2.4.6，source commit `a83fcae82d2a08f0ee0c688f9d137b3566c097f8`
+- vLLM 环境：`/root/autodl-tmp/envs/qwen3-vllm-py312`
+- vLLM：0.10.2
+- served model name：`qwen3-8b`
+- dtype：bfloat16
+- tensor parallel size：1
+- max model length：32768
+- GPU memory utilization：0.45
+- vLLM seed：20260914
+- temperature：0.6
+- top_p：0.95
+- 每次请求的 seed：20260914
+- 每次调用的 max output tokens：2048
+- Qwen thinking：关闭
+- mini-swe-agent step limit：40
+- shell command timeout：180 秒
+- mini-swe-agent 使用上一轮已验证的 text-based shell action 模式
+- 每题仅一次正式模型尝试，明确的基础设施故障重试除外
+
+保存完整的模型启动命令、agent prompt、配置文件、模型与脚本版本、模型文件校验信息。不要根据中途的模型表现调整 prompt、采样参数、步数或补丁提取规则。
+
+五、双 GPU、4 任务并行
+
+服务器有两张 GPU。使用两份 vLLM 服务，每张 GPU 加载一份模型；不要启动四份模型：
+
+- vLLM 0：`CUDA_VISIBLE_DEVICES=0`，`127.0.0.1:18080`，`max_num_seqs=2`
+- vLLM 1：`CUDA_VISIBLE_DEVICES=1`，`127.0.0.1:18081`，`max_num_seqs=2`
+
+两份服务的模型、tokenizer、dtype、上下文长度和采样设置保持一致，分别记录到：
+
+- `<EXP>/logs/vllm-gpu0.log`
+- `<EXP>/logs/vllm-gpu1.log`
+
+启动四个固定 worker：
+
+- worker 0、1 → GPU 0，端口 18080
+- worker 2、3 → GPU 1，端口 18081
+
+按 `<EXP>/data/selected_tasks.jsonl` 的任务序号分配：
+
+`worker_id = task_index % 4`
+
+一个 worker 同一时间只执行一题。每题必须有独立的 worktree、临时环境、trajectory、日志、输出和状态文件。共享 Git bare mirror 的 fetch、worktree 创建及移除操作由主调度器串行处理，避免并发写锁冲突。
+
+正式运行前，先检查 GPU、显存、磁盘和端口；启动两个 vLLM 服务并检查两个 endpoint；再在每个 endpoint 上同时发出两个非 benchmark 的短请求，确认 4 请求并行时无 OOM、HTTP 错误或服务重启。若 4 并行 smoke test 不稳定，应停止并报告，不要在正式实验中途擅自改成另一种并行度。
+
+首批四道正式题同时运行，作为并行 canary；它们计入冻结的 50 题，不重新选题。并行能减少总耗时，但不要预先承诺四倍加速，报告实际耗时和吞吐量。
+
+六、任务环境与空间控制
+
+任务 worktree 只能位于：
+
+`<EXP>/worktrees/<instance_id>/`
+
+任务临时 Python 环境只能位于：
+
+`<EXP>/task-envs/<instance_id>/`
+
+不要预先创建 50 套环境。只为当前需要运行的任务按需创建，最多维持四个并行任务环境。共享 pip cache 如有需要，也放在 `<EXP>` 内。保存补丁、trajectory、日志、依赖清单及必要的错误现场后，可清理已完成任务的临时环境和 worktree；清理前必须确认结果文件完整。不得删除已有实验或共享仓库缓存。
+
+这些运行时目录、缓存和嵌套 Git 仓库不得进入 `workspace-tw` 的 Git 索引。
+
+本地任务环境只是做题环境，并非官方 SWE-bench 判题环境。其测试成功或失败只能作为诊断信息，不能等同于官方 resolved 结果。
+
+七、结果、失败与断点恢复
+
+每题保存两种补丁：
+
+- `<EXP>/outputs/<instance_id>.submitted.patch`：mini-swe-agent 正式提交的原始补丁。
+- `<EXP>/outputs/<instance_id>.worktree.patch`：任务结束时工作树中的 diff，仅用于诊断。
+
+正式 prediction 的 `model_patch` 只能取自正式提交结果。如果 agent 未执行提交，`model_patch` 必须为空字符串；不得自动采用 worktree diff，不得人工修复或美化模型输出。
+
+每完成一题，原子写入独立的 per-task 状态文件，至少记录：
+
+- instance ID、task index、worker ID、GPU ID、endpoint
+- 开始与结束时间
+- mini-swe-agent exit status、API 调用次数
+- submitted patch 与 worktree patch 路径及大小
+- 是否为空补丁
+- patch apply-check 结果
+- 基础设施故障、重试次数和原因
+
+不要让多个 worker 同时追加同一个 `predictions.jsonl`。全部任务完成后，由主调度器按冻结清单顺序，从 per-task 结果统一生成：
+
+- `<EXP>/predictions.jsonl`
+- `<EXP>/preds.json`
+
+`predictions.jsonl` 每行只含标准字段：
+
+- `instance_id`
+- `model_name_or_path`
+- `model_patch`
+
+最终须恰好 50 行、50 个不同的 instance ID，顺序与冻结清单一致；空补丁也必须保留记录。
+
+非空正式补丁要在对应精确 `base_commit` 的干净 checkout 上执行 `git apply --check`，仅记录是否可应用，不代表修复正确。不能应用的原始补丁仍要保留并标记，不能人工改写。
+
+`LimitsExceeded`、`RepeatedFormatError`、未提交、空补丁、补丁不能应用、测试失败等都属于模型结果，不得因此换题或重跑。vLLM 崩溃、HTTP 连接失败、Git 准备错误、文件写入失败等才属于基础设施故障；修复后可用完全相同配置重试，并完整记录。若无法排除故障，应如实报告实验未完成，不得伪造 50 条已完成结果。
+
+断点恢复时先验证已有 per-task 文件，跳过完整结果；保持原任务到 worker/GPU 的映射，只重做有记录的基础设施失败。
+
+八、实验产物
+
+`<EXP>` 至少包含：
+
+- `config.json`
+- `data/selected_tasks.jsonl`
+- `data/selected_instance_ids.txt`
+- `data/selection_manifest.json`
+- `predictions.jsonl`
+- `preds.json`
+- `outputs/<instance_id>.submitted.patch`
+- `outputs/<instance_id>.worktree.patch`
+- `trajectories/<instance_id>.traj.json`
+- `logs/vllm-gpu0.log`
+- `logs/vllm-gpu1.log`
+- `logs/<instance_id>.log`
+- `metadata/task_statuses.json`
+- `metadata/task_assignments.json`
+- `metadata/environment.json`
+- `metadata/concurrency_smoke.json`
+- `metadata/retry_log.jsonl`
+- `metadata/patch_validation.json`
+- `metadata/dependency_manifests/`
+- `scripts_snapshot/`
+- `artifacts.sha256`
+- `report.md`
+
+可复用脚本放在 `/root/autodl-tmp/workspace-tw/scripts/`，本次实际执行的脚本另复制到 `<EXP>/scripts_snapshot/`，以便之后复现。
+
+九、报告与最终检查
+
+`<EXP>/report.md` 至少报告：
+
+- 实验目标、固定 50 题的选择算法、seed、数据源 SHA-256 和各仓库数量
+- 模型、mini-swe-agent、vLLM 版本及全部推理参数
+- 双 GPU、双 vLLM、四 worker 拓扑和任务分配
+- 并发 smoke test 结果、开始/结束时间、总耗时、实际并行吞吐量
+- 每题的 worker、耗时、退出状态、正式补丁字节数和 apply-check 状态
+- Submitted、LimitsExceeded、格式错误、空补丁、基础设施失败及重试数量
+- 非空补丁数量、可应用补丁数量、磁盘使用情况
+- 当前服务器没有官方判题环境，本次没有官方 resolved 分数
+- 将 `predictions.jsonl` 送往具备官方 SWE-bench 判题环境的机器进行评分的方法
+- 这 50 题不得进入后续 SFT 数据
+- 50 题只是固定小规模 holdout，不能冒充完整 Verified 500 题成绩
+
+结束前核对：
+
+1. 共享 `/root/autodl-tmp/data/swebench/` 未被修改。
+2. 选题文件都位于 `<EXP>/data/`，不在共享数据根目录下。
+3. `predictions.jsonl` 恰好 50 条、合法 JSON、ID 唯一且顺序正确。
+4. 每条结果均可追溯到对应 trajectory 和状态文件。
+5. 非空正式补丁均有 apply-check 记录。
+6. 所有重要产物进入 `artifacts.sha256`。
+7. 没有读取或保存 gold patch、test patch 或官方分数。
+8. 没有在 `/root/autodl-tmp/envs/` 下创建新内容。
+9. 没有让 Git 跟踪 worktree、虚拟环境、缓存或嵌套仓库。
+10. 没有覆盖已有实验，也没有进行官方判题。
+11. 不执行 Git commit 或 push，除非用户另行要求。
+
+最终向用户汇报实验目录、实际总耗时、50 题完成情况、空补丁和可应用补丁数量、基础设施异常、`predictions.jsonl` 与 `report.md` 的绝对路径。
