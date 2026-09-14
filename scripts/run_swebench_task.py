@@ -21,6 +21,7 @@ from minisweagent.models.litellm_textbased_model import LitellmTextbasedModel
 
 
 MODEL_NAME = "openai/qwen3-8b"
+REPO_CACHE = Path("/root/autodl-tmp/data/swebench-repos")
 SYSTEM_TEMPLATE = (
     "You are a software engineering agent. The current directory is the task worktree and replaces /testbed. "
     "Never create or modify files outside it and do not clone, fetch, download, or access network resources. "
@@ -196,9 +197,43 @@ def main() -> int:
 
     submission = result.get("submission", "") or ""
     submitted_path.write_text(submission, encoding="utf-8")
+    worktree_deleted_by_agent = not worktree.exists()
     try:
-        worktree_bytes = write_worktree_patch(worktree, args.baseline_head, worktree_patch_path)
-        patch_check = check_patch(worktree, args.baseline_head, submitted_path, experiment)
+        if worktree_deleted_by_agent:
+            worktree_patch_path.write_text("", encoding="utf-8")
+            worktree_bytes = 0
+            if submission:
+                mirror = REPO_CACHE / f"{task['repo'].replace('/', '__')}.git"
+                with tempfile.TemporaryDirectory(prefix="deleted-worktree-check-", dir=experiment / "metadata") as temporary:
+                    clean = Path(temporary)
+                    archive = subprocess.Popen(
+                        ["git", f"--git-dir={mirror}", "archive", "--format=tar", task["base_commit"]],
+                        stdout=subprocess.PIPE,
+                    )
+                    assert archive.stdout is not None
+                    extract = subprocess.run(["tar", "-xf", "-", "-C", str(clean)], stdin=archive.stdout)
+                    archive.stdout.close()
+                    archive_status = archive.wait()
+                    if archive_status != 0 or extract.returncode != 0:
+                        raise RuntimeError("Unable to reconstruct deleted worktree for patch validation")
+                    subprocess.run(["git", "init", "-q"], cwd=clean, check=True)
+                    patch_result = run_capture(["git", "apply", "--check", str(submitted_path)], cwd=clean)
+                    patch_check = {
+                        "attempted": True,
+                        "applies": patch_result.returncode == 0,
+                        "returncode": patch_result.returncode,
+                        "output": patch_result.stdout[-10000:],
+                    }
+            else:
+                patch_check = {
+                    "attempted": False,
+                    "applies": None,
+                    "returncode": None,
+                    "output": "empty patch; worktree deleted by model action",
+                }
+        else:
+            worktree_bytes = write_worktree_patch(worktree, args.baseline_head, worktree_patch_path)
+            patch_check = check_patch(worktree, args.baseline_head, submitted_path, experiment)
     except BaseException as error:
         infrastructure_error = True
         if exception_info is None:
@@ -235,6 +270,7 @@ def main() -> int:
         "worktree_patch": str(worktree_patch_path),
         "worktree_patch_bytes": worktree_bytes,
         "empty_submission": not bool(submission),
+        "worktree_deleted_by_agent": worktree_deleted_by_agent,
         "patch_apply_check": patch_check,
         "infrastructure_error": infrastructure_error,
         "exception": exception_info,

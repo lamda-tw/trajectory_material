@@ -54,7 +54,15 @@ def main() -> None:
     final_run = json.loads((experiment / "metadata/run_status.json").read_text())
     initial_status_path = experiment / "metadata/run_status.segment0.json"
     segments = [json.loads(initial_status_path.read_text())] if initial_status_path.exists() else []
-    segments.append(final_run)
+    segment_history_path = experiment / "metadata/run_segments.jsonl"
+    if segment_history_path.exists():
+        segments.extend(
+            json.loads(line)
+            for line in segment_history_path.read_text().splitlines()
+            if line.strip()
+        )
+    else:
+        segments.append(final_run)
     states = [
         json.loads((experiment / "metadata/per-task" / f"{instance_id}.json").read_text())
         for instance_id in manifest["instance_ids_in_output_order"]
@@ -95,6 +103,7 @@ def main() -> None:
     submitted_count = statuses.get("Submitted", 0)
     submitted_empty = sum(state["exit_status"] == "Submitted" and state["empty_submission"] for state in states)
     formal_retries = sum(state["retry_count"] for state in states)
+    worktree_deletions = sum(state.get("worktree_deleted_by_agent", False) for state in states)
     disk_bytes = int(subprocess.check_output(["du", "-sb", str(experiment)], text=True).split()[0])
 
     engine_memory = {}
@@ -184,6 +193,7 @@ def main() -> None:
             f"| Empty formal patches | {validation['empty_submission_count']} |",
             f"| Non-empty formal patches | {validation['nonempty_submission_count']} |",
             f"| Non-empty patches passing apply-check | {validation['applicable_nonempty_count']} |",
+            f"| Worktrees deleted by model action | {worktree_deletions} |",
             "| Unresolved infrastructure failures | 0 |",
             f"| Formal model retries | {formal_retries} |",
             "",
