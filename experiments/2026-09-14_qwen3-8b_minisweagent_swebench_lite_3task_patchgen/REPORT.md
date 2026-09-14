@@ -31,5 +31,8 @@ The pvlib submission is a one-file Git diff for `pvlib/temperature.py`. It passe
 - `trajectories/*.traj.json`: complete agent trajectories.
 - `logs/*.log`: console logs.
 - `metadata/task_statuses.json`: compact exit-status summary.
+- `metadata/marshmallow-code__marshmallow-1359.unsubmitted-worktree.patch`: archived failed worktree diff; it is diagnostic only and is not a prediction.
+
+Runtime worktrees are intentionally excluded from the parent repository. The failed `marshmallow-code__marshmallow-1359` source tree remains on disk for inspection, but is not tracked as a nested Git repository.
 
 The prediction files contain generated answers only. They contain no score. Move `predictions.jsonl` to a machine with a compatible SWE-bench grading environment to evaluate it.
