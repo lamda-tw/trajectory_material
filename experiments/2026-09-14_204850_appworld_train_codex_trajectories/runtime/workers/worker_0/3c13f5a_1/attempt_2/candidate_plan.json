@@ -1,0 +1,276 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "3c13f5a_1",
+  "task_family": "3c13f5a",
+  "completion_mode": "status_only",
+  "plan_summary": "Authenticate with supervisor-provided credentials, enumerate all roommate contacts, robustly derive the previous calendar month, locate and parse the matching electricity receipt, compute each roommate's equal share including the payer, create one Venmo request per roommate with the specified note, validate every mutation acknowledgement, and complete the task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "Before any task API call, inspect and retain the public documentation for every API needed by the workflow.",
+      "action_code": "_api_doc_targets = [\n    \"supervisor.show_profile\",\n    \"supervisor.show_account_passwords\",\n    \"phone.login\",\n    \"phone.search_contacts\",\n    \"phone.get_current_date_and_time\",\n    \"file_system.login\",\n    \"file_system.show_directory\",\n    \"file_system.show_file\",\n    \"venmo.login\",\n    \"venmo.create_payment_request\",\n    \"supervisor.complete_task\",\n]\npublic_api_docs = {}\nfor _qualified_name in _api_doc_targets:\n    _app_name, _api_name = _qualified_name.split(\".\", 1)\n    public_api_docs[_qualified_name] = apis.api_docs.show_api_doc(app_name=_app_name, api_name=_api_name)\nprint({\"documented_apis\": list(public_api_docs)})",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public documentation is available for every subsequent task API."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "The documented Supervisor APIs can now supply the current user's public identity and app credentials without relying on hardcoded secrets.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\n\ndef _normalize_account_name(_value):\n    return \"\".join(_character for _character in str(_value).lower() if _character.isalnum())\n\ndef _password_for_app(_app_name):\n    _target = _normalize_account_name(_app_name)\n    _matches = [\n        _record for _record in account_password_records\n        if _target == _normalize_account_name(_record[\"account_name\"])\n        or _target in _normalize_account_name(_record[\"account_name\"])\n        or _normalize_account_name(_record[\"account_name\"]) in _target\n    ]\n    if len(_matches) != 1:\n        raise RuntimeError(\"Could not uniquely resolve credentials for \" + _app_name)\n    return _matches[0][\"password\"]\n\nphone_password = _password_for_app(\"phone\")\nfile_system_password = _password_for_app(\"file_system\")\nvenmo_password = _password_for_app(\"venmo\")\nprint({\n    \"first_name\": supervisor_profile[\"first_name\"],\n    \"last_name\": supervisor_profile[\"last_name\"],\n    \"email\": supervisor_profile[\"email\"],\n    \"phone_number\": supervisor_profile[\"phone_number\"],\n})",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Supervisor profile is retained.",
+        "Passwords are resolved into variables without being printed."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 3,
+      "phase": "authenticate",
+      "reasoning": "Use the observed supervisor phone number and securely retained phone password to obtain a phone access token.",
+      "action_code": "phone_login_result = apis.phone.login(\n    username=supervisor_profile[\"phone_number\"],\n    password=phone_password,\n)\nphone_access_token = phone_login_result[\"access_token\"]",
+      "depends_on_steps": [
+        1,
+        2
+      ],
+      "api_names_used": [
+        "phone.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A phone access token is retained without being printed."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 4,
+      "phase": "observe",
+      "reasoning": "With the phone token available, retrieve every page of contacts filtered to roommates so no recipient is omitted.",
+      "action_code": "roommate_contacts = []\n_contact_page_index = 0\n_contact_page_limit = 20\nwhile True:\n    _contact_page = apis.phone.search_contacts(\n        access_token=phone_access_token,\n        query=\"\",\n        relationship=\"roommate\",\n        page_index=_contact_page_index,\n        page_limit=_contact_page_limit,\n    )\n    if not _contact_page:\n        break\n    roommate_contacts.extend(_contact_page)\n    if len(_contact_page) < _contact_page_limit:\n        break\n    _contact_page_index += 1\nprint([\n    {\n        \"contact_id\": _contact[\"contact_id\"],\n        \"first_name\": _contact[\"first_name\"],\n        \"last_name\": _contact[\"last_name\"],\n        \"email\": _contact[\"email\"],\n        \"relationships\": _contact[\"relationships\"],\n    }\n    for _contact in roommate_contacts\n])",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "phone.search_contacts"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All roommate-contact pagination pages are consumed.",
+        "Public recipient records are available for derivation."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 5,
+      "phase": "observe",
+      "reasoning": "Read the current date from the public phone API so the phrase “last month” can be resolved from live task data.",
+      "action_code": "current_date_and_time = apis.phone.get_current_date_and_time()\nprint(current_date_and_time)",
+      "depends_on_steps": [
+        1,
+        3
+      ],
+      "api_names_used": [
+        "phone.get_current_date_and_time"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "The current date and time response is retained."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 6,
+      "phase": "derive",
+      "reasoning": "The date response is now available; parse common ISO, numeric, and month-name formats and derive the immediately preceding calendar month without assuming a named-month representation.",
+      "action_code": "from datetime import datetime as _DateTime\nimport re as _re\n\n_raw_date = str(current_date_and_time.get(\"date\", \"\")).strip()\n_date_variants = [_raw_date]\nif \",\" in _raw_date:\n    _date_variants.append(_raw_date.split(\",\", 1)[1].strip())\n_date_variants += [\n    _re.sub(r\"(\\d)(st|nd|rd|th)\\b\", r\"\\1\", _variant, flags=_re.IGNORECASE)\n    for _variant in list(_date_variants)\n]\n_current_calendar_date = None\nfor _variant in _date_variants:\n    try:\n        _current_calendar_date = _DateTime.fromisoformat(_variant.replace(\"Z\", \"+00:00\"))\n        break\n    except ValueError:\n        pass\n    for _format in (\n        \"%Y-%m-%d\", \"%Y/%m/%d\", \"%m/%d/%Y\", \"%d/%m/%Y\",\n        \"%m-%d-%Y\", \"%d-%m-%Y\", \"%B %d, %Y\", \"%b %d, %Y\",\n        \"%B %d %Y\", \"%b %d %Y\", \"%d %B, %Y\", \"%d %b, %Y\",\n        \"%d %B %Y\", \"%d %b %Y\",\n    ):\n        try:\n            _current_calendar_date = _DateTime.strptime(_variant, _format)\n            break\n        except ValueError:\n            pass\n    if _current_calendar_date is not None:\n        break\nif _current_calendar_date is None:\n    raise RuntimeError(\"The phone date could not be parsed using supported public date formats\")\nif _current_calendar_date.month == 1:\n    target_bill_year = _current_calendar_date.year - 1\n    target_bill_month = 12\nelse:\n    target_bill_year = _current_calendar_date.year\n    target_bill_month = _current_calendar_date.month - 1\ntarget_bill_period = f\"{target_bill_year:04d}-{target_bill_month:02d}\"\nprint({\"target_billing_month\": target_bill_period})",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "The preceding calendar month and year are computed from the observed phone date."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 7,
+      "phase": "authenticate",
+      "reasoning": "Use the observed supervisor email and securely retained file-system password to obtain the token needed to inspect the receipt.",
+      "action_code": "file_system_login_result = apis.file_system.login(\n    username=supervisor_profile[\"email\"],\n    password=file_system_password,\n)\nfile_system_access_token = file_system_login_result[\"access_token\"]",
+      "depends_on_steps": [
+        1,
+        2
+      ],
+      "api_names_used": [
+        "file_system.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A file-system access token is retained without being printed."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 8,
+      "phase": "observe",
+      "reasoning": "Search the user's home directory recursively for files whose paths identify them as electricity-related receipt candidates.",
+      "action_code": "electricity_file_paths = apis.file_system.show_directory(\n    access_token=file_system_access_token,\n    directory_path=\"~/\",\n    substring=\"electricity\",\n    entry_type=\"files\",\n    recursive=True,\n)\nprint(electricity_file_paths)",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "file_system.show_directory"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All electricity-related file paths under the home directory are retained."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 9,
+      "phase": "observe",
+      "reasoning": "The candidate paths are available; read every candidate so the target period and paid amount can be selected from real receipt data.",
+      "action_code": "receipt_file_records = []\nfor _file_path in electricity_file_paths:\n    receipt_file_records.append(\n        apis.file_system.show_file(\n            file_path=_file_path,\n            access_token=file_system_access_token,\n        )\n    )\nprint([\n    {\n        \"path\": _record[\"path\"],\n        \"content\": _record[\"content\"],\n        \"created_at\": _record[\"created_at\"],\n        \"updated_at\": _record[\"updated_at\"],\n    }\n    for _record in receipt_file_records\n])",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [
+        "file_system.show_file"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every discovered electricity-file candidate is read.",
+        "Receipt contents and metadata are available for selection."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 10,
+      "phase": "derive",
+      "reasoning": "The target month and candidate contents are now available; select the uniquely applicable receipt and extract its labeled monetary total without assuming an amount.",
+      "action_code": "from decimal import Decimal as _Decimal\n\nif not receipt_file_records:\n    raise RuntimeError(\"No electricity receipt candidate was found\")\n_month_names = (\n    \"january\", \"february\", \"march\", \"april\", \"may\", \"june\",\n    \"july\", \"august\", \"september\", \"october\", \"november\", \"december\",\n)\n_target_month_name = _month_names[target_bill_month - 1]\n_target_month_abbreviation = _target_month_name[:3]\n_target_year_text = str(target_bill_year)\n_numeric_period_tokens = (\n    f\"{target_bill_year:04d}-{target_bill_month:02d}\",\n    f\"{target_bill_year:04d}_{target_bill_month:02d}\",\n    f\"{target_bill_year:04d}/{target_bill_month:02d}\",\n    f\"{target_bill_month:02d}-{target_bill_year:04d}\",\n    f\"{target_bill_month:02d}_{target_bill_year:04d}\",\n    f\"{target_bill_month:02d}/{target_bill_year:04d}\",\n)\n\ndef _receipt_period_score(_record):\n    _searchable = (str(_record[\"path\"]) + \"\\n\" + str(_record[\"content\"])).lower()\n    _score = 0\n    if _target_year_text in _searchable and _re.search(r\"\\b\" + _re.escape(_target_month_name) + r\"\\b\", _searchable):\n        _score += 6\n    if _target_year_text in _searchable and _re.search(r\"\\b\" + _re.escape(_target_month_abbreviation) + r\"\\b\", _searchable):\n        _score += 4\n    _score += sum(3 for _token in _numeric_period_tokens if _token in _searchable)\n    return _score\n\n_scored_receipts = [(_receipt_period_score(_record), _record) for _record in receipt_file_records]\nif len(_scored_receipts) == 1:\n    selected_receipt = _scored_receipts[0][1]\nelse:\n    _best_score = max(_score for _score, _record in _scored_receipts)\n    _best_receipts = [_record for _score, _record in _scored_receipts if _score == _best_score]\n    if _best_score <= 0 or len(_best_receipts) != 1:\n        raise RuntimeError(\"The prior-month electricity receipt could not be selected uniquely\")\n    selected_receipt = _best_receipts[0]\n\n_receipt_content = str(selected_receipt[\"content\"])\n_amount_patterns = (\n    r\"(?i)\\b(?:amount\\s+paid|payment\\s+amount|total\\s+paid|bill\\s+total|grand\\s+total|total\\s+amount|amount\\s+due|total\\s+due)\\b\\s*[:=\\-]?\\s*(?:USD\\s*)?\\$?\\s*([0-9][0-9,]*(?:\\.[0-9]{1,2})?)\",\n    r\"(?i)\\b(?:total|paid|amount)\\b\\s*[:=\\-]?\\s*(?:USD\\s*)?\\$?\\s*([0-9][0-9,]*(?:\\.[0-9]{1,2})?)\",\n)\nbill_amount = None\nfor _pattern in _amount_patterns:\n    _values = {\n        _Decimal(_match.replace(\",\", \"\"))\n        for _match in _re.findall(_pattern, _receipt_content)\n    }\n    _positive_values = {_value for _value in _values if _value > 0}\n    if len(_positive_values) == 1:\n        bill_amount = next(iter(_positive_values))\n        break\n    if len(_positive_values) > 1:\n        raise RuntimeError(\"The receipt contains multiple competing labeled totals\")\nif bill_amount is None:\n    _currency_values = {\n        _Decimal(_match.replace(\",\", \"\"))\n        for _match in _re.findall(r\"(?i)(?:USD\\s*|\\$\\s*)([0-9][0-9,]*(?:\\.[0-9]{1,2})?)\", _receipt_content)\n    }\n    _currency_values = {_value for _value in _currency_values if _value > 0}\n    if len(_currency_values) != 1:\n        raise RuntimeError(\"A unique positive receipt amount could not be extracted\")\n    bill_amount = next(iter(_currency_values))\nprint({\"selected_receipt_path\": selected_receipt[\"path\"], \"bill_amount\": str(bill_amount)})",
+      "depends_on_steps": [
+        6,
+        9
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "One receipt is selected using the derived prior-month period.",
+        "One positive bill total is derived from its real contents."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 11,
+      "phase": "authenticate",
+      "reasoning": "Use the observed supervisor email and securely retained Venmo password to obtain the token required for payment requests.",
+      "action_code": "venmo_login_result = apis.venmo.login(\n    username=supervisor_profile[\"email\"],\n    password=venmo_password,\n)\nvenmo_access_token = venmo_login_result[\"access_token\"]",
+      "depends_on_steps": [
+        1,
+        2
+      ],
+      "api_names_used": [
+        "venmo.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A Venmo access token is retained without being printed."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 12,
+      "phase": "derive",
+      "reasoning": "Immediately before mutation, review the discovered roommates and bill total, include the payer in the denominator, and construct one validated request per unique roommate email.",
+      "action_code": "from decimal import ROUND_HALF_UP as _ROUND_HALF_UP\n\nif not roommate_contacts:\n    raise RuntimeError(\"No roommate contacts were found\")\nif any(not str(_contact.get(\"email\", \"\")).strip() for _contact in roommate_contacts):\n    raise RuntimeError(\"A roommate contact lacks the email required by Venmo\")\n_self_email = str(supervisor_profile[\"email\"]).strip().lower()\nroommate_emails = sorted({\n    str(_contact[\"email\"]).strip().lower()\n    for _contact in roommate_contacts\n    if str(_contact[\"email\"]).strip().lower() != _self_email\n})\nif not roommate_emails:\n    raise RuntimeError(\"No distinct roommate recipient emails remain after review\")\nparticipant_count = len(roommate_emails) + 1\nper_person_share = (bill_amount / _Decimal(participant_count)).quantize(\n    _Decimal(\"0.01\"),\n    rounding=_ROUND_HALF_UP,\n)\nif per_person_share <= 0:\n    raise RuntimeError(\"The computed roommate share is not positive\")\nplanned_requests = [\n    {\n        \"user_email\": _email,\n        \"amount\": float(per_person_share),\n        \"description\": \"For electricity bill.\",\n    }\n    for _email in roommate_emails\n]\nprint({\n    \"bill_amount\": str(bill_amount),\n    \"participant_count_including_payer\": participant_count,\n    \"requests\": planned_requests,\n})",
+      "depends_on_steps": [
+        2,
+        4,
+        10,
+        11
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "The payer is included in the equal-split denominator.",
+        "There is exactly one planned request per unique roommate email.",
+        "Every planned request has a positive share and the exact requested description."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 13,
+      "phase": "act",
+      "reasoning": "The complete request batch has been derived and reviewed from public records, so send each planned Venmo request using those values.",
+      "action_code": "payment_request_results = []\nfor _planned_request in planned_requests:\n    _response = apis.venmo.create_payment_request(\n        user_email=_planned_request[\"user_email\"],\n        amount=_planned_request[\"amount\"],\n        access_token=venmo_access_token,\n        description=_planned_request[\"description\"],\n    )\n    payment_request_results.append({\n        \"request\": _planned_request,\n        \"response\": _response,\n    })\nprint([\n    {\n        \"user_email\": _result[\"request\"][\"user_email\"],\n        \"payment_request_id\": _result[\"response\"][\"payment_request_id\"],\n    }\n    for _result in payment_request_results\n])",
+      "depends_on_steps": [
+        12
+      ],
+      "api_names_used": [
+        "venmo.create_payment_request"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "A create-payment-request call is made for every reviewed roommate request.",
+        "Each real mutation response is retained."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 14,
+      "phase": "verify",
+      "reasoning": "The real mutation responses are now available; validate that every planned roommate request received a distinct public payment-request identifier and that no planned request was omitted.",
+      "action_code": "if len(payment_request_results) != len(planned_requests):\n    raise RuntimeError(\"The number of mutation results does not match the reviewed request batch\")\n_verified_request_ids = []\nfor _result in payment_request_results:\n    _request_id = _result[\"response\"].get(\"payment_request_id\")\n    if not isinstance(_request_id, int):\n        raise RuntimeError(\"A Venmo mutation did not return a payment_request_id\")\n    if _result[\"request\"][\"description\"] != \"For electricity bill.\":\n        raise RuntimeError(\"A submitted request did not use the required description\")\n    if _result[\"request\"][\"amount\"] != float(per_person_share):\n        raise RuntimeError(\"A submitted request did not use the reviewed equal share\")\n    _verified_request_ids.append(_request_id)\nif len(set(_verified_request_ids)) != len(_verified_request_ids):\n    raise RuntimeError(\"Venmo returned duplicate payment-request identifiers\")\nverification_summary = {\n    \"planned_roommate_requests\": len(planned_requests),\n    \"acknowledged_roommate_requests\": len(_verified_request_ids),\n    \"payment_request_ids\": _verified_request_ids,\n    \"amount_each\": float(per_person_share),\n    \"description\": \"For electricity bill.\",\n}\nprint(verification_summary)",
+      "depends_on_steps": [
+        12,
+        13
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every planned roommate has one acknowledged request.",
+        "All acknowledgements have distinct payment-request IDs.",
+        "Submitted amounts and descriptions match the reviewed batch."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 15,
+      "phase": "complete",
+      "reasoning": "After the mutation verification succeeds, mark this action task complete without supplying a QA answer.",
+      "action_code": "completion_result = apis.supervisor.complete_task(status=\"success\")",
+      "depends_on_steps": [
+        14
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The task is reported complete only after request verification."
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

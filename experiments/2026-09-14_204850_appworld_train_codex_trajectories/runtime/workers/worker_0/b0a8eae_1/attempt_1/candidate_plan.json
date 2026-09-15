@@ -1,0 +1,242 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "b0a8eae_1",
+  "task_family": "b0a8eae",
+  "completion_mode": "status_only",
+  "plan_summary": "Read today's workout duration from Simple Note, compute every library playlist's duration from public Spotify song records, play a qualifying playlist, and verify the selected playlist and starting song before completing the task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public documentation for every required API must be inspected before any task API is called.",
+      "action_code": "docs = {}\nfor app_name, api_name in [\n    ('supervisor', 'show_profile'),\n    ('supervisor', 'show_account_passwords'),\n    ('phone', 'get_current_date_and_time'),\n    ('simple_note', 'login'),\n    ('simple_note', 'search_notes'),\n    ('simple_note', 'show_note'),\n    ('spotify', 'login'),\n    ('spotify', 'show_playlist_library'),\n    ('spotify', 'show_song'),\n    ('spotify', 'play_music'),\n    ('supervisor', 'complete_task'),\n]:\n    docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public documentation is retrieved for every API used later"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "observe",
+      "reasoning": "With the schemas inspected, retrieve the account identity, app credentials, and current date needed to interpret “today” and authenticate without exposing secrets.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\npassword_records = apis.supervisor.show_account_passwords()\ncurrent_date_time = apis.phone.get_current_date_and_time()\ndef normalize_account_name(value):\n    return ''.join(ch.lower() for ch in str(value) if ch.isalnum())\nsimple_note_password = next(record['password'] for record in password_records if normalize_account_name(record['account_name']) in ('simplenote', 'simplenoteapp'))\nspotify_password = next(record['password'] for record in password_records if normalize_account_name(record['account_name']) in ('spotify', 'spotifyapp'))\naccount_username = supervisor_profile['email']\nprint({'profile': supervisor_profile, 'current_date_time': current_date_time})",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords",
+        "phone.get_current_date_and_time"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Supervisor identity is available",
+        "Current date is available",
+        "Both required app passwords are held only in variables"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 3,
+      "phase": "authenticate",
+      "reasoning": "The profile email and Simple Note password from the preceding observation provide the documented login inputs.",
+      "action_code": "simple_note_auth = apis.simple_note.login(username=account_username, password=simple_note_password)\nsimple_note_token = simple_note_auth['access_token']",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "simple_note.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A Simple Note access token is stored without being printed"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 4,
+      "phase": "observe",
+      "reasoning": "Search for the workout plan using an instruction-derived term and exhaust pagination; if that query has no matches, exhaustively read note metadata so the plan can still be selected from real data.",
+      "action_code": "def read_all_note_pages(query_value):\n    collected = []\n    page_index = 0\n    page_limit = 20\n    while True:\n        page = apis.simple_note.search_notes(access_token=simple_note_token, query=query_value, page_index=page_index, page_limit=page_limit)\n        collected.extend(page)\n        if len(page) < page_limit:\n            break\n        page_index += 1\n    return collected\nnote_search_query = 'workout'\nworkout_note_summaries = read_all_note_pages(note_search_query)\nif not workout_note_summaries:\n    note_search_query = ''\n    workout_note_summaries = read_all_note_pages(note_search_query)\nprint(workout_note_summaries)",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "simple_note.search_notes"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every page for the effective note search is read",
+        "Candidate note IDs and metadata are available"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 5,
+      "phase": "observe",
+      "reasoning": "The search response omits note content, so each real candidate must be opened before selecting the relevant plan or deriving its duration.",
+      "action_code": "note_details = [apis.simple_note.show_note(note_id=note['note_id'], access_token=simple_note_token) for note in workout_note_summaries]\nassert note_details, 'No candidate notes were found'\nprint(note_details)",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "simple_note.show_note"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Full content is retrieved for every candidate note"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 6,
+      "phase": "derive",
+      "reasoning": "Use only the retrieved date and note records to select the current workout plan and convert its stated duration or time range into seconds for comparison with song durations.",
+      "action_code": "date_text = str(current_date_time.get('date', '')).strip()\ndate_lower = date_text.lower()\ndigit_groups = []\ncurrent_digits = ''\nfor ch in date_text:\n    if ch.isdigit():\n        current_digits += ch\n    elif current_digits:\n        digit_groups.append(int(current_digits))\n        current_digits = ''\nif current_digits:\n    digit_groups.append(int(current_digits))\nmonth_names = ['january','february','march','april','may','june','july','august','september','october','november','december']\nmonth_lookup = {}\nfor month_number, month_name in enumerate(month_names, 1):\n    month_lookup[month_name] = month_number\n    month_lookup[month_name[:3]] = month_number\nyear = month = day = None\nif len(digit_groups) >= 3 and digit_groups[0] >= 1000:\n    year, month, day = digit_groups[0], digit_groups[1], digit_groups[2]\nelif digit_groups and digit_groups[-1] >= 1000:\n    year = digit_groups[-1]\n    named_month = next((number for name, number in month_lookup.items() if name in date_lower), None)\n    if named_month is not None:\n        month = named_month\n        day = digit_groups[0]\n    elif len(digit_groups) >= 3:\n        first, second = digit_groups[0], digit_groups[1]\n        month, day = (second, first) if first > 12 else (first, second)\nweekday_name = ''\nif year is not None and month is not None and day is not None and 1 <= month <= 12:\n    offsets = [0,3,2,5,0,3,5,1,4,6,2,4]\n    adjusted_year = year - (1 if month < 3 else 0)\n    weekday_index = (adjusted_year + adjusted_year // 4 - adjusted_year // 100 + adjusted_year // 400 + offsets[month - 1] + day) % 7\n    weekday_name = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'][weekday_index]\ndate_variants = [date_lower]\nif year is not None and month is not None and day is not None:\n    date_variants.extend([\n        f'{year:04d}-{month:02d}-{day:02d}',\n        f'{month}/{day}/{year}',\n        f'{month:02d}/{day:02d}/{year}',\n        f'{month_names[month-1]} {day}',\n        f'{month_names[month-1][:3]} {day}',\n    ])\ndate_variants = [value for value in date_variants if value]\ndef score_note(note):\n    title = str(note.get('title', '')).lower()\n    content = str(note.get('content', '')).lower()\n    combined = title + '\\n' + content\n    score = 0\n    score += 8 if 'workout' in title else 0\n    score += 4 if 'plan' in title else 0\n    score += 3 if 'workout' in content else 0\n    score += 2 if any(term in combined for term in ('exercise', 'training', 'gym')) else 0\n    score += 12 if any(value in combined for value in date_variants) else 0\n    score += 5 if weekday_name and weekday_name in combined else 0\n    score += 2 if 'today' in combined else 0\n    return (score, str(note.get('updated_at', '')), int(note.get('note_id', 0)))\nselected_note = max(note_details, key=score_note)\ncontent_lines = str(selected_note.get('content', '')).splitlines()\nall_weekdays = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday']\nscope_start = None\nif weekday_name:\n    scope_start = next((index for index, line in enumerate(content_lines) if weekday_name in line.lower()), None)\nif scope_start is None:\n    scope_start = next((index for index, line in enumerate(content_lines) if any(value in line.lower() for value in date_variants)), None)\nif scope_start is None:\n    scoped_lines = content_lines\nelse:\n    scope_end = len(content_lines)\n    for index in range(scope_start + 1, len(content_lines)):\n        heading = content_lines[index].strip().lower().rstrip(':')\n        if any(heading.startswith(name) for name in all_weekdays if name != weekday_name):\n            scope_end = index\n            break\n    scoped_lines = content_lines[scope_start:scope_end]\nnumber_words = {\n    'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,'six':6,'seven':7,'eight':8,'nine':9,'ten':10,\n    'eleven':11,'twelve':12,'thirteen':13,'fourteen':14,'fifteen':15,'sixteen':16,'seventeen':17,'eighteen':18,'nineteen':19,\n    'twenty':20,'thirty':30,'forty':40,'fifty':50,'sixty':60,'seventy':70,'eighty':80,'ninety':90,'half':0.5\n}\ndef numeric_value(token):\n    if token in ('a', 'an'):\n        return 1.0\n    if token in number_words:\n        return float(number_words[token])\n    try:\n        return float(token)\n    except ValueError:\n        return None\ndef duration_seconds_from_text(text_value):\n    normalized = ''.join(ch.lower() if (ch.isalnum() or ch == '.') else ' ' for ch in text_value)\n    tokens = normalized.split()\n    total = 0.0\n    for index, token in enumerate(tokens):\n        multiplier = None\n        if token in ('second','seconds','sec','secs'):\n            multiplier = 1\n        elif token in ('minute','minutes','min','mins'):\n            multiplier = 60\n        elif token in ('hour','hours','hr','hrs'):\n            multiplier = 3600\n        if multiplier is not None:\n            value = numeric_value(tokens[index - 1]) if index > 0 else None\n            if value is not None:\n                total += value * multiplier\n    return int(total)\nexplicit_values = []\nfor line in scoped_lines:\n    lower_line = line.lower()\n    if any(unit in lower_line for unit in (' sec',' min',' hour',' hr')) and any(key in lower_line for key in ('total','duration','last','length')):\n        value = duration_seconds_from_text(line)\n        if value > 0:\n            explicit_values.append(value)\nif explicit_values:\n    workout_duration_seconds = max(explicit_values)\nelse:\n    workout_duration_seconds = sum(duration_seconds_from_text(line) for line in scoped_lines)\ndef extract_clock_minutes(text_value):\n    found = []\n    index = 0\n    while index < len(text_value):\n        if text_value[index].isdigit():\n            hour_end = index\n            while hour_end < len(text_value) and text_value[hour_end].isdigit():\n                hour_end += 1\n            if hour_end < len(text_value) and text_value[hour_end] == ':':\n                minute_start = hour_end + 1\n                minute_end = minute_start\n                while minute_end < len(text_value) and text_value[minute_end].isdigit():\n                    minute_end += 1\n                if minute_end > minute_start:\n                    hour_value = int(text_value[index:hour_end])\n                    minute_value = int(text_value[minute_start:minute_end])\n                    marker = ''.join(ch for ch in text_value[minute_end:minute_end + 7].lower() if ch.isalpha())[:2]\n                    if marker == 'pm' and hour_value < 12:\n                        hour_value += 12\n                    elif marker == 'am' and hour_value == 12:\n                        hour_value = 0\n                    if 0 <= hour_value < 24 and 0 <= minute_value < 60:\n                        found.append(hour_value * 60 + minute_value)\n                    index = minute_end\n                    continue\n        index += 1\n    return found\nif workout_duration_seconds <= 0:\n    clock_minutes = extract_clock_minutes('\\n'.join(scoped_lines))\n    range_minutes = 0\n    for index in range(0, len(clock_minutes) - 1, 2):\n        difference = clock_minutes[index + 1] - clock_minutes[index]\n        if difference < 0:\n            difference += 24 * 60\n        range_minutes += difference\n    workout_duration_seconds = range_minutes * 60\nassert workout_duration_seconds > 0, 'No workout duration or usable time range was found in the selected plan'\nprint({'selected_note_id': selected_note['note_id'], 'selected_note_title': selected_note['title'], 'weekday': weekday_name, 'workout_duration_seconds': workout_duration_seconds})",
+      "depends_on_steps": [
+        2,
+        5
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "A candidate note is selected from retrieved records",
+        "A positive workout duration is derived from its relevant date or weekday section"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 7,
+      "phase": "authenticate",
+      "reasoning": "The profile email and Spotify password already held in variables provide the documented Spotify login inputs.",
+      "action_code": "spotify_auth = apis.spotify.login(username=account_username, password=spotify_password)\nspotify_token = spotify_auth['access_token']",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "spotify.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A Spotify access token is stored without being printed"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 8,
+      "phase": "observe",
+      "reasoning": "All playlist pages must be retrieved so a qualifying playlist is selected from the complete library rather than a partial page.",
+      "action_code": "playlist_library = []\nplaylist_page_index = 0\nplaylist_page_limit = 20\nwhile True:\n    playlist_page = apis.spotify.show_playlist_library(access_token=spotify_token, page_index=playlist_page_index, page_limit=playlist_page_limit)\n    playlist_library.extend(playlist_page)\n    if len(playlist_page) < playlist_page_limit:\n        break\n    playlist_page_index += 1\nprint([{'playlist_id': playlist['playlist_id'], 'title': playlist['title'], 'song_count': len(playlist['song_ids'])} for playlist in playlist_library])",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "spotify.show_playlist_library"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every playlist-library page is read",
+        "Playlist IDs and song memberships are available"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 9,
+      "phase": "observe",
+      "reasoning": "Playlist records provide song IDs but not durations, so retrieve each distinct referenced song before comparing playlist lengths with the workout.",
+      "action_code": "unique_song_ids = sorted({song_id for playlist in playlist_library for song_id in playlist['song_ids']})\nsong_details_by_id = {}\nfor song_id in unique_song_ids:\n    song_details_by_id[song_id] = apis.spotify.show_song(song_id=song_id)\nprint([{'song_id': song['song_id'], 'title': song['title'], 'duration': song['duration']} for song in song_details_by_id.values()])",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [
+        "spotify.show_song"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A public duration record is available for every song referenced by the library playlists"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 10,
+      "phase": "derive",
+      "reasoning": "Before changing playback, total the retrieved song durations, review all qualifying candidates, and select a playlist whose duration covers the derived workout duration.",
+      "action_code": "playlist_duration_rows = []\nfor playlist in playlist_library:\n    total_seconds = sum(int(song_details_by_id[song_id]['duration']) for song_id in playlist['song_ids'])\n    playlist_duration_rows.append({\n        'playlist': playlist,\n        'playlist_id': playlist['playlist_id'],\n        'title': playlist['title'],\n        'song_count': len(playlist['song_ids']),\n        'total_seconds': total_seconds,\n        'rating': float(playlist.get('rating') or 0),\n        'like_count': int(playlist.get('like_count') or 0),\n    })\neligible_playlists = [row for row in playlist_duration_rows if row['total_seconds'] >= workout_duration_seconds]\nassert eligible_playlists, 'No playlist in the library is long enough for the workout'\nselected_playlist_row = max(eligible_playlists, key=lambda row: (row['total_seconds'], row['song_count'], row['rating'], row['like_count'], row['title']))\nselected_playlist_id = selected_playlist_row['playlist_id']\nselected_playlist_song_ids = list(selected_playlist_row['playlist']['song_ids'])\nassert selected_playlist_song_ids, 'The selected playlist has no songs'\nprint({'workout_duration_seconds': workout_duration_seconds, 'eligible_playlists': [{key: row[key] for key in ('playlist_id','title','song_count','total_seconds')} for row in eligible_playlists], 'selected_playlist': {key: selected_playlist_row[key] for key in ('playlist_id','title','song_count','total_seconds')}})",
+      "depends_on_steps": [
+        6,
+        9
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every playlist duration is computed from retrieved songs",
+        "The selected playlist duration is at least the workout duration",
+        "The selected playlist contains songs"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 11,
+      "phase": "act",
+      "reasoning": "The reviewed playlist ID is derived from real library and duration data and satisfies the requested length threshold, so it is ready to be played.",
+      "action_code": "playback_result = apis.spotify.play_music(access_token=spotify_token, playlist_id=selected_playlist_id)\nprint(playback_result)",
+      "depends_on_steps": [
+        10
+      ],
+      "api_names_used": [
+        "spotify.play_music"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Spotify accepts the selected playlist for playback",
+        "The mutation returns a played song ID"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 12,
+      "phase": "verify",
+      "reasoning": "After playback changes, re-read the complete playlist library and the selected playlist's songs, then cross-check the returned played song against the refreshed playlist and duration threshold.",
+      "action_code": "verified_library = []\nverify_page_index = 0\nverify_page_limit = 20\nwhile True:\n    verify_page = apis.spotify.show_playlist_library(access_token=spotify_token, page_index=verify_page_index, page_limit=verify_page_limit)\n    verified_library.extend(verify_page)\n    if len(verify_page) < verify_page_limit:\n        break\n    verify_page_index += 1\nverified_playlist = next(playlist for playlist in verified_library if playlist['playlist_id'] == selected_playlist_id)\nverified_song_details = [apis.spotify.show_song(song_id=song_id) for song_id in verified_playlist['song_ids']]\nverified_total_seconds = sum(int(song['duration']) for song in verified_song_details)\nplayed_song_id = playback_result['song_id']\nassert verified_total_seconds >= workout_duration_seconds, 'The refreshed playlist is not long enough for the workout'\nassert verified_playlist['song_ids'], 'The refreshed playlist is empty'\nassert played_song_id == verified_playlist['song_ids'][0], 'The returned played song is not the selected playlist starting song'\nassert any(song['song_id'] == played_song_id for song in verified_song_details), 'The returned played song is absent from the refreshed playlist'\nprint({'playlist_id': selected_playlist_id, 'played_song_id': played_song_id, 'verified_total_seconds': verified_total_seconds, 'workout_duration_seconds': workout_duration_seconds, 'duration_is_sufficient': verified_total_seconds >= workout_duration_seconds, 'played_song_is_playlist_start': played_song_id == verified_playlist['song_ids'][0]})",
+      "depends_on_steps": [
+        11
+      ],
+      "api_names_used": [
+        "spotify.show_playlist_library",
+        "spotify.show_song"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "The selected playlist remains in the library",
+        "Its refreshed total duration covers the workout",
+        "The play response identifies the refreshed playlist's starting song"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 13,
+      "phase": "complete",
+      "reasoning": "The action and all available public postcondition checks have completed, so the action task can be marked successful without an answer value.",
+      "action_code": "completion_result = apis.supervisor.complete_task(status='success')",
+      "depends_on_steps": [
+        12
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The supervisor records successful task completion"
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

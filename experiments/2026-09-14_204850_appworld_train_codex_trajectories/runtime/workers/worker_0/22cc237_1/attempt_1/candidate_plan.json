@@ -1,0 +1,248 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "22cc237_1",
+  "task_family": "22cc237",
+  "completion_mode": "status_only",
+  "plan_summary": "Authenticate through Supervisor-provided credentials, identify yesterday's dinner attendees and shares from Simple Note and coworker contacts, exclude coworkers whose matching shares were already received on Venmo, create payment requests for the remainder with the required description, then re-read transactions and validate the mutation receipts before completing the task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "All public API contracts needed for the task must be inspected before any task API is called.",
+      "action_code": "api_doc_specs = [('supervisor', 'show_profile'), ('supervisor', 'show_account_passwords'), ('phone', 'login'), ('phone', 'get_current_date_and_time'), ('phone', 'search_contacts'), ('simple_note', 'login'), ('simple_note', 'search_notes'), ('simple_note', 'show_note'), ('venmo', 'login'), ('venmo', 'show_transactions'), ('venmo', 'create_payment_request'), ('supervisor', 'complete_task')]\napi_docs_by_name = {}\nfor app_name, api_name in api_doc_specs:\n    api_docs_by_name[app_name + '.' + api_name] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public documentation is loaded for every API that will be used"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "observe",
+      "reasoning": "The supervisor profile supplies app usernames, while Supervisor-managed account records are the authorized source of app passwords.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\npassword_records = apis.supervisor.show_account_passwords()\ndef normalize_account_name(value):\n    return ''.join(ch.lower() for ch in value if ch.isalnum())\ndef password_for(app_label):\n    wanted = normalize_account_name(app_label)\n    exact = [row['password'] for row in password_records if normalize_account_name(row['account_name']) == wanted]\n    matches = exact if exact else [row['password'] for row in password_records if wanted in normalize_account_name(row['account_name']) or normalize_account_name(row['account_name']) in wanted]\n    if len(matches) != 1:\n        raise RuntimeError('Could not uniquely resolve the account password for ' + app_label)\n    return matches[0]\nphone_password = password_for('phone')\nsimple_note_password = password_for('simple_note')\nvenmo_password = password_for('venmo')",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Supervisor profile is available",
+        "Exactly one credential is resolved for each required app",
+        "Passwords remain unprinted"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "authenticate",
+      "reasoning": "The phone session is needed to read contacts, and the phone clock provides a database-relative interpretation of “yesterday.”",
+      "action_code": "phone_login_result = apis.phone.login(username=supervisor_profile['phone_number'], password=phone_password)\nphone_access_token = phone_login_result['access_token']\nphone_clock = apis.phone.get_current_date_and_time()\ntoday_date = phone_clock['date'][:10]\ndef previous_iso_date(iso_date):\n    year, month, day = [int(part) for part in iso_date.split('-')]\n    if day > 1:\n        day -= 1\n    else:\n        month -= 1\n        if month == 0:\n            month = 12\n            year -= 1\n        month_lengths = [31, 29 if (year % 400 == 0 or (year % 4 == 0 and year % 100 != 0)) else 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]\n        day = month_lengths[month - 1]\n    return str(year).zfill(4) + '-' + str(month).zfill(2) + '-' + str(day).zfill(2)\nyesterday_date = previous_iso_date(today_date)\nprint({'today_date': today_date, 'yesterday_date': yesterday_date})",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "phone.login",
+        "phone.get_current_date_and_time"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Phone login yields an access token",
+        "Yesterday is derived from the public phone clock"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 4,
+      "phase": "observe",
+      "reasoning": "Coworker contact records are needed to map names in the dinner note to Venmo-compatible email addresses, so every page of the relationship-filtered contact search must be read.",
+      "action_code": "coworkers = []\ncontact_page_index = 0\nwhile True:\n    contact_page = apis.phone.search_contacts(access_token=phone_access_token, query='', relationship='coworker', page_index=contact_page_index, page_limit=20)\n    coworkers.extend(contact_page)\n    if len(contact_page) < 20:\n        break\n    contact_page_index += 1\nprint([{'contact_id': row['contact_id'], 'first_name': row['first_name'], 'last_name': row['last_name'], 'email': row['email'], 'relationships': row['relationships']} for row in coworkers])",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "phone.search_contacts"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All pages of coworker contacts are loaded",
+        "Candidate names and emails are available for note matching"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 5,
+      "phase": "authenticate",
+      "reasoning": "A Simple Note session is required before searching for the task-relevant dinner note.",
+      "action_code": "simple_note_login_result = apis.simple_note.login(username=supervisor_profile['email'], password=simple_note_password)\nsimple_note_access_token = simple_note_login_result['access_token']",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "simple_note.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Simple Note login yields an access token",
+        "The token remains unprinted"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 6,
+      "phase": "observe",
+      "reasoning": "The dinner-note search must be exhausted across all pages, and each matching note must be opened because search results omit note content.",
+      "action_code": "dinner_note_summaries = []\nnote_page_index = 0\nwhile True:\n    note_page = apis.simple_note.search_notes(access_token=simple_note_access_token, query='dinner', page_index=note_page_index, page_limit=20)\n    dinner_note_summaries.extend(note_page)\n    if len(note_page) < 20:\n        break\n    note_page_index += 1\nif not dinner_note_summaries:\n    raise RuntimeError('No dinner note candidates were found')\ndinner_note_details = []\nfor note_summary in dinner_note_summaries:\n    dinner_note_details.append(apis.simple_note.show_note(note_id=note_summary['note_id'], access_token=simple_note_access_token))\nprint(dinner_note_details)",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [
+        "simple_note.search_notes",
+        "simple_note.show_note"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All pages of dinner-note candidates are loaded",
+        "Full content is loaded for every candidate"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 7,
+      "phase": "derive",
+      "reasoning": "The detailed note candidates and coworker records are available, so the most task-relevant note can be selected and its name/amount lines mapped to contact emails without inventing identifiers or amounts.",
+      "action_code": "def note_rank(note):\n    searchable = (note.get('title', '') + ' ' + note.get('content', '')).lower()\n    is_dinner = int('dinner' in searchable)\n    is_yesterday = int(note.get('created_at', '')[:10] == yesterday_date or note.get('updated_at', '')[:10] == yesterday_date)\n    is_work_related = int('work' in searchable or 'coworker' in searchable or 'colleague' in searchable)\n    return (is_dinner, is_yesterday, is_work_related, note.get('updated_at', ''), note.get('created_at', ''))\nselected_dinner_note = max(dinner_note_details, key=note_rank)\ndef normalized_words(value):\n    return ' '.join(''.join(ch.lower() if ch.isalnum() else ' ' for ch in value).split())\nfirst_name_counts = {}\nfor contact in coworkers:\n    first = normalized_words(contact.get('first_name', ''))\n    first_name_counts[first] = first_name_counts.get(first, 0) + 1\ndef positive_numbers(value):\n    values = []\n    current = ''\n    for ch in value:\n        if ch.isdigit() or ch in '.,':\n            current += ch\n        else:\n            if any(c.isdigit() for c in current):\n                try:\n                    number = float(current.replace(',', ''))\n                    if number > 0:\n                        values.append(number)\n                except ValueError:\n                    pass\n            current = ''\n    if any(c.isdigit() for c in current):\n        try:\n            number = float(current.replace(',', ''))\n            if number > 0:\n                values.append(number)\n        except ValueError:\n            pass\n    return values\nnote_segments = [segment.strip() for segment in selected_dinner_note['content'].replace('\\r', '\\n').replace(';', '\\n').split('\\n') if segment.strip()]\nshares_by_email = {}\nshare_evidence = []\nfor segment in note_segments:\n    segment_lower = segment.lower()\n    padded_words = ' ' + normalized_words(segment) + ' '\n    matched_contacts = []\n    for contact in coworkers:\n        email = contact.get('email', '').lower()\n        first = normalized_words(contact.get('first_name', ''))\n        full = normalized_words(contact.get('first_name', '') + ' ' + contact.get('last_name', ''))\n        email_match = bool(email and email in segment_lower)\n        full_match = bool(full and (' ' + full + ' ') in padded_words)\n        unique_first_match = bool(first and first_name_counts.get(first) == 1 and (' ' + first + ' ') in padded_words)\n        if email_match or full_match or unique_first_match:\n            matched_contacts.append(contact)\n    if len(matched_contacts) == 1:\n        amount_source = segment[segment.find('$'):] if '$' in segment else segment\n        numbers = positive_numbers(amount_source)\n        if numbers:\n            amount = numbers[0] if '$' in segment else numbers[-1]\n            email = matched_contacts[0]['email'].lower()\n            if email in shares_by_email and abs(shares_by_email[email] - amount) >= 0.005:\n                raise RuntimeError('Conflicting dinner-share amounts for ' + email)\n            shares_by_email[email] = amount\n            share_evidence.append({'name': matched_contacts[0]['first_name'] + ' ' + matched_contacts[0]['last_name'], 'email': email, 'amount': amount})\nif not shares_by_email:\n    raise RuntimeError('No coworker share amounts could be mapped from the selected note')\nprint({'selected_note_id': selected_dinner_note['note_id'], 'parsed_shares': share_evidence})",
+      "depends_on_steps": [
+        4,
+        6
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "A dinner note is selected from real candidates",
+        "Each parsed share is tied to a real coworker email",
+        "All derived amounts are positive"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 8,
+      "phase": "authenticate",
+      "reasoning": "A Venmo session is required to inspect received payments and create any necessary requests.",
+      "action_code": "venmo_login_result = apis.venmo.login(username=supervisor_profile['email'], password=venmo_password)\nvenmo_access_token = venmo_login_result['access_token']",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "venmo.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Venmo login yields an access token",
+        "The token remains unprinted"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 9,
+      "phase": "observe",
+      "reasoning": "Received transactions since the dinner date must be read across every page so paid shares can be recognized from real sender emails and amounts.",
+      "action_code": "received_transactions_before = []\ntransaction_page_index = 0\nwhile True:\n    transaction_page = apis.venmo.show_transactions(access_token=venmo_access_token, direction='received', min_created_at=yesterday_date, page_index=transaction_page_index, page_limit=20, sort_by='+created_at')\n    received_transactions_before.extend(transaction_page)\n    if len(transaction_page) < 20:\n        break\n    transaction_page_index += 1\nprint([{'transaction_id': tx['transaction_id'], 'sender_email': tx['sender']['email'], 'receiver_email': tx['receiver']['email'], 'amount': tx['amount'], 'description': tx['description'], 'created_at': tx['created_at']} for tx in received_transactions_before])",
+      "depends_on_steps": [
+        3,
+        8
+      ],
+      "api_names_used": [
+        "venmo.show_transactions"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All pages of received transactions since yesterday are loaded",
+        "Sender emails and amounts are available for comparison with noted shares"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 10,
+      "phase": "derive",
+      "reasoning": "The parsed shares and complete received-payment snapshot are now available, so request targets can be reviewed separately before any mutation.",
+      "action_code": "paid_before_emails = set()\nfor email, share_amount in shares_by_email.items():\n    matching_payments = [tx for tx in received_transactions_before if tx.get('sender', {}).get('email', '').lower() == email and abs(float(tx['amount']) - float(share_amount)) < 0.005]\n    if matching_payments:\n        paid_before_emails.add(email)\ntarget_requests = []\nfor email, share_amount in shares_by_email.items():\n    if email not in paid_before_emails:\n        target_requests.append({'user_email': email, 'amount': share_amount, 'description': 'Work Dinner'})\nif len({item['user_email'] for item in target_requests}) != len(target_requests):\n    raise RuntimeError('Duplicate request targets were derived')\nif any(item['amount'] <= 0 for item in target_requests):\n    raise RuntimeError('A derived request amount is not positive')\nprint({'already_paid_emails': sorted(paid_before_emails), 'request_candidates': target_requests})",
+      "depends_on_steps": [
+        7,
+        9
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "A coworker is excluded only when a received transaction matches both their email and noted share",
+        "Each unpaid attendee appears once",
+        "Every request uses the exact description Work Dinner and a positive noted amount"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 11,
+      "phase": "act",
+      "reasoning": "The reviewed target list contains only attendees without a matching received share, so one payment request can now be created for each derived target.",
+      "action_code": "payment_request_receipts = []\nfor request_item in target_requests:\n    request_response = apis.venmo.create_payment_request(user_email=request_item['user_email'], amount=request_item['amount'], access_token=venmo_access_token, description=request_item['description'])\n    payment_request_receipts.append({'request': request_item, 'response': request_response})\nprint(payment_request_receipts)",
+      "depends_on_steps": [
+        10
+      ],
+      "api_names_used": [
+        "venmo.create_payment_request"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "One mutation response is retained for every reviewed request target"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 12,
+      "phase": "verify",
+      "reasoning": "The mutation responses are available; transactions must be re-read through all pages and the responses and derived coverage checked before declaring completion.",
+      "action_code": "received_transactions_after = []\nverification_page_index = 0\nwhile True:\n    verification_page = apis.venmo.show_transactions(access_token=venmo_access_token, direction='received', min_created_at=yesterday_date, page_index=verification_page_index, page_limit=20, sort_by='+created_at')\n    received_transactions_after.extend(verification_page)\n    if len(verification_page) < 20:\n        break\n    verification_page_index += 1\nreceipt_ids = [entry['response'].get('payment_request_id') for entry in payment_request_receipts]\nif len(payment_request_receipts) != len(target_requests) or any(request_id is None for request_id in receipt_ids):\n    raise RuntimeError('Not every reviewed target received a payment-request acknowledgement')\nif len(set(receipt_ids)) != len(receipt_ids):\n    raise RuntimeError('Payment-request acknowledgements were not unique')\nrequested_emails = {entry['request']['user_email'] for entry in payment_request_receipts}\nexpected_requested_emails = set(shares_by_email) - paid_before_emails\nif requested_emails != expected_requested_emails:\n    raise RuntimeError('Created request targets do not exactly cover the unpaid attendees')\nif requested_emails.intersection(paid_before_emails):\n    raise RuntimeError('A request was created for an attendee already identified as paid')\nif any(entry['request']['description'] != 'Work Dinner' or entry['request']['amount'] != shares_by_email[entry['request']['user_email']] for entry in payment_request_receipts):\n    raise RuntimeError('A created request did not retain the required description or noted amount')\npaid_after_emails = set()\nfor email, share_amount in shares_by_email.items():\n    if any(tx.get('sender', {}).get('email', '').lower() == email and abs(float(tx['amount']) - float(share_amount)) < 0.005 for tx in received_transactions_after):\n        paid_after_emails.add(email)\nprint({'acknowledged_request_count': len(receipt_ids), 'request_ids': receipt_ids, 'paid_attendees_after_requery': sorted(paid_after_emails), 'covered_attendee_count': len(paid_before_emails.union(requested_emails))})",
+      "depends_on_steps": [
+        11
+      ],
+      "api_names_used": [
+        "venmo.show_transactions"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every unpaid attendee has one acknowledged request",
+        "No attendee already paid before mutation was requested",
+        "Each request preserves the noted amount and Work Dinner description",
+        "Received transactions were re-queried across all pages"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 13,
+      "phase": "complete",
+      "reasoning": "All planned mutations and postcondition checks have executed without stopping, so the action task can be marked successful.",
+      "action_code": "completion_result = apis.supervisor.complete_task(status='success')",
+      "depends_on_steps": [
+        12
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Task is marked complete only after verification"
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

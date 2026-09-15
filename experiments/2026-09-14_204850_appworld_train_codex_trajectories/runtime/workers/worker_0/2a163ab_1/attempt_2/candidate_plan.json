@@ -1,0 +1,167 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "2a163ab_1",
+  "task_family": "2a163ab",
+  "completion_mode": "status_only",
+  "plan_summary": "Authenticate, paginate roommate contacts and the Venmo feed, derive today's roommate-related transactions, like them, verify their like counts increased, then complete the task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "All required task APIs must be documented before their first use.",
+      "action_code": "api_docs = {}\nfor app_name, api_name in ((\"supervisor\", \"show_profile\"), (\"supervisor\", \"show_account_passwords\"), (\"phone\", \"login\"), (\"phone\", \"get_current_date_and_time\"), (\"phone\", \"search_contacts\"), (\"venmo\", \"login\"), (\"venmo\", \"show_social_feed\"), (\"venmo\", \"like_transaction\"), (\"supervisor\", \"complete_task\")):\n    api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Documentation is retrieved for every required task API."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "observe",
+      "reasoning": "The supervisor profile provides app usernames, and the password records provide credentials without hardcoding secrets.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\nphone_password = next(record[\"password\"] for record in account_password_records if \"phone\" in record[\"account_name\"].strip().casefold())\nvenmo_password = next(record[\"password\"] for record in account_password_records if \"venmo\" in record[\"account_name\"].strip().casefold())",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Profile and credentials are retained without printing secret values."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "authenticate",
+      "reasoning": "Authenticated phone and Venmo tokens are required for contact and feed access.",
+      "action_code": "phone_login_result = apis.phone.login(username=supervisor_profile[\"phone_number\"], password=phone_password)\nphone_access_token = phone_login_result[\"access_token\"]\nvenmo_login_result = apis.venmo.login(username=supervisor_profile[\"email\"], password=venmo_password)\nvenmo_access_token = venmo_login_result[\"access_token\"]",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "phone.login",
+        "venmo.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Phone and Venmo access tokens are saved without being printed."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 4,
+      "phase": "observe",
+      "reasoning": "Roommates must be resolved from contacts, with every page read before matching feed participants.",
+      "action_code": "roommate_contacts = []\ncontact_page_index = 0\nwhile True:\n    contact_page = apis.phone.search_contacts(access_token=phone_access_token, query=\"\", relationship=\"roommate\", page_index=contact_page_index, page_limit=20)\n    roommate_contacts.extend(contact_page)\n    if len(contact_page) < 20:\n        break\n    contact_page_index += 1\nprint({\"roommate_count\": len(roommate_contacts), \"roommates\": [{\"contact_id\": contact[\"contact_id\"], \"name\": (contact[\"first_name\"] + \" \" + contact[\"last_name\"]).strip(), \"email\": contact[\"email\"]} for contact in roommate_contacts]})",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "phone.search_contacts"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All pages of roommate contacts are collected."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 5,
+      "phase": "observe",
+      "reasoning": "The current date defines today, and every social-feed page must be read before selecting transactions.",
+      "action_code": "current_date_and_time = apis.phone.get_current_date_and_time()\ncurrent_date = current_date_and_time[\"date\"]\nsocial_feed = []\nfeed_page_index = 0\nwhile True:\n    feed_page = apis.venmo.show_social_feed(access_token=venmo_access_token, page_index=feed_page_index, page_limit=20)\n    social_feed.extend(feed_page)\n    if len(feed_page) < 20:\n        break\n    feed_page_index += 1\nprint({\"current_date\": current_date, \"social_feed_count\": len(social_feed)})",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "phone.get_current_date_and_time",
+        "venmo.show_social_feed"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "The current date and all social-feed pages are saved."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 6,
+      "phase": "derive",
+      "reasoning": "The saved contacts, date, and feed permit review of the exact mutation targets by matching creation date and either participant's email.",
+      "action_code": "roommate_emails = {contact[\"email\"].strip().casefold() for contact in roommate_contacts if contact[\"email\"].strip()}\ntarget_transactions = [transaction for transaction in social_feed if transaction[\"created_at\"].startswith(current_date) and (transaction[\"sender\"][\"email\"].strip().casefold() in roommate_emails or transaction[\"receiver\"][\"email\"].strip().casefold() in roommate_emails)]\ntarget_transactions_by_id = {transaction[\"transaction_id\"]: transaction for transaction in target_transactions}\ntarget_transaction_ids = list(target_transactions_by_id)\npre_like_counts = {transaction_id: target_transactions_by_id[transaction_id][\"like_count\"] for transaction_id in target_transaction_ids}\nprint({\"target_count\": len(target_transaction_ids), \"targets\": [{\"transaction_id\": transaction[\"transaction_id\"], \"created_at\": transaction[\"created_at\"], \"sender\": transaction[\"sender\"], \"receiver\": transaction[\"receiver\"], \"like_count\": transaction[\"like_count\"]} for transaction in target_transactions_by_id.values()]})",
+      "depends_on_steps": [
+        4,
+        5
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Targets are created today and have a roommate as sender or receiver.",
+        "Mutation IDs and prior like counts derive only from retrieved records."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 7,
+      "phase": "act",
+      "reasoning": "The reviewed transaction IDs are the complete derived set requiring likes.",
+      "action_code": "like_results_by_id = {}\nfor transaction_id in target_transaction_ids:\n    like_results_by_id[transaction_id] = apis.venmo.like_transaction(transaction_id=transaction_id, access_token=venmo_access_token)\nprint({\"like_attempt_count\": len(like_results_by_id)})",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [
+        "venmo.like_transaction"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "One like request is issued for every derived target and no other transaction."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 8,
+      "phase": "verify",
+      "reasoning": "The full feed must be re-read so every target's resulting public like count can be compared with its saved prior value.",
+      "action_code": "post_social_feed = []\npost_feed_page_index = 0\nwhile True:\n    post_feed_page = apis.venmo.show_social_feed(access_token=venmo_access_token, page_index=post_feed_page_index, page_limit=20)\n    post_social_feed.extend(post_feed_page)\n    if len(post_feed_page) < 20:\n        break\n    post_feed_page_index += 1\npost_feed_by_id = {transaction[\"transaction_id\"]: transaction for transaction in post_social_feed}\npost_target_ids = {transaction[\"transaction_id\"] for transaction in post_social_feed if transaction[\"created_at\"].startswith(current_date) and (transaction[\"sender\"][\"email\"].strip().casefold() in roommate_emails or transaction[\"receiver\"][\"email\"].strip().casefold() in roommate_emails)}\nverified_transaction_ids = [transaction_id for transaction_id in target_transaction_ids if transaction_id in post_feed_by_id and post_feed_by_id[transaction_id][\"like_count\"] > pre_like_counts[transaction_id]]\nverification_passed = post_target_ids == set(target_transaction_ids) and set(verified_transaction_ids) == set(target_transaction_ids)\nprint({\"target_count\": len(target_transaction_ids), \"post_target_count\": len(post_target_ids), \"verified_like_count_increases\": len(verified_transaction_ids), \"verification_passed\": verification_passed})",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "venmo.show_social_feed"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "The post-mutation matching set equals the reviewed target set.",
+        "Every target's like count exceeds its pre-mutation value."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 9,
+      "phase": "complete",
+      "reasoning": "The action task can be marked successful only after the verification variable confirms every requested like.",
+      "action_code": "assert verification_passed, \"Not every requested Venmo like could be verified\"\ncompletion_result = apis.supervisor.complete_task(status=\"success\")",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Success is submitted only after all requested likes are verified."
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

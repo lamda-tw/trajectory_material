@@ -1,0 +1,143 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "7d7fbf6_2",
+  "task_family": "7d7fbf6",
+  "completion_mode": "status_only",
+  "plan_summary": "Inspect the required public APIs, authenticate through Supervisor-provided credentials, enumerate vacation-spot directories, derive and review archive mappings, compress and delete each source directory, verify archives and deletions through public reads, then complete the action task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public documentation for every task API must be inspected before any task API is called, so later calls can use only documented parameters and response fields.",
+      "action_code": "profile_api_doc = apis.api_docs.show_api_doc(app_name=\"supervisor\", api_name=\"show_profile\")\npasswords_api_doc = apis.api_docs.show_api_doc(app_name=\"supervisor\", api_name=\"show_account_passwords\")\ncomplete_api_doc = apis.api_docs.show_api_doc(app_name=\"supervisor\", api_name=\"complete_task\")\nlogin_api_doc = apis.api_docs.show_api_doc(app_name=\"file_system\", api_name=\"login\")\nshow_directory_api_doc = apis.api_docs.show_api_doc(app_name=\"file_system\", api_name=\"show_directory\")\ncompress_directory_api_doc = apis.api_docs.show_api_doc(app_name=\"file_system\", api_name=\"compress_directory\")",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "With the API documentation inspected, obtain the supervisor profile and app-password records, derive the file-system credentials without exposing them, and log in for an access token.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\nfile_system_password_record = next(record for record in account_password_records if record[\"account_name\"].strip().lower().replace(\" \", \"_\") == \"file_system\")\nfile_system_password = file_system_password_record[\"password\"]\nfile_system_login = apis.file_system.login(username=supervisor_profile[\"email\"], password=file_system_password)\nfile_system_access_token = file_system_login[\"access_token\"]",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords",
+        "file_system.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "observe",
+      "reasoning": "The vacation spots must be discovered from the current top-level subdirectories of the instructed photos directory rather than assumed in advance.",
+      "action_code": "photos_subdirectories = apis.file_system.show_directory(access_token=file_system_access_token, directory_path=\"~/photos/\", entry_type=\"directories\", recursive=False)",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "file_system.show_directory"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Current non-recursive subdirectories under ~/photos/"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 4,
+      "phase": "derive",
+      "reasoning": "Before any compression mutation, derive and review one source-to-archive mapping per discovered vacation-spot directory, excluding the destination directory itself.",
+      "action_code": "vacation_spot_plan = []\nseen_vacation_spots = set()\nfor returned_path in photos_subdirectories:\n    vacation_spot = returned_path.rstrip(\"/\").split(\"/\")[-1]\n    if vacation_spot and vacation_spot != \"vacations\" and vacation_spot not in seen_vacation_spots:\n        seen_vacation_spots.add(vacation_spot)\n        vacation_spot_plan.append({\"vacation_spot\": vacation_spot, \"directory_path\": \"~/photos/\" + vacation_spot, \"compressed_file_path\": \"~/photos/vacations/\" + vacation_spot + \".tar\"})\nvacation_spot_plan.sort(key=lambda item: item[\"vacation_spot\"])\nprint(vacation_spot_plan)",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Each discovered vacation-spot directory maps to ~/photos/vacations/<vacation_spot>.tar",
+        "The ~/photos/vacations destination is not selected as a source"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 5,
+      "phase": "act",
+      "reasoning": "The reviewed mappings supply every mutation argument; compress each selected directory to its derived tar path while requesting source deletion and deterministic overwrite behavior.",
+      "action_code": "compression_results = []\nfor vacation_item in vacation_spot_plan:\n    compression_result = apis.file_system.compress_directory(directory_path=vacation_item[\"directory_path\"], access_token=file_system_access_token, compressed_file_path=vacation_item[\"compressed_file_path\"], delete_directory=True, overwrite=True)\n    compression_results.append(compression_result)",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "file_system.compress_directory"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "A tar archive is created for every planned vacation spot",
+        "Every compressed vacation-spot source directory is deleted"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 6,
+      "phase": "observe",
+      "reasoning": "After the mutations, independently re-read both the photos directory and archive destination so requested postconditions can be checked from public state.",
+      "action_code": "post_compression_subdirectories = apis.file_system.show_directory(access_token=file_system_access_token, directory_path=\"~/photos/\", entry_type=\"directories\", recursive=False)\npost_compression_archive_files = apis.file_system.show_directory(access_token=file_system_access_token, directory_path=\"~/photos/vacations/\", entry_type=\"files\", recursive=False)",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [
+        "file_system.show_directory"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Post-mutation top-level directories under ~/photos/",
+        "Post-mutation files under ~/photos/vacations/"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 7,
+      "phase": "verify",
+      "reasoning": "Compute the expected names solely from the reviewed plan and compare them with the post-mutation reads; stop before completion if any archive is missing or any selected source directory remains.",
+      "action_code": "expected_vacation_spots = {item[\"vacation_spot\"] for item in vacation_spot_plan}\nexpected_archive_names = {item[\"vacation_spot\"] + \".tar\" for item in vacation_spot_plan}\nremaining_directory_names = {path.rstrip(\"/\").split(\"/\")[-1] for path in post_compression_subdirectories}\nactual_archive_names = {path.rstrip(\"/\").split(\"/\")[-1] for path in post_compression_archive_files}\nundeleted_vacation_spots = sorted(expected_vacation_spots & remaining_directory_names)\nmissing_archive_names = sorted(expected_archive_names - actual_archive_names)\nverification_summary = {\"planned_vacation_spot_count\": len(expected_vacation_spots), \"verified_archive_count\": len(expected_archive_names & actual_archive_names), \"missing_archive_names\": missing_archive_names, \"undeleted_vacation_spots\": undeleted_vacation_spots}\nprint(verification_summary)\nif missing_archive_names or undeleted_vacation_spots:\n    raise RuntimeError(\"Postcondition verification failed: \" + str(verification_summary))",
+      "depends_on_steps": [
+        4,
+        6
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every planned <vacation_spot>.tar exists in ~/photos/vacations/",
+        "No planned vacation-spot source directory remains under ~/photos/"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 8,
+      "phase": "complete",
+      "reasoning": "The action task can be marked successful only after the public postcondition checks finish without detecting a missing archive or undeleted source directory.",
+      "action_code": "completion_result = apis.supervisor.complete_task(status=\"success\")",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [],
+      "output_policy": "no_print"
+    }
+  ]
+}

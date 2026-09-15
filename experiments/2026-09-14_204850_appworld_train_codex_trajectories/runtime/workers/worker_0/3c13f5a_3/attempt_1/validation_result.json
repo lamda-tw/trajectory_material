@@ -1,0 +1,136 @@
+{
+  "accepted": true,
+  "trajectory": {
+    "task_id": "3c13f5a_3",
+    "task_family": "3c13f5a",
+    "instruction": "I paid for our last month's cable bill. Its amount is supposed to be shared equally among my roommates and me. Make venmo requests to my roommates, with a description note, \"I paid for cable bill.\". The bill receipt is in my file system.",
+    "supervisor": {
+      "first_name": "Jennifer",
+      "last_name": "Powell",
+      "email": "jepowell@gmail.com",
+      "phone_number": "4288705164"
+    },
+    "datetime": "2023-05-18T12:00:00",
+    "appworld_version": "0.2.0.dev0",
+    "source": "ground_truth_api_calls_guided_codex_reconstruction",
+    "steps": [
+      {
+        "step_index": 1,
+        "reasoning": "All required public API contracts must be inspected before any task API is called.",
+        "action_code": "api_doc_targets = [('supervisor', 'complete_task'), ('supervisor', 'show_account_passwords'), ('supervisor', 'show_profile'), ('file_system', 'login'), ('file_system', 'show_directory'), ('file_system', 'show_file'), ('phone', 'get_current_date_and_time'), ('phone', 'login'), ('phone', 'search_contacts'), ('venmo', 'create_payment_request'), ('venmo', 'login')]\napi_docs = {}\nfor app_name, api_name in api_doc_targets:\n    api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 2,
+        "reasoning": "The supervisor profile supplies account usernames, while the password API supplies credentials that must remain unprinted.",
+        "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\npasswords_by_normalized_name = {}\nfor account_record in account_password_records:\n    normalized_name = ''.join(ch.lower() for ch in account_record['account_name'] if ch.isalnum())\n    passwords_by_normalized_name[normalized_name] = account_record['password']\ndef account_password(app_name):\n    target = ''.join(ch.lower() for ch in app_name if ch.isalnum())\n    matches = [password for normalized_name, password in passwords_by_normalized_name.items() if normalized_name == target]\n    if len(matches) != 1:\n        raise RuntimeError('Could not resolve exactly one password for ' + app_name)\n    return matches[0]\nphone_password = account_password('phone')\nfile_system_password = account_password('file_system')\nvenmo_password = account_password('venmo')",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 3,
+        "reasoning": "The receipt must correspond to the month immediately before the device's current date, so that month must be derived dynamically.",
+        "action_code": "current_date_time = apis.phone.get_current_date_and_time()\ndate_text = current_date_time['date']\nmonth_names = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']\nmonth_lookup = {}\nfor month_number, month_name in enumerate(month_names, start=1):\n    month_lookup[month_name.lower()] = month_number\n    month_lookup[month_name[:3].lower()] = month_number\ndate_tokens = date_text.replace(',', ' ').replace('/', ' ').replace('-', ' ').split()\ncurrent_year = next((int(token) for token in date_tokens if token.isdigit() and len(token) == 4), None)\ncurrent_month = next((month_lookup[token.lower()] for token in date_tokens if token.lower() in month_lookup), None)\nif current_month is None:\n    if date_tokens and date_tokens[0].isdigit() and len(date_tokens[0]) == 4:\n        current_month = int(date_tokens[1])\n    elif date_tokens and date_tokens[0].isdigit():\n        current_month = int(date_tokens[0])\nif current_year is None or current_month is None or not 1 <= current_month <= 12:\n    raise RuntimeError('Unable to derive the current year and month from the phone date')\nif current_month == 1:\n    last_month = 12\n    last_year = current_year - 1\nelse:\n    last_month = current_month - 1\n    last_year = current_year\nlast_month_name = month_names[last_month - 1]\nlast_month_iso = f'{last_year:04d}-{last_month:02d}'",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 4,
+        "reasoning": "A phone access token is required to read the supervisor's roommate contacts.",
+        "action_code": "phone_login_result = apis.phone.login(username=supervisor_profile['phone_number'], password=phone_password)\nphone_access_token = phone_login_result['access_token']",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 5,
+        "reasoning": "Every contact page filtered to the roommate relationship must be read so that no roommate is omitted from the split.",
+        "action_code": "roommate_contacts = []\nroommate_contact_pages = []\npage_index = 0\npage_limit = 20\nwhile True:\n    contact_page = apis.phone.search_contacts(access_token=phone_access_token, relationship='roommate', page_index=page_index, page_limit=page_limit)\n    roommate_contact_pages.append(contact_page)\n    roommate_contacts.extend(contact_page)\n    if len(contact_page) < page_limit:\n        break\n    page_index += 1\nif not roommate_contacts:\n    raise RuntimeError('No roommate contacts were found')\nprint([{'contact_id': contact['contact_id'], 'first_name': contact['first_name'], 'last_name': contact['last_name'], 'email': contact['email'], 'relationships': contact['relationships']} for contact in roommate_contacts])",
+        "observation": "[\n {\n  \"contact_id\": 571,\n  \"first_name\": \"Connor\",\n  \"last_name\": \"Brown\",\n  \"email\": \"connorbrow@gmail.com\",\n  \"relationships\": [\n   \"roommate\"\n  ]\n },\n {\n  \"contact_id\": 573,\n  \"first_name\": \"Edwin\",\n  \"last_name\": \"Wilson\",\n  \"email\": \"ed_wilson@gmail.com\",\n  \"relationships\": [\n   \"roommate\"\n  ]\n },\n {\n  \"contact_id\": 572,\n  \"first_name\": \"Martin\",\n  \"last_name\": \"Blackburn\",\n  \"email\": \"mar_blac@gmail.com\",\n  \"relationships\": [\n   \"roommate\"\n  ]\n }\n]\n"
+      },
+      {
+        "step_index": 6,
+        "reasoning": "A file-system access token is required to locate and read the cable receipt.",
+        "action_code": "file_system_login_result = apis.file_system.login(username=supervisor_profile['email'], password=file_system_password)\nfile_system_access_token = file_system_login_result['access_token']",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 7,
+        "reasoning": "A recursive file listing allows receipt candidates to be selected from real paths without assuming a filename or directory.",
+        "action_code": "all_file_paths = apis.file_system.show_directory(access_token=file_system_access_token, directory_path='~/', entry_type='files', recursive=True)\nreceipt_path_candidates = [path for path in all_file_paths if 'cable' in path.lower()]\nif not receipt_path_candidates:\n    receipt_path_candidates = [path for path in all_file_paths if 'bill' in path.lower() or 'receipt' in path.lower()]\nif not receipt_path_candidates:\n    receipt_path_candidates = list(all_file_paths)\nif not receipt_path_candidates:\n    raise RuntimeError('No files are available to inspect for the receipt')\nprint({'candidate_paths': receipt_path_candidates})",
+        "observation": "{\n \"candidate_paths\": [\n  \"/home/jennifer/bills/cable/2022-05.txt\",\n  \"/home/jennifer/bills/cable/2022-06.txt\",\n  \"/home/jennifer/bills/cable/2022-07.txt\",\n  \"/home/jennifer/bills/cable/2022-08.txt\",\n  \"/home/jennifer/bills/cable/2022-09.txt\",\n  \"/home/jennifer/bills/cable/2022-10.txt\",\n  \"/home/jennifer/bills/cable/2022-11.txt\",\n  \"/home/jennifer/bills/cable/2022-12.txt\",\n  \"/home/jennifer/bills/cable/2023-01.txt\",\n  \"/home/jennifer/bills/cable/2023-02.txt\",\n  \"/home/jennifer/bills/cable/2023-03.txt\",\n  \"/home/jennifer/bills/cable/2023-04.txt\"\n ]\n}\n"
+      },
+      {
+        "step_index": 8,
+        "reasoning": "The candidate files must be read and compared against both the cable subject and the derived prior month before the bill amount can be selected.",
+        "action_code": "receipt_file_records = []\nfor candidate_path in receipt_path_candidates:\n    receipt_file_records.append(apis.file_system.show_file(file_path=candidate_path, access_token=file_system_access_token))\ndef marks_last_month(text):\n    lowered = text.lower()\n    year_text = str(last_year)\n    numeric_markers = [f'{last_year:04d}-{last_month:02d}', f'{last_year:04d}/{last_month:02d}', f'{last_year:04d}_{last_month:02d}', f'{last_year:04d}{last_month:02d}']\n    if any(marker in lowered for marker in numeric_markers):\n        return True\n    if year_text in lowered and (last_month_name.lower() in lowered or last_month_name[:3].lower() in lowered):\n        return True\n    leading_month_markers = [f'{last_month:02d}/', f'{last_month}/', f'{last_month:02d}-', f'{last_month}-']\n    return year_text in lowered and any(marker in lowered for marker in leading_month_markers)\nscored_receipts = []\nfor file_record in receipt_file_records:\n    combined_text = file_record['path'] + '\\n' + file_record['content']\n    lowered = combined_text.lower()\n    if 'cable' not in lowered or not marks_last_month(combined_text):\n        continue\n    score = 10\n    score += 6 if 'cable' in file_record['path'].lower() else 3\n    score += 4 if 'receipt' in lowered else 0\n    score += 2 if 'paid' in lowered else 0\n    score += 1 if 'bill' in lowered else 0\n    scored_receipts.append((score, file_record))\nif not scored_receipts:\n    raise RuntimeError('No cable receipt could be grounded to the previous calendar month')\nhighest_receipt_score = max(score for score, _ in scored_receipts)\ntop_receipts = [record for score, record in scored_receipts if score == highest_receipt_score]\nif len(top_receipts) != 1:\n    raise RuntimeError('The previous-month cable receipt is ambiguous')\nselected_receipt = top_receipts[0]\ndef first_numeric_value(fragment):\n    buffer = ''\n    started = False\n    for character in fragment:\n        if character.isdigit():\n            buffer += character\n            started = True\n        elif started and character in '.,':\n            buffer += character\n        elif started:\n            break\n    cleaned = buffer.replace(',', '').rstrip('.')\n    if not cleaned or cleaned.count('.') > 1:\n        return None\n    value = float(cleaned)\n    return value if value > 0 else None\ndef extract_receipt_amount(content):\n    lowered = content.lower()\n    amount_markers = ['total amount paid', 'amount paid', 'grand total', 'total due', 'amount due', 'total amount', 'balance due', 'total', 'amount']\n    for marker in amount_markers:\n        search_from = 0\n        while True:\n            marker_index = lowered.find(marker, search_from)\n            if marker_index < 0:\n                break\n            line_end = content.find('\\n', marker_index)\n            if line_end < 0:\n                line_end = min(len(content), marker_index + len(marker) + 80)\n            value = first_numeric_value(content[marker_index + len(marker):line_end])\n            if value is not None:\n                return value\n            search_from = marker_index + len(marker)\n    dollar_index = content.find('$')\n    if dollar_index >= 0:\n        return first_numeric_value(content[dollar_index + 1:dollar_index + 40])\n    return None\nbill_total = extract_receipt_amount(selected_receipt['content'])\nif bill_total is None or bill_total <= 0:\n    raise RuntimeError('Unable to derive a positive bill total from the selected receipt')\nprint({'eligible_receipt_paths': [record['path'] for _, record in scored_receipts], 'selected_receipt_path': selected_receipt['path'], 'derived_bill_total': bill_total})",
+        "observation": "{\n \"eligible_receipt_paths\": [\n  \"/home/jennifer/bills/cable/2023-04.txt\"\n ],\n \"selected_receipt_path\": \"/home/jennifer/bills/cable/2023-04.txt\",\n \"derived_bill_total\": 128.0\n}\n"
+      },
+      {
+        "step_index": 9,
+        "reasoning": "A Venmo token is required before payment requests can be created for the derived recipients.",
+        "action_code": "venmo_login_result = apis.venmo.login(username=supervisor_profile['email'], password=venmo_password)\nvenmo_access_token = venmo_login_result['access_token']",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 10,
+        "reasoning": "Immediately before mutation, the recipient set, equal per-person share, and exact request note must be reviewed from the saved contacts and receipt.",
+        "action_code": "own_email = supervisor_profile['email'].strip().lower()\nroommate_by_email = {}\nfor contact in roommate_contacts:\n    relationship_values = [value.lower() for value in contact['relationships']]\n    email = contact['email'].strip().lower()\n    if 'roommate' in relationship_values and email and email != own_email:\n        roommate_by_email[email] = contact\nrecipient_emails = sorted(roommate_by_email)\nif not recipient_emails:\n    raise RuntimeError('No distinct roommate email recipients remain after review')\nparticipant_count = len(recipient_emails) + 1\nshare_amount = round(bill_total / participant_count, 2)\nif share_amount <= 0:\n    raise RuntimeError('The derived roommate share is not positive')\nrequest_description = 'I paid for cable bill.'\nrequest_specs = [{'user_email': email, 'amount': share_amount, 'description': request_description} for email in recipient_emails]\nprint({'bill_total': bill_total, 'participant_count': participant_count, 'requests': request_specs})",
+        "observation": "{\n \"bill_total\": 128.0,\n \"participant_count\": 4,\n \"requests\": [\n  {\n   \"user_email\": \"connorbrow@gmail.com\",\n   \"amount\": 32.0,\n   \"description\": \"I paid for cable bill.\"\n  },\n  {\n   \"user_email\": \"ed_wilson@gmail.com\",\n   \"amount\": 32.0,\n   \"description\": \"I paid for cable bill.\"\n  },\n  {\n   \"user_email\": \"mar_blac@gmail.com\",\n   \"amount\": 32.0,\n   \"description\": \"I paid for cable bill.\"\n  }\n ]\n}\n"
+      },
+      {
+        "step_index": 11,
+        "reasoning": "The reviewed request specifications now provide all mutation arguments without relying on hardcoded recipients or amounts.",
+        "action_code": "payment_request_results = []\nfor request_spec in request_specs:\n    payment_request_result = apis.venmo.create_payment_request(user_email=request_spec['user_email'], amount=request_spec['amount'], access_token=venmo_access_token, description=request_spec['description'])\n    payment_request_results.append(payment_request_result)\nprint(payment_request_results)",
+        "observation": "[\n {\n  \"message\": \"Payment request created.\",\n  \"payment_request_id\": 6097\n },\n {\n  \"message\": \"Payment request created.\",\n  \"payment_request_id\": 6098\n },\n {\n  \"message\": \"Payment request created.\",\n  \"payment_request_id\": 6099\n }\n]\n"
+      },
+      {
+        "step_index": 12,
+        "reasoning": "After the mutations, the source contact pages and selected receipt must be re-read, and the returned request records must be checked against freshly derived specifications.",
+        "action_code": "verification_contacts = []\nverification_contact_pages = []\nverification_page_index = 0\nwhile True:\n    verification_page = apis.phone.search_contacts(access_token=phone_access_token, relationship='roommate', page_index=verification_page_index, page_limit=page_limit)\n    verification_contact_pages.append(verification_page)\n    verification_contacts.extend(verification_page)\n    if len(verification_page) < page_limit:\n        break\n    verification_page_index += 1\nverification_receipt = apis.file_system.show_file(file_path=selected_receipt['path'], access_token=file_system_access_token)\nverified_total = extract_receipt_amount(verification_receipt['content'])\nverified_roommate_emails = sorted({contact['email'].strip().lower() for contact in verification_contacts if 'roommate' in [value.lower() for value in contact['relationships']] and contact['email'].strip().lower() != own_email})\nif verified_total is None or not verified_roommate_emails:\n    raise RuntimeError('Verification sources no longer yield the required bill and roommates')\nverified_share = round(verified_total / (len(verified_roommate_emails) + 1), 2)\nverification_specs = [{'user_email': email, 'amount': verified_share, 'description': request_description} for email in verified_roommate_emails]\nif verification_specs != request_specs:\n    raise RuntimeError('Fresh source records do not match the submitted request specifications')\nif len(payment_request_results) != len(request_specs):\n    raise RuntimeError('The number of request results does not match the reviewed recipients')\npayment_request_ids = [result.get('payment_request_id') for result in payment_request_results]\nif any(request_id is None for request_id in payment_request_ids) or len(set(payment_request_ids)) != len(payment_request_ids):\n    raise RuntimeError('The Venmo responses do not contain distinct payment request IDs')\nif any(not result.get('message') for result in payment_request_results):\n    raise RuntimeError('A Venmo creation response is missing its confirmation message')\nverification_summary = {'created_request_count': len(payment_request_ids), 'payment_request_ids': payment_request_ids, 'recipients': verified_roommate_emails, 'amount_each': verified_share, 'description': request_description, 'receipt_path': verification_receipt['path']}\nprint(verification_summary)",
+        "observation": "{\n \"created_request_count\": 3,\n \"payment_request_ids\": [\n  6097,\n  6098,\n  6099\n ],\n \"recipients\": [\n  \"connorbrow@gmail.com\",\n  \"ed_wilson@gmail.com\",\n  \"mar_blac@gmail.com\"\n ],\n \"amount_each\": 32.0,\n \"description\": \"I paid for cable bill.\",\n \"receipt_path\": \"/home/jennifer/bills/cable/2023-04.txt\"\n}\n"
+      },
+      {
+        "step_index": 13,
+        "reasoning": "The action task can be marked successful only after the post-mutation checks have executed without error.",
+        "action_code": "completion_result = apis.supervisor.complete_task(status='success')",
+        "observation": "Execution successful."
+      }
+    ],
+    "final_status": "success",
+    "evaluation": {
+      "success": true,
+      "num_tests": 6,
+      "num_passes": 6,
+      "num_failures": 0
+    },
+    "replay_evaluation": {
+      "success": true,
+      "num_tests": 6,
+      "num_passes": 6,
+      "num_failures": 0
+    },
+    "replay_verified": true,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0,
+    "api_call_count": 37,
+    "api_call_count_source": "appworld_api_calls_log",
+    "replay_api_call_count": 37,
+    "step_count": 13,
+    "provenance": {
+      "specs_sha256": "cf5f4dd9cd62144e1b7187a7eaff65e4e20a71f6b30e9091c6082520aa27e6ef",
+      "api_calls_sha256": "2920922e0277a2cd39a17d962016ff7122df12e8070275a78412f515580d99c1",
+      "plan_sha256": "9a29ec8082e58c451c13ea7a5a4c78681eeb52d2b94ebbf8dfafbcf34518e459"
+    }
+  },
+  "task_result": {
+    "task_id": "3c13f5a_3",
+    "status": "verified",
+    "attempts": 1,
+    "generation_error": null,
+    "execution_error": null,
+    "evaluation_success": true,
+    "replay_success": true,
+    "step_count": 13,
+    "api_call_count": 37,
+    "rejection_reason": null,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0
+  }
+}

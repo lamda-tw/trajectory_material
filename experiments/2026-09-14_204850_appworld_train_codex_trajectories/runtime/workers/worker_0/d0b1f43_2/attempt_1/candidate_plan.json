@@ -1,0 +1,178 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "d0b1f43_2",
+  "task_family": "d0b1f43",
+  "completion_mode": "answer_variable",
+  "plan_summary": "Authenticate with the phone and Venmo accounts, identify all coworker contacts, retrieve every page of received Venmo transactions since February 1 of the current year, sum verified amounts, and submit the computed answer.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "Public documentation must be inspected for every required API before any task API is called.",
+      "action_code": "required_api_docs = {}\nfor app_name, api_name in [(\"supervisor\", \"show_profile\"), (\"supervisor\", \"show_account_passwords\"), (\"phone\", \"get_current_date_and_time\"), (\"phone\", \"login\"), (\"phone\", \"search_contacts\"), (\"venmo\", \"login\"), (\"venmo\", \"show_transactions\"), (\"supervisor\", \"complete_task\")]:\n    required_api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Documentation for all task APIs is available before use"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "observe",
+      "reasoning": "The profile supplies account usernames, the password list supplies credentials, and the phone date establishes what year and present date the relative time phrase refers to.",
+      "action_code": "current_date_time = apis.phone.get_current_date_and_time()\nsupervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "phone.get_current_date_and_time",
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Current date record",
+        "Supervisor phone number and email",
+        "Available app credential records"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "derive",
+      "reasoning": "Authentication inputs and the February 1 boundary can now be derived from the preceding public records without hardcoding credentials or a calendar year.",
+      "action_code": "phone_password_matches = [record[\"password\"] for record in account_password_records if record[\"account_name\"].strip().lower() == \"phone\"]\nvenmo_password_matches = [record[\"password\"] for record in account_password_records if record[\"account_name\"].strip().lower() == \"venmo\"]\nif len(phone_password_matches) != 1 or len(venmo_password_matches) != 1:\n    raise ValueError(\"Expected exactly one credential record for each required app\")\nphone_password = phone_password_matches[0]\nvenmo_password = venmo_password_matches[0]\ncurrent_date = str(current_date_time[\"date\"])[:10]\ncurrent_year = current_date.split(\"-\")[0]\nstart_date = current_year + \"-02-01\"\nphone_username = supervisor_profile[\"phone_number\"]\nvenmo_username = supervisor_profile[\"email\"]",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Exactly one phone credential",
+        "Exactly one Venmo credential",
+        "Current-year February 1 date boundary"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 4,
+      "phase": "authenticate",
+      "reasoning": "The derived usernames and secret password variables are sufficient to obtain the two access tokens required for subsequent reads.",
+      "action_code": "phone_login_result = apis.phone.login(username=phone_username, password=phone_password)\nphone_access_token = phone_login_result[\"access_token\"]\nvenmo_login_result = apis.venmo.login(username=venmo_username, password=venmo_password)\nvenmo_access_token = venmo_login_result[\"access_token\"]",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "phone.login",
+        "venmo.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Phone access token obtained",
+        "Venmo access token obtained"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 5,
+      "phase": "observe",
+      "reasoning": "All contact pages must be read so no coworker is omitted; relationship classification can then be performed locally from public contact fields.",
+      "action_code": "all_contacts = []\ncontact_page_index = 0\nwhile True:\n    contact_page = apis.phone.search_contacts(access_token=phone_access_token, query=\"\", page_index=contact_page_index, page_limit=20)\n    all_contacts.extend(contact_page)\n    if len(contact_page) < 20:\n        break\n    contact_page_index += 1\nprint({\"contact_pages_read\": contact_page_index + 1, \"contacts_read\": len(all_contacts)})",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "phone.search_contacts"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every contact pagination page consumed"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 6,
+      "phase": "derive",
+      "reasoning": "Coworker email candidates can be selected from relationship labels, deduplicated case-insensitively, and kept separate from the supervisor's own email.",
+      "action_code": "coworker_email_by_normalized = {}\nowner_email_normalized = supervisor_profile[\"email\"].strip().lower()\nfor contact in all_contacts:\n    normalized_relationships = {str(value).strip().lower().replace(\"-\", \"\").replace(\"_\", \"\").replace(\" \", \"\") for value in contact[\"relationships\"]}\n    email = contact[\"email\"].strip()\n    email_normalized = email.lower()\n    if normalized_relationships.intersection({\"coworker\", \"coworkers\"}) and email and email_normalized != owner_email_normalized:\n        coworker_email_by_normalized.setdefault(email_normalized, email)\ncoworker_emails = list(coworker_email_by_normalized.values())\nprint({\"coworker_count\": len(coworker_emails)})",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Coworker relationship match",
+        "Unique coworker emails",
+        "Supervisor email excluded"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 7,
+      "phase": "observe",
+      "reasoning": "For each derived coworker email, every page of transactions filtered as received since the computed start date must be retrieved; transaction IDs prevent accidental double counting.",
+      "action_code": "received_transactions = []\nseen_transaction_ids = set()\ntransaction_pages_read = 0\nfor coworker_email in coworker_emails:\n    transaction_page_index = 0\n    while True:\n        transaction_page = apis.venmo.show_transactions(access_token=venmo_access_token, user_email=coworker_email, min_created_at=start_date, direction=\"received\", page_index=transaction_page_index, page_limit=20)\n        transaction_pages_read += 1\n        for transaction in transaction_page:\n            transaction_id = transaction[\"transaction_id\"]\n            if transaction_id not in seen_transaction_ids:\n                seen_transaction_ids.add(transaction_id)\n                received_transactions.append(transaction)\n        if len(transaction_page) < 20:\n            break\n        transaction_page_index += 1\nprint({\"transaction_pages_read\": transaction_pages_read, \"unique_transactions_read\": len(received_transactions)})",
+      "depends_on_steps": [
+        3,
+        4,
+        6
+      ],
+      "api_names_used": [
+        "venmo.show_transactions"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every transaction page for every coworker consumed",
+        "Received-direction filter applied",
+        "Start-date filter applied",
+        "Duplicate transaction IDs removed"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 8,
+      "phase": "derive",
+      "reasoning": "The sender, receiver, creation date, and amount fields allow the returned records to be locally checked against every requested criterion before computing a currency-safe total.",
+      "action_code": "coworker_email_normalized_set = set(coworker_email_by_normalized)\nverified_received_transactions = [transaction for transaction in received_transactions if transaction[\"sender\"][\"email\"].strip().lower() in coworker_email_normalized_set and transaction[\"receiver\"][\"email\"].strip().lower() == owner_email_normalized and start_date <= str(transaction[\"created_at\"])[:10] <= current_date]\ntotal_received_cents = sum(int(round(float(transaction[\"amount\"]) * 100)) for transaction in verified_received_transactions)\nanswer_amount = total_received_cents / 100\nprint({\"verified_transaction_count\": len(verified_received_transactions), \"total_received\": answer_amount})",
+      "depends_on_steps": [
+        2,
+        3,
+        6,
+        7
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Sender is a coworker",
+        "Receiver is the supervisor",
+        "Transaction date is from February 1 through the current date",
+        "Total is rounded to currency precision"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 9,
+      "phase": "complete",
+      "reasoning": "The answer variable has been computed solely from fully paginated and locally verified public transaction records, so it can now be submitted.",
+      "action_code": "completion_result = apis.supervisor.complete_task(answer=answer_amount, status=\"success\")",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Task completion submitted with computed answer"
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

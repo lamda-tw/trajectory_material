@@ -1,0 +1,169 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "c901732_1",
+  "task_family": "c901732",
+  "completion_mode": "status_only",
+  "plan_summary": "Authenticate with Spotify using Supervisor-provided credentials, paginate through matching albums, inspect every song in the uniquely matched album, select the unique minimum-play-count song, play it, verify the selected identity and mutation response, then complete the task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public documentation for every API needed by the task must be inspected before any task API is called.",
+      "action_code": "required_api_docs = [(\"supervisor\", \"show_profile\"), (\"supervisor\", \"show_account_passwords\"), (\"spotify\", \"login\"), (\"spotify\", \"search_albums\"), (\"spotify\", \"show_song\"), (\"spotify\", \"play_music\"), (\"supervisor\", \"complete_task\")]\npublic_api_docs = [apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name) for app_name, api_name in required_api_docs]",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public documentation is loaded for every task API before its first use."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "Spotify credentials must be obtained from the Supervisor APIs and kept private before logging in.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_passwords = apis.supervisor.show_account_passwords()\nspotify_password_records = [record for record in account_passwords if record[\"account_name\"].casefold() == \"spotify\"]\nassert len(spotify_password_records) == 1\nspotify_username = supervisor_profile[\"email\"]\nspotify_password = spotify_password_records[0][\"password\"]\nspotify_login = apis.spotify.login(username=spotify_username, password=spotify_password)\nspotify_access_token = spotify_login[\"access_token\"]",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords",
+        "spotify.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Exactly one Spotify credential record is selected.",
+        "A Spotify access token is stored without printing credentials or tokens."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "observe",
+      "reasoning": "All pagination pages for the instructed album-title query must be read before choosing an album.",
+      "action_code": "album_query = \"Echo Chamber Chronicles\"\nalbum_page_limit = 20\nalbum_page_index = 0\nall_album_results = []\nwhile True:\n    album_page = apis.spotify.search_albums(query=album_query, page_index=album_page_index, page_limit=album_page_limit)\n    all_album_results.extend(album_page)\n    if len(album_page) < album_page_limit:\n        break\n    album_page_index += 1\nprint([{\"album_id\": album[\"album_id\"], \"title\": album[\"title\"], \"artists\": album[\"artists\"], \"song_count\": len(album[\"song_ids\"])} for album in all_album_results])",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "spotify.search_albums"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every result page for the album query is collected.",
+        "Only public album candidate information is printed."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 4,
+      "phase": "derive",
+      "reasoning": "The target album must be selected from the real paginated results using the exact title stated in the instruction.",
+      "action_code": "exact_album_matches = [album for album in all_album_results if album[\"title\"].casefold() == album_query.casefold()]\nassert len(exact_album_matches) == 1\nselected_album = exact_album_matches[0]\nassert len(selected_album[\"song_ids\"]) > 0\nprint({\"album_id\": selected_album[\"album_id\"], \"title\": selected_album[\"title\"], \"artists\": selected_album[\"artists\"], \"song_count\": len(selected_album[\"song_ids\"])})",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "A unique exact-title album is selected from observed results.",
+        "The selected album contains at least one song ID."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 5,
+      "phase": "observe",
+      "reasoning": "Determining the least listened-to song requires reading the public details and play count of every song in the selected album.",
+      "action_code": "album_song_details = [apis.spotify.show_song(song_id=song_id) for song_id in selected_album[\"song_ids\"]]\nprint([{\"song_id\": song[\"song_id\"], \"title\": song[\"title\"], \"album_id\": song[\"album_id\"], \"album_title\": song[\"album_title\"], \"play_count\": song[\"play_count\"]} for song in album_song_details])",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "spotify.show_song"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Details are retrieved for every song ID belonging to the selected album.",
+        "Public song identities and play counts are available for selection."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 6,
+      "phase": "derive",
+      "reasoning": "A separate pre-mutation review must derive the unique minimum-play-count song and confirm it belongs to the selected album.",
+      "action_code": "assert len(album_song_details) == len(selected_album[\"song_ids\"])\nassert all(song[\"album_id\"] == selected_album[\"album_id\"] for song in album_song_details)\nminimum_play_count = min(song[\"play_count\"] for song in album_song_details)\nleast_listened_candidates = [song for song in album_song_details if song[\"play_count\"] == minimum_play_count]\nassert len(least_listened_candidates) == 1\nselected_song = least_listened_candidates[0]\nassert selected_song[\"song_id\"] in selected_album[\"song_ids\"]\nprint({\"song_id\": selected_song[\"song_id\"], \"title\": selected_song[\"title\"], \"album_id\": selected_song[\"album_id\"], \"album_title\": selected_song[\"album_title\"], \"play_count\": selected_song[\"play_count\"]})",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "All inspected songs belong to the selected album.",
+        "The chosen song is the unique observed minimum by play count.",
+        "The mutation song ID is derived solely from prior public API results."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 7,
+      "phase": "act",
+      "reasoning": "The reviewed song ID can now be passed to Spotify to play the requested song.",
+      "action_code": "play_result = apis.spotify.play_music(access_token=spotify_access_token, song_id=selected_song[\"song_id\"])",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [
+        "spotify.play_music"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Spotify receives only the derived song ID as the playback target."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 8,
+      "phase": "verify",
+      "reasoning": "After playback, a fresh public song read and the mutation response must be checked against the pre-mutation selection before task completion.",
+      "action_code": "verified_song = apis.spotify.show_song(song_id=selected_song[\"song_id\"])\nassert play_result[\"song_id\"] == selected_song[\"song_id\"]\nassert verified_song[\"song_id\"] == selected_song[\"song_id\"]\nassert verified_song[\"album_id\"] == selected_album[\"album_id\"]\nassert selected_song[\"play_count\"] == minimum_play_count\nassert all(selected_song[\"play_count\"] <= song[\"play_count\"] for song in album_song_details)\nplayback_verification = {\"song_id\": verified_song[\"song_id\"], \"title\": verified_song[\"title\"], \"album_id\": verified_song[\"album_id\"], \"album_title\": verified_song[\"album_title\"]}\nprint(playback_verification)",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "spotify.show_song"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "The playback response identifies the selected song ID.",
+        "A fresh public read confirms the played song's identity and album.",
+        "The played target remains the song derived from the minimum pre-play play count."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 9,
+      "phase": "complete",
+      "reasoning": "Once the requested playback and its checks have executed successfully, the action task can be marked complete without an answer value.",
+      "action_code": "completion_result = apis.supervisor.complete_task(status=\"success\")",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The action task is marked successful only after playback verification."
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

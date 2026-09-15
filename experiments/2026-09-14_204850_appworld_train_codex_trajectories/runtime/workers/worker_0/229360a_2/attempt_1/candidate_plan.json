@@ -1,0 +1,209 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "229360a_2",
+  "task_family": "229360a",
+  "completion_mode": "status_only",
+  "plan_summary": "Inspect the required public APIs, authenticate without exposing secrets, fully paginate the song and album state, derive removals from liked/downloaded intersections, mutate only song and album libraries, verify exact retained sets, and complete the action task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "Public documentation must be inspected before any task API is called, including authentication, reads, mutations, and completion.",
+      "action_code": "api_docs = {}\nfor app_name, api_name in [\n    (\"supervisor\", \"show_profile\"),\n    (\"supervisor\", \"show_account_passwords\"),\n    (\"supervisor\", \"complete_task\"),\n    (\"spotify\", \"login\"),\n    (\"spotify\", \"show_song_library\"),\n    (\"spotify\", \"show_album_library\"),\n    (\"spotify\", \"show_downloaded_songs\"),\n    (\"spotify\", \"show_liked_songs\"),\n    (\"spotify\", \"show_liked_albums\"),\n    (\"spotify\", \"remove_song_from_library\"),\n    (\"spotify\", \"remove_album_from_library\"),\n]:\n    api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Documentation for every task API is available before its first call."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "The Spotify username and password must come from Supervisor APIs, and secrets must remain stored without being printed.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_passwords = apis.supervisor.show_account_passwords()\nspotify_password = next(item[\"password\"] for item in account_passwords if item[\"account_name\"].lower() == \"spotify\")\nspotify_session = apis.spotify.login(username=supervisor_profile[\"email\"], password=spotify_password)\nspotify_access_token = spotify_session[\"access_token\"]",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords",
+        "spotify.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A Spotify access token is stored for subsequent calls.",
+        "No credential or token is printed."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "observe",
+      "reasoning": "The cleanup criteria require the complete current song library, album library, downloaded-song set, and liked-song set, so every page must be read before deriving changes.",
+      "action_code": "song_library = []\npage_index = 0\nwhile True:\n    page = apis.spotify.show_song_library(access_token=spotify_access_token, page_index=page_index, page_limit=20)\n    song_library.extend(page)\n    if len(page) < 20:\n        break\n    page_index += 1\nalbum_library = []\npage_index = 0\nwhile True:\n    page = apis.spotify.show_album_library(access_token=spotify_access_token, page_index=page_index, page_limit=20)\n    album_library.extend(page)\n    if len(page) < 20:\n        break\n    page_index += 1\ndownloaded_songs = []\npage_index = 0\nwhile True:\n    page = apis.spotify.show_downloaded_songs(access_token=spotify_access_token, page_index=page_index, page_limit=20)\n    downloaded_songs.extend(page)\n    if len(page) < 20:\n        break\n    page_index += 1\nliked_songs = []\npage_index = 0\nwhile True:\n    page = apis.spotify.show_liked_songs(access_token=spotify_access_token, page_index=page_index, page_limit=20)\n    liked_songs.extend(page)\n    if len(page) < 20:\n        break\n    page_index += 1\nprint({\"song_library_count\": len(song_library), \"album_library_count\": len(album_library), \"downloaded_song_count\": len(downloaded_songs), \"liked_song_count\": len(liked_songs)})",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "spotify.show_song_library",
+        "spotify.show_album_library",
+        "spotify.show_downloaded_songs",
+        "spotify.show_liked_songs"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All pagination pages for the four collections are stored.",
+        "Only safe collection counts are printed."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 4,
+      "phase": "derive",
+      "reasoning": "A song should remain only when its ID is present in the current song library, liked songs, and downloaded songs; the complementary library IDs are the reviewed removal targets.",
+      "action_code": "song_library_ids = {item[\"song_id\"] for item in song_library}\nliked_song_ids = {item[\"song_id\"] for item in liked_songs}\ndownloaded_song_ids = {item[\"song_id\"] for item in downloaded_songs}\nsong_keep_ids = song_library_ids & liked_song_ids & downloaded_song_ids\nsong_remove_ids = sorted(song_library_ids - song_keep_ids)\nprint({\"songs_reviewed\": len(song_library_ids), \"songs_to_keep\": len(song_keep_ids), \"songs_to_remove\": len(song_remove_ids)})",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every song removal ID is derived from the observed library.",
+        "Every keep ID satisfies both liked and downloaded criteria."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 5,
+      "phase": "act",
+      "reasoning": "The reviewed song removal IDs are now available from public read results, so each can be removed without using any hardcoded identifier.",
+      "action_code": "song_removal_results = []\nfor song_id in song_remove_ids:\n    song_removal_results.append(apis.spotify.remove_song_from_library(song_id=song_id, access_token=spotify_access_token))",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "spotify.remove_song_from_library"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Only IDs in song_remove_ids are submitted for removal."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 6,
+      "phase": "verify",
+      "reasoning": "After the song mutations, the song library must be fully re-read and compared with the previously derived keep set before proceeding.",
+      "action_code": "verified_song_library = []\npage_index = 0\nwhile True:\n    page = apis.spotify.show_song_library(access_token=spotify_access_token, page_index=page_index, page_limit=20)\n    verified_song_library.extend(page)\n    if len(page) < 20:\n        break\n    page_index += 1\nverified_song_ids = {item[\"song_id\"] for item in verified_song_library}\nassert verified_song_ids == song_keep_ids\nassert len(verified_song_library) == len(song_keep_ids)\nassert verified_song_ids <= liked_song_ids\nassert verified_song_ids <= downloaded_song_ids\nprint({\"verified_song_library_count\": len(verified_song_library)})",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [
+        "spotify.show_song_library"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "The song library exactly equals the derived keep set.",
+        "Every remaining song is liked and downloaded."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 7,
+      "phase": "observe",
+      "reasoning": "Album cleanup additionally requires the complete liked-album set, which must be paginated before album removal targets can be derived.",
+      "action_code": "liked_albums = []\npage_index = 0\nwhile True:\n    page = apis.spotify.show_liked_albums(access_token=spotify_access_token, page_index=page_index, page_limit=20)\n    liked_albums.extend(page)\n    if len(page) < 20:\n        break\n    page_index += 1\nliked_album_ids = {item[\"album_id\"] for item in liked_albums}\nprint({\"liked_album_count\": len(liked_albums)})",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [
+        "spotify.show_liked_albums"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All liked-album pages are stored.",
+        "Only a safe aggregate is printed."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 8,
+      "phase": "derive",
+      "reasoning": "An album should remain only if it is liked and every song ID listed for that album appears in the downloaded-song set; all other observed library albums are reviewed removal targets.",
+      "action_code": "album_library_ids = {item[\"album_id\"] for item in album_library}\nalbum_keep_ids = {\n    item[\"album_id\"]\n    for item in album_library\n    if item[\"album_id\"] in liked_album_ids\n    and all(song_id in downloaded_song_ids for song_id in item[\"song_ids\"])\n}\nalbum_remove_ids = sorted(album_library_ids - album_keep_ids)\nprint({\"albums_reviewed\": len(album_library_ids), \"albums_to_keep\": len(album_keep_ids), \"albums_to_remove\": len(album_remove_ids)})",
+      "depends_on_steps": [
+        3,
+        7
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every album removal ID is derived from observed records.",
+        "Every retained album is liked and has all of its songs downloaded."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 9,
+      "phase": "act",
+      "reasoning": "The reviewed album removal IDs are now available, so each can be removed without altering the playlist library or using hardcoded identifiers.",
+      "action_code": "album_removal_results = []\nfor album_id in album_remove_ids:\n    album_removal_results.append(apis.spotify.remove_album_from_library(album_id=album_id, access_token=spotify_access_token))",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [
+        "spotify.remove_album_from_library"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Only IDs in album_remove_ids are submitted for removal.",
+        "No playlist API is called."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 10,
+      "phase": "verify",
+      "reasoning": "After album mutations, both mutable libraries must be fully re-read to verify the exact album keep set and confirm the song cleanup still holds.",
+      "action_code": "final_album_library = []\npage_index = 0\nwhile True:\n    page = apis.spotify.show_album_library(access_token=spotify_access_token, page_index=page_index, page_limit=20)\n    final_album_library.extend(page)\n    if len(page) < 20:\n        break\n    page_index += 1\nfinal_song_library = []\npage_index = 0\nwhile True:\n    page = apis.spotify.show_song_library(access_token=spotify_access_token, page_index=page_index, page_limit=20)\n    final_song_library.extend(page)\n    if len(page) < 20:\n        break\n    page_index += 1\nfinal_album_ids = {item[\"album_id\"] for item in final_album_library}\nfinal_song_ids = {item[\"song_id\"] for item in final_song_library}\nassert final_album_ids == album_keep_ids\nassert len(final_album_library) == len(album_keep_ids)\nassert final_song_ids == song_keep_ids\nassert len(final_song_library) == len(song_keep_ids)\nassert all(item[\"song_id\"] in liked_song_ids and item[\"song_id\"] in downloaded_song_ids for item in final_song_library)\nassert all(item[\"album_id\"] in liked_album_ids and all(song_id in downloaded_song_ids for song_id in item[\"song_ids\"]) for item in final_album_library)\nprint({\"final_song_library_count\": len(final_song_library), \"final_album_library_count\": len(final_album_library)})",
+      "depends_on_steps": [
+        9
+      ],
+      "api_names_used": [
+        "spotify.show_album_library",
+        "spotify.show_song_library"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "The final song library exactly equals the liked-and-downloaded song keep set.",
+        "The final album library exactly equals the liked-and-fully-downloaded album keep set.",
+        "No playlist mutation was performed."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 11,
+      "phase": "complete",
+      "reasoning": "If execution reaches this step, the post-mutation assertions have completed, so the action task can be marked successful without an answer value.",
+      "action_code": "completion_result = apis.supervisor.complete_task(status=\"success\")",
+      "depends_on_steps": [
+        10
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The action task is marked complete with success status and no answer argument."
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

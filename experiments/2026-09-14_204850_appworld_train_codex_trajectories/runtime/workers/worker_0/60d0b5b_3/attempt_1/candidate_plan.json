@@ -1,0 +1,187 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "60d0b5b_3",
+  "task_family": "60d0b5b",
+  "completion_mode": "status_only",
+  "plan_summary": "Authenticate with Supervisor-provided credentials, resolve Brandon through phone contacts, find the latest approved Venmo request sent to that contact, refund its amount, and verify the mutation response and source request before completing.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public documentation for every task API must be inspected before any task API is called.",
+      "action_code": "task_api_refs = [('supervisor', 'show_profile'), ('supervisor', 'show_account_passwords'), ('phone', 'login'), ('phone', 'search_contacts'), ('venmo', 'login'), ('venmo', 'show_sent_payment_requests'), ('venmo', 'create_transaction'), ('supervisor', 'complete_task')]\npublic_api_docs = [apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name) for app_name, api_name in task_api_refs]",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public documentation is retrieved for each API used later"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "The supervisor profile supplies login usernames, while account passwords must be obtained without exposing them.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\nphone_password = next(record['password'] for record in account_password_records if 'phone' in record['account_name'].strip().casefold())\nvenmo_password = next(record['password'] for record in account_password_records if 'venmo' in record['account_name'].strip().casefold())",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Supervisor profile and app passwords are retained in variables without printing secrets"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "authenticate",
+      "reasoning": "A phone access token is required to search the supervisor's contacts for Brandon.",
+      "action_code": "phone_login_result = apis.phone.login(username=supervisor_profile['phone_number'], password=phone_password)\nphone_access_token = phone_login_result['access_token']",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "phone.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Phone access token is stored without being printed"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 4,
+      "phase": "observe",
+      "reasoning": "Brandon's public contact identity is needed to match Venmo requests reliably, and all search-result pages must be read.",
+      "action_code": "brandon_contact_pages = []\ncontact_page_index = 0\ncontact_page_limit = 20\nwhile True:\n    contact_page = apis.phone.search_contacts(access_token=phone_access_token, query='Brandon', page_index=contact_page_index, page_limit=contact_page_limit)\n    brandon_contact_pages.extend(contact_page)\n    if len(contact_page) < contact_page_limit:\n        break\n    contact_page_index += 1\nexact_brandon_contacts = [record for record in brandon_contact_pages if record.get('first_name', '').strip().casefold() == 'brandon' and record.get('email')]\nif not exact_brandon_contacts:\n    raise RuntimeError('No exact Brandon contact with an email was found')\nbrandon_emails = {record['email'].strip().casefold() for record in exact_brandon_contacts}\nprint([{'contact_id': record['contact_id'], 'first_name': record['first_name'], 'last_name': record['last_name'], 'email': record['email']} for record in exact_brandon_contacts])",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "phone.search_contacts"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every page of Brandon contact results is read",
+        "Exact Brandon contact email candidates are derived from public records"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 5,
+      "phase": "authenticate",
+      "reasoning": "A Venmo access token is required to inspect sent payment requests and issue the refund.",
+      "action_code": "venmo_login_result = apis.venmo.login(username=supervisor_profile['email'], password=venmo_password)\nvenmo_access_token = venmo_login_result['access_token']",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "venmo.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Venmo access token is stored without being printed"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 6,
+      "phase": "observe",
+      "reasoning": "All sent payment requests must be read before determining which request to Brandon was the latest.",
+      "action_code": "sent_payment_requests = []\nrequest_page_index = 0\nrequest_page_limit = 20\nwhile True:\n    request_page = apis.venmo.show_sent_payment_requests(access_token=venmo_access_token, page_index=request_page_index, page_limit=request_page_limit)\n    sent_payment_requests.extend(request_page)\n    if len(request_page) < request_page_limit:\n        break\n    request_page_index += 1\nbrandon_request_candidates = [record for record in sent_payment_requests if record.get('receiver', {}).get('email', '').strip().casefold() in brandon_emails]\nprint([{'payment_request_id': record['payment_request_id'], 'receiver': record['receiver'], 'amount': record['amount'], 'description': record['description'], 'created_at': record['created_at'], 'approved_at': record['approved_at'], 'private': record['private']} for record in brandon_request_candidates])",
+      "depends_on_steps": [
+        4,
+        5
+      ],
+      "api_names_used": [
+        "venmo.show_sent_payment_requests"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every page of sent payment requests is read",
+        "Requests whose receiver matches a resolved Brandon email are identified"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 7,
+      "phase": "derive",
+      "reasoning": "Immediately before sending money, the latest request to Brandon must be selected from observed records and reviewed to ensure it was approved and has a refundable amount.",
+      "action_code": "if not brandon_request_candidates:\n    raise RuntimeError('No sent payment request to Brandon was found')\naccidental_request = max(brandon_request_candidates, key=lambda record: (record['created_at'], record['payment_request_id']))\nif not accidental_request.get('approved_at'):\n    raise RuntimeError('The latest payment request to Brandon is not approved')\nrefund_amount = accidental_request['amount']\nif refund_amount <= 0:\n    raise RuntimeError('The approved request does not have a positive refundable amount')\nrefund_receiver_email = accidental_request['receiver']['email']\nrefund_private = accidental_request['private']\nrefund_description = 'Refund for accidental payment request'\nrefund_review = {'payment_request_id': accidental_request['payment_request_id'], 'receiver_email': refund_receiver_email, 'amount': refund_amount, 'created_at': accidental_request['created_at'], 'approved_at': accidental_request['approved_at'], 'private': refund_private}\nprint(refund_review)",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "The selected request is the latest observed request to Brandon",
+        "The selected request is approved",
+        "Refund recipient, amount, and privacy are derived from the selected request"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 8,
+      "phase": "act",
+      "reasoning": "The reviewed recipient and amount now provide the exact values needed to return the accidentally requested money.",
+      "action_code": "refund_transaction = apis.venmo.create_transaction(receiver_email=refund_receiver_email, amount=refund_amount, access_token=venmo_access_token, description=refund_description, private=refund_private)",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "venmo.create_transaction"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Venmo returns a transaction result for the derived refund"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 9,
+      "phase": "verify",
+      "reasoning": "After the mutation, the available public read API must be queried again across all pages, and the transaction response plus the source request must be checked before completion.",
+      "action_code": "verification_sent_requests = []\nverification_page_index = 0\nwhile True:\n    verification_page = apis.venmo.show_sent_payment_requests(access_token=venmo_access_token, page_index=verification_page_index, page_limit=request_page_limit)\n    verification_sent_requests.extend(verification_page)\n    if len(verification_page) < request_page_limit:\n        break\n    verification_page_index += 1\nverification_brandon_requests = [record for record in verification_sent_requests if record.get('receiver', {}).get('email', '').strip().casefold() in brandon_emails]\nverification_source_request = next((record for record in verification_brandon_requests if record['payment_request_id'] == accidental_request['payment_request_id']), None)\nverification_latest_request = max(verification_brandon_requests, key=lambda record: (record['created_at'], record['payment_request_id'])) if verification_brandon_requests else None\nverification_checks = {'transaction_id_returned': refund_transaction.get('transaction_id') is not None, 'source_request_found': verification_source_request is not None, 'source_request_still_latest_for_brandon': verification_latest_request is not None and verification_latest_request['payment_request_id'] == accidental_request['payment_request_id'], 'source_request_still_approved': verification_source_request is not None and bool(verification_source_request.get('approved_at')), 'refund_amount_matches_source': verification_source_request is not None and verification_source_request['amount'] == refund_amount, 'refund_receiver_matches_source': verification_source_request is not None and verification_source_request['receiver']['email'].strip().casefold() == refund_receiver_email.strip().casefold()}\nprint(verification_checks)\nif not all(verification_checks.values()):\n    raise RuntimeError('Refund verification did not satisfy every available check')",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [
+        "venmo.show_sent_payment_requests"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "The mutation response contains a transaction ID",
+        "The source request remains the latest request to Brandon",
+        "The source request remains approved",
+        "The refunded amount and recipient match the re-read source request"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 10,
+      "phase": "complete",
+      "reasoning": "The action task can be marked successful only after the refund mutation and all available postcondition checks have completed without error.",
+      "action_code": "completion_result = apis.supervisor.complete_task(status='success')",
+      "depends_on_steps": [
+        9
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Task is reported complete with success status"
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

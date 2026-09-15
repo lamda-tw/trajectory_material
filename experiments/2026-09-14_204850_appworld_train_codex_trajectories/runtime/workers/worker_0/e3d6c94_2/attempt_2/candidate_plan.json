@@ -1,0 +1,225 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "e3d6c94_2",
+  "task_family": "e3d6c94",
+  "completion_mode": "status_only",
+  "plan_summary": "Authenticate safely, exhaustively read Spotify recommendations, robustly derive the current year from the phone's human- or ISO-formatted date, inspect every recommended song, create the requested playlist, add every deduplicated R&B song from the current or preceding year, re-query the songs and review mutation responses, then complete the action task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "Public documentation for every task API must be inspected before making the first task API call.",
+      "action_code": "required_api_docs = [\n    (\"phone\", \"get_current_date_and_time\"),\n    (\"supervisor\", \"show_profile\"),\n    (\"supervisor\", \"show_account_passwords\"),\n    (\"spotify\", \"login\"),\n    (\"spotify\", \"show_recommendations\"),\n    (\"spotify\", \"show_song\"),\n    (\"spotify\", \"create_playlist\"),\n    (\"spotify\", \"add_song_to_playlist\"),\n    (\"supervisor\", \"complete_task\"),\n]\npublic_api_docs = {}\nfor app_name, api_name in required_api_docs:\n    public_api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Documentation is retrieved for every API used later."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "The current date, supervisor identity, and Spotify credential record are needed to derive the time window and authenticate without hardcoding credentials.",
+      "action_code": "current_datetime = apis.phone.get_current_date_and_time()\nsupervisor_profile = apis.supervisor.show_profile()\naccount_passwords = apis.supervisor.show_account_passwords()",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "phone.get_current_date_and_time",
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Current date record is saved.",
+        "Supervisor profile is saved.",
+        "Account password records are saved without printing secrets."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "derive",
+      "reasoning": "The phone date may be human-readable, so the year must be extracted from numeric tokens rather than assumed to occupy the first four characters; the Spotify credential must also be selected from returned account records.",
+      "action_code": "date_number_parts = \"\".join(character if character.isdigit() else \" \" for character in current_datetime[\"date\"]).split()\nyear_candidates = [int(part) for part in date_number_parts if len(part) == 4]\nif not year_candidates:\n    raise ValueError(\"No four-digit year was found in the current date\")\ncurrent_year = year_candidates[0]\nallowed_release_years = {current_year, current_year - 1}\nspotify_credential_candidates = [record for record in account_passwords if record[\"account_name\"].strip().casefold() == \"spotify\"]\nif len(spotify_credential_candidates) != 1:\n    raise ValueError(\"A unique Spotify credential record could not be selected\")\nspotify_username = supervisor_profile[\"email\"]\nspotify_password = spotify_credential_candidates[0][\"password\"]\nprint({\"current_year\": current_year, \"allowed_release_years\": sorted(allowed_release_years), \"spotify_credential_matches\": len(spotify_credential_candidates)})",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "A four-digit current year is derived robustly.",
+        "Exactly one Spotify credential record is selected.",
+        "No password value is printed."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 4,
+      "phase": "authenticate",
+      "reasoning": "The derived supervisor email and Spotify password can now be used to obtain the access token required by Spotify account APIs.",
+      "action_code": "spotify_login_result = apis.spotify.login(username=spotify_username, password=spotify_password)\nspotify_access_token = spotify_login_result[\"access_token\"]\nprint({\"spotify_access_token_received\": bool(spotify_access_token)})",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "spotify.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A nonempty Spotify access token is stored without exposing its value."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 5,
+      "phase": "observe",
+      "reasoning": "All recommendation pages must be read before deciding which recommended songs satisfy the genre and release-year constraints.",
+      "action_code": "recommendation_pages = []\nrecommended_songs = []\npage_index = 0\npage_limit = 20\nwhile True:\n    recommendation_page = apis.spotify.show_recommendations(access_token=spotify_access_token, page_index=page_index, page_limit=page_limit)\n    recommendation_pages.append(recommendation_page)\n    recommended_songs.extend(recommendation_page)\n    if len(recommendation_page) < page_limit:\n        break\n    page_index += 1\nprint({\"pages_read\": len(recommendation_pages), \"recommendations_read\": len(recommended_songs)})",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "spotify.show_recommendations"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Pagination continues through the first short or empty page.",
+        "All returned recommendation records are saved."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 6,
+      "phase": "observe",
+      "reasoning": "Recommendation records omit genre and release date, so every distinct recommended song must be queried through the public song-details API.",
+      "action_code": "recommended_song_ids = list(dict.fromkeys(song[\"song_id\"] for song in recommended_songs))\nrecommended_song_details = []\nfor song_id in recommended_song_ids:\n    recommended_song_details.append(apis.spotify.show_song(song_id=song_id))\nprint([{\"song_id\": song[\"song_id\"], \"title\": song[\"title\"], \"genre\": song[\"genre\"], \"release_date\": song[\"release_date\"]} for song in recommended_song_details])",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [
+        "spotify.show_song"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Each distinct recommended song has a saved detail record containing genre and release date."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 7,
+      "phase": "derive",
+      "reasoning": "The saved details can now be filtered to the requested R&B genre and the two allowed release years, while retaining only IDs derived from actual recommendations; the exact playlist title is also reviewed before creation.",
+      "action_code": "def normalized_genre_key(value):\n    return \"\".join(character for character in value.casefold() if character.isalnum())\n\nr_and_b_genre_keys = {\"rb\", \"rnb\", \"rhythmandblues\"}\nselected_songs = []\nselected_song_summaries = []\nfor song in recommended_song_details:\n    release_number_parts = \"\".join(character if character.isdigit() else \" \" for character in song[\"release_date\"]).split()\n    release_year_candidates = [int(part) for part in release_number_parts if len(part) == 4]\n    if release_year_candidates:\n        release_year = release_year_candidates[0]\n        if normalized_genre_key(song[\"genre\"]) in r_and_b_genre_keys and release_year in allowed_release_years:\n            selected_songs.append(song)\n            selected_song_summaries.append({\"song_id\": song[\"song_id\"], \"title\": song[\"title\"], \"genre\": song[\"genre\"], \"release_year\": release_year})\nselected_song_ids = [song[\"song_id\"] for song in selected_songs]\nplaylist_title = \"Spotify R&B Recommendations\"\nprint({\"playlist_title\": playlist_title, \"selected_song_count\": len(selected_song_ids), \"selected_songs\": selected_song_summaries})",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Selection is restricted to distinct Spotify recommendations.",
+        "Each selection is R&B and released in the current or preceding year.",
+        "The requested playlist title is exact."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 8,
+      "phase": "act",
+      "reasoning": "The reviewed title and selection are available, so the new playlist can be created and its runtime ID captured for subsequent additions.",
+      "action_code": "created_playlist = apis.spotify.create_playlist(title=playlist_title, access_token=spotify_access_token)\nplaylist_id = created_playlist[\"playlist_id\"]\nprint({\"playlist_id\": playlist_id, \"message\": created_playlist[\"message\"]})",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "spotify.create_playlist"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The creation response supplies the new playlist ID.",
+        "The creation response is retained for final verification."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 9,
+      "phase": "derive",
+      "reasoning": "Before adding songs, each selected ID should be re-read and revalidated against the requested criteria, and the dynamic playlist ID from the creation response should be reviewed.",
+      "action_code": "pre_add_song_details = []\nfor song_id in selected_song_ids:\n    pre_add_song_details.append(apis.spotify.show_song(song_id=song_id))\nsongs_ready_to_add = []\npre_add_summaries = []\nfor song in pre_add_song_details:\n    release_number_parts = \"\".join(character if character.isdigit() else \" \" for character in song[\"release_date\"]).split()\n    release_year_candidates = [int(part) for part in release_number_parts if len(part) == 4]\n    if release_year_candidates and normalized_genre_key(song[\"genre\"]) in r_and_b_genre_keys and release_year_candidates[0] in allowed_release_years:\n        songs_ready_to_add.append(song[\"song_id\"])\n        pre_add_summaries.append({\"song_id\": song[\"song_id\"], \"title\": song[\"title\"], \"genre\": song[\"genre\"], \"release_year\": release_year_candidates[0]})\nif songs_ready_to_add != selected_song_ids:\n    raise ValueError(\"The pre-add review no longer matches the derived selection\")\nprint({\"playlist_id\": playlist_id, \"playlist_title\": playlist_title, \"songs_ready_to_add\": pre_add_summaries})",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [
+        "spotify.show_song"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every mutation song ID is derived from a fresh public read.",
+        "Every queued song still meets the genre and year filters.",
+        "The target playlist ID is the ID returned by creation."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 10,
+      "phase": "act",
+      "reasoning": "The reviewed playlist ID and song IDs can now be used to perform one addition for every eligible recommended song.",
+      "action_code": "add_song_results = []\nfor song_id in songs_ready_to_add:\n    add_response = apis.spotify.add_song_to_playlist(playlist_id=playlist_id, song_id=song_id, access_token=spotify_access_token)\n    add_song_results.append({\"song_id\": song_id, \"response\": add_response})\nprint({\"playlist_id\": playlist_id, \"addition_response_count\": len(add_song_results)})",
+      "depends_on_steps": [
+        9
+      ],
+      "api_names_used": [
+        "spotify.add_song_to_playlist"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "An addition call is made for every reviewed song ID.",
+        "Each real addition response is retained with its song ID."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 11,
+      "phase": "verify",
+      "reasoning": "After the mutations, every added song must be re-queried and checked again, while the playlist-creation and per-song addition responses are assembled as public postcondition evidence.",
+      "action_code": "post_add_song_details = []\nfor song_id in songs_ready_to_add:\n    post_add_song_details.append(apis.spotify.show_song(song_id=song_id))\npost_add_song_ids = [song[\"song_id\"] for song in post_add_song_details]\npost_add_eligible_ids = []\nfor song in post_add_song_details:\n    release_number_parts = \"\".join(character if character.isdigit() else \" \" for character in song[\"release_date\"]).split()\n    release_year_candidates = [int(part) for part in release_number_parts if len(part) == 4]\n    if release_year_candidates and normalized_genre_key(song[\"genre\"]) in r_and_b_genre_keys and release_year_candidates[0] in allowed_release_years:\n        post_add_eligible_ids.append(song[\"song_id\"])\nif post_add_song_ids != songs_ready_to_add or post_add_eligible_ids != songs_ready_to_add:\n    raise ValueError(\"Post-mutation song verification did not match the reviewed selection\")\nif len(add_song_results) != len(songs_ready_to_add):\n    raise ValueError(\"Not every reviewed song produced an addition response\")\nif any(\"message\" not in result[\"response\"] for result in add_song_results):\n    raise ValueError(\"An addition response is missing its public message\")\nverification_evidence = {\n    \"playlist\": {\"playlist_id\": playlist_id, \"title\": playlist_title, \"creation_message\": created_playlist[\"message\"]},\n    \"additions\": [{\"song_id\": result[\"song_id\"], \"message\": result[\"response\"][\"message\"]} for result in add_song_results],\n    \"refetched_songs\": [{\"song_id\": song[\"song_id\"], \"title\": song[\"title\"], \"genre\": song[\"genre\"], \"release_date\": song[\"release_date\"]} for song in post_add_song_details],\n}\nprint(verification_evidence)",
+      "depends_on_steps": [
+        10
+      ],
+      "api_names_used": [
+        "spotify.show_song"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every added song is re-fetched by its real ID.",
+        "Every re-fetched song still satisfies the R&B and release-year requirements.",
+        "Playlist creation and every addition have captured public response evidence."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 12,
+      "phase": "complete",
+      "reasoning": "The action task may be marked successful after the post-mutation checks complete without raising an error.",
+      "action_code": "task_completion = apis.supervisor.complete_task(status=\"success\")\nprint(task_completion)",
+      "depends_on_steps": [
+        11
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The supervisor receives status success only after verification."
+      ],
+      "output_policy": "public_records"
+    }
+  ]
+}

@@ -1,0 +1,190 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "afc0fce_2",
+  "task_family": "afc0fce",
+  "completion_mode": "status_only",
+  "plan_summary": "Inspect the required public APIs, authenticate without exposing secrets, derive a robust seven-day date window, enumerate all friend contacts and received Venmo transactions across every page, like and comment on the derived targets, re-query and verify both postconditions, then complete the task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "Public documentation must be inspected before any task API is called, so load the documentation for every API used by the plan.",
+      "action_code": "api_docs_to_inspect = [\n    (\"supervisor\", \"show_profile\"),\n    (\"supervisor\", \"show_account_passwords\"),\n    (\"supervisor\", \"complete_task\"),\n    (\"phone\", \"get_current_date_and_time\"),\n    (\"phone\", \"login\"),\n    (\"phone\", \"search_contacts\"),\n    (\"venmo\", \"login\"),\n    (\"venmo\", \"show_transactions\"),\n    (\"venmo\", \"like_transaction\"),\n    (\"venmo\", \"create_transaction_comment\"),\n]\napi_docs = {}\nfor app_name, api_name in api_docs_to_inspect:\n    api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public documentation for every planned task API is loaded before its first use."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "The authenticated phone and Venmo reads require the supervisor's live profile and app passwords, and the current phone date is needed to derive the relative time window.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\naccount_passwords_by_name = {\n    record[\"account_name\"].strip().lower(): record[\"password\"]\n    for record in account_password_records\n}\nphone_password = account_passwords_by_name[\"phone\"]\nvenmo_password = account_passwords_by_name[\"venmo\"]\nphone_login_result = apis.phone.login(\n    username=supervisor_profile[\"phone_number\"],\n    password=phone_password,\n)\nphone_access_token = phone_login_result[\"access_token\"]\nvenmo_login_result = apis.venmo.login(\n    username=supervisor_profile[\"email\"],\n    password=venmo_password,\n)\nvenmo_access_token = venmo_login_result[\"access_token\"]\ncurrent_date_time = apis.phone.get_current_date_and_time()",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords",
+        "phone.login",
+        "venmo.login",
+        "phone.get_current_date_and_time"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Phone and Venmo access tokens are retained only in variables.",
+        "The live phone date response is saved for date-window derivation."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "derive",
+      "reasoning": "The instruction defines a seven-day inclusive window, so parse either an ISO or a human-readable phone date and subtract six calendar days without assuming the returned display format.",
+      "action_code": "date_text = current_date_time[\"date\"].strip()\nmonth_names = [\n    \"january\", \"february\", \"march\", \"april\", \"may\", \"june\",\n    \"july\", \"august\", \"september\", \"october\", \"november\", \"december\",\n]\nmonth_abbreviations = [name[:3] for name in month_names]\ndate_parts = date_text.replace(\",\", \"\").split()\nmonth_token_index = next(\n    (index for index, token in enumerate(date_parts) if token.lower()[:3] in month_abbreviations),\n    None,\n)\nif month_token_index is None:\n    iso_date_text = date_text[:10]\n    current_year, current_month, current_day = [int(part) for part in iso_date_text.split(\"-\")]\nelse:\n    current_month = month_abbreviations.index(date_parts[month_token_index].lower()[:3]) + 1\n    token_after_month = date_parts[month_token_index + 1]\n    if token_after_month.isdigit() and int(token_after_month) <= 31:\n        current_day = int(token_after_month)\n        current_year = int(date_parts[month_token_index + 2])\n    else:\n        current_day = int(date_parts[month_token_index - 1])\n        current_year = int(token_after_month)\ndef days_in_month(year, month):\n    if month == 2:\n        return 29 if year % 400 == 0 or (year % 4 == 0 and year % 100 != 0) else 28\n    return 30 if month in (4, 6, 9, 11) else 31\nwindow_start_year = current_year\nwindow_start_month = current_month\nwindow_start_day = current_day\nfor _ in range(6):\n    window_start_day -= 1\n    if window_start_day == 0:\n        window_start_month -= 1\n        if window_start_month == 0:\n            window_start_month = 12\n            window_start_year -= 1\n        window_start_day = days_in_month(window_start_year, window_start_month)\nwindow_start_date = f\"{window_start_year:04d}-{window_start_month:02d}-{window_start_day:02d}\"\nwindow_end_date = f\"{current_year:04d}-{current_month:02d}-{current_day:02d}\"\nprint({\"window_start_date\": window_start_date, \"window_end_date\": window_end_date})",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "The inclusive window starts six calendar days before the live current date.",
+        "Both date bounds use the API's YYYY-MM-DD filter format."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 4,
+      "phase": "observe",
+      "reasoning": "Friend status comes from the phone contact relationships, so enumerate the friend-filtered contact list until an empty page is reached.",
+      "action_code": "friend_contact_pages = []\nfriend_contacts = []\ncontact_page_index = 0\nwhile True:\n    contact_page = apis.phone.search_contacts(\n        access_token=phone_access_token,\n        relationship=\"friend\",\n        page_index=contact_page_index,\n        page_limit=20,\n    )\n    friend_contact_pages.append(contact_page)\n    if not contact_page:\n        break\n    friend_contacts.extend(contact_page)\n    contact_page_index += 1",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "phone.search_contacts"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every page of friend-filtered phone contacts is read."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 5,
+      "phase": "derive",
+      "reasoning": "The transaction queries must be grounded in contact records, so derive a deduplicated set of friend emails and exclude the supervisor's own account email.",
+      "action_code": "supervisor_email = supervisor_profile[\"email\"].strip().lower()\nfriend_contacts_by_email = {}\nfor contact in friend_contacts:\n    relationships = [str(value).strip().lower() for value in contact.get(\"relationships\", [])]\n    contact_email = contact.get(\"email\", \"\").strip().lower()\n    if \"friend\" in relationships and contact_email and contact_email != supervisor_email:\n        friend_contacts_by_email[contact_email] = contact\nfriend_emails = sorted(friend_contacts_by_email)\nprint({\"friend_count\": len(friend_emails)})",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Only emails derived from contacts labeled as friends are selected.",
+        "Friend emails are deduplicated and do not include the supervisor."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 6,
+      "phase": "observe",
+      "reasoning": "Each friend's received transactions must be read across all pages from the window start, then locally bounded through the live current date and checked against sender and receiver identities.",
+      "action_code": "transaction_pages = {}\ntarget_transactions_by_id = {}\nfor friend_email in friend_emails:\n    transaction_page_index = 0\n    while True:\n        transaction_page = apis.venmo.show_transactions(\n            access_token=venmo_access_token,\n            user_email=friend_email,\n            min_created_at=window_start_date,\n            direction=\"received\",\n            page_index=transaction_page_index,\n            page_limit=20,\n        )\n        transaction_pages[(friend_email, transaction_page_index)] = transaction_page\n        if not transaction_page:\n            break\n        for transaction in transaction_page:\n            created_date = transaction[\"created_at\"][:10]\n            sender_email = transaction[\"sender\"][\"email\"].strip().lower()\n            receiver_email = transaction[\"receiver\"][\"email\"].strip().lower()\n            if (\n                window_start_date <= created_date <= window_end_date\n                and sender_email == friend_email\n                and receiver_email == supervisor_email\n            ):\n                target_transactions_by_id[transaction[\"transaction_id\"]] = transaction\n        transaction_page_index += 1\nprint({\n    \"target_count\": len(target_transactions_by_id),\n    \"target_transaction_ids\": sorted(target_transactions_by_id),\n})",
+      "depends_on_steps": [
+        3,
+        5
+      ],
+      "api_names_used": [
+        "venmo.show_transactions"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every transaction page for every derived friend is read.",
+        "Targets are received by the supervisor, sent by a friend, and fall within the inclusive seven-day window."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 7,
+      "phase": "derive",
+      "reasoning": "A separate review is required before mutation, so derive transaction IDs, baseline comment counts, and the subset that is not already liked solely from the saved transaction records.",
+      "action_code": "target_transaction_ids = sorted(target_transactions_by_id)\nbaseline_comment_count_by_id = {\n    transaction_id: target_transactions_by_id[transaction_id][\"comment_count\"]\n    for transaction_id in target_transaction_ids\n}\ntransaction_ids_to_like = [\n    transaction_id\n    for transaction_id in target_transaction_ids\n    if not target_transactions_by_id[transaction_id][\"liked\"]\n]\ntransaction_ids_to_like_set = set(transaction_ids_to_like)\nprint({\n    \"reviewed_target_ids\": target_transaction_ids,\n    \"like_required_ids\": transaction_ids_to_like,\n    \"comment_required_count\": len(target_transaction_ids),\n})",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every target is scheduled to receive the requested comment.",
+        "Only targets not already liked are scheduled for a like mutation.",
+        "Baseline comment counts are retained for post-mutation verification."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 8,
+      "phase": "act",
+      "reasoning": "The reviewed IDs now provide the mutation scope; like each currently unliked target and add the literal requested comment to every target while retaining each public response.",
+      "action_code": "mutation_results = {}\nfor transaction_id in target_transaction_ids:\n    like_result = None\n    if transaction_id in transaction_ids_to_like_set:\n        like_result = apis.venmo.like_transaction(\n            transaction_id=transaction_id,\n            access_token=venmo_access_token,\n        )\n    comment_result = apis.venmo.create_transaction_comment(\n        transaction_id=transaction_id,\n        comment=\"Thanks!\",\n        access_token=venmo_access_token,\n    )\n    mutation_results[transaction_id] = {\n        \"like\": like_result,\n        \"comment\": comment_result,\n    }",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "venmo.like_transaction",
+        "venmo.create_transaction_comment"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Every reviewed target receives a \"Thanks!\" comment mutation.",
+        "Every reviewed target that was not already liked receives a like mutation."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 9,
+      "phase": "verify",
+      "reasoning": "Mutation responses alone are insufficient for state verification, so re-read every relevant transaction page and compare current liked flags and comment counts with the saved targets and baselines.",
+      "action_code": "verification_pages = {}\nverified_transactions_by_id = {}\nfor friend_email in friend_emails:\n    verification_page_index = 0\n    while True:\n        verification_page = apis.venmo.show_transactions(\n            access_token=venmo_access_token,\n            user_email=friend_email,\n            min_created_at=window_start_date,\n            direction=\"received\",\n            page_index=verification_page_index,\n            page_limit=20,\n        )\n        verification_pages[(friend_email, verification_page_index)] = verification_page\n        if not verification_page:\n            break\n        for transaction in verification_page:\n            created_date = transaction[\"created_at\"][:10]\n            sender_email = transaction[\"sender\"][\"email\"].strip().lower()\n            receiver_email = transaction[\"receiver\"][\"email\"].strip().lower()\n            if (\n                window_start_date <= created_date <= window_end_date\n                and sender_email == friend_email\n                and receiver_email == supervisor_email\n            ):\n                verified_transactions_by_id[transaction[\"transaction_id\"]] = transaction\n        verification_page_index += 1\nmissing_target_ids = [\n    transaction_id for transaction_id in target_transaction_ids\n    if transaction_id not in verified_transactions_by_id\n]\nunliked_target_ids = [\n    transaction_id for transaction_id in target_transaction_ids\n    if transaction_id in verified_transactions_by_id\n    and not verified_transactions_by_id[transaction_id][\"liked\"]\n]\ncomment_count_not_advanced_ids = [\n    transaction_id for transaction_id in target_transaction_ids\n    if transaction_id in verified_transactions_by_id\n    and verified_transactions_by_id[transaction_id][\"comment_count\"] < baseline_comment_count_by_id[transaction_id] + 1\n]\nmissing_comment_receipt_ids = []\nfor transaction_id in target_transaction_ids:\n    comment_receipt = mutation_results.get(transaction_id, {}).get(\"comment\")\n    if not isinstance(comment_receipt, dict) or \"comment_id\" not in comment_receipt:\n        missing_comment_receipt_ids.append(transaction_id)\nverification_ok = not (\n    missing_target_ids\n    or unliked_target_ids\n    or comment_count_not_advanced_ids\n    or missing_comment_receipt_ids\n)\nprint({\n    \"verification_ok\": verification_ok,\n    \"missing_target_ids\": missing_target_ids,\n    \"unliked_target_ids\": unliked_target_ids,\n    \"comment_count_not_advanced_ids\": comment_count_not_advanced_ids,\n    \"missing_comment_receipt_ids\": missing_comment_receipt_ids,\n})",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [
+        "venmo.show_transactions"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every original target remains present in the re-query.",
+        "Every target is liked.",
+        "Every target's comment count increased by at least one.",
+        "Every target has a returned comment creation identifier."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 10,
+      "phase": "complete",
+      "reasoning": "The task may be marked successful only after the computed verification result confirms all requested postconditions.",
+      "action_code": "if not verification_ok:\n    raise RuntimeError(\"Requested Venmo updates were not fully verified\")\ncompletion_result = apis.supervisor.complete_task(status=\"success\")",
+      "depends_on_steps": [
+        9
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Task completion is submitted with success only when all Venmo postconditions are verified."
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

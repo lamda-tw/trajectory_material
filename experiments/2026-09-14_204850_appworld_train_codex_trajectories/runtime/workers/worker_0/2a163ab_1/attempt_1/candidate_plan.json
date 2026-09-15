@@ -1,0 +1,205 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "2a163ab_1",
+  "task_family": "2a163ab",
+  "completion_mode": "status_only",
+  "plan_summary": "Inspect all required API contracts, authenticate without exposing secrets, exhaustively load roommate contacts and the Venmo social feed, derive today's roommate-involving transactions, like each derived transaction, re-read the full feed to verify the likes, and complete the task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "Inspect every required public API contract before making any task API call so subsequent actions use documented parameters and response fields.",
+      "action_code": "required_api_docs = {}\nfor app_name, api_name in [\n    (\"supervisor\", \"show_profile\"),\n    (\"supervisor\", \"show_account_passwords\"),\n    (\"phone\", \"get_current_date_and_time\"),\n    (\"phone\", \"login\"),\n    (\"phone\", \"search_contacts\"),\n    (\"venmo\", \"login\"),\n    (\"venmo\", \"show_social_feed\"),\n    (\"venmo\", \"like_transaction\"),\n    (\"supervisor\", \"complete_task\"),\n]:\n    required_api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public documentation for every required task API is retrieved before use."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "observe",
+      "reasoning": "Retrieve the supervisor identity, app password records, and authoritative current date needed for authentication and the meaning of today, while keeping secrets unprinted.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\ncurrent_date_and_time = apis.phone.get_current_date_and_time()",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords",
+        "phone.get_current_date_and_time"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Supervisor profile, password records, and current date/time are saved in variables."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "derive",
+      "reasoning": "Derive the phone and Venmo credentials from the retrieved records without hardcoding or displaying passwords.",
+      "action_code": "def password_for_app(app_name):\n    matches = [record for record in account_password_records if record[\"account_name\"].strip().casefold() == app_name.casefold()]\n    if len(matches) != 1:\n        raise RuntimeError(\"Expected exactly one password record for the requested app\")\n    return matches[0][\"password\"]\n\nphone_username = supervisor_profile[\"phone_number\"]\nphone_password = password_for_app(\"phone\")\nvenmo_username = supervisor_profile[\"email\"]\nvenmo_password = password_for_app(\"venmo\")",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Exactly one password record is selected for each required app.",
+        "No credential value is printed."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 4,
+      "phase": "authenticate",
+      "reasoning": "Authenticate to the phone app with the derived supervisor phone number and phone password so contacts can be queried.",
+      "action_code": "phone_login_result = apis.phone.login(username=phone_username, password=phone_password)\nphone_access_token = phone_login_result[\"access_token\"]",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "phone.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A phone access token is saved without being printed."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 5,
+      "phase": "observe",
+      "reasoning": "Load every page of contacts whose documented relationship is roommate so no roommate is omitted from transaction matching.",
+      "action_code": "roommate_contacts = []\ncontacts_page_index = 0\nwhile True:\n    contacts_page = apis.phone.search_contacts(\n        access_token=phone_access_token,\n        relationship=\"roommate\",\n        page_index=contacts_page_index,\n        page_limit=20,\n    )\n    roommate_contacts.extend(contacts_page)\n    if len(contacts_page) < 20:\n        break\n    contacts_page_index += 1\n\nprint({\n    \"roommate_contacts\": [\n        {\"first_name\": contact[\"first_name\"], \"last_name\": contact[\"last_name\"], \"email\": contact[\"email\"]}\n        for contact in roommate_contacts\n    ]\n})",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "phone.search_contacts"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All roommate-contact pagination pages are consumed.",
+        "Roommate identities needed for matching are saved."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 6,
+      "phase": "authenticate",
+      "reasoning": "Authenticate to Venmo using the derived supervisor email and Venmo password after roommate identities are available.",
+      "action_code": "venmo_login_result = apis.venmo.login(username=venmo_username, password=venmo_password)\nvenmo_access_token = venmo_login_result[\"access_token\"]",
+      "depends_on_steps": [
+        3,
+        5
+      ],
+      "api_names_used": [
+        "venmo.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A Venmo access token is saved without being printed."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 7,
+      "phase": "observe",
+      "reasoning": "Read every page of the Venmo social feed before selecting transactions, ensuring the selection is based on the complete public feed.",
+      "action_code": "social_feed_transactions = []\nfeed_page_index = 0\nwhile True:\n    feed_page = apis.venmo.show_social_feed(\n        access_token=venmo_access_token,\n        page_index=feed_page_index,\n        page_limit=20,\n    )\n    social_feed_transactions.extend(feed_page)\n    if len(feed_page) < 20:\n        break\n    feed_page_index += 1\n\nprint({\"social_feed_records_loaded\": len(social_feed_transactions)})",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [
+        "venmo.show_social_feed"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All social-feed pagination pages are consumed.",
+        "The complete feed is saved for derivation."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 8,
+      "phase": "derive",
+      "reasoning": "Using only the retrieved current date, roommate contacts, and complete feed, review and derive the unique transaction IDs from today whose sender or receiver matches a roommate.",
+      "action_code": "roommate_email_keys = {\n    contact[\"email\"].strip().casefold()\n    for contact in roommate_contacts\n    if contact[\"email\"].strip()\n}\nroommate_name_keys = {\n    (contact[\"first_name\"].strip() + \" \" + contact[\"last_name\"].strip()).strip().casefold()\n    for contact in roommate_contacts\n}\ntoday_key = str(current_date_and_time[\"date\"]).strip()\n\ndef party_is_roommate(party):\n    party_email = party[\"email\"].strip().casefold()\n    party_name = party[\"name\"].strip().casefold()\n    return (bool(party_email) and party_email in roommate_email_keys) or party_name in roommate_name_keys\n\ntarget_transactions_by_id = {}\nfor transaction in social_feed_transactions:\n    is_today = str(transaction[\"created_at\"]).strip().startswith(today_key)\n    involves_roommate = party_is_roommate(transaction[\"sender\"]) or party_is_roommate(transaction[\"receiver\"])\n    if is_today and involves_roommate:\n        target_transactions_by_id[transaction[\"transaction_id\"]] = transaction\n\ntarget_transactions = list(target_transactions_by_id.values())\ntarget_transaction_ids = [transaction[\"transaction_id\"] for transaction in target_transactions]\npre_like_counts = {\n    transaction[\"transaction_id\"]: transaction[\"like_count\"]\n    for transaction in target_transactions\n}\nprint({\n    \"transactions_selected_for_liking\": [\n        {\n            \"transaction_id\": transaction[\"transaction_id\"],\n            \"created_at\": transaction[\"created_at\"],\n            \"sender\": transaction[\"sender\"],\n            \"receiver\": transaction[\"receiver\"],\n            \"like_count\": transaction[\"like_count\"],\n        }\n        for transaction in target_transactions\n    ]\n})",
+      "depends_on_steps": [
+        2,
+        5,
+        7
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Targets are restricted to the current date.",
+        "Each target involves a retrieved roommate as sender or receiver.",
+        "Transaction IDs are deduplicated and pre-mutation like counts are saved."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 9,
+      "phase": "act",
+      "reasoning": "The reviewed target IDs are now available, so like each selected transaction exactly once using only those derived IDs.",
+      "action_code": "like_results = []\nfor transaction_id in target_transaction_ids:\n    like_result = apis.venmo.like_transaction(\n        transaction_id=transaction_id,\n        access_token=venmo_access_token,\n    )\n    like_results.append({\"transaction_id\": transaction_id, \"result\": like_result})",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [
+        "venmo.like_transaction"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "One like request is issued for every derived unique target transaction."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 10,
+      "phase": "verify",
+      "reasoning": "Re-read every page of the public social feed after the mutations and verify both target completeness and the observable like-count change for every selected transaction.",
+      "action_code": "verified_social_feed = []\nverify_page_index = 0\nwhile True:\n    verify_page = apis.venmo.show_social_feed(\n        access_token=venmo_access_token,\n        page_index=verify_page_index,\n        page_limit=20,\n    )\n    verified_social_feed.extend(verify_page)\n    if len(verify_page) < 20:\n        break\n    verify_page_index += 1\n\nverified_by_id = {transaction[\"transaction_id\"]: transaction for transaction in verified_social_feed}\nverified_matching_ids = {\n    transaction[\"transaction_id\"]\n    for transaction in verified_social_feed\n    if str(transaction[\"created_at\"]).strip().startswith(today_key)\n    and (party_is_roommate(transaction[\"sender\"]) or party_is_roommate(transaction[\"receiver\"]))\n}\nif verified_matching_ids != set(target_transaction_ids):\n    raise RuntimeError(\"The post-mutation feed does not contain the same complete target set\")\nfor transaction_id in target_transaction_ids:\n    if transaction_id not in verified_by_id:\n        raise RuntimeError(\"A target transaction is missing from the post-mutation feed\")\n    if verified_by_id[transaction_id][\"like_count\"] != pre_like_counts[transaction_id] + 1:\n        raise RuntimeError(\"A target transaction's like count did not increase by one\")\n\nprint({\"verified_liked_transaction_count\": len(target_transaction_ids)})",
+      "depends_on_steps": [
+        9
+      ],
+      "api_names_used": [
+        "venmo.show_social_feed"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "The full feed is re-queried after mutation.",
+        "The complete today-and-roommate target set remains accounted for.",
+        "Every selected transaction's like count increased by exactly one."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 11,
+      "phase": "complete",
+      "reasoning": "After the verification step completes without a mismatch, mark this action task successful without supplying an answer.",
+      "action_code": "completion_result = apis.supervisor.complete_task(status=\"success\")",
+      "depends_on_steps": [
+        10
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The action task is reported complete only after postcondition verification."
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

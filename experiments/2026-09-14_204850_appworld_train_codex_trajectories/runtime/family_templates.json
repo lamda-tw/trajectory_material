@@ -1,0 +1,954 @@
+{
+  "82e2fac": {
+    "verified_from_task": "82e2fac_3",
+    "step_scaffold": [
+      {
+        "role": "complete",
+        "api_refs": [
+          "api_docs.show_api_doc"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "supervisor.show_account_passwords",
+          "supervisor.show_profile"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "spotify.login"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [
+          "spotify.show_album_library"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [
+          "spotify.show_song"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [],
+        "uses_loop": false,
+        "uses_assertion": false
+      },
+      {
+        "role": "complete",
+        "api_refs": [
+          "supervisor.complete_task"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      }
+    ]
+  },
+  "2a163ab": {
+    "verified_from_task": "2a163ab_2",
+    "step_scaffold": [
+      {
+        "role": "inspect_docs",
+        "api_refs": [
+          "api_docs.show_api_doc"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "supervisor.show_account_passwords",
+          "supervisor.show_profile"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "phone.get_current_date_and_time",
+          "phone.login",
+          "phone.search_contacts"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "venmo.login",
+          "venmo.show_social_feed"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "mutate",
+        "api_refs": [
+          "venmo.like_transaction"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "verify",
+        "api_refs": [
+          "venmo.show_social_feed"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "complete",
+        "api_refs": [
+          "supervisor.complete_task"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      }
+    ]
+  },
+  "34d9492": {
+    "verified_from_task": "34d9492_3",
+    "step_scaffold": [
+      {
+        "role": "inspect_docs",
+        "api_refs": [
+          "api_docs.show_api_doc"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "file_system.login",
+          "phone.get_current_date_and_time",
+          "supervisor.show_account_passwords",
+          "supervisor.show_profile"
+        ],
+        "uses_loop": true,
+        "uses_assertion": true
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [
+          "file_system.show_directory"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [
+          "file_system.show_file"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "verify",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": true
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [
+          "file_system.move_file"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "verify",
+        "api_refs": [
+          "file_system.show_directory",
+          "file_system.show_file"
+        ],
+        "uses_loop": true,
+        "uses_assertion": true
+      },
+      {
+        "role": "complete",
+        "api_refs": [
+          "supervisor.complete_task"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      }
+    ]
+  },
+  "229360a": {
+    "verified_from_task": "229360a_3",
+    "step_scaffold": [
+      {
+        "role": "inspect_docs",
+        "api_refs": [
+          "api_docs.show_api_doc"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "spotify.login",
+          "supervisor.show_account_passwords",
+          "supervisor.show_profile"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [
+          "spotify.show_album_library",
+          "spotify.show_downloaded_songs",
+          "spotify.show_liked_songs",
+          "spotify.show_song_library"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "mutate",
+        "api_refs": [
+          "spotify.remove_song_from_library"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "verify",
+        "api_refs": [
+          "spotify.show_song_library"
+        ],
+        "uses_loop": true,
+        "uses_assertion": true
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [
+          "spotify.show_liked_albums"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "mutate",
+        "api_refs": [
+          "spotify.remove_album_from_library"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "verify",
+        "api_refs": [
+          "spotify.show_album_library",
+          "spotify.show_song_library"
+        ],
+        "uses_loop": true,
+        "uses_assertion": true
+      },
+      {
+        "role": "complete",
+        "api_refs": [
+          "supervisor.complete_task"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      }
+    ]
+  },
+  "07b42fd": {
+    "verified_from_task": "07b42fd_3",
+    "step_scaffold": [
+      {
+        "role": "inspect_docs",
+        "api_refs": [
+          "api_docs.show_api_doc"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "spotify.login",
+          "supervisor.show_account_passwords",
+          "supervisor.show_profile"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [
+          "spotify.search_artists"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "mutate",
+        "api_refs": [
+          "spotify.follow_artist"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "verify",
+        "api_refs": [
+          "spotify.search_artists"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "complete",
+        "api_refs": [
+          "supervisor.complete_task"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      }
+    ]
+  },
+  "302c169": {
+    "verified_from_task": "302c169_3",
+    "step_scaffold": [
+      {
+        "role": "inspect_docs",
+        "api_refs": [
+          "api_docs.show_api_doc"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "phone.login",
+          "supervisor.show_account_passwords",
+          "supervisor.show_profile"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [
+          "phone.show_alarms"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "mutate",
+        "api_refs": [
+          "phone.update_alarm"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [
+          "phone.show_alarms"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "mutate",
+        "api_refs": [
+          "phone.update_alarm"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [
+          "phone.show_alarms"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "complete",
+        "api_refs": [
+          "supervisor.complete_task"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      }
+    ]
+  },
+  "6ea6792": {
+    "verified_from_task": "6ea6792_3",
+    "step_scaffold": [
+      {
+        "role": "inspect_docs",
+        "api_refs": [
+          "api_docs.show_api_doc"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "phone.login",
+          "supervisor.show_account_passwords",
+          "supervisor.show_profile"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [
+          "phone.search_contacts"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "venmo.login"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [
+          "venmo.show_received_payment_requests"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "mutate",
+        "api_refs": [
+          "venmo.approve_payment_request"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "verify",
+        "api_refs": [
+          "venmo.show_received_payment_requests"
+        ],
+        "uses_loop": true,
+        "uses_assertion": true
+      },
+      {
+        "role": "complete",
+        "api_refs": [
+          "supervisor.complete_task"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      }
+    ]
+  },
+  "60d0b5b": {
+    "verified_from_task": "60d0b5b_3",
+    "step_scaffold": [
+      {
+        "role": "inspect_docs",
+        "api_refs": [
+          "api_docs.show_api_doc"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "supervisor.show_account_passwords",
+          "supervisor.show_profile"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "phone.login"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [
+          "phone.search_contacts"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "venmo.login"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [
+          "venmo.show_sent_payment_requests"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "mutate",
+        "api_refs": [
+          "venmo.create_transaction"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [
+          "venmo.show_sent_payment_requests"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "complete",
+        "api_refs": [
+          "supervisor.complete_task"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      }
+    ]
+  },
+  "3c13f5a": {
+    "verified_from_task": "3c13f5a_3",
+    "step_scaffold": [
+      {
+        "role": "inspect_docs",
+        "api_refs": [
+          "api_docs.show_api_doc"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "supervisor.show_account_passwords",
+          "supervisor.show_profile"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [
+          "phone.get_current_date_and_time"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "phone.login"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [
+          "phone.search_contacts"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "file_system.login"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [
+          "file_system.show_directory"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [
+          "file_system.show_file"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "venmo.login"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "mutate",
+        "api_refs": [
+          "venmo.create_payment_request"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [
+          "file_system.show_file",
+          "phone.search_contacts"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "complete",
+        "api_refs": [
+          "supervisor.complete_task"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      }
+    ]
+  },
+  "e7a10f8": {
+    "verified_from_task": "e7a10f8_3",
+    "step_scaffold": [
+      {
+        "role": "inspect_docs",
+        "api_refs": [
+          "api_docs.show_api_doc"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "spotify.login",
+          "supervisor.show_account_passwords",
+          "supervisor.show_profile"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [
+          "spotify.show_playlist_library"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [
+          "spotify.show_playlist",
+          "spotify.show_song"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "complete",
+        "api_refs": [
+          "supervisor.complete_task"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      }
+    ]
+  },
+  "e85d92a": {
+    "verified_from_task": "e85d92a_3",
+    "step_scaffold": [
+      {
+        "role": "inspect_docs",
+        "api_refs": [
+          "api_docs.show_api_doc"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "supervisor.show_account_passwords",
+          "supervisor.show_profile"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [
+          "spotify.search_artists"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [
+          "spotify.search_songs"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "complete",
+        "api_refs": [
+          "supervisor.complete_task"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      }
+    ]
+  },
+  "e3d6c94": {
+    "verified_from_task": "e3d6c94_3",
+    "step_scaffold": [
+      {
+        "role": "inspect_docs",
+        "api_refs": [
+          "api_docs.show_api_doc"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "phone.get_current_date_and_time",
+          "supervisor.show_account_passwords",
+          "supervisor.show_profile"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "spotify.login"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [
+          "spotify.show_recommendations"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [
+          "spotify.show_song"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "mutate",
+        "api_refs": [
+          "spotify.create_playlist"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [
+          "spotify.show_song"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "mutate",
+        "api_refs": [
+          "spotify.add_song_to_playlist"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [
+          "spotify.show_song"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "complete",
+        "api_refs": [
+          "supervisor.complete_task"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      }
+    ]
+  }
+}

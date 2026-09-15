@@ -1,0 +1,167 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "76f2c72_2",
+  "task_family": "76f2c72",
+  "completion_mode": "answer_variable",
+  "plan_summary": "Authenticate to the file system, recursively read every bill file, identify this year's internet bills from public file data, deterministically select each bill's strongest total-cost candidate, sum the amounts, review the derivation, and submit the computed answer.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public documentation for every task API must be inspected before any task API is called so subsequent calls use only documented parameters and response fields.",
+      "action_code": "required_api_docs = {}\nfor app_name, api_name in [\n    (\"phone\", \"get_current_date_and_time\"),\n    (\"supervisor\", \"show_profile\"),\n    (\"supervisor\", \"show_account_passwords\"),\n    (\"file_system\", \"login\"),\n    (\"file_system\", \"show_directory\"),\n    (\"file_system\", \"show_file\"),\n    (\"supervisor\", \"complete_task\"),\n]:\n    required_api_docs[app_name + \".\" + api_name] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public documentation is loaded for every API used later"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "observe",
+      "reasoning": "The meaning of “this year” must be derived from the environment's current date rather than from a hardcoded year.",
+      "action_code": "current_date_time = apis.phone.get_current_date_and_time()\nprint(current_date_time)",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "phone.get_current_date_and_time"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Current date and time record is available for year derivation"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 3,
+      "phase": "authenticate",
+      "reasoning": "The file-system username and password must come from Supervisor APIs, while password values must remain unprinted.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_passwords = apis.supervisor.show_account_passwords()\nfilesystem_password_record = next(record for record in account_passwords if \"filesystem\" in \"\".join(ch for ch in record[\"account_name\"].lower() if ch.isalnum()))\nfilesystem_username = supervisor_profile[\"email\"]\nfilesystem_password = filesystem_password_record[\"password\"]",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Supervisor email is stored as the username",
+        "A file-system password record is selected without exposing its value"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 4,
+      "phase": "authenticate",
+      "reasoning": "The documented file APIs require an access token obtained by logging in with the Supervisor-derived credentials.",
+      "action_code": "filesystem_login = apis.file_system.login(username=filesystem_username, password=filesystem_password)\nfilesystem_access_token = filesystem_login[\"access_token\"]",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "file_system.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "File-system access token is stored without being printed"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 5,
+      "phase": "observe",
+      "reasoning": "Every file under the explicitly named bills directory must be discovered, including files in nested directories; the documented response is a non-paginated array.",
+      "action_code": "bill_paths = apis.file_system.show_directory(access_token=filesystem_access_token, directory_path=\"~/bills/\", entry_type=\"files\", recursive=True)\nprint(bill_paths)",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "file_system.show_directory"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All recursively listed file paths under ~/bills/ are stored"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 6,
+      "phase": "observe",
+      "reasoning": "Each discovered file must be read so bill type, billing year, and cost can be derived from real public file records rather than filenames alone.",
+      "action_code": "bill_file_records = []\nfor bill_path in bill_paths:\n    bill_file_records.append(apis.file_system.show_file(file_path=bill_path, access_token=filesystem_access_token))\nprint(bill_file_records)",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [
+        "file_system.show_file"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A public file record is stored for every discovered bill path"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 7,
+      "phase": "derive",
+      "reasoning": "With the current date and all file records available, identify internet bills attributable to the current year and generate ranked monetary candidates without assuming a provider, filename, amount, or file count.",
+      "action_code": "date_number_parts = \"\".join(ch if ch.isdigit() else \" \" for ch in current_date_time[\"date\"]).split()\ncurrent_year = next(part for part in date_number_parts if len(part) == 4)\n\ndef years_in(text_value):\n    parts = \"\".join(ch if ch.isdigit() else \" \" for ch in str(text_value)).split()\n    return {part for part in parts if len(part) == 4 and 1900 <= int(part) <= 2100}\n\ndef number_tokens(text_value):\n    found = []\n    token = \"\"\n    start = 0\n    for index, ch in enumerate(text_value + \" \"):\n        if ch.isdigit() or (token and ch in \".,\"):\n            if not token:\n                start = index\n            token += ch\n        else:\n            raw = token.strip(\".,\")\n            normalized = raw.replace(\",\", \"\")\n            if raw and normalized.count(\".\") <= 1:\n                try:\n                    found.append({\"value\": float(normalized), \"raw\": raw, \"start\": start})\n                except ValueError:\n                    pass\n            token = \"\"\n    return found\n\ninternet_terms = (\"internet\", \"broadband\", \"wi-fi\", \"wifi\", \"fiber\", \"fibre\", \"isp\")\nrelevant_bill_records = []\nfor record in bill_file_records:\n    searchable = (record[\"path\"] + \"\\n\" + record[\"content\"]).lower()\n    document_years = years_in(record[\"path\"] + \"\\n\" + record[\"content\"])\n    metadata_years = years_in(record[\"created_at\"] + \"\\n\" + record[\"updated_at\"])\n    is_internet = any(term in searchable for term in internet_terms)\n    is_current_year = current_year in document_years or (not document_years and current_year in metadata_years)\n    if is_internet and is_current_year:\n        relevant_bill_records.append(record)\n\nphrase_weights = [\n    (\"amount due\", 120), (\"total due\", 116), (\"balance due\", 113),\n    (\"grand total\", 110), (\"invoice total\", 108), (\"bill total\", 107),\n    (\"total amount\", 105), (\"total charges\", 103), (\"current charges\", 101),\n    (\"amount paid\", 99), (\"payment amount\", 97), (\"total\", 85),\n    (\"amount\", 70), (\"cost\", 65), (\"charge\", 60), (\"price\", 55)\n]\npenalty_weights = [\n    (\"previous balance\", 80), (\"subtotal\", 70), (\"discount\", 60),\n    (\"credit\", 50), (\"minimum due\", 45), (\"late fee\", 40),\n    (\"tax\", 35), (\"account number\", 90), (\"invoice number\", 90),\n    (\"customer number\", 90), (\"data usage\", 70), (\"bill date\", 90),\n    (\"due date\", 90)\n]\n\nbill_amount_candidates = []\nfor record in relevant_bill_records:\n    expanded_content = record[\"content\"].replace(\";\", \"\\n\").replace(\"|\", \"\\n\").replace(', \"', '\\n\"').replace(',\"', '\\n\"')\n    segments = expanded_content.splitlines()\n    record_candidates = []\n    for line_index, line in enumerate(segments):\n        lower_line = line.lower()\n        phrase_score = 0\n        phrase_end = None\n        for phrase, weight in phrase_weights:\n            position = lower_line.find(phrase)\n            if position >= 0 and weight > phrase_score:\n                phrase_score = weight\n                phrase_end = position + len(phrase)\n        penalty = sum(weight for phrase, weight in penalty_weights if phrase in lower_line)\n        line_currency = any(marker in lower_line for marker in (\"$\", \"usd\", \"dollar\", \"€\", \"£\"))\n        if phrase_score or line_currency:\n            for amount_index, token in enumerate(number_tokens(line)):\n                amount = token[\"value\"]\n                if amount <= 0:\n                    continue\n                before = line[max(0, token[\"start\"] - 5):token[\"start\"]].lower()\n                after_start = token[\"start\"] + len(token[\"raw\"])\n                after = line[after_start:after_start + 8].lower()\n                direct_currency = any(marker in before or marker in after for marker in (\"$\", \"usd\", \"dollar\", \"€\", \"£\"))\n                proximity_bonus = 0\n                if phrase_end is not None and token[\"start\"] >= phrase_end:\n                    proximity_bonus = max(0, 30 - (token[\"start\"] - phrase_end))\n                decimal_bonus = 8 if \".\" in token[\"raw\"] else 0\n                year_penalty = 100 if str(int(amount)) == current_year and not direct_currency else 0\n                score = phrase_score - penalty + (45 if direct_currency else 15 if line_currency else 0) + proximity_bonus + decimal_bonus - year_penalty\n                record_candidates.append({\"path\": record[\"path\"], \"amount\": amount, \"score\": score, \"line_index\": line_index, \"amount_index\": amount_index, \"line\": line.strip(), \"direct_currency\": direct_currency})\n    if not record_candidates:\n        for line_index, line in enumerate(segments):\n            lower_line = line.lower()\n            if any(term in lower_line for term in (\"date\", \"account\", \"invoice number\", \"customer number\", \"phone\")):\n                continue\n            for amount_index, token in enumerate(number_tokens(line)):\n                amount = token[\"value\"]\n                if amount > 0 and str(int(amount)) != current_year:\n                    record_candidates.append({\"path\": record[\"path\"], \"amount\": amount, \"score\": 8 if \".\" in token[\"raw\"] else 0, \"line_index\": line_index, \"amount_index\": amount_index, \"line\": line.strip(), \"direct_currency\": False})\n    bill_amount_candidates.extend(record_candidates)\n\ncandidate_summary = []\nfor record in relevant_bill_records:\n    candidates = [candidate for candidate in bill_amount_candidates if candidate[\"path\"] == record[\"path\"]]\n    candidate_summary.append({\"path\": record[\"path\"], \"candidates\": candidates})\nprint({\"current_year\": current_year, \"matched_bill_paths\": [record[\"path\"] for record in relevant_bill_records], \"candidate_summary\": candidate_summary})",
+      "depends_on_steps": [
+        2,
+        6
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Current year is derived from the phone date",
+        "Only records with internet and current-year evidence are included",
+        "All monetary candidates remain traceable to public file paths and lines"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 8,
+      "phase": "verify",
+      "reasoning": "Before completing the QA task, deterministically review one strongest total-cost candidate per matched bill and expose the selected amounts, unresolved paths, and computed total for grounding.",
+      "action_code": "selected_bill_amounts = []\nunresolved_bill_paths = []\nfor record in relevant_bill_records:\n    record_candidates = [candidate for candidate in bill_amount_candidates if candidate[\"path\"] == record[\"path\"]]\n    if record_candidates:\n        best_candidate = max(record_candidates, key=lambda candidate: (candidate[\"score\"], candidate[\"direct_currency\"], -candidate[\"line_index\"], -candidate[\"amount_index\"]))\n        selected_bill_amounts.append({\"path\": record[\"path\"], \"amount\": best_candidate[\"amount\"], \"source_line\": best_candidate[\"line\"], \"score\": best_candidate[\"score\"]})\n    else:\n        unresolved_bill_paths.append(record[\"path\"])\ntotal_internet_cost = round(sum(item[\"amount\"] for item in selected_bill_amounts), 2)\nanswer_review = {\"year\": current_year, \"selected_bill_amounts\": selected_bill_amounts, \"unresolved_bill_paths\": unresolved_bill_paths, \"total_internet_cost\": total_internet_cost}\nprint(answer_review)",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Each selected amount is tied to a matched bill and source line",
+        "Any bill lacking a monetary candidate is disclosed",
+        "The answer variable is the rounded sum of selected real amounts"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 9,
+      "phase": "complete",
+      "reasoning": "The reviewed total is an answer variable computed solely from the current date and public file API results, so it can now be submitted as the concise answer.",
+      "action_code": "task_completion = apis.supervisor.complete_task(answer=total_internet_cost, status=\"success\")",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Supervisor receives the computed total as the QA answer",
+        "Task completion call returns its acknowledgement"
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

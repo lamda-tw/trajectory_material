@@ -1,0 +1,150 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "76f2c72_1",
+  "task_family": "76f2c72",
+  "completion_mode": "answer_variable",
+  "plan_summary": "Authenticate through Supervisor-provided credentials, recursively read every file under the stated bills directory, identify current-year electricity bills from their paths and contents, rank monetary amounts using bill-total cues, sum the reviewed selections, and submit the computed total.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public documentation for every required task API must be inspected before any task API is called.",
+      "action_code": "required_api_docs = {}\nfor app_name, api_name in [\n    (\"supervisor\", \"show_profile\"),\n    (\"supervisor\", \"show_account_passwords\"),\n    (\"file_system\", \"login\"),\n    (\"file_system\", \"show_directory\"),\n    (\"file_system\", \"show_file\"),\n    (\"phone\", \"get_current_date_and_time\"),\n    (\"supervisor\", \"complete_task\"),\n]:\n    required_api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public documentation is saved for every required API before task API use"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "The inspected Supervisor APIs provide the account identity and app password needed for login without embedding credentials in the plan.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\ndef normalize_account_name(value):\n    return \"\".join(character for character in str(value).lower() if character.isalnum())\nfile_system_accounts = [record for record in account_password_records if normalize_account_name(record[\"account_name\"]) == \"filesystem\"]\nif len(file_system_accounts) != 1:\n    raise RuntimeError(\"A unique file_system credential record was not available.\")\nfile_system_username = supervisor_profile[\"email\"]\nfile_system_password = file_system_accounts[0][\"password\"]",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A unique file-system credential is selected from Supervisor data",
+        "Credential values remain unprinted"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "authenticate",
+      "reasoning": "The Supervisor-derived username and password are now available and can be exchanged for the token required by file read APIs.",
+      "action_code": "file_system_login = apis.file_system.login(username=file_system_username, password=file_system_password)\nfile_system_access_token = file_system_login[\"access_token\"]",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "file_system.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "The file-system access token is stored without printing it"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 4,
+      "phase": "observe",
+      "reasoning": "The current year must come from the phone, and a recursive files-only directory call can obtain the complete non-paginated listing beneath the user-specified directory.",
+      "action_code": "phone_now = apis.phone.get_current_date_and_time()\ndate_parts = \"\".join(character if character.isdigit() else \" \" for character in str(phone_now[\"date\"])).split()\nfour_digit_years = [part for part in date_parts if len(part) == 4 and part.isdigit()]\nif four_digit_years:\n    current_year = four_digit_years[-1]\nelse:\n    two_digit_years = [part for part in date_parts if len(part) == 2 and part.isdigit()]\n    if not two_digit_years:\n        raise RuntimeError(\"The current year could not be derived from the public phone date.\")\n    current_year = str(2000 + int(two_digit_years[-1]))\nall_bill_paths = apis.file_system.show_directory(access_token=file_system_access_token, directory_path=\"~/bills/\", entry_type=\"files\", recursive=True)\nprint({\"current_date\": phone_now[\"date\"], \"directory_paths\": all_bill_paths})",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "phone.get_current_date_and_time",
+        "file_system.show_directory"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Current year is derived from the returned phone date",
+        "Every recursively listed file path under ~/bills/ is retained"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 5,
+      "phase": "observe",
+      "reasoning": "Every path in the complete directory listing must be read so electricity and year classification does not depend solely on filenames.",
+      "action_code": "bill_file_records = []\nfor bill_path in all_bill_paths:\n    bill_file_records.append(apis.file_system.show_file(file_path=bill_path, access_token=file_system_access_token))\nprint({\"loaded_file_count\": len(bill_file_records), \"loaded_paths\": [record[\"path\"] for record in bill_file_records]})",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "file_system.show_file"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A public file record is saved for every listed path",
+        "File contents and authentication secrets are not printed"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 6,
+      "phase": "derive",
+      "reasoning": "With all file records and the current year available, relevant electricity bills can be classified and monetary candidates ranked by nearby invoice-total cues rather than by hardcoded values.",
+      "action_code": "import re\nfrom decimal import Decimal\n\nelectricity_terms = (\"electricity\", \"electric\")\npositive_cues = (\n    (\"total amount due\", 150), (\"current amount due\", 145), (\"amount due\", 140),\n    (\"balance due\", 135), (\"total due\", 135), (\"amount payable\", 130),\n    (\"total payable\", 130), (\"pay this amount\", 125), (\"please pay\", 120),\n    (\"new balance\", 115), (\"total charges this period\", 115),\n    (\"total electricity charges\", 115), (\"bill total\", 110),\n    (\"grand total\", 110), (\"total charges\", 105), (\"current charges\", 95),\n    (\"charges this period\", 95), (\"new charges\", 95), (\"current bill\", 90),\n    (\"total cost\", 90), (\"total\", 65), (\"charges\", 45), (\"cost\", 45)\n)\nnegative_cues = (\n    \"previous balance\", \"prior balance\", \"payment received\", \"payment\", \"credit\",\n    \"late fee\", \"minimum payment\", \"usage\", \"kwh\", \"meter\", \"account\",\n    \"invoice number\", \"tax\", \"subtotal\", \"rate\", \"due date\"\n)\nnumber_pattern = re.compile(r\"(?<![A-Za-z0-9])(?P<currency>\\$|USD\\b)?\\s*(?P<number>\\(?-?\\d[\\d,]*(?:\\.\\d{1,4})?\\)?)(?![A-Za-z0-9])\", re.IGNORECASE)\nrelevant_bill_files = []\nbill_amount_candidates = {}\nfor record in bill_file_records:\n    path_text = str(record[\"path\"]).lower()\n    content_text = str(record[\"content\"])\n    content_lower = content_text.lower()\n    is_electricity = any(term in path_text or term in content_lower for term in electricity_terms)\n    is_current_year = current_year in path_text or current_year in content_text\n    if not (is_electricity and is_current_year):\n        continue\n    relevant_bill_files.append(record)\n    candidates = []\n    for match in number_pattern.finditer(content_text):\n        raw_number = match.group(\"number\")\n        is_negative = raw_number.startswith(\"-\") or (raw_number.startswith(\"(\") and raw_number.endswith(\")\"))\n        cleaned_number = raw_number.strip(\"()\").lstrip(\"-\").replace(\",\", \"\")\n        try:\n            amount = Decimal(cleaned_number)\n        except Exception:\n            continue\n        if is_negative:\n            amount = -amount\n        before = re.sub(r\"[\\s_-]+\", \" \", content_text[max(0, match.start() - 220):match.start()].lower())\n        after = re.sub(r\"[\\s_-]+\", \" \", content_text[match.end():match.end() + 100].lower())\n        best_cue = None\n        best_cue_score = 0\n        for cue, weight in positive_cues:\n            before_position = before.rfind(cue)\n            if before_position >= 0:\n                distance = len(before) - (before_position + len(cue))\n                cue_score = weight - min(70, distance // 3)\n                if cue_score > best_cue_score:\n                    best_cue, best_cue_score = cue, cue_score\n            after_position = after.find(cue)\n            if after_position >= 0:\n                cue_score = weight - 15 - min(60, after_position // 3)\n                if cue_score > best_cue_score:\n                    best_cue, best_cue_score = cue, cue_score\n        score = best_cue_score\n        has_currency = match.group(\"currency\") is not None\n        has_cents = \".\" in cleaned_number\n        score += 25 if has_currency else 0\n        score += 10 if has_cents else 0\n        negative_distance = 10**6\n        for cue in negative_cues:\n            before_position = before.rfind(cue)\n            if before_position >= 0:\n                negative_distance = min(negative_distance, len(before) - (before_position + len(cue)))\n            after_position = after.find(cue)\n            if after_position >= 0:\n                negative_distance = min(negative_distance, after_position)\n        if negative_distance <= 40:\n            score -= 90 - negative_distance\n        digit_count = sum(character.isdigit() for character in cleaned_number)\n        if digit_count >= 7 and not has_cents:\n            score -= 100\n        if cleaned_number.split(\".\")[0] == current_year and not has_currency:\n            score -= 120\n        candidates.append({\"amount\": amount, \"score\": score, \"cue\": best_cue, \"has_currency\": has_currency, \"has_cents\": has_cents, \"position\": match.start()})\n    candidates.sort(key=lambda item: (item[\"score\"], item[\"has_currency\"], item[\"has_cents\"], item[\"position\"]), reverse=True)\n    bill_amount_candidates[record[\"path\"]] = candidates\ncandidate_summary = [{\"path\": record[\"path\"], \"top_candidates\": [{\"amount\": str(item[\"amount\"]), \"score\": item[\"score\"], \"cue\": item[\"cue\"]} for item in bill_amount_candidates[record[\"path\"]][:5]]} for record in relevant_bill_files]\nprint({\"current_year_electricity_bill_candidates\": candidate_summary})",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Only records identified from returned path or content as electricity bills for the derived current year are included",
+        "Monetary candidates retain their source path and ranking evidence"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 7,
+      "phase": "verify",
+      "reasoning": "Before submitting the answer, the derived candidates must be reviewed to ensure each distinct relevant bill contributes exactly one source-grounded amount and the total is computed only from those selections.",
+      "action_code": "if not relevant_bill_files:\n    raise RuntimeError(\"No current-year electricity bill files were identified from the public records.\")\nrelevant_paths = [record[\"path\"] for record in relevant_bill_files]\nif len(relevant_paths) != len(set(relevant_paths)):\n    raise RuntimeError(\"Duplicate current-year electricity bill paths were identified.\")\nselected_bill_amounts = []\nfor record in relevant_bill_files:\n    candidates = bill_amount_candidates[record[\"path\"]]\n    if not candidates:\n        raise RuntimeError(\"No monetary candidate was present in bill: \" + record[\"path\"])\n    selected = candidates[0]\n    selected_bill_amounts.append({\"path\": record[\"path\"], \"amount\": selected[\"amount\"], \"score\": selected[\"score\"], \"cue\": selected[\"cue\"]})\ncomputed_total = sum((item[\"amount\"] for item in selected_bill_amounts), Decimal(\"0\"))\nanswer_total = format(computed_total.quantize(Decimal(\"0.01\")), \"f\")\nprint({\"selected_bill_amounts\": [{\"path\": item[\"path\"], \"amount\": str(item[\"amount\"]), \"score\": item[\"score\"], \"cue\": item[\"cue\"]} for item in selected_bill_amounts], \"computed_total\": answer_total})",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every distinct current-year electricity bill has one selected monetary amount",
+        "answer_total equals the sum of the selected source-grounded amounts",
+        "The answer is formatted as a concise monetary number"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 8,
+      "phase": "complete",
+      "reasoning": "The source-grounded total has been derived and reviewed, so the QA task can now be completed with that answer variable.",
+      "action_code": "task_completion = apis.supervisor.complete_task(answer=answer_total, status=\"success\")",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Submit answer_total as the task answer with success status"
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

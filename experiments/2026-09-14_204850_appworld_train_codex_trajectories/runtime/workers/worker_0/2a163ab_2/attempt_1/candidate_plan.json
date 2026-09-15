@@ -1,0 +1,193 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "2a163ab_2",
+  "task_family": "2a163ab",
+  "completion_mode": "status_only",
+  "plan_summary": "Inspect all relevant public contracts, obtain credentials and the current date, enumerate sibling contacts and the complete Venmo feed, derive and review yesterday's matching transactions, like them, re-read the feed to verify the changes, then complete the action task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "All public API contracts must be inspected before any task API is called, including the authentication, paginated read, mutation, verification, and completion APIs needed by the instruction.",
+      "action_code": "api_docs = {}\nfor app_name, api_name in [\n    (\"supervisor\", \"show_profile\"),\n    (\"supervisor\", \"show_account_passwords\"),\n    (\"phone\", \"get_current_date_and_time\"),\n    (\"phone\", \"login\"),\n    (\"phone\", \"search_contacts\"),\n    (\"venmo\", \"login\"),\n    (\"venmo\", \"show_social_feed\"),\n    (\"venmo\", \"like_transaction\"),\n    (\"supervisor\", \"complete_task\"),\n]:\n    api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public documentation for every subsequently used task API is inspected"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "observe",
+      "reasoning": "The profile supplies app usernames, the password records supply credentials, and the phone clock supplies the date from which yesterday must be derived.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\nphone_clock = apis.phone.get_current_date_and_time()\nprint({\"profile\": supervisor_profile, \"clock\": phone_clock})",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords",
+        "phone.get_current_date_and_time"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Supervisor profile is retained",
+        "Account password records are retained without printing secrets",
+        "Current phone date and time are retained"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 3,
+      "phase": "derive",
+      "reasoning": "Credentials and the exact previous calendar date must be derived from returned records before authentication and date filtering; assertions prevent ambiguous account or date selection.",
+      "action_code": "def select_app_password(app_name):\n    exact_matches = [record for record in account_password_records if record[\"account_name\"].strip().casefold() == app_name.casefold()]\n    assert len(exact_matches) == 1\n    return exact_matches[0][\"password\"]\n\nphone_password = select_app_password(\"phone\")\nvenmo_password = select_app_password(\"venmo\")\n\ndef days_in_month(year, month):\n    if month == 2:\n        return 29 if (year % 400 == 0 or (year % 4 == 0 and year % 100 != 0)) else 28\n    return 30 if month in (4, 6, 9, 11) else 31\n\ncurrent_date_parts = phone_clock[\"date\"].strip().split(\"-\")\nassert len(current_date_parts) == 3 and len(current_date_parts[0]) == 4\ncurrent_year, current_month, current_day = [int(part) for part in current_date_parts]\nassert 1 <= current_month <= 12 and 1 <= current_day <= days_in_month(current_year, current_month)\nif current_day > 1:\n    previous_year, previous_month, previous_day = current_year, current_month, current_day - 1\nelif current_month > 1:\n    previous_year, previous_month = current_year, current_month - 1\n    previous_day = days_in_month(previous_year, previous_month)\nelse:\n    previous_year, previous_month, previous_day = current_year - 1, 12, 31\nyesterday_date = f\"{previous_year:04d}-{previous_month:02d}-{previous_day:02d}\"\nprint({\"target_date\": yesterday_date})",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Exactly one phone password record is selected",
+        "Exactly one Venmo password record is selected",
+        "Yesterday is derived as a valid calendar date"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 4,
+      "phase": "authenticate",
+      "reasoning": "The phone contact book and Venmo social feed require their respective access tokens, using usernames from the returned profile and passwords selected without exposing them.",
+      "action_code": "phone_login = apis.phone.login(username=supervisor_profile[\"phone_number\"], password=phone_password)\nphone_access_token = phone_login[\"access_token\"]\nvenmo_login = apis.venmo.login(username=supervisor_profile[\"email\"], password=venmo_password)\nvenmo_access_token = venmo_login[\"access_token\"]",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "phone.login",
+        "venmo.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Phone access token is retained without printing it",
+        "Venmo access token is retained without printing it"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 5,
+      "phase": "observe",
+      "reasoning": "All sibling contacts must be collected so that feed participants can be matched against the complete sibling set rather than a single page.",
+      "action_code": "sibling_contacts = []\ncontact_page_index = 0\nwhile True:\n    contact_page = apis.phone.search_contacts(access_token=phone_access_token, relationship=\"sibling\", page_index=contact_page_index, page_limit=20)\n    sibling_contacts.extend(contact_page)\n    if len(contact_page) < 20:\n        break\n    contact_page_index += 1\nprint({\"sibling_contacts\": [{\"contact_id\": contact[\"contact_id\"], \"first_name\": contact[\"first_name\"], \"last_name\": contact[\"last_name\"], \"email\": contact[\"email\"], \"relationships\": contact[\"relationships\"]} for contact in sibling_contacts]})",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "phone.search_contacts"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every page of contacts filtered by sibling relationship is collected",
+        "Sibling identity fields needed for feed matching are retained"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 6,
+      "phase": "observe",
+      "reasoning": "The instruction applies to the entire social feed, so every feed page must be read before any matching transaction is selected.",
+      "action_code": "feed_transactions = []\nfeed_page_index = 0\nwhile True:\n    feed_page = apis.venmo.show_social_feed(access_token=venmo_access_token, page_index=feed_page_index, page_limit=20)\n    feed_transactions.extend(feed_page)\n    if len(feed_page) < 20:\n        break\n    feed_page_index += 1\nprint({\"feed_transaction_count\": len(feed_transactions), \"pages_read\": feed_page_index + 1})",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "venmo.show_social_feed"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every pagination page of the Venmo social feed is collected"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 7,
+      "phase": "derive",
+      "reasoning": "A separate review must identify exactly the feed transactions dated yesterday whose sender or receiver email matches a sibling contact, while deriving every mutation ID from read results.",
+      "action_code": "sibling_emails = {contact[\"email\"].strip().casefold() for contact in sibling_contacts if contact[\"email\"].strip()}\n\ndef transaction_date(transaction):\n    created_at = transaction[\"created_at\"].strip()\n    date_text = created_at[:10]\n    parts = date_text.split(\"-\")\n    assert len(parts) == 3 and len(parts[0]) == 4\n    year, month, day = [int(part) for part in parts]\n    assert 1 <= month <= 12 and 1 <= day <= days_in_month(year, month)\n    return f\"{year:04d}-{month:02d}-{day:02d}\"\n\nlike_candidates_by_id = {}\nfor transaction in feed_transactions:\n    participant_emails = {\n        transaction[\"sender\"][\"email\"].strip().casefold(),\n        transaction[\"receiver\"][\"email\"].strip().casefold(),\n    }\n    if transaction_date(transaction) == yesterday_date and participant_emails.intersection(sibling_emails):\n        like_candidates_by_id[transaction[\"transaction_id\"]] = transaction\nlike_candidates = list(like_candidates_by_id.values())\ntarget_transaction_ids = [transaction[\"transaction_id\"] for transaction in like_candidates]\nassert len(target_transaction_ids) == len(set(target_transaction_ids))\nbefore_like_counts = {transaction[\"transaction_id\"]: transaction[\"like_count\"] for transaction in like_candidates}\nprint({\"reviewed_like_candidates\": [{\"transaction_id\": transaction[\"transaction_id\"], \"created_at\": transaction[\"created_at\"], \"sender\": transaction[\"sender\"], \"receiver\": transaction[\"receiver\"], \"like_count\": transaction[\"like_count\"]} for transaction in like_candidates]})",
+      "depends_on_steps": [
+        3,
+        5,
+        6
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Each candidate is dated yesterday",
+        "Each candidate involves at least one sibling email",
+        "Candidate transaction IDs are unique and derived from feed records",
+        "Pre-mutation like counts are retained"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 8,
+      "phase": "act",
+      "reasoning": "The reviewed transaction IDs now define the complete mutation scope, so each selected feed transaction can be liked once using the authenticated Venmo account.",
+      "action_code": "like_results = []\nfor transaction_id in target_transaction_ids:\n    like_result = apis.venmo.like_transaction(transaction_id=transaction_id, access_token=venmo_access_token)\n    like_results.append({\"transaction_id\": transaction_id, \"result\": like_result})\nprint({\"like_attempted_transaction_ids\": [item[\"transaction_id\"] for item in like_results], \"result_count\": len(like_results)})",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "venmo.like_transaction"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "A like mutation is issued once for every reviewed transaction ID"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 9,
+      "phase": "verify",
+      "reasoning": "After the mutation calls return, the complete feed must be re-read and compared with the saved candidates and counts to verify scope and a like-count increase for every requested transaction.",
+      "action_code": "verified_feed_transactions = []\nverification_page_index = 0\nwhile True:\n    verification_page = apis.venmo.show_social_feed(access_token=venmo_access_token, page_index=verification_page_index, page_limit=20)\n    verified_feed_transactions.extend(verification_page)\n    if len(verification_page) < 20:\n        break\n    verification_page_index += 1\nverified_feed_by_id = {transaction[\"transaction_id\"]: transaction for transaction in verified_feed_transactions}\npost_match_ids = set()\nfor transaction in verified_feed_transactions:\n    participant_emails = {\n        transaction[\"sender\"][\"email\"].strip().casefold(),\n        transaction[\"receiver\"][\"email\"].strip().casefold(),\n    }\n    if transaction_date(transaction) == yesterday_date and participant_emails.intersection(sibling_emails):\n        post_match_ids.add(transaction[\"transaction_id\"])\nassert post_match_ids == set(target_transaction_ids)\nverification_records = []\nfor transaction_id in target_transaction_ids:\n    after_record = verified_feed_by_id.get(transaction_id)\n    present = after_record is not None\n    increased = present and after_record[\"like_count\"] >= before_like_counts[transaction_id] + 1\n    verification_records.append({\"transaction_id\": transaction_id, \"present\": present, \"before_like_count\": before_like_counts[transaction_id], \"after_like_count\": after_record[\"like_count\"] if present else None, \"like_count_increased\": increased})\nassert all(record[\"present\"] and record[\"like_count_increased\"] for record in verification_records)\nprint({\"verification\": verification_records, \"verified_transaction_count\": len(verification_records)})",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [
+        "venmo.show_social_feed"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every page of the post-mutation feed is collected",
+        "The recomputed yesterday-and-sibling target set matches the reviewed mutation scope",
+        "Every targeted transaction remains present",
+        "Every targeted transaction's like count increased after the mutation"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 10,
+      "phase": "complete",
+      "reasoning": "The prior verification assertions gate this step, so reaching it permits the action task to be marked successful without an answer value.",
+      "action_code": "completion_result = apis.supervisor.complete_task(status=\"success\")",
+      "depends_on_steps": [
+        9
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Task is completed with success status and no QA answer"
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

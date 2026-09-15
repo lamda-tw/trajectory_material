@@ -1,0 +1,118 @@
+{
+  "accepted": true,
+  "trajectory": {
+    "task_id": "692c77d_3",
+    "task_family": "692c77d",
+    "instruction": "Give a 4-star rating to all songs in my Spotify album library which I have liked. If I have already rated it lower, increase it to 4.",
+    "supervisor": {
+      "first_name": "Jessica",
+      "last_name": "Miller",
+      "email": "jes.mill@gmail.com",
+      "phone_number": "3808719492"
+    },
+    "datetime": "2023-05-18T12:00:00",
+    "appworld_version": "0.2.0.dev0",
+    "source": "ground_truth_api_calls_guided_codex_reconstruction",
+    "steps": [
+      {
+        "step_index": 1,
+        "reasoning": "The public documentation for every task API must be inspected before any task API is called, including the completion API needed at the end.",
+        "action_code": "api_doc_requests = [\n    (\"supervisor\", \"show_profile\"),\n    (\"supervisor\", \"show_account_passwords\"),\n    (\"spotify\", \"login\"),\n    (\"spotify\", \"show_album_library\"),\n    (\"spotify\", \"show_liked_songs\"),\n    (\"spotify\", \"show_song_reviews\"),\n    (\"spotify\", \"review_song\"),\n    (\"spotify\", \"update_song_review\"),\n    (\"supervisor\", \"complete_task\"),\n]\npublic_api_docs = {}\nfor app_name, api_name in api_doc_requests:\n    public_api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 2,
+        "reasoning": "Spotify credentials must come from Supervisor APIs, and the profile email can be used as the login username without exposing secrets.",
+        "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\nspotify_password = next(record[\"password\"] for record in account_password_records if record[\"account_name\"].strip().lower() == \"spotify\")\nspotify_login_result = apis.spotify.login(username=supervisor_profile[\"email\"], password=spotify_password)\nspotify_access_token = spotify_login_result[\"access_token\"]",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 3,
+        "reasoning": "The target scope requires complete album-library and liked-song data, so both APIs must be paginated until an incomplete page is returned.",
+        "action_code": "page_limit = 20\nalbum_library = []\npage_index = 0\nwhile True:\n    album_page = apis.spotify.show_album_library(access_token=spotify_access_token, page_index=page_index, page_limit=page_limit)\n    album_library.extend(album_page)\n    if len(album_page) < page_limit:\n        break\n    page_index += 1\nliked_songs = []\npage_index = 0\nwhile True:\n    liked_page = apis.spotify.show_liked_songs(access_token=spotify_access_token, page_index=page_index, page_limit=page_limit)\n    liked_songs.extend(liked_page)\n    if len(liked_page) < page_limit:\n        break\n    page_index += 1\nprint({\"album_count\": len(album_library), \"liked_song_count\": len(liked_songs)})",
+        "observation": "{\"album_count\": 8, \"liked_song_count\": 25}\n"
+      },
+      {
+        "step_index": 4,
+        "reasoning": "The requested songs are those whose IDs occur in saved albums and also occur in the fully read liked-song collection.",
+        "action_code": "album_library_song_ids = set()\nfor album_record in album_library:\n    album_library_song_ids.update(album_record[\"song_ids\"])\ntarget_songs_by_id = {}\nfor liked_song in liked_songs:\n    if liked_song[\"song_id\"] in album_library_song_ids:\n        target_songs_by_id[liked_song[\"song_id\"]] = liked_song\ntarget_song_ids = sorted(target_songs_by_id)\ntarget_song_candidates = [{\"song_id\": song_id, \"title\": target_songs_by_id[song_id][\"title\"]} for song_id in target_song_ids]\nprint(target_song_candidates)",
+        "observation": "[\n {\n  \"song_id\": 1,\n  \"title\": \"Painting Shadows on the Wall\"\n },\n {\n  \"song_id\": 5,\n  \"title\": \"Chasing the Ghosts of Yesterday\"\n },\n {\n  \"song_id\": 6,\n  \"title\": \"Reflections in a Pool of Regret\"\n },\n {\n  \"song_id\": 7,\n  \"title\": \"Memories Stitched in Time\"\n },\n {\n  \"song_id\": 16,\n  \"title\": \"Yearning for a Glimpse of Heaven\"\n },\n {\n  \"song_id\": 17,\n  \"title\": \"Dancing Through the Veil of Dreams\"\n },\n {\n  \"song_id\": 18,\n  \"title\": \"Secrets We Dare Not Speak\"\n },\n {\n  \"song_id\": 23,\n  \"title\": \"Solitude's Melancholy\"\n },\n {\n  \"song_id\": 25,\n  \"title\": \"A Symphony of Broken Hearts\"\n },\n {\n  \"song_id\": 26,\n  \"title\": \"In the Light of Dying Stars\"\n },\n {\n  \"song_id\": 27,\n  \"title\": \"When Angels Weep for Us\"\n },\n {\n  \"song_id\": 49,\n  \"title\": \"Whispers of the Enchanted Forest\"\n },\n {\n  \"song_id\": 52,\n  \"title\": \"Bleeding Sun\"\n },\n {\n  \"song_id\": 53,\n  \"title\": \"Unearthed Secrets\"\n },\n {\n  \"song_id\": 63,\n  \"title\": \"Journey Through the Unknown\"\n },\n {\n  \"song_id\": 66,\n  \"title\": \"Phantom Pain\"\n },\n {\n  \"song_id\": 76,\n  \"title\": \"Whispers of the Heart\"\n },\n {\n  \"song_id\": 80,\n  \"title\": \"Wandering the Streets Alone\"\n },\n {\n  \"song_id\": 81,\n  \"title\": \"Echoes of the Whispering Wind\"\n },\n {\n  \"song_id\": 82,\n  \"title\": \"Lost in the Twilight of Hope\"\n }\n]\n"
+      },
+      {
+        "step_index": 5,
+        "reasoning": "For each derived target, all reviews by the supervisor's email must be read to distinguish missing reviews from existing ratings and to obtain any review IDs needed for updates.",
+        "action_code": "target_reviews_by_song_id = {}\nfor song_id in target_song_ids:\n    personal_reviews = []\n    page_index = 0\n    while True:\n        review_page = apis.spotify.show_song_reviews(song_id=song_id, user_email=supervisor_profile[\"email\"], page_index=page_index, page_limit=page_limit)\n        personal_reviews.extend(review_page)\n        if len(review_page) < page_limit:\n            break\n        page_index += 1\n    target_reviews_by_song_id[song_id] = personal_reviews\nreview_summary = [{\"song_id\": song_id, \"review_count\": len(target_reviews_by_song_id[song_id]), \"ratings\": [review[\"rating\"] for review in target_reviews_by_song_id[song_id]]} for song_id in target_song_ids]\nprint(review_summary)",
+        "observation": "[\n {\n  \"song_id\": 1,\n  \"review_count\": 1,\n  \"ratings\": [\n   1\n  ]\n },\n {\n  \"song_id\": 5,\n  \"review_count\": 0,\n  \"ratings\": []\n },\n {\n  \"song_id\": 6,\n  \"review_count\": 0,\n  \"ratings\": []\n },\n {\n  \"song_id\": 7,\n  \"review_count\": 0,\n  \"ratings\": []\n },\n {\n  \"song_id\": 16,\n  \"review_count\": 0,\n  \"ratings\": []\n },\n {\n  \"song_id\": 17,\n  \"review_count\": 0,\n  \"ratings\": []\n },\n {\n  \"song_id\": 18,\n  \"review_count\": 0,\n  \"ratings\": []\n },\n {\n  \"song_id\": 23,\n  \"review_count\": 0,\n  \"ratings\": []\n },\n {\n  \"song_id\": 25,\n  \"review_count\": 1,\n  \"ratings\": [\n   1\n  ]\n },\n {\n  \"song_id\": 26,\n  \"review_count\": 0,\n  \"ratings\": []\n },\n {\n  \"song_id\": 27,\n  \"review_count\": 0,\n  \"ratings\": []\n },\n {\n  \"song_id\": 49,\n  \"review_count\": 0,\n  \"ratings\": []\n },\n {\n  \"song_id\": 52,\n  \"review_count\": 1,\n  \"ratings\": [\n   1\n  ]\n },\n {\n  \"song_id\": 53,\n  \"review_count\": 0,\n  \"ratings\": []\n },\n {\n  \"song_id\": 63,\n  \"review_count\": 0,\n  \"ratings\": []\n },\n {\n  \"song_id\": 66,\n  \"review_count\": 0,\n  \"ratings\": []\n },\n {\n  \"song_id\": 76,\n  \"review_count\": 0,\n  \"ratings\": []\n },\n {\n  \"song_id\": 80,\n  \"review_count\": 0,\n  \"ratings\": []\n },\n {\n  \"song_id\": 81,\n  \"review_count\": 0,\n  \"ratings\": []\n },\n {\n  \"song_id\": 82,\n  \"review_count\": 0,\n  \"ratings\": []\n }\n]\n"
+      },
+      {
+        "step_index": 6,
+        "reasoning": "A separate mutation review can now derive creates only for targets without a personal review and updates only for existing target reviews whose rating is not already 4.",
+        "action_code": "reviews_to_update = []\nsong_ids_to_review = []\nfor song_id in target_song_ids:\n    personal_reviews = target_reviews_by_song_id[song_id]\n    if not personal_reviews:\n        song_ids_to_review.append(song_id)\n    else:\n        for review in personal_reviews:\n            if review[\"rating\"] != 4:\n                reviews_to_update.append({\"song_id\": song_id, \"review_id\": review[\"song_review_id\"]})\nmutation_plan_is_consistent = (\n    all(item[\"song_id\"] in target_songs_by_id for item in reviews_to_update)\n    and all(any(review[\"song_review_id\"] == item[\"review_id\"] and review[\"rating\"] != 4 for review in target_reviews_by_song_id[item[\"song_id\"]]) for item in reviews_to_update)\n    and all(song_id in target_songs_by_id and not target_reviews_by_song_id[song_id] for song_id in song_ids_to_review)\n)\nif not mutation_plan_is_consistent:\n    raise RuntimeError(\"Derived Spotify review mutations are inconsistent with the observed public records.\")\nprint({\"target_song_count\": len(target_song_ids), \"review_update_count\": len(reviews_to_update), \"review_create_count\": len(song_ids_to_review)})",
+        "observation": "{\"target_song_count\": 20, \"review_update_count\": 3, \"review_create_count\": 17}\n"
+      },
+      {
+        "step_index": 7,
+        "reasoning": "The reviewed mutation variables provide the exact public IDs and operation type for bringing every target's personal rating to 4 stars.",
+        "action_code": "review_update_results = []\nfor mutation in reviews_to_update:\n    review_update_results.append(apis.spotify.update_song_review(review_id=mutation[\"review_id\"], access_token=spotify_access_token, rating=4))\nreview_create_results = []\nfor song_id in song_ids_to_review:\n    review_create_results.append(apis.spotify.review_song(song_id=song_id, rating=4, access_token=spotify_access_token))",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 8,
+        "reasoning": "Mutation responses alone do not establish the postcondition, so the album library, liked songs, and personal reviews must be independently re-read with complete pagination.",
+        "action_code": "verified_album_library = []\npage_index = 0\nwhile True:\n    album_page = apis.spotify.show_album_library(access_token=spotify_access_token, page_index=page_index, page_limit=page_limit)\n    verified_album_library.extend(album_page)\n    if len(album_page) < page_limit:\n        break\n    page_index += 1\nverified_liked_songs = []\npage_index = 0\nwhile True:\n    liked_page = apis.spotify.show_liked_songs(access_token=spotify_access_token, page_index=page_index, page_limit=page_limit)\n    verified_liked_songs.extend(liked_page)\n    if len(liked_page) < page_limit:\n        break\n    page_index += 1\nverified_album_song_ids = set()\nfor album_record in verified_album_library:\n    verified_album_song_ids.update(album_record[\"song_ids\"])\nverified_target_song_ids = sorted({song[\"song_id\"] for song in verified_liked_songs if song[\"song_id\"] in verified_album_song_ids})\nverification_song_ids = sorted(set(target_song_ids) | set(verified_target_song_ids))\nverified_reviews_by_song_id = {}\nfor song_id in verification_song_ids:\n    personal_reviews = []\n    page_index = 0\n    while True:\n        review_page = apis.spotify.show_song_reviews(song_id=song_id, user_email=supervisor_profile[\"email\"], page_index=page_index, page_limit=page_limit)\n        personal_reviews.extend(review_page)\n        if len(review_page) < page_limit:\n            break\n        page_index += 1\n    verified_reviews_by_song_id[song_id] = personal_reviews\nprint({\"verified_album_count\": len(verified_album_library), \"verified_liked_song_count\": len(verified_liked_songs), \"verified_target_count\": len(verified_target_song_ids), \"ratings_by_song\": [{\"song_id\": song_id, \"ratings\": [review[\"rating\"] for review in verified_reviews_by_song_id[song_id]]} for song_id in verification_song_ids]})",
+        "observation": "{\n \"verified_album_count\": 8,\n \"verified_liked_song_count\": 25,\n \"verified_target_count\": 20,\n \"ratings_by_song\": [\n  {\n   \"song_id\": 1,\n   \"ratings\": [\n    4\n   ]\n  },\n  {\n   \"song_id\": 5,\n   \"ratings\": [\n    4\n   ]\n  },\n  {\n   \"song_id\": 6,\n   \"ratings\": [\n    4\n   ]\n  },\n  {\n   \"song_id\": 7,\n   \"ratings\": [\n    4\n   ]\n  },\n  {\n   \"song_id\": 16,\n   \"ratings\": [\n    4\n   ]\n  },\n  {\n   \"song_id\": 17,\n   \"ratings\": [\n    4\n   ]\n  },\n  {\n   \"song_id\": 18,\n   \"ratings\": [\n    4\n   ]\n  },\n  {\n   \"song_id\": 23,\n   \"ratings\": [\n    4\n   ]\n  },\n  {\n   \"song_id\": 25,\n   \"ratings\": [\n    4\n   ]\n  },\n  {\n   \"song_id\": 26,\n   \"ratings\": [\n    4\n   ]\n  },\n  {\n   \"song_id\": 27,\n   \"ratings\": [\n    4\n   ]\n  },\n  {\n   \"song_id\": 49,\n   \"ratings\": [\n    4\n   ]\n  },\n  {\n   \"song_id\": 52,\n   \"ratings\": [\n    4\n   ]\n  },\n  {\n   \"song_id\": 53,\n   \"ratings\": [\n    4\n   ]\n  },\n  {\n   \"song_id\": 63,\n   \"ratings\": [\n    4\n   ]\n  },\n  {\n   \"song_id\": 66,\n   \"ratings\": [\n    4\n   ]\n  },\n  {\n   \"song_id\": 76,\n   \"ratings\": [\n    4\n   ]\n  },\n  {\n   \"song_id\": 80,\n   \"ratings\": [\n    4\n   ]\n  },\n  {\n   \"song_id\": 81,\n   \"ratings\": [\n    4\n   ]\n  },\n  {\n   \"song_id\": 82,\n   \"ratings\": [\n    4\n   ]\n  }\n ]\n}\n"
+      },
+      {
+        "step_index": 9,
+        "reasoning": "The fresh records can now be evaluated without assumptions: the target scope must remain stable and every personal review for each target must exist and have rating 4.",
+        "action_code": "scope_stable = set(verified_target_song_ids) == set(target_song_ids)\noriginal_targets_are_four_star = all(bool(verified_reviews_by_song_id[song_id]) and all(review[\"rating\"] == 4 for review in verified_reviews_by_song_id[song_id]) for song_id in target_song_ids)\ncurrent_targets_are_four_star = all(bool(verified_reviews_by_song_id[song_id]) and all(review[\"rating\"] == 4 for review in verified_reviews_by_song_id[song_id]) for song_id in verified_target_song_ids)\nverification_passed = scope_stable and original_targets_are_four_star and current_targets_are_four_star\nprint({\"scope_stable\": scope_stable, \"original_targets_are_four_star\": original_targets_are_four_star, \"current_targets_are_four_star\": current_targets_are_four_star, \"verification_passed\": verification_passed})",
+        "observation": "{\n \"scope_stable\": true,\n \"original_targets_are_four_star\": true,\n \"current_targets_are_four_star\": true,\n \"verification_passed\": true\n}\n"
+      },
+      {
+        "step_index": 10,
+        "reasoning": "This action task may be marked successful only after the computed verification variable confirms all requested postconditions.",
+        "action_code": "if not verification_passed:\n    raise RuntimeError(\"The requested Spotify 4-star ratings were not verified.\")\ncompletion_result = apis.supervisor.complete_task(status=\"success\")",
+        "observation": "Execution successful."
+      }
+    ],
+    "final_status": "success",
+    "evaluation": {
+      "success": true,
+      "num_tests": 7,
+      "num_passes": 7,
+      "num_failures": 0
+    },
+    "replay_evaluation": {
+      "success": true,
+      "num_tests": 7,
+      "num_passes": 7,
+      "num_failures": 0
+    },
+    "replay_verified": true,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0,
+    "api_call_count": 79,
+    "api_call_count_source": "appworld_api_calls_log",
+    "replay_api_call_count": 79,
+    "step_count": 10,
+    "provenance": {
+      "specs_sha256": "b46002add00086aea30eae49bf1e6472668ab6cd66b7bcbd9b6f5b0c5b3b885c",
+      "api_calls_sha256": "5d6e04443ea14e4d344244585da74dddd35fc8475931298081b932234d426724",
+      "plan_sha256": "d7cd129bccc7eb3e630011383c22698a4b47a27881e96f3889d07f7230c4d920"
+    }
+  },
+  "task_result": {
+    "task_id": "692c77d_3",
+    "status": "verified",
+    "attempts": 1,
+    "generation_error": null,
+    "execution_error": null,
+    "evaluation_success": true,
+    "replay_success": true,
+    "step_count": 10,
+    "api_call_count": 79,
+    "rejection_reason": null,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0
+  }
+}

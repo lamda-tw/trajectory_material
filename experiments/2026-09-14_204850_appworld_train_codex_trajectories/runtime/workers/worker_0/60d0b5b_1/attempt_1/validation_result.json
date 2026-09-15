@@ -1,0 +1,118 @@
+{
+  "accepted": true,
+  "trajectory": {
+    "task_id": "60d0b5b_1",
+    "task_family": "60d0b5b",
+    "instruction": "The last Venmo payment request I sent to Robert was an accident and they approved it. Send them the money back.",
+    "supervisor": {
+      "first_name": "Tammy",
+      "last_name": "Weaver",
+      "email": "ta.weav@gmail.com",
+      "phone_number": "2738013302"
+    },
+    "datetime": "2023-05-18T12:00:00",
+    "appworld_version": "0.2.0.dev0",
+    "source": "ground_truth_api_calls_guided_codex_reconstruction",
+    "steps": [
+      {
+        "step_index": 1,
+        "reasoning": "Inspect every required public API contract before making any task API call so subsequent calls use only documented parameters and fields.",
+        "action_code": "api_doc_specs = [\n    (\"supervisor\", \"show_profile\"),\n    (\"supervisor\", \"show_account_passwords\"),\n    (\"phone\", \"login\"),\n    (\"phone\", \"search_contacts\"),\n    (\"venmo\", \"login\"),\n    (\"venmo\", \"show_sent_payment_requests\"),\n    (\"venmo\", \"create_transaction\"),\n    (\"supervisor\", \"complete_task\"),\n]\npublic_api_docs = {\n    (app_name, api_name): apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)\n    for app_name, api_name in api_doc_specs\n}",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 2,
+        "reasoning": "Retrieve the supervisor profile and app credential records needed for documented phone and Venmo authentication, while keeping passwords private.",
+        "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\npassword_by_account = {\n    record[\"account_name\"].strip().casefold(): record[\"password\"]\n    for record in account_password_records\n}\nphone_password = password_by_account[\"phone\"]\nvenmo_password = password_by_account[\"venmo\"]",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 3,
+        "reasoning": "Use the profile phone number and stored phone password to obtain the token required to search contacts.",
+        "action_code": "phone_login_result = apis.phone.login(\n    username=supervisor_profile[\"phone_number\"],\n    password=phone_password,\n)\nphone_access_token = phone_login_result[\"access_token\"]",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 4,
+        "reasoning": "Search every page of contacts for the instruction-provided name so Robert's public contact identity can be resolved without guessing an email.",
+        "action_code": "robert_contact_pages = []\ncontact_page_index = 0\nwhile True:\n    contact_page = apis.phone.search_contacts(\n        access_token=phone_access_token,\n        query=\"Robert\",\n        page_index=contact_page_index,\n        page_limit=20,\n    )\n    robert_contact_pages.append(contact_page)\n    if len(contact_page) < 20:\n        break\n    contact_page_index += 1\nrobert_contact_records = [\n    contact for page in robert_contact_pages for contact in page\n]\nprint([\n    {\n        \"contact_id\": contact[\"contact_id\"],\n        \"first_name\": contact[\"first_name\"],\n        \"last_name\": contact[\"last_name\"],\n        \"email\": contact[\"email\"],\n    }\n    for contact in robert_contact_records\n])",
+        "observation": "[\n {\n  \"contact_id\": 1174,\n  \"first_name\": \"Robert\",\n  \"last_name\": \"Martinez\",\n  \"email\": \"robertmartinez@gmail.com\"\n },\n {\n  \"contact_id\": 1159,\n  \"first_name\": \"Jonathan\",\n  \"last_name\": \"Ball\",\n  \"email\": \"jo.ball@gmail.com\"\n },\n {\n  \"contact_id\": 1160,\n  \"first_name\": \"Morgan\",\n  \"last_name\": \"Burton\",\n  \"email\": \"morgan-harrison@gmail.com\"\n },\n {\n  \"contact_id\": 1161,\n  \"first_name\": \"Richard\",\n  \"last_name\": \"Riddle\",\n  \"email\": \"ric.riddle@gmail.com\"\n },\n {\n  \"contact_id\": 1162,\n  \"first_name\": \"Cheryl\",\n  \"last_name\": \"Martinez\",\n  \"email\": \"cheweber@gmail.com\"\n },\n {\n  \"contact_id\": 1163,\n  \"first_name\": \"Ashley\",\n  \"last_name\": \"Moore\",\n  \"email\": \"as_moore@gmail.com\"\n },\n {\n  \"contact_id\": 1164,\n  \"first_name\": \"Lindsey\",\n  \"last_name\": \"Simpson\",\n  \"email\": \"lindseysimpson@gmail.com\"\n },\n {\n  \"contact_id\": 1165,\n  \"first_name\": \"Cory\",\n  \"last_name\": \"Wilson\",\n  \"email\": \"corwils@gmail.com\"\n },\n {\n  \"contact_id\": 1166,\n  \"first_name\": \"Alex\",\n  \"last_name\": \"White\",\n  \"email\": \"alexwhite@gmail.com\"\n },\n {\n  \"contact_id\": 1167,\n  \"first_name\": \"Hunter\",\n  \"last_name\": \"Weaver\",\n  \"email\": \"hun.weaver@gmail.com\"\n },\n {\n  \"contact_id\": 1168,\n  \"first_name\": \"Joyce\",\n  \"last_name\": \"Weaver\",\n  \"email\": \"joyce-weav@gmail.com\"\n },\n {\n  \"contact_id\": 1169,\n  \"first_name\": \"Jose\",\n  \"last_name\": \"Harrison\",\n  \"email\": \"joseharr@gmail.com\"\n },\n {\n  \"contact_id\": 1170,\n  \"first_name\": \"Jordan\",\n  \"last_name\": \"Harrison\",\n  \"email\": \"jo-harr@gmail.com\"\n },\n {\n  \"contact_id\": 1171,\n  \"first_name\": \"Michael\",\n  \"last_name\": \"Burch\",\n  \"email\": \"mi.burch@gmail.com\"\n },\n {\n  \"contact_id\": 1172,\n  \"first_name\": \"Anita\",\n  \"last_name\": \"Burch\",\n  \"email\": \"anita.burch@gmail.com\"\n },\n {\n  \"contact_id\": 1173,\n  \"first_name\": \"Joseph\",\n  \"last_name\": \"Weber\",\n  \"email\": \"joseph.webe@gmail.com\"\n },\n {\n  \"contact_id\": 1175,\n  \"first_name\": \"Erika\",\n  \"last_name\": \"Blackburn\",\n  \"email\": \"erikabail@gmail.com\"\n },\n {\n  \"contact_id\": 1176,\n  \"first_name\": \"Sherry\",\n  \"last_name\": \"Smith\",\n  \"email\": \"she_bailey@gmail.com\"\n },\n {\n  \"contact_id\": 1177,\n  \"first_name\": \"Kathryn\",\n  \"last_name\": \"Maldonado\",\n  \"email\": \"kathrynmaldonado@gmail.com\"\n },\n {\n  \"contact_id\": 1178,\n  \"first_name\": \"Andrew\",\n  \"last_name\": \"Brown\",\n  \"email\": \"andrew_brow@gmail.com\"\n },\n {\n  \"contact_id\": 1179,\n  \"first_name\": \"James\",\n  \"last_name\": \"Solomon\",\n  \"email\": \"ja-solomon@gmail.com\"\n },\n {\n  \"contact_id\": 1180,\n  \"first_name\": \"Jason\",\n  \"last_name\": \"Simpson\",\n  \"email\": \"jasonsimp@gmail.com\"\n }\n]\n"
+      },
+      {
+        "step_index": 5,
+        "reasoning": "Use the supervisor email and stored Venmo password to obtain the token required to inspect requests and issue the refund.",
+        "action_code": "venmo_login_result = apis.venmo.login(\n    username=supervisor_profile[\"email\"],\n    password=venmo_password,\n)\nvenmo_access_token = venmo_login_result[\"access_token\"]",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 6,
+        "reasoning": "Read every page of sent payment requests without prematurely filtering, because the latest request to Robert must be selected before its approved state is checked.",
+        "action_code": "sent_request_pages = []\nrequest_page_index = 0\nwhile True:\n    request_page = apis.venmo.show_sent_payment_requests(\n        access_token=venmo_access_token,\n        page_index=request_page_index,\n        page_limit=20,\n    )\n    sent_request_pages.append(request_page)\n    if len(request_page) < 20:\n        break\n    request_page_index += 1\nall_sent_payment_requests = [\n    request for page in sent_request_pages for request in page\n]\nprint({\"sent_payment_request_count\": len(all_sent_payment_requests)})",
+        "observation": "{\"sent_payment_request_count\": 62}\n"
+      },
+      {
+        "step_index": 7,
+        "reasoning": "Before sending money, resolve exact-first-name Robert contacts, select the newest request sent to any matching contact, confirm that selected request was approved, and derive the refund fields entirely from public records.",
+        "action_code": "exact_robert_contacts = [\n    contact for contact in robert_contact_records\n    if contact[\"first_name\"].strip().casefold() == \"robert\"\n]\nrobert_contact_emails = {\n    contact[\"email\"].strip().casefold() for contact in exact_robert_contacts\n}\nrequests_to_robert = [\n    request for request in all_sent_payment_requests\n    if request[\"receiver\"][\"email\"].strip().casefold() in robert_contact_emails\n]\nif not requests_to_robert:\n    raise RuntimeError(\"No sent payment request to an exact Robert contact was found\")\nselected_payment_request = max(\n    requests_to_robert,\n    key=lambda request: (request[\"created_at\"], request[\"payment_request_id\"]),\n)\nif not selected_payment_request.get(\"approved_at\") or selected_payment_request.get(\"denied_at\"):\n    raise RuntimeError(\"The latest payment request sent to Robert is not approved\")\nrefund_receiver_email = selected_payment_request[\"receiver\"][\"email\"]\nrefund_amount = selected_payment_request[\"amount\"]\nif refund_amount <= 0:\n    raise RuntimeError(\"The selected payment request does not have a positive amount\")\nrefund_description = \"Refund for accidental payment request\"\nselected_payment_request_id = selected_payment_request[\"payment_request_id\"]\nprint({\n    \"source_payment_request_id\": selected_payment_request_id,\n    \"receiver_email\": refund_receiver_email,\n    \"amount\": refund_amount,\n    \"created_at\": selected_payment_request[\"created_at\"],\n    \"approved_at\": selected_payment_request[\"approved_at\"],\n    \"refund_description\": refund_description,\n})",
+        "observation": "{\n \"source_payment_request_id\": 6097,\n \"receiver_email\": \"robertmartinez@gmail.com\",\n \"amount\": 74.0,\n \"created_at\": \"2023-05-15T11:55:43\",\n \"approved_at\": \"2023-05-15T12:35:00\",\n \"refund_description\": \"Refund for accidental payment request\"\n}\n"
+      },
+      {
+        "step_index": 8,
+        "reasoning": "The reviewed variables now identify the recipient and exact amount paid for the accidental approved request, so create one refund transaction using those derived values.",
+        "action_code": "refund_transaction = apis.venmo.create_transaction(\n    receiver_email=refund_receiver_email,\n    amount=refund_amount,\n    access_token=venmo_access_token,\n    description=refund_description,\n)",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 9,
+        "reasoning": "After the mutation, re-read every page of the available public request records and combine that evidence with the documented transaction response to verify the source selection and refund creation before completion.",
+        "action_code": "verification_request_pages = []\nverification_page_index = 0\nwhile True:\n    verification_page = apis.venmo.show_sent_payment_requests(\n        access_token=venmo_access_token,\n        page_index=verification_page_index,\n        page_limit=20,\n    )\n    verification_request_pages.append(verification_page)\n    if len(verification_page) < 20:\n        break\n    verification_page_index += 1\nverification_sent_requests = [\n    request for page in verification_request_pages for request in page\n]\nverification_requests_to_robert = [\n    request for request in verification_sent_requests\n    if request[\"receiver\"][\"email\"].strip().casefold() in robert_contact_emails\n]\nif not verification_requests_to_robert:\n    raise RuntimeError(\"Robert's source request is no longer visible during verification\")\nverification_latest_request = max(\n    verification_requests_to_robert,\n    key=lambda request: (request[\"created_at\"], request[\"payment_request_id\"]),\n)\nsource_matches = (\n    verification_latest_request[\"payment_request_id\"] == selected_payment_request_id\n    and verification_latest_request[\"receiver\"][\"email\"].strip().casefold() == refund_receiver_email.strip().casefold()\n    and verification_latest_request[\"amount\"] == refund_amount\n    and bool(verification_latest_request.get(\"approved_at\"))\n    and not verification_latest_request.get(\"denied_at\")\n)\ntransaction_id = refund_transaction.get(\"transaction_id\")\nif transaction_id is None or not source_matches:\n    raise RuntimeError(\"Refund creation or source-request verification failed\")\nprint({\n    \"refund_transaction_id\": transaction_id,\n    \"source_payment_request_id\": selected_payment_request_id,\n    \"receiver_email\": refund_receiver_email,\n    \"amount\": refund_amount,\n    \"source_is_latest_and_approved\": source_matches,\n})",
+        "observation": "{\n \"refund_transaction_id\": 8217,\n \"source_payment_request_id\": 6097,\n \"receiver_email\": \"robertmartinez@gmail.com\",\n \"amount\": 74.0,\n \"source_is_latest_and_approved\": true\n}\n"
+      },
+      {
+        "step_index": 10,
+        "reasoning": "Only after the refund and post-mutation checks complete without raising should this action task be marked successful.",
+        "action_code": "completion_result = apis.supervisor.complete_task(status=\"success\")",
+        "observation": "Execution successful."
+      }
+    ],
+    "final_status": "success",
+    "evaluation": {
+      "success": true,
+      "num_tests": 7,
+      "num_passes": 7,
+      "num_failures": 0
+    },
+    "replay_evaluation": {
+      "success": true,
+      "num_tests": 7,
+      "num_passes": 7,
+      "num_failures": 0
+    },
+    "replay_verified": true,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0,
+    "api_call_count": 24,
+    "api_call_count_source": "appworld_api_calls_log",
+    "replay_api_call_count": 24,
+    "step_count": 10,
+    "provenance": {
+      "specs_sha256": "1a040c4f7fd218548da13b18c95bf430cc1f550975b420fc8f7c48159f6d6a7c",
+      "api_calls_sha256": "286d876a458484746148150c14728c7496c1ba878c6e8da37082ce859bcf8713",
+      "plan_sha256": "39eb4f75abc4359b106d91e07b09178e4e1cb2f9efa0fb0b505629b40df9fbef"
+    }
+  },
+  "task_result": {
+    "task_id": "60d0b5b_1",
+    "status": "verified",
+    "attempts": 1,
+    "generation_error": null,
+    "execution_error": null,
+    "evaluation_success": true,
+    "replay_success": true,
+    "step_count": 10,
+    "api_call_count": 24,
+    "rejection_reason": null,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0
+  }
+}

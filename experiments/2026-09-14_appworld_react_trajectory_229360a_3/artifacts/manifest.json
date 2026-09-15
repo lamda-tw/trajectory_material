@@ -1,0 +1,22 @@
+{
+  "created_at_utc": "2026-09-14T12:01:50.449781+00:00",
+  "task_id": "229360a_3",
+  "task_family": "229360a",
+  "num_steps": 7,
+  "num_sft_records": 7,
+  "official_evaluator_success": true,
+  "source_specs_sha256": "0dbee444b3c82b16773291358952c88b3963803155c2bb451f07184b6ec21e77",
+  "prompt_template_sha256": "c41f7852217d46586047a38f68e88b827cb9dcbe624e9651f9db8301547a534b",
+  "outputs": {
+    "train.jsonl": "d3ca66a5abd4ae3e316c094c66d13a04d03c7883ed8cb8012260a11f91b32d4b",
+    "trajectory.json": "6fdfa2d3fdaa9e8f2fd2c843b544eaaf00155cc21dbd826a72f83a0df62ae3a5",
+    "evaluation.json": "9d4fd915e1aedf71db9ea8062c8010ed1ef0fab12b74521c6f48d13cfae8c7e2"
+  },
+  "construction_notes": [
+    "Ground-truth API calls were used only as an action-plan reference.",
+    "All observations were captured from a fresh AppWorld execution.",
+    "No ground-truth solution, evaluation code, private_data, or test_data appears in prompts.",
+    "Credentials and access tokens stay in REPL variables and are not printed into SFT observations.",
+    "Each JSONL row trains one assistant turn with the exact preceding observable history."
+  ]
+}

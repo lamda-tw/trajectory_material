@@ -1,0 +1,118 @@
+{
+  "accepted": true,
+  "trajectory": {
+    "task_id": "60d0b5b_2",
+    "task_family": "60d0b5b",
+    "instruction": "The last Venmo payment request I sent to Cory was an accident and they approved it. Send them the money back.",
+    "supervisor": {
+      "first_name": "Chelsea",
+      "last_name": "Burch",
+      "email": "chelsea-burch@gmail.com",
+      "phone_number": "7763361246"
+    },
+    "datetime": "2023-05-18T12:00:00",
+    "appworld_version": "0.2.0.dev0",
+    "source": "ground_truth_api_calls_guided_codex_reconstruction",
+    "steps": [
+      {
+        "step_index": 1,
+        "reasoning": "All public API documentation must be inspected before any task API is called.",
+        "action_code": "task_api_specs = [('supervisor', 'show_profile'), ('supervisor', 'show_account_passwords'), ('phone', 'login'), ('phone', 'search_contacts'), ('venmo', 'login'), ('venmo', 'show_sent_payment_requests'), ('venmo', 'create_transaction'), ('supervisor', 'complete_task')]\npublic_api_docs = {}\nfor app_name, api_name in task_api_specs:\n    public_api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 2,
+        "reasoning": "The supervisor profile supplies account usernames, while the password API supplies credentials that must remain in variables and must not be printed.",
+        "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\nphone_password = next(record['password'] for record in account_password_records if record['account_name'].casefold() == 'phone')\nvenmo_password = next(record['password'] for record in account_password_records if record['account_name'].casefold() == 'venmo')",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 3,
+        "reasoning": "The phone account must be authenticated before searching the supervisor's contacts.",
+        "action_code": "phone_login_result = apis.phone.login(username=supervisor_profile['phone_number'], password=phone_password)\nphone_access_token = phone_login_result['access_token']",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 4,
+        "reasoning": "Every page of Cory contact matches is needed so the eventual Venmo recipient can be resolved from public contact data rather than hardcoded.",
+        "action_code": "cory_contact_results = []\ncontact_page_index = 0\nwhile True:\n    contact_page = apis.phone.search_contacts(access_token=phone_access_token, query='Cory', page_index=contact_page_index, page_limit=20)\n    cory_contact_results.extend(contact_page)\n    if len(contact_page) < 20:\n        break\n    contact_page_index += 1\ncory_contacts = [contact for contact in cory_contact_results if contact['first_name'].casefold() == 'cory']\nif not cory_contacts:\n    raise RuntimeError('No exact Cory contact was found')\ncory_emails = {contact['email'].casefold() for contact in cory_contacts}\nprint([{'first_name': contact['first_name'], 'last_name': contact['last_name'], 'email': contact['email']} for contact in cory_contacts])",
+        "observation": "[{\"first_name\": \"Cory\", \"last_name\": \"Wilson\", \"email\": \"corwils@gmail.com\"}]\n"
+      },
+      {
+        "step_index": 5,
+        "reasoning": "The supervisor's profile email and securely retained Venmo password can now be used to authenticate Venmo.",
+        "action_code": "venmo_login_result = apis.venmo.login(username=supervisor_profile['email'], password=venmo_password)\nvenmo_access_token = venmo_login_result['access_token']",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 6,
+        "reasoning": "All sent-request pages must be retrieved without status prefiltering so the latest request to any contact-resolved Cory can be identified across all request states.",
+        "action_code": "sent_payment_requests = []\nrequest_page_index = 0\nwhile True:\n    request_page = apis.venmo.show_sent_payment_requests(access_token=venmo_access_token, page_index=request_page_index, page_limit=20)\n    sent_payment_requests.extend(request_page)\n    if len(request_page) < 20:\n        break\n    request_page_index += 1\ncory_request_candidates = [request for request in sent_payment_requests if request['receiver']['email'].casefold() in cory_emails]\nprint({'sent_request_count': len(sent_payment_requests), 'cory_request_candidates': [{'payment_request_id': request['payment_request_id'], 'receiver': request['receiver'], 'amount': request['amount'], 'created_at': request['created_at'], 'approved_at': request.get('approved_at'), 'denied_at': request.get('denied_at')} for request in cory_request_candidates]})",
+        "observation": "{\n \"sent_request_count\": 83,\n \"cory_request_candidates\": [\n  {\n   \"payment_request_id\": 6097,\n   \"receiver\": {\n    \"name\": \"Cory Wilson\",\n    \"email\": \"corwils@gmail.com\"\n   },\n   \"amount\": 48.0,\n   \"created_at\": \"2023-05-07T15:05:25\",\n   \"approved_at\": \"2023-05-18T00:04:05\",\n   \"denied_at\": null\n  },\n  {\n   \"payment_request_id\": 1923,\n   \"receiver\": {\n    \"name\": \"Cory Wilson\",\n    \"email\": \"corwils@gmail.com\"\n   },\n   \"amount\": 46.0,\n   \"created_at\": \"2023-05-03T23:25:37\",\n   \"approved_at\": null,\n   \"denied_at\": \"2023-05-07T16:24:37\"\n  },\n  {\n   \"payment_request_id\": 1915,\n   \"receiver\": {\n    \"name\": \"Cory Wilson\",\n    \"email\": \"corwils@gmail.com\"\n   },\n   \"amount\": 77.0,\n   \"created_at\": \"2023-04-23T16:59:27\",\n   \"approved_at\": null,\n   \"denied_at\": \"2023-04-25T02:02:27\"\n  },\n  {\n   \"payment_request_id\": 1916,\n   \"receiver\": {\n    \"name\": \"Cory Wilson\",\n    \"email\": \"corwils@gmail.com\"\n   },\n   \"amount\": 14.0,\n   \"created_at\": \"2023-04-12T14:46:19\",\n   \"approved_at\": \"2023-04-13T09:48:58\",\n   \"denied_at\": null\n  },\n  {\n   \"payment_request_id\": 1919,\n   \"receiver\": {\n    \"name\": \"Cory Wilson\",\n    \"email\": \"corwils@gmail.com\"\n   },\n   \"amount\": 5.0,\n   \"created_at\": \"2023-04-03T11:41:44\",\n   \"approved_at\": null,\n   \"denied_at\": \"2023-04-04T08:39:44\"\n  },\n  {\n   \"payment_request_id\": 1924,\n   \"receiver\": {\n    \"name\": \"Cory Wilson\",\n    \"email\": \"corwils@gmail.com\"\n   },\n   \"amount\": 13.0,\n   \"created_at\": \"2023-03-25T13:05:44\",\n   \"approved_at\": \"2023-03-28T04:01:03\",\n   \"denied_at\": null\n  },\n  {\n   \"payment_request_id\": 1921,\n   \"receiver\": {\n    \"name\": \"Cory Wilson\",\n    \"email\": \"corwils@gmail.com\"\n   },\n   \"amount\": 11.0,\n   \"created_at\": \"2023-03-24T18:32:40\",\n   \"approved_at\": null,\n   \"denied_at\": null\n  },\n  {\n   \"payment_request_id\": 1918,\n   \"receiver\": {\n    \"name\": \"Cory Wilson\",\n    \"email\": \"corwils@gmail.com\"\n   },\n   \"amount\": 18.0,\n   \"created_at\": \"2023-03-24T02:29:19\",\n   \"approved_at\": null,\n   \"denied_at\": null\n  },\n  {\n   \"payment_request_id\": 1920,\n   \"receiver\": {\n    \"name\": \"Cory Wilson\",\n    \"email\": \"corwils@gmail.com\"\n   },\n   \"amount\": 5.0,\n   \"created_at\": \"2023-03-21T11:20:56\",\n   \"approved_at\": \"2023-03-23T16:01:31\",\n   \"denied_at\": null\n  },\n  {\n   \"payment_request_id\": 1922,\n   \"receiver\": {\n    \"name\": \"Cory Wilson\",\n    \"email\": \"corwils@gmail.com\"\n   },\n   \"amount\": 34.0,\n   \"created_at\": \"2023-03-18T22:45:28\",\n   \"approved_at\": \"2023-03-19T04:43:32\",\n   \"denied_at\": null\n  },\n  {\n   \"payment_request_id\": 1917,\n   \"receiver\": {\n    \"name\": \"Cory Wilson\",\n    \"email\": \"corwils@gmail.com\"\n   },\n   \"amount\": 18.0,\n   \"created_at\": \"2023-03-07T16:08:07\",\n   \"approved_at\": \"2023-03-10T03:37:54\",\n   \"denied_at\": null\n  }\n ]\n}\n"
+      },
+      {
+        "step_index": 7,
+        "reasoning": "Immediately before mutation, select the chronologically latest Cory request and validate that it is approved, not denied, and has a positive amount.",
+        "action_code": "if not cory_request_candidates:\n    raise RuntimeError('No sent payment request to Cory was found')\nlatest_cory_request = max(cory_request_candidates, key=lambda request: (request['created_at'], request['payment_request_id']))\nif not latest_cory_request.get('approved_at') or latest_cory_request.get('denied_at'):\n    raise RuntimeError('The latest sent payment request to Cory is not approved')\nif latest_cory_request['amount'] <= 0:\n    raise RuntimeError('The request amount is not refundable')\nrefund_receiver_email = latest_cory_request['receiver']['email']\nrefund_amount = latest_cory_request['amount']\nrefund_private = latest_cory_request['private']\nrefund_description = 'Refund for accidental payment request'\nprint({'selected_payment_request_id': latest_cory_request['payment_request_id'], 'receiver_email': refund_receiver_email, 'amount': refund_amount, 'created_at': latest_cory_request['created_at'], 'approved': True})",
+        "observation": "{\n \"selected_payment_request_id\": 6097,\n \"receiver_email\": \"corwils@gmail.com\",\n \"amount\": 48.0,\n \"created_at\": \"2023-05-07T15:05:25\",\n \"approved\": true\n}\n"
+      },
+      {
+        "step_index": 8,
+        "reasoning": "The reviewed variables now identify the recipient and exact approved-request amount, so one matching refund transaction can be submitted.",
+        "action_code": "refund_transaction = apis.venmo.create_transaction(receiver_email=refund_receiver_email, amount=refund_amount, access_token=venmo_access_token, description=refund_description, private=refund_private)",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 9,
+        "reasoning": "After the mutation, re-read every sent-request page and combine that public source validation with the transaction receipt before allowing completion.",
+        "action_code": "verification_sent_requests = []\nverification_page_index = 0\nwhile True:\n    verification_page = apis.venmo.show_sent_payment_requests(access_token=venmo_access_token, page_index=verification_page_index, page_limit=20)\n    verification_sent_requests.extend(verification_page)\n    if len(verification_page) < 20:\n        break\n    verification_page_index += 1\nrevalidated_source_request = next((request for request in verification_sent_requests if request['payment_request_id'] == latest_cory_request['payment_request_id']), None)\nsource_request_valid = revalidated_source_request is not None and revalidated_source_request['receiver']['email'].casefold() == refund_receiver_email.casefold() and revalidated_source_request['amount'] == refund_amount and bool(revalidated_source_request.get('approved_at')) and not revalidated_source_request.get('denied_at')\ntransaction_receipt_valid = isinstance(refund_transaction.get('transaction_id'), int)\nverification_passed = source_request_valid and transaction_receipt_valid\nprint({'source_request_revalidated': source_request_valid, 'transaction_receipt_valid': transaction_receipt_valid, 'verification_passed': verification_passed})\nif not verification_passed:\n    raise RuntimeError('Refund verification failed')",
+        "observation": "{\n \"source_request_revalidated\": true,\n \"transaction_receipt_valid\": true,\n \"verification_passed\": true\n}\n"
+      },
+      {
+        "step_index": 10,
+        "reasoning": "The prior verification step prevents execution from reaching completion unless the refund receipt and its public source request have both been validated.",
+        "action_code": "completion_result = apis.supervisor.complete_task(status='success')",
+        "observation": "Execution successful."
+      }
+    ],
+    "final_status": "success",
+    "evaluation": {
+      "success": true,
+      "num_tests": 7,
+      "num_passes": 7,
+      "num_failures": 0
+    },
+    "replay_evaluation": {
+      "success": true,
+      "num_tests": 7,
+      "num_passes": 7,
+      "num_failures": 0
+    },
+    "replay_verified": true,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0,
+    "api_call_count": 26,
+    "api_call_count_source": "appworld_api_calls_log",
+    "replay_api_call_count": 26,
+    "step_count": 10,
+    "provenance": {
+      "specs_sha256": "dde356b5b82f89165e365cab7aa3d3c20eb6ec4317f09e25fa9eaec1c205392c",
+      "api_calls_sha256": "1ffee4685267d4aa5a72805b3d5fa76ff0755662462b22573d2a141e2057c584",
+      "plan_sha256": "9c515358efc1ee66f50e5ab3715daaecd1a2f7513eeed265ce2bc6fea5fdf5ae"
+    }
+  },
+  "task_result": {
+    "task_id": "60d0b5b_2",
+    "status": "verified",
+    "attempts": 1,
+    "generation_error": null,
+    "execution_error": null,
+    "evaluation_success": true,
+    "replay_success": true,
+    "step_count": 10,
+    "api_call_count": 26,
+    "rejection_reason": null,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "82e2fac": {
+    "verified_from_task": "82e2fac_1",
+    "step_scaffold": [
+      {
+        "role": "complete",
+        "api_refs": [
+          "api_docs.show_api_doc"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "supervisor.show_account_passwords",
+          "supervisor.show_profile"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "authenticate",
+        "api_refs": [
+          "spotify.login"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [
+          "spotify.show_playlist_library"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [
+          "spotify.show_song"
+        ],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "derive",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "read_or_compute",
+        "api_refs": [],
+        "uses_loop": true,
+        "uses_assertion": false
+      },
+      {
+        "role": "complete",
+        "api_refs": [
+          "supervisor.complete_task"
+        ],
+        "uses_loop": false,
+        "uses_assertion": false
+      }
+    ]
+  }
+}

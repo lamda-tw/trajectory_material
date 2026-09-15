@@ -1,0 +1,124 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "7d7fbf6_3",
+  "task_family": "7d7fbf6",
+  "completion_mode": "status_only",
+  "plan_summary": "Authenticate to the file-system app, enumerate immediate vacation-spot directories, derive one source/archive pair per spot, compress each directory into the vacations folder while deleting its source, verify every archive exists and every source directory is gone, then complete the task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public documentation for every task API must be inspected before any task API is called, including the final completion API.",
+      "action_code": "profile_doc = apis.api_docs.show_api_doc(app_name=\"supervisor\", api_name=\"show_profile\")\npasswords_doc = apis.api_docs.show_api_doc(app_name=\"supervisor\", api_name=\"show_account_passwords\")\nlogin_doc = apis.api_docs.show_api_doc(app_name=\"file_system\", api_name=\"login\")\nshow_directory_doc = apis.api_docs.show_api_doc(app_name=\"file_system\", api_name=\"show_directory\")\ncompress_directory_doc = apis.api_docs.show_api_doc(app_name=\"file_system\", api_name=\"compress_directory\")\ncomplete_task_doc = apis.api_docs.show_api_doc(app_name=\"supervisor\", api_name=\"complete_task\")",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "The file-system credentials must come from Supervisor APIs, and secrets must remain only in variables while logging in with the profile email.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\nfile_system_password = next(record[\"password\"] for record in account_password_records if record[\"account_name\"] == \"file_system\")\nfile_system_login = apis.file_system.login(username=supervisor_profile[\"email\"], password=file_system_password)\nfile_system_access_token = file_system_login[\"access_token\"]",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords",
+        "file_system.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "observe",
+      "reasoning": "The immediate subdirectories of ~/pictures/ must be read so the vacation-spot names and mutation targets come from current public data.",
+      "action_code": "picture_directory_entries = apis.file_system.show_directory(access_token=file_system_access_token, directory_path=\"~/pictures/\", entry_type=\"directories\", recursive=False)",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "file_system.show_directory"
+      ],
+      "mutates_state": false,
+      "verification_targets": [],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 4,
+      "phase": "derive",
+      "reasoning": "A separate review step must derive every source and destination from the observed directory names while excluding the literal vacations destination directory.",
+      "action_code": "vacation_spots = sorted({entry.rstrip(\"/\").split(\"/\")[-1] for entry in picture_directory_entries if entry.rstrip(\"/\").split(\"/\")[-1] != \"vacations\"})\ncompression_plan = [{\"vacation_spot\": spot, \"source_directory\": \"~/pictures/\" + spot, \"archive_path\": \"~/pictures/vacations/\" + spot + \".zip\"} for spot in vacation_spots]\nprint(compression_plan)",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Each observed vacation-spot directory maps to ~/pictures/vacations/<vacation_spot>.zip",
+        "The vacations destination directory is excluded from source mutations"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 5,
+      "phase": "act",
+      "reasoning": "The reviewed compression plan now supplies all mutation paths, and the requested operation requires each source directory to be deleted after its ZIP archive is written.",
+      "action_code": "compression_results = []\nfor compression_job in compression_plan:\n    compression_result = apis.file_system.compress_directory(access_token=file_system_access_token, directory_path=compression_job[\"source_directory\"], compressed_file_path=compression_job[\"archive_path\"], delete_directory=True, overwrite=True)\n    compression_results.append(compression_result)",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "file_system.compress_directory"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Create one requested ZIP archive per vacation spot",
+        "Delete every compressed vacation-spot source directory"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 6,
+      "phase": "verify",
+      "reasoning": "Fresh public directory reads are required to verify both requested postconditions before reporting success.",
+      "action_code": "post_picture_directories = apis.file_system.show_directory(access_token=file_system_access_token, directory_path=\"~/pictures/\", entry_type=\"directories\", recursive=False)\npost_vacation_archives = apis.file_system.show_directory(access_token=file_system_access_token, directory_path=\"~/pictures/vacations/\", entry_type=\"files\", recursive=False)\npost_picture_directory_names = {entry.rstrip(\"/\").split(\"/\")[-1] for entry in post_picture_directories}\npost_archive_names = {entry.rstrip(\"/\").split(\"/\")[-1] for entry in post_vacation_archives}\nremaining_vacation_spot_directories = sorted(spot for spot in vacation_spots if spot in post_picture_directory_names)\nmissing_archive_names = sorted(spot + \".zip\" for spot in vacation_spots if spot + \".zip\" not in post_archive_names)\nverification_summary = {\"all_source_directories_deleted\": not remaining_vacation_spot_directories, \"all_archives_present\": not missing_archive_names, \"remaining_source_directories\": remaining_vacation_spot_directories, \"missing_archives\": missing_archive_names}\nprint(verification_summary)\nassert verification_summary[\"all_source_directories_deleted\"] and verification_summary[\"all_archives_present\"]",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [
+        "file_system.show_directory"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every planned vacation-spot subdirectory is absent from ~/pictures/",
+        "Every planned <vacation_spot>.zip is present directly in ~/pictures/vacations/"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 7,
+      "phase": "complete",
+      "reasoning": "The action task can be marked successful only after the fresh read-based verification has established both requested postconditions.",
+      "action_code": "completion_result = apis.supervisor.complete_task(status=\"success\")",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [],
+      "output_policy": "no_print"
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "accepted": true,
+  "trajectory": {
+    "task_id": "c901732_3",
+    "task_family": "c901732",
+    "instruction": "Play the most listened to song on Spotify from the Velvet Underground album.",
+    "supervisor": {
+      "first_name": "Jeremy",
+      "last_name": "Calhoun",
+      "email": "jer.calhoun@gmail.com",
+      "phone_number": "2786837088"
+    },
+    "datetime": "2023-05-18T12:00:00",
+    "appworld_version": "0.2.0.dev0",
+    "source": "ground_truth_api_calls_guided_codex_reconstruction",
+    "steps": [
+      {
+        "step_index": 1,
+        "reasoning": "The public documentation for every task API must be inspected before any task API is called.",
+        "action_code": "api_docs = {}\nfor app_name, api_name in [\n    (\"supervisor\", \"show_profile\"),\n    (\"supervisor\", \"show_account_passwords\"),\n    (\"spotify\", \"login\"),\n    (\"spotify\", \"search_albums\"),\n    (\"spotify\", \"show_song\"),\n    (\"spotify\", \"play_music\"),\n    (\"supervisor\", \"complete_task\"),\n]:\n    api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 2,
+        "reasoning": "Spotify playback requires an access token, so obtain the supervisor's profile and matching Spotify password and log in without exposing credentials.",
+        "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_passwords = apis.supervisor.show_account_passwords()\nspotify_password_record = next(\n    (record for record in account_passwords if str(record[\"account_name\"]).strip().casefold() == \"spotify\"),\n    None,\n)\nassert spotify_password_record is not None, \"No Spotify account password was available\"\nspotify_username = supervisor_profile[\"email\"]\nspotify_password = spotify_password_record[\"password\"]\nspotify_login = apis.spotify.login(username=spotify_username, password=spotify_password)\nspotify_access_token = spotify_login[\"access_token\"]\nassert spotify_access_token, \"Spotify login did not return an access token\"",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 3,
+        "reasoning": "The requested album must be discovered from public search results, and every result page must be read before selecting it.",
+        "action_code": "album_query = \"Velvet Underground\"\nalbum_page_limit = 20\nalbum_page_index = 0\nalbum_results = []\nwhile True:\n    album_page = apis.spotify.search_albums(\n        query=album_query,\n        page_index=album_page_index,\n        page_limit=album_page_limit,\n    )\n    album_results.extend(album_page)\n    if len(album_page) < album_page_limit:\n        break\n    album_page_index += 1\nassert album_results, \"The album search returned no results\"\nprint({\"album_result_count\": len(album_results), \"pages_read\": album_page_index + 1})",
+        "observation": "{\"album_result_count\": 18, \"pages_read\": 1}\n"
+      },
+      {
+        "step_index": 4,
+        "reasoning": "Select the strongest semantic match using the requested words, prioritizing an exact album-title match while allowing title-only, artist-only, or combined evidence so selection does not incorrectly require both fields to match.",
+        "action_code": "def normalize_name(value):\n    normalized = \"\".join(character.casefold() if character.isalnum() else \" \" for character in str(value))\n    return \" \".join(normalized.split())\n\ndef remove_leading_the(value):\n    return value[4:] if value.startswith(\"the \") else value\n\ntarget_core = \"velvet underground\"\nranked_album_candidates = []\nfor result_position, album in enumerate(album_results):\n    title_core = remove_leading_the(normalize_name(album[\"title\"]))\n    artist_cores = [remove_leading_the(normalize_name(artist[\"name\"])) for artist in album[\"artists\"]]\n    title_exact = title_core == target_core\n    title_contains = target_core in title_core\n    artist_exact = target_core in artist_cores\n    if title_exact or title_contains or artist_exact:\n        rank = (\n            int(title_exact),\n            int(title_contains and artist_exact),\n            int(artist_exact),\n            int(title_contains),\n            -result_position,\n        )\n        ranked_album_candidates.append((rank, album, title_exact, title_contains, artist_exact))\nassert ranked_album_candidates, \"No search result was semantically related to Velvet Underground\"\nbest_album_candidate = max(ranked_album_candidates, key=lambda candidate: candidate[0])\nselected_album = best_album_candidate[1]\nselected_album_song_ids = list(dict.fromkeys(selected_album[\"song_ids\"]))\nassert selected_album_song_ids, \"The selected album has no songs\"\nprint({\n    \"selected_album_id\": selected_album[\"album_id\"],\n    \"selected_album_title\": selected_album[\"title\"],\n    \"selected_album_artists\": [artist[\"name\"] for artist in selected_album[\"artists\"]],\n    \"title_exact\": best_album_candidate[2],\n    \"title_contains\": best_album_candidate[3],\n    \"artist_exact\": best_album_candidate[4],\n    \"song_count\": len(selected_album_song_ids),\n})",
+        "observation": "{\n \"selected_album_id\": 8,\n \"selected_album_title\": \"Velvet Underground\",\n \"selected_album_artists\": [\n  \"Aria Sterling\"\n ],\n \"title_exact\": true,\n \"title_contains\": true,\n \"artist_exact\": false,\n \"song_count\": 7\n}\n"
+      },
+      {
+        "step_index": 5,
+        "reasoning": "Determining the most listened-to song requires reading the public details and play count of every song belonging to the selected album.",
+        "action_code": "album_song_records = [\n    apis.spotify.show_song(song_id=song_id)\n    for song_id in selected_album_song_ids\n]\nprint([\n    {\"song_id\": song[\"song_id\"], \"title\": song[\"title\"], \"play_count\": song[\"play_count\"]}\n    for song in album_song_records\n])",
+        "observation": "[\n {\n  \"song_id\": 37,\n  \"title\": \"Endless Roads\",\n  \"play_count\": 379\n },\n {\n  \"song_id\": 38,\n  \"title\": \"Destiny's Game\",\n  \"play_count\": 178\n },\n {\n  \"song_id\": 39,\n  \"title\": \"A Pathway to Nowhere\",\n  \"play_count\": 594\n },\n {\n  \"song_id\": 40,\n  \"title\": \"Burning Like a Distant Star\",\n  \"play_count\": 120\n },\n {\n  \"song_id\": 41,\n  \"title\": \"Gone Astray\",\n  \"play_count\": 629\n },\n {\n  \"song_id\": 42,\n  \"title\": \"Unspoken Words\",\n  \"play_count\": 349\n },\n {\n  \"song_id\": 43,\n  \"title\": \"Whispers of Destiny\",\n  \"play_count\": 433\n }\n]\n"
+      },
+      {
+        "step_index": 6,
+        "reasoning": "A separate pre-mutation review must validate album membership and derive the song with the maximum real play count.",
+        "action_code": "song_by_id = {song[\"song_id\"]: song for song in album_song_records}\nassert set(song_by_id) == set(selected_album_song_ids), \"Not every requested album song was retrieved uniquely\"\nassert all(song[\"album_id\"] == selected_album[\"album_id\"] for song in album_song_records), \"A retrieved song does not belong to the selected album\"\nassert all(isinstance(song[\"play_count\"], (int, float)) for song in album_song_records), \"A song lacks a numeric play count\"\nmaximum_play_count = max(song[\"play_count\"] for song in album_song_records)\ntop_song_ids = [song_id for song_id in selected_album_song_ids if song_by_id[song_id][\"play_count\"] == maximum_play_count]\nassert top_song_ids, \"No maximum-play-count song could be derived\"\nselected_song_id = top_song_ids[0]\nselected_song = song_by_id[selected_song_id]\nassert all(selected_song[\"play_count\"] >= song[\"play_count\"] for song in album_song_records)\nprint({\n    \"selected_song_id\": selected_song_id,\n    \"selected_song_title\": selected_song[\"title\"],\n    \"album_id\": selected_song[\"album_id\"],\n    \"play_count\": selected_song[\"play_count\"],\n    \"top_tie_count\": len(top_song_ids),\n})",
+        "observation": "{\n \"selected_song_id\": 41,\n \"selected_song_title\": \"Gone Astray\",\n \"album_id\": 8,\n \"play_count\": 629,\n \"top_tie_count\": 1\n}\n"
+      },
+      {
+        "step_index": 7,
+        "reasoning": "The prior review derives the requested song ID, so play that specific song with the authenticated Spotify token.",
+        "action_code": "play_result = apis.spotify.play_music(\n    access_token=spotify_access_token,\n    song_id=selected_song_id,\n)\nprint({\"requested_song_id\": selected_song_id, \"play_response_song_id\": play_result[\"song_id\"], \"message\": play_result[\"message\"]})",
+        "observation": "{\n \"requested_song_id\": 41,\n \"play_response_song_id\": 41,\n \"message\": \"Song (Gone Astray) is now playing.\"\n}\n"
+      },
+      {
+        "step_index": 8,
+        "reasoning": "Verify the mutation response identifies the derived maximum-play-count song and re-query that public song record to confirm its identity and album membership.",
+        "action_code": "verified_song = apis.spotify.show_song(song_id=selected_song_id)\nassert play_result[\"song_id\"] == selected_song_id, \"Spotify reported playing a different song\"\nassert verified_song[\"song_id\"] == selected_song_id, \"The verification read returned a different song\"\nassert verified_song[\"album_id\"] == selected_album[\"album_id\"], \"The played song is not from the selected album\"\nassert verified_song[\"title\"] == selected_song[\"title\"], \"The verified song identity changed\"\nprint({\n    \"verified_song_id\": verified_song[\"song_id\"],\n    \"verified_song_title\": verified_song[\"title\"],\n    \"verified_album_id\": verified_song[\"album_id\"],\n    \"play_response_matches\": play_result[\"song_id\"] == selected_song_id,\n})",
+        "observation": "{\n \"verified_song_id\": 41,\n \"verified_song_title\": \"Gone Astray\",\n \"verified_album_id\": 8,\n \"play_response_matches\": true\n}\n"
+      },
+      {
+        "step_index": 9,
+        "reasoning": "If the playback and fresh-read verification assertions complete, finish this action task with success and no answer payload.",
+        "action_code": "completion_result = apis.supervisor.complete_task(status=\"success\")",
+        "observation": "Execution successful."
+      }
+    ],
+    "final_status": "success",
+    "evaluation": {
+      "success": true,
+      "num_tests": 6,
+      "num_passes": 6,
+      "num_failures": 0
+    },
+    "replay_evaluation": {
+      "success": true,
+      "num_tests": 6,
+      "num_passes": 6,
+      "num_failures": 0
+    },
+    "replay_verified": true,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0,
+    "api_call_count": 21,
+    "api_call_count_source": "appworld_api_calls_log",
+    "replay_api_call_count": 21,
+    "step_count": 9,
+    "provenance": {
+      "specs_sha256": "629e28cce50b6be7ba8f5fa10310c4b5c6972afd63d62e5814405aa88186f023",
+      "api_calls_sha256": "3ba9cf0a603d6d17b0716171cf60cab416a28d2763cac89aa647e88d59c611ad",
+      "plan_sha256": "f96a4998998cd084e2ae7548c0a3776ed5ecbdb6ecc191558dc5e6f48df7f62f"
+    }
+  },
+  "task_result": {
+    "task_id": "c901732_3",
+    "status": "verified",
+    "attempts": 1,
+    "generation_error": null,
+    "execution_error": null,
+    "evaluation_success": true,
+    "replay_success": true,
+    "step_count": 9,
+    "api_call_count": 21,
+    "rejection_reason": null,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0
+  }
+}

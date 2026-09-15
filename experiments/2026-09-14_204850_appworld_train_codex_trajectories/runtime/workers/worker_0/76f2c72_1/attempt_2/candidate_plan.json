@@ -1,0 +1,151 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "76f2c72_1",
+  "task_family": "76f2c72",
+  "completion_mode": "answer_variable",
+  "plan_summary": "Authenticate to the file system, recursively read all bill files, identify this year's electricity bills from the returned paths and contents, deterministically extract one best-supported total from each bill, sum the amounts, verify complete coverage, and submit the computed total.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public documentation for every task API must be inspected before any task API is called.",
+      "action_code": "api_doc_targets = [('supervisor', 'show_profile'), ('supervisor', 'show_account_passwords'), ('file_system', 'login'), ('file_system', 'show_directory'), ('file_system', 'show_file'), ('phone', 'get_current_date_and_time'), ('supervisor', 'complete_task')]\napi_docs = {}\nfor app_name, api_name in api_doc_targets:\n    api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Documentation is retrieved for every API used by later steps"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "observe",
+      "reasoning": "The supervisor profile supplies the login username, while the current date determines which bill year the question refers to.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\ncurrent_date_time = apis.phone.get_current_date_and_time()\ndate_digit_runs = []\nactive_digits = ''\nfor character in str(current_date_time['date']):\n    if character.isdigit():\n        active_digits += character\n    elif active_digits:\n        date_digit_runs.append(active_digits)\n        active_digits = ''\nif active_digits:\n    date_digit_runs.append(active_digits)\nfour_digit_years = [digits for digits in date_digit_runs if len(digits) == 4]\nif not four_digit_years:\n    raise RuntimeError('Could not derive a four-digit current year from the public date response')\ncurrent_year = four_digit_years[0]",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "phone.get_current_date_and_time"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Supervisor email is stored for authentication",
+        "A four-digit current year is derived from the public date response"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "authenticate",
+      "reasoning": "The file-system password must come from the supervisor credential API and remain unprinted before it is used to obtain an access token.",
+      "action_code": "account_password_records = apis.supervisor.show_account_passwords()\nfile_system_password_matches = []\nfor credential_record in account_password_records:\n    normalized_account_name = str(credential_record['account_name']).lower().replace('-', '_').replace(' ', '_')\n    if normalized_account_name in ('file_system', 'filesystem'):\n        file_system_password_matches.append(credential_record)\nif len(file_system_password_matches) != 1:\n    file_system_password_matches = [record for record in account_password_records if 'file' in str(record['account_name']).lower() and 'system' in str(record['account_name']).lower()]\nif len(file_system_password_matches) != 1:\n    raise RuntimeError('Could not uniquely identify the file-system credential record')\nfile_system_password = file_system_password_matches[0]['password']\nfile_system_login = apis.file_system.login(username=supervisor_profile['email'], password=file_system_password)\nfile_system_access_token = file_system_login['access_token']",
+      "depends_on_steps": [
+        1,
+        2
+      ],
+      "api_names_used": [
+        "supervisor.show_account_passwords",
+        "file_system.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Exactly one file-system credential is selected from returned records",
+        "An access token is stored without printing credentials or tokens"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 4,
+      "phase": "observe",
+      "reasoning": "A recursive files-only listing of the instructed bills directory is needed so no nested bill file is omitted.",
+      "action_code": "bill_paths = apis.file_system.show_directory(access_token=file_system_access_token, directory_path='~/bills/', entry_type='files', recursive=True)\nprint({'listed_bill_paths': bill_paths})",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "file_system.show_directory"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All file paths recursively returned from the bills directory are retained"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 5,
+      "phase": "inspect",
+      "reasoning": "Every path returned by the recursive listing must be read before selecting the electricity bills or calculating their amounts.",
+      "action_code": "bill_file_records = []\nfor bill_path in bill_paths:\n    bill_file_record = apis.file_system.show_file(file_path=bill_path, access_token=file_system_access_token)\n    bill_file_records.append(bill_file_record)\nprint({'files_read': len(bill_file_records), 'paths': [record['path'] for record in bill_file_records]})",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "file_system.show_file"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A public file record is retained for every listed path"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 6,
+      "phase": "derive",
+      "reasoning": "The returned paths and contents can now be scoped to electricity bills for the derived current year, and competing labeled totals can be ranked deterministically instead of requiring a unique label match.",
+      "action_code": "electricity_records = []\nfor record in bill_file_records:\n    path_text = str(record['path']).lower()\n    content_text = str(record.get('content') or '')\n    if 'electric' in path_text or ('electric' in content_text[:1000].lower() and 'bill' in content_text[:1000].lower()):\n        electricity_records.append(record)\npath_year_electricity_records = [record for record in electricity_records if current_year in str(record['path'])]\nif path_year_electricity_records:\n    current_year_electricity_bill_records = path_year_electricity_records\nelse:\n    current_year_electricity_bill_records = [record for record in electricity_records if current_year in str(record.get('content') or '')]\n\ndef scan_number_candidates(fragment):\n    number_candidates = []\n    index = 0\n    while index < len(fragment):\n        if not fragment[index].isdigit():\n            index += 1\n            continue\n        start = index\n        while index < len(fragment) and (fragment[index].isdigit() or fragment[index] in ',.'):\n            index += 1\n        raw_number = fragment[start:index].strip('.,')\n        cleaned_number = raw_number.replace(',', '')\n        if not cleaned_number or cleaned_number.count('.') > 1 or not cleaned_number.replace('.', '').isdigit():\n            continue\n        before = fragment[max(0, start - 12):start].lower()\n        after = fragment[index:min(len(fragment), index + 8)].lower()\n        decimal_places = len(cleaned_number.split('.')[1]) if '.' in cleaned_number else 0\n        currency_marked = any(symbol in before for symbol in ('$','£','€')) or any(code in before or code in after for code in ('usd','ttd','cad','aud','eur','gbp'))\n        money_like = currency_marked or ('.' in cleaned_number and 1 <= decimal_places <= 2) or ',' in raw_number\n        compact_before = ''.join(before.split())\n        value = float(cleaned_number)\n        if compact_before.endswith('$-') or compact_before.endswith('£-') or compact_before.endswith('€-') or compact_before.endswith('(') or compact_before.endswith('($'):\n            value = -value\n        number_candidates.append((value, money_like))\n    return number_candidates\n\nranked_labels = [('total amount due', 150), ('amount now due', 148), ('total payable', 146), ('amount payable', 144), ('pay this amount', 142), ('balance due', 140), ('total due', 138), ('amount due', 136), ('total cost', 134), ('grand total', 132), ('invoice total', 130), ('bill total', 128), ('total bill', 126), ('total amount', 124), ('statement balance', 122), ('new balance', 120), ('total current charges', 118), ('current charges', 116), ('total electricity charges', 114), ('electricity total', 112), ('total charges', 110), ('bill amount', 108), ('net amount', 106), ('total', 100)]\nbill_amount_selections = []\nunresolved_bill_paths = []\nfor record in current_year_electricity_bill_records:\n    content = str(record.get('content') or '')\n    lowered_content = content.lower()\n    labeled_candidates = []\n    for label, base_score in ranked_labels:\n        search_from = 0\n        while True:\n            position = lowered_content.find(label, search_from)\n            if position < 0:\n                break\n            search_from = position + len(label)\n            if label == 'total' and position > 0 and lowered_content[position - 1].isalpha():\n                continue\n            line_start = lowered_content.rfind('\\n', 0, position) + 1\n            line_end = lowered_content.find('\\n', position)\n            if line_end < 0:\n                line_end = len(lowered_content)\n            prefix = lowered_content[max(line_start, position - 28):position]\n            if any(term in prefix for term in ('previous', 'prior', 'past due')):\n                continue\n            same_line_after = content[position + len(label):line_end]\n            same_line_before = content[line_start:position]\n            forward_context = content[position + len(label):min(len(content), position + len(label) + 240)]\n            after_numbers = scan_number_candidates(same_line_after)\n            before_numbers = scan_number_candidates(same_line_before)\n            forward_numbers = scan_number_candidates(forward_context)\n            chosen_pair = next((item for item in after_numbers if item[1]), None)\n            if chosen_pair is None:\n                chosen_pair = next((item for item in reversed(before_numbers) if item[1]), None)\n            if chosen_pair is None:\n                chosen_pair = next((item for item in forward_numbers if item[1]), None)\n            if chosen_pair is None and after_numbers:\n                chosen_pair = after_numbers[0]\n            if chosen_pair is None and before_numbers:\n                chosen_pair = before_numbers[-1]\n            if chosen_pair is None and forward_numbers:\n                chosen_pair = forward_numbers[0]\n            if chosen_pair is not None:\n                candidate_score = base_score\n                line_context = lowered_content[line_start:line_end]\n                if label == 'total' and any(component in line_context for component in ('tax', 'fee', 'usage', 'supply', 'delivery', 'subtotal')):\n                    candidate_score -= 30\n                labeled_candidates.append({'amount': chosen_pair[0], 'label': label, 'score': candidate_score, 'position': position})\n    if labeled_candidates:\n        labeled_candidates.sort(key=lambda candidate: (-candidate['score'], candidate['position']))\n        chosen_candidate = labeled_candidates[0]\n        bill_amount_selections.append({'path': record['path'], 'amount': chosen_candidate['amount'], 'method': chosen_candidate['label']})\n    else:\n        strong_file_amounts = [value for value, money_like in scan_number_candidates(content) if money_like]\n        if strong_file_amounts:\n            bill_amount_selections.append({'path': record['path'], 'amount': max(strong_file_amounts), 'method': 'monetary_fallback'})\n        else:\n            unresolved_bill_paths.append(record['path'])\nprint({'year': current_year, 'candidate_paths': [record['path'] for record in current_year_electricity_bill_records], 'amount_selections': bill_amount_selections, 'unresolved_paths': unresolved_bill_paths})",
+      "depends_on_steps": [
+        2,
+        5
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Electricity records are selected from returned public data",
+        "Current-year scope is derived from the current date and file data",
+        "One deterministically ranked amount candidate is retained per resolvable bill"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 7,
+      "phase": "verify",
+      "reasoning": "Before answering, the selected amount records must cover every identified current-year electricity bill exactly once and yield a finite numeric sum.",
+      "action_code": "if not current_year_electricity_bill_records:\n    raise RuntimeError('No current-year electricity bill records were identified from the returned file data')\nif unresolved_bill_paths:\n    raise RuntimeError('An amount could not be derived for: ' + ', '.join(unresolved_bill_paths))\nexpected_bill_paths = [record['path'] for record in current_year_electricity_bill_records]\nselected_bill_paths = [selection['path'] for selection in bill_amount_selections]\nif len(expected_bill_paths) != len(set(expected_bill_paths)):\n    raise RuntimeError('The current-year electricity bill paths are not unique')\nif len(selected_bill_paths) != len(expected_bill_paths) or set(selected_bill_paths) != set(expected_bill_paths):\n    raise RuntimeError('The amount selections do not cover every current-year electricity bill exactly once')\nfor selection in bill_amount_selections:\n    if not isinstance(selection['amount'], (int, float)) or selection['amount'] != selection['amount']:\n        raise RuntimeError('A selected bill amount is not a finite numeric value')\ntotal_cost = round(sum(selection['amount'] for selection in bill_amount_selections), 2)\nprint({'year': current_year, 'bill_count': len(bill_amount_selections), 'bill_amounts': [{'path': selection['path'], 'amount': selection['amount']} for selection in bill_amount_selections], 'total_cost': total_cost})",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every identified current-year electricity bill has exactly one selected amount",
+        "The final answer variable is computed from all selected bill amounts"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 8,
+      "phase": "complete",
+      "reasoning": "The verified total-cost variable is ready to be submitted as the concise answer to this QA task.",
+      "action_code": "completion_result = apis.supervisor.complete_task(answer=total_cost)",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The task is completed with the computed total_cost answer variable"
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

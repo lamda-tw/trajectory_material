@@ -1,0 +1,151 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "287e338_1",
+  "task_family": "287e338",
+  "completion_mode": "answer_variable",
+  "plan_summary": "Authenticate to Spotify, exhaustively paginate personalized song recommendations, load canonical song records, count how many recommended songs feature each artist, resolve the unique highest-frequency artist to its public artist record, and submit its name.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public documentation for every required task API must be inspected before making the first task API call so later calls use only documented contracts.",
+      "action_code": "required_api_docs = {}\nfor app_name, api_name in [\n    (\"supervisor\", \"show_profile\"),\n    (\"supervisor\", \"show_account_passwords\"),\n    (\"spotify\", \"login\"),\n    (\"spotify\", \"show_recommendations\"),\n    (\"spotify\", \"show_song\"),\n    (\"spotify\", \"show_artist\"),\n    (\"supervisor\", \"complete_task\"),\n]:\n    required_api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public contracts for all required APIs are available before task API use"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "Spotify recommendations require an access token, so the supervisor profile supplies the documented login username and the matching supervisor password record supplies the password without exposing secrets.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_passwords = apis.supervisor.show_account_passwords()\nspotify_password_matches = [record[\"password\"] for record in account_passwords if record[\"account_name\"].strip().casefold() == \"spotify\"]\nif len(spotify_password_matches) != 1:\n    raise ValueError(\"Expected exactly one Spotify password record\")\nspotify_password = spotify_password_matches[0]\nspotify_login = apis.spotify.login(username=supervisor_profile[\"email\"], password=spotify_password)\nspotify_access_token = spotify_login[\"access_token\"]",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords",
+        "spotify.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Exactly one Spotify credential is selected",
+        "A Spotify access token is stored without printing credentials or token values"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "observe",
+      "reasoning": "All recommendation pages must be read before artist frequency can be computed; requesting the maximum documented page size and continuing through the first short page avoids assuming a result count.",
+      "action_code": "recommendation_pages = []\npage_index = 0\npage_limit = 20\nwhile True:\n    recommendation_page = apis.spotify.show_recommendations(access_token=spotify_access_token, page_index=page_index, page_limit=page_limit)\n    recommendation_pages.append(recommendation_page)\n    if len(recommendation_page) < page_limit:\n        break\n    page_index += 1\nrecommendations = [recommendation for page in recommendation_pages for recommendation in page]\nprint({\"pages_read\": len(recommendation_pages), \"recommendation_count\": len(recommendations)})",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "spotify.show_recommendations"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Pagination continues until a page contains fewer than page_limit records",
+        "All returned recommendation records are retained"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 4,
+      "phase": "observe",
+      "reasoning": "Canonical song records provide the documented artist IDs for every recommended song and satisfy the required song-detail lookup without relying on guessed associations.",
+      "action_code": "unique_recommended_song_ids = list(dict.fromkeys(recommendation[\"song_id\"] for recommendation in recommendations))\nrecommended_song_records_by_id = {}\nfor song_id in unique_recommended_song_ids:\n    song_record = apis.spotify.show_song(song_id=song_id)\n    if song_record[\"song_id\"] != song_id:\n        raise ValueError(\"Song lookup returned a mismatched song_id\")\n    recommended_song_records_by_id[song_id] = song_record\nprint({\"canonical_song_records_loaded\": len(recommended_song_records_by_id)})",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "spotify.show_song"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every distinct recommended song has a canonical record",
+        "Each returned song_id matches the requested song_id"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 5,
+      "phase": "derive",
+      "reasoning": "With all recommendations and their canonical song records available, the most-recommended artist can be selected by counting each artist once per recommended song; the singular wording requires a unique maximum rather than an invented tie-breaker.",
+      "action_code": "artist_recommendation_counts = {}\nfor recommendation in recommendations:\n    song_record = recommended_song_records_by_id[recommendation[\"song_id\"]]\n    artist_ids_on_song = set()\n    for artist in song_record[\"artists\"]:\n        artist_id = artist[\"id\"]\n        if artist_id in artist_ids_on_song:\n            continue\n        artist_ids_on_song.add(artist_id)\n        artist_recommendation_counts[artist_id] = artist_recommendation_counts.get(artist_id, 0) + 1\nif not artist_recommendation_counts:\n    raise ValueError(\"No recommended artist could be derived\")\nmaximum_recommendation_count = max(artist_recommendation_counts.values())\ntop_artist_ids = [artist_id for artist_id, count in artist_recommendation_counts.items() if count == maximum_recommendation_count]\nprint({\"top_artist_ids\": top_artist_ids, \"recommendation_frequency\": maximum_recommendation_count})\nif len(top_artist_ids) != 1:\n    raise ValueError(\"The recommendation data does not identify one uniquely most-recommended artist\")\nselected_artist_id = top_artist_ids[0]",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Artist frequency counts cover every recommended song",
+        "An artist is counted at most once per song",
+        "Exactly one artist has the maximum frequency"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 6,
+      "phase": "observe",
+      "reasoning": "The selected ID must be resolved through the documented artist API so the answer uses the canonical public artist name.",
+      "action_code": "selected_artist_record = apis.spotify.show_artist(artist_id=selected_artist_id)\nprint(selected_artist_record)",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [
+        "spotify.show_artist"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A canonical public artist record is retrieved for the derived winner"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 7,
+      "phase": "verify",
+      "reasoning": "Before the final completion mutation, review that the artist record matches the derived ID, remains the strict frequency winner, and supplies a nonempty answer name.",
+      "action_code": "if selected_artist_record[\"artist_id\"] != selected_artist_id:\n    raise ValueError(\"Artist lookup returned a mismatched artist_id\")\nif any(count >= maximum_recommendation_count for artist_id, count in artist_recommendation_counts.items() if artist_id != selected_artist_id):\n    raise ValueError(\"Selected artist is not the unique strict frequency winner\")\nanswer = selected_artist_record[\"name\"].strip()\nif not answer:\n    raise ValueError(\"Selected artist has no usable name\")\nprint({\"answer_candidate\": answer, \"recommendation_frequency\": maximum_recommendation_count})",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Artist record ID equals the derived winner ID",
+        "Every other artist has a lower recommendation frequency",
+        "Answer is the winner's nonempty canonical name"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 8,
+      "phase": "complete",
+      "reasoning": "The verified canonical artist name is the computed answer to the QA task, so the final step submits it to the supervisor.",
+      "action_code": "completion_result = apis.supervisor.complete_task(answer=answer, status=\"success\")",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The computed answer variable is submitted with success status"
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

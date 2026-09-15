@@ -1,0 +1,158 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "82e2fac_3",
+  "task_family": "82e2fac",
+  "completion_mode": "answer_variable",
+  "plan_summary": "Inspect the public API docs, obtain and use the Spotify credentials, paginate the complete album library, load every referenced song, select the song with the greatest play count, and submit its title.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public documentation for every API used must be inspected before making the first task API call.",
+      "action_code": "api_doc_requests = [\n    (\"supervisor\", \"show_profile\"),\n    (\"supervisor\", \"show_account_passwords\"),\n    (\"spotify\", \"login\"),\n    (\"spotify\", \"show_album_library\"),\n    (\"spotify\", \"show_song\"),\n    (\"supervisor\", \"complete_task\"),\n]\napi_docs = {}\nfor app_name, api_name in api_doc_requests:\n    api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public documentation is retrieved for every task API that later steps call."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "The supervisor APIs provide the account identity and app password needed for authentication without exposing secrets in output.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_passwords = apis.supervisor.show_account_passwords()",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Supervisor profile and account-password records are saved in variables."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "derive",
+      "reasoning": "The Spotify username and password must be selected from the retrieved supervisor records before login, while keeping the secret unprinted.",
+      "action_code": "spotify_password_candidates = [\n    record for record in account_passwords\n    if \"spotify\" in record[\"account_name\"].strip().casefold()\n]\nif len(spotify_password_candidates) != 1:\n    raise RuntimeError(\"Unable to identify exactly one Spotify credential record\")\nspotify_username = supervisor_profile[\"email\"]\nspotify_password = spotify_password_candidates[0][\"password\"]",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Exactly one Spotify password record is identified and credentials remain stored only in variables."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 4,
+      "phase": "authenticate",
+      "reasoning": "Authenticated access is required before reading the user's Spotify album library.",
+      "action_code": "spotify_login_result = apis.spotify.login(username=spotify_username, password=spotify_password)\nspotify_access_token = spotify_login_result[\"access_token\"]",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "spotify.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A Spotify access token is saved without printing it."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 5,
+      "phase": "observe",
+      "reasoning": "The full album library must be read page by page so songs from no saved album are omitted.",
+      "action_code": "album_library = []\npage_index = 0\npage_limit = 20\nwhile True:\n    album_page = apis.spotify.show_album_library(\n        access_token=spotify_access_token,\n        page_index=page_index,\n        page_limit=page_limit,\n    )\n    album_library.extend(album_page)\n    if len(album_page) < page_limit:\n        break\n    page_index += 1",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "spotify.show_album_library"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All album-library pages, including the terminal short or empty page, are read and accumulated."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 6,
+      "phase": "derive",
+      "reasoning": "Song-detail requests must be based only on song IDs found in the retrieved album records, with duplicates removed.",
+      "action_code": "album_song_ids = []\nseen_song_ids = set()\nfor album in album_library:\n    for song_id in album[\"song_ids\"]:\n        if song_id not in seen_song_ids:\n            seen_song_ids.add(song_id)\n            album_song_ids.append(song_id)\nif not album_song_ids:\n    raise RuntimeError(\"The album library contains no songs\")",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "A nonempty, deduplicated list of song IDs is derived exclusively from saved albums."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 7,
+      "phase": "observe",
+      "reasoning": "Each library song's public details are needed because play count and title are provided by the song-detail API.",
+      "action_code": "album_song_records = []\nfor song_id in album_song_ids:\n    song_record = apis.spotify.show_song(song_id=song_id)\n    album_song_records.append(song_record)",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [
+        "spotify.show_song"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A song-detail record is retrieved for every deduplicated song ID from the album library."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 8,
+      "phase": "derive",
+      "reasoning": "The requested answer is the title from the retrieved song record having the greatest play count.",
+      "action_code": "most_played_song = max(album_song_records, key=lambda song: song[\"play_count\"])\nanswer = most_played_song[\"title\"]\nprint({\n    \"song_id\": most_played_song[\"song_id\"],\n    \"title\": answer,\n    \"play_count\": most_played_song[\"play_count\"],\n})",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "The answer variable is taken from the title field of the maximum-play-count library song."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 9,
+      "phase": "complete",
+      "reasoning": "The answer has been computed from the complete set of public album-library song records and can now be submitted.",
+      "action_code": "completion_result = apis.supervisor.complete_task(answer=answer)",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The computed title is submitted as the QA answer."
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

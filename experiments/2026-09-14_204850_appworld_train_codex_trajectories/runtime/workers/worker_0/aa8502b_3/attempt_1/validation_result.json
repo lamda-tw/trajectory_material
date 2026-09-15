@@ -1,0 +1,100 @@
+{
+  "accepted": true,
+  "trajectory": {
+    "task_id": "aa8502b_3",
+    "task_family": "aa8502b",
+    "instruction": "Follow all the artists who have sung at least one song I have liked on Spotify.",
+    "supervisor": {
+      "first_name": "Vickie",
+      "last_name": "Powell",
+      "email": "vicpowe@gmail.com",
+      "phone_number": "8924356613"
+    },
+    "datetime": "2023-05-18T12:00:00",
+    "appworld_version": "0.2.0.dev0",
+    "source": "ground_truth_api_calls_guided_codex_reconstruction",
+    "steps": [
+      {
+        "step_index": 1,
+        "reasoning": "The public documentation for every task API must be inspected before making the first task API call.",
+        "action_code": "api_doc_targets = [('supervisor', 'show_profile'), ('supervisor', 'show_account_passwords'), ('spotify', 'login'), ('spotify', 'show_following_artists'), ('spotify', 'show_liked_songs'), ('spotify', 'follow_artist'), ('supervisor', 'complete_task')]\napi_docs = {}\nfor app_name, api_name in api_doc_targets:\n    api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)\nprint({'inspected_api_docs': [app + '.' + api for app, api in api_doc_targets]})",
+        "observation": "{\n \"inspected_api_docs\": [\n  \"supervisor.show_profile\",\n  \"supervisor.show_account_passwords\",\n  \"spotify.login\",\n  \"spotify.show_following_artists\",\n  \"spotify.show_liked_songs\",\n  \"spotify.follow_artist\",\n  \"supervisor.complete_task\"\n ]\n}\n"
+      },
+      {
+        "step_index": 2,
+        "reasoning": "Spotify access requires the supervisor's account email and the Spotify password supplied through the supervisor APIs; secret values must remain unprinted.",
+        "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_passwords = apis.supervisor.show_account_passwords()\nspotify_password_records = [record for record in account_passwords if record['account_name'].strip().lower() == 'spotify']\nif len(spotify_password_records) != 1:\n    raise RuntimeError('Expected exactly one Spotify credential record')\nspotify_password = spotify_password_records[0]['password']\nspotify_login_result = apis.spotify.login(username=supervisor_profile['email'], password=spotify_password)\nspotify_access_token = spotify_login_result['access_token']\nprint({'profile_loaded': bool(supervisor_profile), 'spotify_credential_matches': len(spotify_password_records), 'authenticated': bool(spotify_access_token)})",
+        "observation": "{\"profile_loaded\": true, \"spotify_credential_matches\": 1, \"authenticated\": true}\n"
+      },
+      {
+        "step_index": 3,
+        "reasoning": "All pages of current follows and liked songs are needed so artist selection is complete and existing follows are not redundantly mutated.",
+        "action_code": "following_artists = []\nfollowing_page_index = 0\nwhile True:\n    following_page = apis.spotify.show_following_artists(access_token=spotify_access_token, page_index=following_page_index, page_limit=20)\n    following_artists.extend(following_page)\n    if len(following_page) < 20:\n        break\n    following_page_index += 1\nliked_songs = []\nliked_page_index = 0\nwhile True:\n    liked_page = apis.spotify.show_liked_songs(access_token=spotify_access_token, page_index=liked_page_index, page_limit=20)\n    liked_songs.extend(liked_page)\n    if len(liked_page) < 20:\n        break\n    liked_page_index += 1\nprint({'following_artist_count': len(following_artists), 'liked_song_count': len(liked_songs)})",
+        "observation": "{\"following_artist_count\": 9, \"liked_song_count\": 41}\n"
+      },
+      {
+        "step_index": 4,
+        "reasoning": "Before mutation, derive the unique credited artists from the retrieved liked songs and review which of their IDs are absent from the retrieved following list.",
+        "action_code": "target_artists_by_id = {artist['id']: artist['name'] for song in liked_songs for artist in song['artists']}\ntarget_artist_ids = set(target_artists_by_id)\nfollowing_artist_ids = {artist['artist_id'] for artist in following_artists}\nartist_ids_to_follow = sorted(target_artist_ids - following_artist_ids)\nfollow_review = [{'artist_id': artist_id, 'name': target_artists_by_id[artist_id]} for artist_id in artist_ids_to_follow]\nprint({'unique_liked-song_artist_count': len(target_artist_ids), 'artists_to_follow': follow_review})",
+        "observation": "{\n \"unique_liked-song_artist_count\": 17,\n \"artists_to_follow\": [\n  {\n   \"artist_id\": 1,\n   \"name\": \"Olivia Roberts\"\n  },\n  {\n   \"artist_id\": 2,\n   \"name\": \"Phoenix Rivers\"\n  },\n  {\n   \"artist_id\": 3,\n   \"name\": \"Jasper Skye\"\n  },\n  {\n   \"artist_id\": 4,\n   \"name\": \"Marigold Muse\"\n  },\n  {\n   \"artist_id\": 5,\n   \"name\": \"Ava Morgan\"\n  },\n  {\n   \"artist_id\": 8,\n   \"name\": \"Aria Sterling\"\n  },\n  {\n   \"artist_id\": 10,\n   \"name\": \"Zoe Mitchell\"\n  },\n  {\n   \"artist_id\": 11,\n   \"name\": \"Eliana Harper\"\n  },\n  {\n   \"artist_id\": 12,\n   \"name\": \"Mia Sullivan\"\n  },\n  {\n   \"artist_id\": 14,\n   \"name\": \"Grace Harrison\"\n  },\n  {\n   \"artist_id\": 16,\n   \"name\": \"Apollo Serenade\"\n  },\n  {\n   \"artist_id\": 17,\n   \"name\": \"Dylan Stone\"\n  },\n  {\n   \"artist_id\": 18,\n   \"name\": \"Astrid Nightshade\"\n  }\n ]\n}\n"
+      },
+      {
+        "step_index": 5,
+        "reasoning": "The reviewed artist IDs are the liked-song artists not already present among the user's followed artists, so each can now be followed.",
+        "action_code": "follow_results = []\nfor artist_id in artist_ids_to_follow:\n    follow_results.append(apis.spotify.follow_artist(artist_id=artist_id, access_token=spotify_access_token))",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 6,
+        "reasoning": "The authoritative followed-artists read API must be queried again across every page to test whether every artist credited on a liked song is now followed.",
+        "action_code": "verified_following_artists = []\nverification_page_index = 0\nwhile True:\n    verification_page = apis.spotify.show_following_artists(access_token=spotify_access_token, page_index=verification_page_index, page_limit=20)\n    verified_following_artists.extend(verification_page)\n    if len(verification_page) < 20:\n        break\n    verification_page_index += 1\nverified_following_artist_ids = {artist['artist_id'] for artist in verified_following_artists}\nmissing_target_artist_ids = sorted(target_artist_ids - verified_following_artist_ids)\nverification_ok = len(missing_target_artist_ids) == 0\nprint({'verification_ok': verification_ok, 'target_artist_count': len(target_artist_ids), 'verified_target_count': len(target_artist_ids & verified_following_artist_ids), 'missing_artist_ids': missing_target_artist_ids})",
+        "observation": "{\n \"verification_ok\": true,\n \"target_artist_count\": 17,\n \"verified_target_count\": 17,\n \"missing_artist_ids\": []\n}\n"
+      },
+      {
+        "step_index": 7,
+        "reasoning": "Use the computed postcondition result to prevent completion unless every target artist was confirmed followed, then mark this action task successful without an answer.",
+        "action_code": "if not verification_ok:\n    raise RuntimeError('Not completing because one or more liked-song artists are not followed')\ncompletion_result = apis.supervisor.complete_task(status='success')\nprint(completion_result)",
+        "observation": "{\"message\": \"Marked the active task complete.\"}\n"
+      }
+    ],
+    "final_status": "success",
+    "evaluation": {
+      "success": true,
+      "num_tests": 4,
+      "num_passes": 4,
+      "num_failures": 0
+    },
+    "replay_evaluation": {
+      "success": true,
+      "num_tests": 4,
+      "num_passes": 4,
+      "num_failures": 0
+    },
+    "replay_verified": true,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0,
+    "api_call_count": 30,
+    "api_call_count_source": "appworld_api_calls_log",
+    "replay_api_call_count": 30,
+    "step_count": 7,
+    "provenance": {
+      "specs_sha256": "85af75da2e0e5af0bab436356ecd5cfcbd5e5a7cbc33741cb9cccc04f4c2a734",
+      "api_calls_sha256": "04525df1df98671408a1dab2feef87f836f7ebdb1abfe8dc90f060199e482bff",
+      "plan_sha256": "3698c1189f784d9de87c6449fa80f7d443a27b149c2cb073875a962ff191abc9"
+    }
+  },
+  "task_result": {
+    "task_id": "aa8502b_3",
+    "status": "verified",
+    "attempts": 1,
+    "generation_error": null,
+    "execution_error": null,
+    "evaluation_success": true,
+    "replay_success": true,
+    "step_count": 7,
+    "api_call_count": 30,
+    "rejection_reason": null,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0
+  }
+}

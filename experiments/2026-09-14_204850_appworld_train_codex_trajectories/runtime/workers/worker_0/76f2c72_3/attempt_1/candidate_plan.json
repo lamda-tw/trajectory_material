@@ -1,0 +1,181 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "76f2c72_3",
+  "task_family": "76f2c72",
+  "completion_mode": "answer_variable",
+  "plan_summary": "Authenticate to the file system, determine the current year, read every file under ~/bills/, select current-year cable bills, extract and sum their billed totals, review the calculation, and submit the computed answer.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public documentation must be inspected before any task API is called so subsequent calls use only documented parameters and response fields.",
+      "action_code": "api_docs = {}\nfor app_name, api_name in [(\"supervisor\", \"show_profile\"), (\"supervisor\", \"show_account_passwords\"), (\"file_system\", \"login\"), (\"file_system\", \"show_directory\"), (\"file_system\", \"show_file\"), (\"phone\", \"get_current_date_and_time\"), (\"supervisor\", \"complete_task\")]:\n    api_docs[app_name + \".\" + api_name] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public documentation for every required task API is available before use"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "observe",
+      "reasoning": "The supervisor profile supplies the file-system username, while the password catalog supplies the corresponding secret without exposing it in output.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_passwords = apis.supervisor.show_account_passwords()\nprint(supervisor_profile)",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Supervisor profile is retrieved",
+        "Account password records are retained without printing secrets"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 3,
+      "phase": "derive",
+      "reasoning": "The file-system credential must be selected from the returned password records by account name rather than hardcoded.",
+      "action_code": "file_system_password = next(entry[\"password\"] for entry in account_passwords if entry[\"account_name\"].strip().casefold().replace(\"-\", \"_\").replace(\" \", \"_\") == \"file_system\")",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "A file-system password is derived from the credential records"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 4,
+      "phase": "authenticate",
+      "reasoning": "Authenticated file reads require an access token obtained using the supervisor's returned email and derived file-system password.",
+      "action_code": "file_system_login = apis.file_system.login(username=supervisor_profile[\"email\"], password=file_system_password)\nfile_system_access_token = file_system_login[\"access_token\"]",
+      "depends_on_steps": [
+        2,
+        3
+      ],
+      "api_names_used": [
+        "file_system.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A file-system access token is obtained and kept private"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 5,
+      "phase": "observe",
+      "reasoning": "The phrase 'this year' must be resolved from the application's current date rather than from a hardcoded year.",
+      "action_code": "current_datetime = apis.phone.get_current_date_and_time()\ndate_number_runs = \"\".join(character if character.isdigit() else \" \" for character in current_datetime[\"date\"]).split()\ncurrent_year = int(next(run for run in date_number_runs if len(run) == 4))\nprint({\"current_datetime\": current_datetime, \"current_year\": current_year})",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "phone.get_current_date_and_time"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Current date is retrieved",
+        "Current year is derived from the returned date"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 6,
+      "phase": "observe",
+      "reasoning": "All files below the instructed bills directory must be enumerated recursively before deciding which ones are relevant.",
+      "action_code": "bill_file_paths = apis.file_system.show_directory(access_token=file_system_access_token, directory_path=\"~/bills/\", entry_type=\"files\", recursive=True)\nprint(bill_file_paths)",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "file_system.show_directory"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every file path under ~/bills/ is enumerated recursively"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 7,
+      "phase": "observe",
+      "reasoning": "Every enumerated bill file must be read so cable classification, bill year, and cost can be derived from actual public file records.",
+      "action_code": "bill_file_records = []\nfor bill_file_path in bill_file_paths:\n    bill_file_records.append(apis.file_system.show_file(file_path=bill_file_path, access_token=file_system_access_token))\nprint(bill_file_records)",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [
+        "file_system.show_file"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A public file record is retrieved for every enumerated bill path"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 8,
+      "phase": "derive",
+      "reasoning": "Relevant records can now be selected using the instruction's cable category and the year derived from the current date.",
+      "action_code": "current_year_text = str(current_year)\ncable_bill_candidates = []\nfor bill_file_record in bill_file_records:\n    searchable_bill_text = (bill_file_record[\"path\"] + \"\\n\" + bill_file_record[\"content\"]).casefold()\n    if \"cable\" in searchable_bill_text and current_year_text in searchable_bill_text:\n        cable_bill_candidates.append(bill_file_record)\nprint({\"candidate_count\": len(cable_bill_candidates), \"candidate_paths\": [record[\"path\"] for record in cable_bill_candidates]})",
+      "depends_on_steps": [
+        5,
+        7
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Candidate bills mention cable and the dynamically derived current year"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 9,
+      "phase": "verify",
+      "reasoning": "Before submitting the answer, each selected bill needs a monetary total derived from its content, and the selected evidence and aggregate must be reviewed for missing values.",
+      "action_code": "def number_tokens(text):\n    tokens = []\n    token = \"\"\n    for character in text:\n        if character.isdigit() or (character in \".,-\" and token):\n            token += character\n        elif character == \"-\":\n            token = character\n        else:\n            cleaned = token.strip(\".,\")\n            if any(character.isdigit() for character in cleaned):\n                tokens.append(cleaned)\n            token = \"\"\n    cleaned = token.strip(\".,\")\n    if any(character.isdigit() for character in cleaned):\n        tokens.append(cleaned)\n    return tokens\n\ndef token_to_cents(token):\n    cleaned = token.replace(\",\", \"\")\n    sign = -1 if cleaned.startswith(\"-\") else 1\n    cleaned = cleaned.lstrip(\"+-\")\n    if \".\" in cleaned:\n        whole, fraction = cleaned.split(\".\", 1)\n    else:\n        whole, fraction = cleaned, \"\"\n    whole_digits = \"\".join(character for character in whole if character.isdigit()) or \"0\"\n    fraction_digits = \"\".join(character for character in fraction if character.isdigit())\n    return sign * (int(whole_digits) * 100 + int((fraction_digits + \"00\")[:2]))\n\namount_labels = [\"total amount due\", \"amount due\", \"total due\", \"balance due\", \"bill total\", \"total\", \"amount\", \"cost\", \"charge\"]\nparsed_cable_bills = []\nfor cable_bill in cable_bill_candidates:\n    bill_lines = cable_bill[\"content\"].splitlines()\n    chosen_label = None\n    chosen_line = None\n    for amount_label in amount_labels:\n        matching_lines = [line for line in bill_lines if amount_label in line.casefold()]\n        if matching_lines:\n            chosen_label = amount_label\n            chosen_line = matching_lines[-1]\n            break\n    amount_cents = None\n    if chosen_line is not None:\n        label_end = chosen_line.casefold().find(chosen_label) + len(chosen_label)\n        amount_text = chosen_line[label_end:]\n        if \"$\" in amount_text:\n            currency_tokens = []\n            for currency_part in amount_text.split(\"$\")[1:]:\n                part_tokens = number_tokens(currency_part)\n                if part_tokens:\n                    currency_tokens.append(part_tokens[0])\n            amount_token = currency_tokens[-1] if currency_tokens else None\n        else:\n            plain_tokens = number_tokens(amount_text)\n            amount_token = plain_tokens[0] if plain_tokens else None\n        if amount_token is not None:\n            amount_cents = token_to_cents(amount_token)\n    parsed_cable_bills.append({\"path\": cable_bill[\"path\"], \"evidence_line\": chosen_line, \"amount_cents\": amount_cents})\nif not cable_bill_candidates:\n    raise ValueError(\"No current-year cable bill candidates were found\")\nunparsed_bill_paths = [bill[\"path\"] for bill in parsed_cable_bills if bill[\"amount_cents\"] is None]\nif unparsed_bill_paths:\n    raise ValueError(\"Could not derive a billed total for: \" + \", \".join(unparsed_bill_paths))\ntotal_cable_cost_cents = sum(bill[\"amount_cents\"] for bill in parsed_cable_bills)\ntotal_cable_cost = total_cable_cost_cents / 100\nprint({\"matched_bill_count\": len(parsed_cable_bills), \"parsed_bills\": parsed_cable_bills, \"total_cable_cost\": total_cable_cost})",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "At least one current-year cable bill is selected",
+        "Every selected bill has a derived monetary total",
+        "The answer variable equals the sum of all selected bill totals"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 10,
+      "phase": "complete",
+      "reasoning": "The reviewed total is the concise answer requested by this QA task and can now be submitted.",
+      "action_code": "completion_result = apis.supervisor.complete_task(status=\"success\", answer=total_cable_cost)",
+      "depends_on_steps": [
+        9
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Computed total cable cost is submitted as the task answer"
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

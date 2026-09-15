@@ -1,0 +1,100 @@
+{
+  "accepted": true,
+  "trajectory": {
+    "task_id": "07b42fd_3",
+    "task_family": "07b42fd",
+    "instruction": "Follow all the reggae artists on Spotify that have at least 21 followers.",
+    "supervisor": {
+      "first_name": "Morgan",
+      "last_name": "Burton",
+      "email": "morgan-harrison@gmail.com",
+      "phone_number": "8903665635"
+    },
+    "datetime": "2023-05-18T12:00:00",
+    "appworld_version": "0.2.0.dev0",
+    "source": "ground_truth_api_calls_guided_codex_reconstruction",
+    "steps": [
+      {
+        "step_index": 1,
+        "reasoning": "The public documentation must be inspected before any task API is called, including the authentication, search, mutation, verification, and completion APIs needed later.",
+        "action_code": "profile_doc = apis.api_docs.show_api_doc(app_name=\"supervisor\", api_name=\"show_profile\")\npasswords_doc = apis.api_docs.show_api_doc(app_name=\"supervisor\", api_name=\"show_account_passwords\")\ncomplete_doc = apis.api_docs.show_api_doc(app_name=\"supervisor\", api_name=\"complete_task\")\nlogin_doc = apis.api_docs.show_api_doc(app_name=\"spotify\", api_name=\"login\")\nsearch_artists_doc = apis.api_docs.show_api_doc(app_name=\"spotify\", api_name=\"search_artists\")\nfollow_artist_doc = apis.api_docs.show_api_doc(app_name=\"spotify\", api_name=\"follow_artist\")",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 2,
+        "reasoning": "The Spotify username and password must come from the Supervisor APIs, and the resulting access token must remain in a variable without being printed.",
+        "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_passwords = apis.supervisor.show_account_passwords()\nspotify_password_record = next(record for record in account_passwords if record[\"account_name\"].casefold() == \"spotify\")\nspotify_password = spotify_password_record[\"password\"]\nspotify_login_result = apis.spotify.login(username=supervisor_profile[\"email\"], password=spotify_password)\nspotify_access_token = spotify_login_result[\"access_token\"]",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 3,
+        "reasoning": "All artists matching the instruction must be collected, so the filtered search must continue from page zero until the first page shorter than the maximum public page size.",
+        "action_code": "artist_search_pages = []\nartist_search_results = []\nartist_page_index = 0\nartist_page_limit = 20\nwhile True:\n    artist_page = apis.spotify.search_artists(query=\"\", genre=\"reggae\", min_follower_count=21, page_index=artist_page_index, page_limit=artist_page_limit)\n    artist_search_pages.append(artist_page)\n    artist_search_results.extend(artist_page)\n    if len(artist_page) < artist_page_limit:\n        break\n    artist_page_index += 1\nprint({\"pages_read\": len(artist_search_pages), \"records_read\": len(artist_search_results)})",
+        "observation": "{\"pages_read\": 1, \"records_read\": 1}\n"
+      },
+      {
+        "step_index": 4,
+        "reasoning": "Before mutating Spotify state, the returned public records must be reviewed against the explicit genre and follower threshold and deduplicated using their returned artist IDs.",
+        "action_code": "reviewed_artists_by_id = {}\nfor artist in artist_search_results:\n    if str(artist[\"genre\"]).casefold() == \"reggae\" and artist[\"follower_count\"] >= 21:\n        reviewed_artists_by_id[artist[\"artist_id\"]] = artist\nfollow_targets = [reviewed_artists_by_id[artist_id] for artist_id in sorted(reviewed_artists_by_id)]\ntarget_artist_ids = {artist[\"artist_id\"] for artist in follow_targets}\nprint([{\"artist_id\": artist[\"artist_id\"], \"name\": artist[\"name\"], \"genre\": artist[\"genre\"], \"follower_count\": artist[\"follower_count\"]} for artist in follow_targets])",
+        "observation": "[{\"artist_id\": 13, \"name\": \"Luna Starlight\", \"genre\": \"reggae\", \"follower_count\": 21}]\n"
+      },
+      {
+        "step_index": 5,
+        "reasoning": "The reviewed target list now provides every mutation ID, and the authenticated access token can be used to follow each selected artist.",
+        "action_code": "follow_call_results = []\nfor artist in follow_targets:\n    follow_response = apis.spotify.follow_artist(artist_id=artist[\"artist_id\"], access_token=spotify_access_token)\n    follow_call_results.append({\"artist_id\": artist[\"artist_id\"], \"response\": follow_response})\nprint({\"target_count\": len(follow_targets), \"follow_calls_returned\": len(follow_call_results)})",
+        "observation": "{\"target_count\": 1, \"follow_calls_returned\": 1}\n"
+      },
+      {
+        "step_index": 6,
+        "reasoning": "After the mutations, a fresh fully paginated public search must confirm the complete qualifying target set, while the saved mutation results must provide a nonempty acknowledgement for every target ID.",
+        "action_code": "verification_search_results = []\nverification_page_index = 0\nwhile True:\n    verification_page = apis.spotify.search_artists(query=\"\", genre=\"reggae\", min_follower_count=21, page_index=verification_page_index, page_limit=artist_page_limit)\n    verification_search_results.extend(verification_page)\n    if len(verification_page) < artist_page_limit:\n        break\n    verification_page_index += 1\nverified_artists_by_id = {}\nfor artist in verification_search_results:\n    if str(artist[\"genre\"]).casefold() == \"reggae\" and artist[\"follower_count\"] >= 21:\n        verified_artists_by_id[artist[\"artist_id\"]] = artist\nverified_target_ids = set(verified_artists_by_id)\nacknowledged_artist_ids = {record[\"artist_id\"] for record in follow_call_results if isinstance(record[\"response\"], dict) and isinstance(record[\"response\"].get(\"message\"), str) and bool(record[\"response\"][\"message\"].strip())}\nverification_ok = verified_target_ids == target_artist_ids and acknowledged_artist_ids == target_artist_ids\nprint({\"verification_ok\": verification_ok, \"verified_target_count\": len(verified_target_ids), \"acknowledged_follow_count\": len(acknowledged_artist_ids)})\nif not verification_ok:\n    raise RuntimeError(\"The qualifying artist set or follow acknowledgements did not verify.\")",
+        "observation": "{\"verification_ok\": true, \"verified_target_count\": 1, \"acknowledged_follow_count\": 1}\n"
+      },
+      {
+        "step_index": 7,
+        "reasoning": "The action task can be marked successful only after the fresh target-set and per-target mutation checks have completed successfully.",
+        "action_code": "if not verification_ok:\n    raise RuntimeError(\"Task verification is not satisfied.\")\ntask_completion = apis.supervisor.complete_task(status=\"success\")",
+        "observation": "Execution successful."
+      }
+    ],
+    "final_status": "success",
+    "evaluation": {
+      "success": true,
+      "num_tests": 5,
+      "num_passes": 5,
+      "num_failures": 0
+    },
+    "replay_evaluation": {
+      "success": true,
+      "num_tests": 5,
+      "num_passes": 5,
+      "num_failures": 0
+    },
+    "replay_verified": true,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0,
+    "api_call_count": 13,
+    "api_call_count_source": "appworld_api_calls_log",
+    "replay_api_call_count": 13,
+    "step_count": 7,
+    "provenance": {
+      "specs_sha256": "36962787a50763f21cb2e1093b6b4c0cd383dbecd5f0a8abdb4b937f2fa4703c",
+      "api_calls_sha256": "cf3f199f778dc9ec9055eb9690426f05cac73baf7b60841dc906290d932df291",
+      "plan_sha256": "8f4d52b43fa757b407046787ce0c54ecd742e339b32d6daccb8be940dcd84aee"
+    }
+  },
+  "task_result": {
+    "task_id": "07b42fd_3",
+    "status": "verified",
+    "attempts": 1,
+    "generation_error": null,
+    "execution_error": null,
+    "evaluation_success": true,
+    "replay_success": true,
+    "step_count": 7,
+    "api_call_count": 13,
+    "rejection_reason": null,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0
+  }
+}

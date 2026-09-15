@@ -1,0 +1,148 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "76f2c72_2",
+  "task_family": "76f2c72",
+  "completion_mode": "answer_variable",
+  "plan_summary": "Authenticate to the file system, determine the current calendar year, recursively read every file under ~/bills/, identify current-year internet bills from their public paths and contents, extract and sum their billed amounts, review the calculation, and submit the computed answer.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "All required public API documentation must be inspected before any task API is called, and the documented response fields and parameters are sufficient for the planned reads and final completion.",
+      "action_code": "required_api_docs = {}\nfor app_name, api_name in [\n    (\"supervisor\", \"show_profile\"),\n    (\"supervisor\", \"show_account_passwords\"),\n    (\"file_system\", \"login\"),\n    (\"phone\", \"get_current_date_and_time\"),\n    (\"file_system\", \"show_directory\"),\n    (\"file_system\", \"show_file\"),\n    (\"supervisor\", \"complete_task\"),\n]:\n    required_api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public documentation for every required task API is available before its first use."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "Filesystem access requires the supervisor's public profile email and the filesystem password supplied by the Supervisor API; secrets should remain only in variables while obtaining an access token.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\n\ndef normalize_account_name(value):\n    return \"\".join(character.lower() for character in str(value) if character.isalnum())\n\nfilesystem_password_record = next(\n    (\n        record\n        for record in account_password_records\n        if normalize_account_name(record.get(\"account_name\", \"\")) == \"filesystem\"\n    ),\n    None,\n)\nassert filesystem_password_record is not None\nfilesystem_password = filesystem_password_record[\"password\"]\nfilesystem_login = apis.file_system.login(\n    username=supervisor_profile[\"email\"],\n    password=filesystem_password,\n)\nfilesystem_access_token = filesystem_login[\"access_token\"]\nassert filesystem_access_token\nprint({\"authenticated_app\": \"file_system\", \"authenticated\": bool(filesystem_access_token)})",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords",
+        "file_system.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A nonempty filesystem access token is obtained without printing the password or token."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 3,
+      "phase": "observe",
+      "reasoning": "The phrase 'this year' must be resolved from the public current-date API rather than from a hardcoded year.",
+      "action_code": "current_date_time = apis.phone.get_current_date_and_time()\n\ndef digit_groups(value):\n    groups = []\n    current_group = \"\"\n    for character in str(value):\n        if character.isdigit():\n            current_group += character\n        elif current_group:\n            groups.append(current_group)\n            current_group = \"\"\n    if current_group:\n        groups.append(current_group)\n    return groups\n\ncurrent_year = next(\n    (group for group in digit_groups(current_date_time[\"date\"]) if len(group) == 4),\n    None,\n)\nassert current_year is not None\nprint({\"current_date\": current_date_time[\"date\"], \"current_year\": current_year})",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "phone.get_current_date_and_time"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A four-digit current calendar year is derived from the returned current date."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 4,
+      "phase": "observe",
+      "reasoning": "The authenticated token can now be used to enumerate every file in the instructed bills directory, including files in any nested directories.",
+      "action_code": "bill_file_paths = apis.file_system.show_directory(\n    access_token=filesystem_access_token,\n    directory_path=\"~/bills/\",\n    entry_type=\"files\",\n    recursive=True,\n)\nprint({\"directory\": \"~/bills/\", \"file_paths\": bill_file_paths})",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "file_system.show_directory"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All file paths returned recursively from ~/bills/ are retained for reading."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 5,
+      "phase": "observe",
+      "reasoning": "The directory listing supplies the real file paths, so every listed file must be read before deciding which records are current-year internet bills or what amounts they contain.",
+      "action_code": "bill_file_records = []\nfor bill_file_path in bill_file_paths:\n    bill_file_records.append(\n        apis.file_system.show_file(\n            file_path=bill_file_path,\n            access_token=filesystem_access_token,\n        )\n    )\nprint([\n    {\"path\": record[\"path\"], \"content\": record[\"content\"]}\n    for record in bill_file_records\n])",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "file_system.show_file"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A public file record is saved for every path returned by the recursive directory read."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 6,
+      "phase": "derive",
+      "reasoning": "The current year and complete file records are available, allowing candidate bills and their amounts to be derived solely from real public paths and contents.",
+      "action_code": "def numeric_values(text):\n    values = []\n    token = \"\"\n    for character in str(text):\n        if character.isdigit() or character in \".,-\":\n            token += character\n        else:\n            if token:\n                cleaned = token.replace(\",\", \"\").strip(\".\")\n                try:\n                    values.append(float(cleaned))\n                except ValueError:\n                    pass\n                token = \"\"\n    if token:\n        cleaned = token.replace(\",\", \"\").strip(\".\")\n        try:\n            values.append(float(cleaned))\n        except ValueError:\n            pass\n    return values\n\ndef currency_values(text):\n    values = []\n    source = str(text)\n    for symbol in \"$£€\":\n        search_from = 0\n        while True:\n            symbol_index = source.find(symbol, search_from)\n            if symbol_index < 0:\n                break\n            number_text = \"\"\n            number_started = False\n            for character in source[symbol_index + 1:]:\n                if character.isdigit():\n                    number_text += character\n                    number_started = True\n                elif character in \".,\" and number_started:\n                    number_text += character\n                elif not number_started and character.isspace():\n                    continue\n                else:\n                    break\n            cleaned = number_text.replace(\",\", \"\").strip(\".\")\n            if cleaned:\n                try:\n                    values.append(float(cleaned))\n                except ValueError:\n                    pass\n            search_from = symbol_index + 1\n    return values\n\ndef amount_from_bill(content):\n    labels = (\n        \"total amount due\",\n        \"amount due\",\n        \"balance due\",\n        \"total due\",\n        \"bill total\",\n        \"total cost\",\n        \"total\",\n        \"amount\",\n        \"cost\",\n        \"charge\",\n    )\n    lines = str(content).splitlines() or [str(content)]\n    for label in labels:\n        found_values = []\n        for line in lines:\n            lowered = line.lower()\n            search_from = 0\n            while True:\n                label_index = lowered.find(label, search_from)\n                if label_index < 0:\n                    break\n                before_ok = label_index == 0 or not lowered[label_index - 1].isalnum()\n                after_index = label_index + len(label)\n                after_ok = after_index == len(lowered) or not lowered[after_index].isalnum()\n                if before_ok and after_ok:\n                    following_text = line[after_index:]\n                    marked_values = currency_values(following_text)\n                    plain_values = numeric_values(following_text)\n                    if marked_values:\n                        found_values.append(marked_values[0])\n                    elif plain_values:\n                        found_values.append(plain_values[0])\n                search_from = label_index + len(label)\n        unique_values = []\n        for value in found_values:\n            rounded_value = round(value, 2)\n            if rounded_value not in unique_values:\n                unique_values.append(rounded_value)\n        if len(unique_values) == 1:\n            return unique_values[0]\n        if unique_values:\n            return None\n    fallback_values = []\n    for value in currency_values(content):\n        rounded_value = round(value, 2)\n        if rounded_value not in fallback_values:\n            fallback_values.append(rounded_value)\n    return fallback_values[0] if len(fallback_values) == 1 else None\n\ncurrent_year_internet_bills = []\nfor file_record in bill_file_records:\n    searchable_text = str(file_record[\"path\"]) + \"\\n\" + str(file_record[\"content\"])\n    lowered_searchable_text = searchable_text.lower()\n    record_years = {\n        group for group in digit_groups(searchable_text) if len(group) == 4\n    }\n    if \"internet\" in lowered_searchable_text and current_year in record_years:\n        current_year_internet_bills.append({\n            \"path\": file_record[\"path\"],\n            \"record_years\": record_years,\n            \"amount\": amount_from_bill(file_record[\"content\"]),\n        })\nprint([\n    {\"path\": bill[\"path\"], \"detected_amount\": bill[\"amount\"]}\n    for bill in current_year_internet_bills\n])",
+      "depends_on_steps": [
+        3,
+        5
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Candidates contain the internet marker and the derived current year.",
+        "Each candidate amount is derived from labeled or unambiguous currency content."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 7,
+      "phase": "verify",
+      "reasoning": "Before submitting the QA answer, a separate review must ensure every selected candidate has an unambiguous numeric amount and that the answer variable is exactly the rounded sum of those real amounts.",
+      "action_code": "assert all(current_year in bill[\"record_years\"] for bill in current_year_internet_bills)\nassert all(bill[\"amount\"] is not None for bill in current_year_internet_bills)\nreviewed_amounts = [bill[\"amount\"] for bill in current_year_internet_bills]\ntotal_cost = round(sum(reviewed_amounts), 2)\nanswer_value = int(total_cost) if total_cost.is_integer() else total_cost\nassert round(sum(bill[\"amount\"] for bill in current_year_internet_bills), 2) == total_cost\nprint({\n    \"year\": current_year,\n    \"matched_bill_count\": len(current_year_internet_bills),\n    \"total_cost\": answer_value,\n})",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every selected bill belongs to the current year.",
+        "Every selected bill has one unambiguous numeric amount.",
+        "answer_value equals the two-decimal rounded sum of all selected bill amounts."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 8,
+      "phase": "complete",
+      "reasoning": "The reviewed answer variable is now computed exclusively from the current date, recursively enumerated public files, and their parsed bill amounts, so it can be submitted as the concise QA answer.",
+      "action_code": "completion_result = apis.supervisor.complete_task(answer=answer_value)",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The computed answer variable is submitted to complete the active task."
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

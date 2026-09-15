@@ -1,0 +1,43 @@
+{
+  "created_at": "2026-09-14T13:11:53.676381+00:00",
+  "updated_at": "2026-09-14T16:14:42.322223+00:00",
+  "workspace_git_commit": "98f3c12337edcef8d19beab7a1231d0f671080fc",
+  "appworld_data_version": "0.2.0",
+  "appworld_db_versions": [
+    "0.2.0"
+  ],
+  "train_txt_sha256": "93d9fe71e7a2e3b7529803d4a20b604f4ebf5ae806f321081140238068189d37",
+  "generate_trajectories_sha256": "f16e35a23f1d974ee57990f9335cd67024ea389e9b155e8fd35baacd2c9d9efd",
+  "validate_trajectories_sha256": "4d25dceaf35ae71e18b2e860d4064630b389289319b1903151f731a26de03bb8",
+  "base_generation_prompt_sha256": "7e8a6f91fecbd46c593b6fa86e08216d38af8555ee1ab20ac96c71a82ff6959a",
+  "output_sha256": {
+    "trajectories.jsonl": "024552b2f6b3a6343912dd8b95108b2d0233f4aeebd25d18685b99f33b1eb4f6",
+    "task_results.jsonl": "facee5db3b6f420743d4ec91e245c5d064d3e978569733492c87a4e96a175f8d",
+    "summary.json": "786204bcc8254a16d164d534322892f8f785b290a59dfb93fc2714276621f470"
+  },
+  "generation_strategy": "ground_truth_api_shape_guided_codex_reconstruction",
+  "codex_command_argv_template": "/root/.nvm/versions/node/v26.8.1/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex exec --ephemeral --skip-git-repo-check --color never --sandbox read-only --cd {codex_workdir} --output-schema {schema} --output-last-message {output} --model {model} -",
+  "codex_model": "gpt-5.6-sol",
+  "maximum_attempts_per_task": 3,
+  "privileged_information_isolation": {
+    "never_prompted": [
+      "private_data",
+      "test_data",
+      "evaluation.py",
+      "solution.py",
+      "compiled_solution.py",
+      "ground_truth answer",
+      "evaluator assertions",
+      "argument values from ground_truth/api_calls.json"
+    ],
+    "teacher_api_sequence": "ordered public API names and non-secret argument-key names; repeats and all values removed"
+  },
+  "completion_and_resume": {
+    "verified_tasks_are_never_reexecuted": true,
+    "failed_tasks_require_retry_failed": true,
+    "attempt_log_is_append_only": true,
+    "final_jsonl_task_ids_must_be_unique": true,
+    "temporary_json_files_use_atomic_replace": true
+  },
+  "qwen_or_vllm_started": false
+}

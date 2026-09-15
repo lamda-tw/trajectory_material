@@ -1,0 +1,130 @@
+{
+  "accepted": true,
+  "trajectory": {
+    "task_id": "e3d6c94_1",
+    "task_family": "e3d6c94",
+    "instruction": "Add all spotify-recommended classical songs released in this year to a new \"Spotify Recommended Songs\" playlist.",
+    "supervisor": {
+      "first_name": "Jason",
+      "last_name": "Simpson",
+      "email": "jasonsimp@gmail.com",
+      "phone_number": "5516882990"
+    },
+    "datetime": "2023-05-18T12:00:00",
+    "appworld_version": "0.2.0.dev0",
+    "source": "ground_truth_api_calls_guided_codex_reconstruction",
+    "steps": [
+      {
+        "step_index": 1,
+        "reasoning": "Public documentation must be inspected before any task API is called, including the APIs needed for authentication, exhaustive recommendation reading, mutations, verification, and completion.",
+        "action_code": "required_api_docs = {}\nfor app_name, api_name in [('supervisor', 'show_profile'), ('supervisor', 'show_account_passwords'), ('phone', 'get_current_date_and_time'), ('spotify', 'login'), ('spotify', 'show_recommendations'), ('spotify', 'show_song'), ('spotify', 'create_playlist'), ('spotify', 'add_song_to_playlist'), ('supervisor', 'complete_task')]:\n    required_api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 2,
+        "reasoning": "The authenticated Spotify account must be resolved through Supervisor data, and the meaning of “this year” must come from the current date API.",
+        "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\ncurrent_date_time = apis.phone.get_current_date_and_time()",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 3,
+        "reasoning": "The stored account data can now supply login variables, while scanning the entire date string for a standalone four-digit year avoids assuming that the year appears first.",
+        "action_code": "spotify_password_record = next(record for record in account_password_records if 'spotify' in str(record['account_name']).casefold())\nspotify_username = supervisor_profile['email']\nspotify_password = spotify_password_record['password']\ndate_text = str(current_date_time['date'])\nyear_candidates = []\nfor position in range(max(0, len(date_text) - 3)):\n    fragment = date_text[position:position + 4]\n    left_boundary = position == 0 or not date_text[position - 1].isdigit()\n    right_boundary = position + 4 == len(date_text) or not date_text[position + 4].isdigit()\n    if fragment.isdigit() and left_boundary and right_boundary:\n        numeric_year = int(fragment)\n        if 1000 <= numeric_year <= 9999:\n            year_candidates.append(numeric_year)\nyear_candidates = list(dict.fromkeys(year_candidates))\nif len(year_candidates) != 1:\n    raise RuntimeError('Could not uniquely derive a four-digit year from the current date')\ncurrent_year = year_candidates[0]\nprint({'current_date': date_text, 'derived_year': current_year})",
+        "observation": "{\"current_date\": \"Thursday, May 18, 2023\", \"derived_year\": 2023}\n"
+      },
+      {
+        "step_index": 4,
+        "reasoning": "The resolved Spotify credentials are available, so logging in now provides the access token needed for authenticated reads and mutations.",
+        "action_code": "spotify_login_result = apis.spotify.login(username=spotify_username, password=spotify_password)\nspotify_access_token = spotify_login_result['access_token']",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 5,
+        "reasoning": "All personalized recommendations must be read before filtering, so pages should be requested at the documented maximum size until a short final page is returned.",
+        "action_code": "recommendation_pages = []\nspotify_recommendations = []\nrecommendation_page_index = 0\nwhile True:\n    recommendation_page = apis.spotify.show_recommendations(access_token=spotify_access_token, page_index=recommendation_page_index, page_limit=20)\n    recommendation_pages.append(recommendation_page)\n    spotify_recommendations.extend(recommendation_page)\n    if len(recommendation_page) < 20:\n        break\n    recommendation_page_index += 1\nprint({'pages_read': len(recommendation_pages), 'recommendation_records': len(spotify_recommendations)})",
+        "observation": "{\"pages_read\": 2, \"recommendation_records\": 23}\n"
+      },
+      {
+        "step_index": 6,
+        "reasoning": "Recommendation records lack release dates and song genres, so each distinct recommended song must be resolved through the public song-details API.",
+        "action_code": "recommended_song_ids = list(dict.fromkeys(record['song_id'] for record in spotify_recommendations))\nrecommended_song_details = [apis.spotify.show_song(song_id=song_id) for song_id in recommended_song_ids]\nrecommended_song_summary = [{'song_id': song['song_id'], 'title': song['title'], 'genre': song['genre'], 'release_date': song['release_date']} for song in recommended_song_details]\nprint(recommended_song_summary)",
+        "observation": "[\n {\n  \"song_id\": 9,\n  \"title\": \"When Fate Becomes a Foe\",\n  \"genre\": \"R&B\",\n  \"release_date\": \"2022-05-21T21:55:36\"\n },\n {\n  \"song_id\": 21,\n  \"title\": \"Lost in the Embrace of Night\",\n  \"genre\": \"indie\",\n  \"release_date\": \"2021-03-23T13:53:26\"\n },\n {\n  \"song_id\": 24,\n  \"title\": \"The Unseen Scars of Love\",\n  \"genre\": \"R&B\",\n  \"release_date\": \"2022-07-15T17:46:36\"\n },\n {\n  \"song_id\": 29,\n  \"title\": \"Violet Rain\",\n  \"genre\": \"indie\",\n  \"release_date\": \"2021-04-02T04:32:45\"\n },\n {\n  \"song_id\": 38,\n  \"title\": \"Destiny's Game\",\n  \"genre\": \"jazz\",\n  \"release_date\": \"2021-06-10T10:41:47\"\n },\n {\n  \"song_id\": 45,\n  \"title\": \"Eclipsed\",\n  \"genre\": \"jazz\",\n  \"release_date\": \"2022-09-27T00:38:12\"\n },\n {\n  \"song_id\": 55,\n  \"title\": \"Tangled Lies\",\n  \"genre\": \"EDM\",\n  \"release_date\": \"2022-12-11T06:22:44\"\n },\n {\n  \"song_id\": 64,\n  \"title\": \"Caught in a Web of Lies\",\n  \"genre\": \"EDM\",\n  \"release_date\": \"2021-03-02T14:08:32\"\n },\n {\n  \"song_id\": 107,\n  \"title\": \"Quiet Despair\",\n  \"genre\": \"EDM\",\n  \"release_date\": \"2021-05-21T07:02:49\"\n },\n {\n  \"song_id\": 113,\n  \"title\": \"Chasing Echoes in the Dark\",\n  \"genre\": \"EDM\",\n  \"release_date\": \"2020-12-31T12:44:37\"\n },\n {\n  \"song_id\": 114,\n  \"title\": \"When All Hope Seems Lost\",\n  \"genre\": \"EDM\",\n  \"release_date\": \"2022-04-20T12:58:02\"\n },\n {\n  \"song_id\": 149,\n  \"title\": \"Ephemeral Beauty\",\n  \"genre\": \"hip-hop\",\n  \"release_date\": \"2020-01-24T17:58:58\"\n },\n {\n  \"song_id\": 162,\n  \"title\": \"Caught in the Afterglow of Love\",\n  \"genre\": \"classical\",\n  \"release_date\": \"2019-02-02T02:47:19\"\n },\n {\n  \"song_id\": 201,\n  \"title\": \"Caught in a Storm of Emotions\",\n  \"genre\": \"indie\",\n  \"release_date\": \"2020-07-04T02:59:14\"\n },\n {\n  \"song_id\": 225,\n  \"title\": \"Shadows in the Twilight\",\n  \"genre\": \"reggae\",\n  \"release_date\": \"2020-12-30T23:31:49\"\n },\n {\n  \"song_id\": 228,\n  \"title\": \"The Last Waltz of a Broken Heart\",\n  \"genre\": \"R&B\",\n  \"release_date\": \"2023-02-08T21:51:57\"\n },\n {\n  \"song_id\": 246,\n  \"title\": \"Love's Last Lonely Mile\",\n  \"genre\": \"R&B\",\n  \"release_date\": \"2022-03-01T04:56:55\"\n },\n {\n  \"song_id\": 265,\n  \"title\": \"Secrets of the Heart\",\n  \"genre\": \"classical\",\n  \"release_date\": \"2023-04-29T08:00:31\"\n },\n {\n  \"song_id\": 270,\n  \"title\": \"Tangled Web\",\n  \"genre\": \"classical\",\n  \"release_date\": \"2020-02-16T11:14:14\"\n },\n {\n  \"song_id\": 273,\n  \"title\": \"Endless Drift\",\n  \"genre\": \"classical\",\n  \"release_date\": \"2023-01-13T15:40:51\"\n },\n {\n  \"song_id\": 286,\n  \"title\": \"Golden Lies\",\n  \"genre\": \"reggae\",\n  \"release_date\": \"2021-03-01T07:07:35\"\n },\n {\n  \"song_id\": 302,\n  \"title\": \"An Ode to Forgotten Dreams\",\n  \"genre\": \"R&B\",\n  \"release_date\": \"2023-01-16T15:16:03\"\n },\n {\n  \"song_id\": 305,\n  \"title\": \"Electric Pulse\",\n  \"genre\": \"classical\",\n  \"release_date\": \"2021-07-21T10:11:55\"\n }\n]\n"
+      },
+      {
+        "step_index": 7,
+        "reasoning": "The current year and complete song details are now available, so the exact mutation set can be derived and reviewed before creating the new playlist.",
+        "action_code": "target_songs = [song for song in recommended_song_details if str(song['genre']).strip().casefold() == 'classical' and str(song['release_date'])[:4] == str(current_year)]\ntarget_song_ids = [song['song_id'] for song in target_songs]\nplaylist_title = 'Spotify Recommended Songs'\ntarget_summary = [{'song_id': song['song_id'], 'title': song['title'], 'genre': song['genre'], 'release_date': song['release_date']} for song in target_songs]\nprint({'playlist_title': playlist_title, 'target_count': len(target_song_ids), 'targets': target_summary})",
+        "observation": "{\n \"playlist_title\": \"Spotify Recommended Songs\",\n \"target_count\": 2,\n \"targets\": [\n  {\n   \"song_id\": 265,\n   \"title\": \"Secrets of the Heart\",\n   \"genre\": \"classical\",\n   \"release_date\": \"2023-04-29T08:00:31\"\n  },\n  {\n   \"song_id\": 273,\n   \"title\": \"Endless Drift\",\n   \"genre\": \"classical\",\n   \"release_date\": \"2023-01-13T15:40:51\"\n  }\n ]\n}\n"
+      },
+      {
+        "step_index": 8,
+        "reasoning": "The reviewed title and target set are ready, so the requested new playlist can now be created and its returned identifier retained for later additions.",
+        "action_code": "playlist_create_result = apis.spotify.create_playlist(title=playlist_title, access_token=spotify_access_token)\nplaylist_id = playlist_create_result['playlist_id']",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 9,
+        "reasoning": "The creation response is available; before adding songs, its identifier and the still-current public song records should be reviewed as a separate pre-mutation check.",
+        "action_code": "if not isinstance(playlist_id, int):\n    raise RuntimeError('Playlist creation did not return an integer playlist identifier')\nreviewed_target_songs = [apis.spotify.show_song(song_id=song_id) for song_id in target_song_ids]\nreviewed_target_ids = [song['song_id'] for song in reviewed_target_songs]\nreviewed_targets_valid = reviewed_target_ids == target_song_ids and all(str(song['genre']).strip().casefold() == 'classical' and str(song['release_date'])[:4] == str(current_year) for song in reviewed_target_songs)\nif not reviewed_targets_valid:\n    raise RuntimeError('The pre-addition public-song review no longer matches the derived target set')\nsongs_to_add = list(reviewed_target_ids)\nprint({'playlist_created': True, 'songs_to_add_count': len(songs_to_add), 'targets_reviewed': reviewed_targets_valid})",
+        "observation": "{\"playlist_created\": true, \"songs_to_add_count\": 2, \"targets_reviewed\": true}\n"
+      },
+      {
+        "step_index": 10,
+        "reasoning": "The new playlist and separately reviewed song identifiers are available, so every selected song can now be added using only derived identifiers.",
+        "action_code": "add_song_results = []\nfor song_id in songs_to_add:\n    add_song_results.append(apis.spotify.add_song_to_playlist(playlist_id=playlist_id, song_id=song_id, access_token=spotify_access_token))",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 11,
+        "reasoning": "After the additions, public song records must be re-queried and combined with the mutation acknowledgements to check the requested target set before task completion.",
+        "action_code": "post_add_song_details = [apis.spotify.show_song(song_id=song_id) for song_id in songs_to_add]\npost_add_ids = [song['song_id'] for song in post_add_song_details]\nall_additions_acknowledged = len(add_song_results) == len(songs_to_add) and all(isinstance(result, dict) and bool(result.get('message')) for result in add_song_results)\npost_add_targets_valid = post_add_ids == songs_to_add and all(str(song['genre']).strip().casefold() == 'classical' and str(song['release_date'])[:4] == str(current_year) for song in post_add_song_details)\npostcondition_verified = isinstance(playlist_id, int) and all_additions_acknowledged and post_add_targets_valid\nprint({'playlist_created': isinstance(playlist_id, int), 'expected_song_count': len(songs_to_add), 'addition_acknowledgements': len(add_song_results), 'source_records_reverified': post_add_targets_valid, 'verification_ready': postcondition_verified})\nif not postcondition_verified:\n    raise RuntimeError('Playlist creation or song-addition verification was incomplete')",
+        "observation": "{\n \"playlist_created\": true,\n \"expected_song_count\": 2,\n \"addition_acknowledgements\": 2,\n \"source_records_reverified\": true,\n \"verification_ready\": true\n}\n"
+      },
+      {
+        "step_index": 12,
+        "reasoning": "All available post-mutation checks have run successfully, so this action task can be marked complete without an answer value.",
+        "action_code": "task_completion_result = apis.supervisor.complete_task(status='success')",
+        "observation": "Execution successful."
+      }
+    ],
+    "final_status": "success",
+    "evaluation": {
+      "success": true,
+      "num_tests": 9,
+      "num_passes": 9,
+      "num_failures": 0
+    },
+    "replay_evaluation": {
+      "success": true,
+      "num_tests": 9,
+      "num_passes": 9,
+      "num_failures": 0
+    },
+    "replay_verified": true,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0,
+    "api_call_count": 46,
+    "api_call_count_source": "appworld_api_calls_log",
+    "replay_api_call_count": 46,
+    "step_count": 12,
+    "provenance": {
+      "specs_sha256": "adde62b3ac397a779c1dedc31ef3295f5ab90942bc858f8e41879bc3a6a232a0",
+      "api_calls_sha256": "a311ee695c1d3db45e72d38bafb1c950057e845358254448609e54c8302c520b",
+      "plan_sha256": "3ce2a35f9a8fa3d586b4d10ff80792f2d17c2a93b30b277c81450a562ef697a4"
+    }
+  },
+  "task_result": {
+    "task_id": "e3d6c94_1",
+    "status": "verified",
+    "attempts": 1,
+    "generation_error": null,
+    "execution_error": null,
+    "evaluation_success": true,
+    "replay_success": true,
+    "step_count": 12,
+    "api_call_count": 46,
+    "rejection_reason": null,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0
+  }
+}

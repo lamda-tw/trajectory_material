@@ -1,0 +1,158 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "82e2fac_2",
+  "task_family": "82e2fac",
+  "completion_mode": "answer_variable",
+  "plan_summary": "Inspect the required API contracts, authenticate to Spotify with supervisor-provided credentials, paginate the complete song library, fetch each song's play count, derive the least-played song title, and submit it.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public documentation for every task API must be inspected before making the first task API call.",
+      "action_code": "profile_doc = apis.api_docs.show_api_doc(app_name=\"supervisor\", api_name=\"show_profile\")\npasswords_doc = apis.api_docs.show_api_doc(app_name=\"supervisor\", api_name=\"show_account_passwords\")\ncomplete_doc = apis.api_docs.show_api_doc(app_name=\"supervisor\", api_name=\"complete_task\")\nlogin_doc = apis.api_docs.show_api_doc(app_name=\"spotify\", api_name=\"login\")\nlibrary_doc = apis.api_docs.show_api_doc(app_name=\"spotify\", api_name=\"show_song_library\")\nsong_doc = apis.api_docs.show_api_doc(app_name=\"spotify\", api_name=\"show_song\")",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public contracts for all required supervisor and Spotify APIs are available for subsequent calls."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "The supervisor profile and app-password records are needed to derive the Spotify login inputs without embedding credentials.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_passwords = apis.supervisor.show_account_passwords()",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Supervisor profile and account-password responses are stored without printing secrets."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "derive",
+      "reasoning": "The Spotify username and password can now be selected from the real supervisor responses while keeping the password secret.",
+      "action_code": "spotify_username = supervisor_profile[\"email\"]\nspotify_password = next(record[\"password\"] for record in account_passwords if record[\"account_name\"].strip().lower() == \"spotify\")",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Spotify login inputs are derived from supervisor API results."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 4,
+      "phase": "authenticate",
+      "reasoning": "A Spotify access token is required to read the user's song library.",
+      "action_code": "spotify_login = apis.spotify.login(username=spotify_username, password=spotify_password)\nspotify_access_token = spotify_login[\"access_token\"]",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "spotify.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A Spotify access token is stored without printing it."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 5,
+      "phase": "observe",
+      "reasoning": "Every page of the song library must be collected before determining which library songs need play-count details.",
+      "action_code": "library_songs = []\nlibrary_page_index = 0\nlibrary_page_limit = 100\nwhile True:\n    library_page = apis.spotify.show_song_library(access_token=spotify_access_token, page_index=library_page_index, page_limit=library_page_limit)\n    if not library_page:\n        break\n    library_songs.extend(library_page)\n    library_page_index += 1",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "spotify.show_song_library"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All song-library pages have been read through the first empty page."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 6,
+      "phase": "derive",
+      "reasoning": "The collected library records provide the song identifiers required for detail lookups; deduplication avoids redundant calls while preserving library order.",
+      "action_code": "library_song_ids = list(dict.fromkeys(song[\"song_id\"] for song in library_songs))",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Song-detail lookup identifiers are derived solely from the paginated library results."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 7,
+      "phase": "observe",
+      "reasoning": "Library records do not expose play counts, so each library song's public detail record must be fetched.",
+      "action_code": "library_song_details = []\nfor library_song_id in library_song_ids:\n    library_song_details.append(apis.spotify.show_song(song_id=library_song_id))",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [
+        "spotify.show_song"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A detail record containing title and play_count is stored for every distinct library song identifier."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 8,
+      "phase": "derive",
+      "reasoning": "With all library song details available, the minimum play count and its corresponding title can be computed from real results.",
+      "action_code": "least_played_song = min(library_song_details, key=lambda song: song[\"play_count\"])\nanswer = least_played_song[\"title\"]",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "The answer variable is the title from the library song detail having the minimum play_count."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 9,
+      "phase": "complete",
+      "reasoning": "The requested title has been computed from the complete library and its song-detail records, so it can be submitted as the QA answer.",
+      "action_code": "completion_result = apis.supervisor.complete_task(answer=answer)",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The computed least-played song title is submitted as the task answer."
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

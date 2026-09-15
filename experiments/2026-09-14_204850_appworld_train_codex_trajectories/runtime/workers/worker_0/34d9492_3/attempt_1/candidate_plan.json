@@ -1,0 +1,158 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "34d9492_3",
+  "task_family": "34d9492",
+  "completion_mode": "status_only",
+  "plan_summary": "Inspect the required API contracts, authenticate without exposing secrets, enumerate and inspect every top-level vacation file, derive each destination from its creation month and the current year, review and execute the moves, then re-query the filesystem to verify location and filename preservation before completing the task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public documentation for every required task API must be inspected before any task API is called, so later calls can follow their declared parameters and response fields.",
+      "action_code": "doc_targets = [('supervisor', 'show_profile'), ('supervisor', 'show_account_passwords'), ('file_system', 'login'), ('phone', 'get_current_date_and_time'), ('file_system', 'show_directory'), ('file_system', 'show_file'), ('file_system', 'move_file'), ('supervisor', 'complete_task')]\ntask_api_docs = {}\nfor app_name, api_name in doc_targets:\n    task_api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)\nprint({'documented_apis': [app_name + '.' + api_name for app_name, api_name in doc_targets]})",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Documentation is retrieved for every required task API before its first use."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "Filesystem reads require an access token, and the meaning of “this year” must come from the real current date rather than a hardcoded year.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\ndef normalize_account_name(value):\n    return ''.join(character for character in str(value).lower() if character.isalnum())\nfile_system_credentials = [record for record in account_password_records if normalize_account_name(record['account_name']) == 'filesystem']\nassert len(file_system_credentials) == 1\nfile_system_password = file_system_credentials[0]['password']\nfile_system_login = apis.file_system.login(username=supervisor_profile['email'], password=file_system_password)\nfile_system_access_token = file_system_login['access_token']\ncurrent_date_and_time = apis.phone.get_current_date_and_time()\ncurrent_date_text = str(current_date_and_time['date'])\ncurrent_year = int(current_date_text[:4])\nprint({'authenticated_account': supervisor_profile['email'], 'current_date': current_date_text})",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords",
+        "file_system.login",
+        "phone.get_current_date_and_time"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Exactly one filesystem credential is selected.",
+        "A filesystem access token is obtained without printing the password or token.",
+        "The current year is derived from the phone API result."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 3,
+      "phase": "observe",
+      "reasoning": "The set of files to organize must be obtained from the requested directory itself, restricted to its current top-level files so existing subdirectories are not treated as source photos.",
+      "action_code": "vacation_root = '~/photographs/vacations/'\nsource_file_paths = apis.file_system.show_directory(access_token=file_system_access_token, directory_path=vacation_root, entry_type='files', recursive=False)\nprint({'source_file_paths': source_file_paths})",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "file_system.show_directory"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All top-level file paths in the vacation directory are saved from the complete array response."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 4,
+      "phase": "inspect",
+      "reasoning": "Each source file’s creation timestamp is required to classify it, so every path returned by the directory read must be inspected before deriving any move.",
+      "action_code": "source_file_records = []\nfor source_file_path in source_file_paths:\n    source_file_records.append(apis.file_system.show_file(file_path=source_file_path, access_token=file_system_access_token))\nprint({'source_files': [{'path': record['path'], 'created_at': record['created_at']} for record in source_file_records]})",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "file_system.show_file"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A public file record is saved for every enumerated source path.",
+        "Each saved record provides the path and creation timestamp needed for classification."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 5,
+      "phase": "derive",
+      "reasoning": "Before any mutation, all source-to-destination mappings must be derived and reviewed from the observed paths, creation timestamps, and current year while preserving each basename.",
+      "action_code": "move_plan = []\nfor source_record in source_file_records:\n    created_at_text = str(source_record['created_at'])\n    created_year = int(created_at_text[:4])\n    created_month = int(created_at_text[5:7])\n    if created_year == current_year and created_month == 1:\n        vacation_city = 'Athens'\n    elif created_year == current_year and created_month == 4:\n        vacation_city = 'Seoul'\n    else:\n        vacation_city = 'Paris'\n    source_path = source_record['path']\n    original_filename = str(source_path).replace('\\\\', '/').rstrip('/').split('/')[-1]\n    destination_path = vacation_root.rstrip('/') + '/' + vacation_city + '/' + original_filename\n    move_plan.append({'source_path': source_path, 'destination_path': destination_path, 'city': vacation_city, 'filename': original_filename})\nassert len(move_plan) == len(source_file_records)\nassert len({item['source_path'] for item in move_plan}) == len(move_plan)\nassert len({item['destination_path'] for item in move_plan}) == len(move_plan)\nassert all(item['destination_path'].replace('\\\\', '/').endswith('/' + item['city'] + '/' + item['filename']) for item in move_plan)\nprint({'reviewed_moves': move_plan})",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "January files from the current year map to Athens.",
+        "April files from the current year map to Seoul.",
+        "All other files map to Paris.",
+        "Every destination preserves its source basename.",
+        "Source and destination paths are unique within the plan."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 6,
+      "phase": "act",
+      "reasoning": "The complete move plan has been derived and reviewed, so each planned filesystem mutation can now be executed using only its saved source and destination values.",
+      "action_code": "move_results = []\nfor move_item in move_plan:\n    move_results.append(apis.file_system.move_file(source_file_path=move_item['source_path'], destination_file_path=move_item['destination_path'], access_token=file_system_access_token, overwrite=False, retain_dates=True))",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [
+        "file_system.move_file"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Every reviewed move is submitted once with overwrite disabled and dates retained."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 7,
+      "phase": "verify",
+      "reasoning": "After the attempted moves, fresh directory and file reads are required to verify that no source files remain at the root and that every original filename exists beneath its derived vacation directory.",
+      "action_code": "remaining_top_level_files = apis.file_system.show_directory(access_token=file_system_access_token, directory_path=vacation_root, entry_type='files', recursive=False)\nlocation_directories = apis.file_system.show_directory(access_token=file_system_access_token, directory_path=vacation_root, entry_type='directories', recursive=False)\nrecursive_vacation_files = apis.file_system.show_directory(access_token=file_system_access_token, directory_path=vacation_root, entry_type='files', recursive=True)\nverified_destination_records = []\nfor move_item in move_plan:\n    verified_destination_records.append(apis.file_system.show_file(file_path=move_item['destination_path'], access_token=file_system_access_token))\ndef path_has_tail(path_value, tail_value):\n    normalized_path = str(path_value).replace('\\\\', '/').rstrip('/')\n    normalized_tail = str(tail_value).replace('\\\\', '/').strip('/')\n    return normalized_path == normalized_tail or normalized_path.endswith('/' + normalized_tail)\nassert remaining_top_level_files == []\nobserved_directory_names = {str(path).replace('\\\\', '/').rstrip('/').split('/')[-1] for path in location_directories}\nplanned_city_names = {item['city'] for item in move_plan}\nassert planned_city_names.issubset(observed_directory_names)\nfor move_item in move_plan:\n    expected_tail = move_item['city'] + '/' + move_item['filename']\n    assert any(path_has_tail(path, expected_tail) for path in recursive_vacation_files)\nfor move_item, destination_record in zip(move_plan, verified_destination_records):\n    assert path_has_tail(destination_record['path'], move_item['city'] + '/' + move_item['filename'])\nprint({'remaining_top_level_files': remaining_top_level_files, 'location_directories': location_directories, 'verified_destination_paths': [record['path'] for record in verified_destination_records]})",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [
+        "file_system.show_directory",
+        "file_system.show_file"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "No original files remain directly in the vacation root.",
+        "Every planned vacation subdirectory exists.",
+        "Every planned destination appears in a fresh recursive directory listing.",
+        "Every destination can be read and ends with the derived city and unchanged original filename."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 8,
+      "phase": "complete",
+      "reasoning": "The task should be marked successful only after the post-mutation assertions have verified all requested organization and filename-preservation conditions.",
+      "action_code": "completion_result = apis.supervisor.complete_task(status='success')",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The action task is completed with success and without an answer argument."
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

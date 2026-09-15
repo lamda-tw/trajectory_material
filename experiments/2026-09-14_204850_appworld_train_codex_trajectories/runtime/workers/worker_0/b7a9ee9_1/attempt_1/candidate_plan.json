@@ -1,0 +1,185 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "b7a9ee9_1",
+  "task_family": "b7a9ee9",
+  "completion_mode": "status_only",
+  "plan_summary": "Authenticate to Spotify, exhaustively enumerate playlist-library pages, inspect every playlist and unique song, derive the artists of songs whose genre is classical, follow each distinct artist, then re-read the source songs and verify mutation-call coverage before completing the task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public documentation for every planned task API must be inspected before the first task API call.",
+      "action_code": "api_docs_by_name = {}\nfor app_name, api_name in [('supervisor', 'show_profile'), ('supervisor', 'show_account_passwords'), ('spotify', 'login'), ('spotify', 'show_playlist_library'), ('spotify', 'show_playlist'), ('spotify', 'show_song'), ('spotify', 'follow_artist'), ('supervisor', 'complete_task')]:\n    api_docs_by_name[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public documentation is retrieved for every API used later"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "observe",
+      "reasoning": "The supervisor profile supplies the account email, while the password listing supplies the Spotify password without exposing either secret.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_passwords = apis.supervisor.show_account_passwords()\nspotify_password_record = next(record for record in account_passwords if record['account_name'].strip().casefold() == 'spotify')\nspotify_username = supervisor_profile['email']\nspotify_password = spotify_password_record['password']",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Spotify username and password are retained only in variables"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "authenticate",
+      "reasoning": "Authenticated playlist-library access requires a Spotify access token obtained using the supervisor-derived credentials.",
+      "action_code": "spotify_login = apis.spotify.login(username=spotify_username, password=spotify_password)\nspotify_access_token = spotify_login['access_token']",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "spotify.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A Spotify access token is saved without printing it"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 4,
+      "phase": "observe",
+      "reasoning": "Every page of the user's playlist library must be read so no playlist is omitted from consideration.",
+      "action_code": "playlist_library = []\nplaylist_page_index = 0\nplaylist_page_limit = 20\nwhile True:\n    playlist_page = apis.spotify.show_playlist_library(access_token=spotify_access_token, page_index=playlist_page_index, page_limit=playlist_page_limit)\n    playlist_library.extend(playlist_page)\n    if len(playlist_page) < playlist_page_limit:\n        break\n    playlist_page_index += 1\nplaylist_ids = list(dict.fromkeys(record['playlist_id'] for record in playlist_library))\nprint({'playlist_count': len(playlist_ids)})",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "spotify.show_playlist_library"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All playlist-library pages are consumed through the first short or empty page",
+        "Playlist IDs are deduplicated from real results"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 5,
+      "phase": "observe",
+      "reasoning": "Detailed playlist records provide the complete song membership needed to build the set of songs appearing in any library playlist.",
+      "action_code": "playlists_by_id = {}\nfor playlist_id in playlist_ids:\n    playlists_by_id[playlist_id] = apis.spotify.show_playlist(playlist_id=playlist_id, access_token=spotify_access_token)\nplaylist_song_ids = sorted({song['id'] for playlist in playlists_by_id.values() for song in playlist['songs']})",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "spotify.show_playlist"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every discovered playlist is retrieved",
+        "Unique song IDs are derived from detailed playlist records"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 6,
+      "phase": "observe",
+      "reasoning": "Song details are required for every unique playlist song because the playlist response does not expose each song's genre.",
+      "action_code": "songs_by_id = {}\nfor song_id in playlist_song_ids:\n    songs_by_id[song_id] = apis.spotify.show_song(song_id=song_id)",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [
+        "spotify.show_song"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every unique playlist song has a detailed public record"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 7,
+      "phase": "derive",
+      "reasoning": "Before mutating state, the fetched song records must be reviewed to select exactly the distinct artists attached to songs whose genre equals classical, case-insensitively.",
+      "action_code": "classical_songs = [song for song in songs_by_id.values() if song['genre'].strip().casefold() == 'classical']\nartists_by_id = {}\nfor song in classical_songs:\n    for artist in song['artists']:\n        artists_by_id[artist['id']] = artist\ntarget_artist_ids = sorted(artists_by_id)\ntarget_song_ids = sorted(song['song_id'] for song in classical_songs)\nreview_summary = {'classical_song_count': len(target_song_ids), 'target_artist_count': len(target_artist_ids), 'artists': [{'id': artist_id, 'name': artists_by_id[artist_id]['name']} for artist_id in target_artist_ids]}\nprint(review_summary)",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Only songs with case-insensitive genre value classical contribute artists",
+        "Target artists are deduplicated by public artist ID",
+        "Candidate artist IDs and names are reviewed before mutation"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 8,
+      "phase": "act",
+      "reasoning": "The reviewed target artist IDs are derived solely from classical songs found in the user's playlists, so each distinct target can now be followed once.",
+      "action_code": "follow_results_by_artist_id = {}\nfor artist_id in target_artist_ids:\n    follow_results_by_artist_id[artist_id] = apis.spotify.follow_artist(artist_id=artist_id, access_token=spotify_access_token)",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "spotify.follow_artist"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "A follow request is issued once for every distinct reviewed target artist ID"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 9,
+      "phase": "verify",
+      "reasoning": "After the follow operations, the source songs should be re-read and the resulting target set compared with the mutation coverage, while retaining each public follow response for verification.",
+      "action_code": "verified_songs_by_id = {}\nfor song_id in target_song_ids:\n    verified_songs_by_id[song_id] = apis.spotify.show_song(song_id=song_id)\nverified_target_artist_ids = sorted({artist['id'] for song in verified_songs_by_id.values() if song['genre'].strip().casefold() == 'classical' for artist in song['artists']})\nverification_summary = {'target_set_matches_reread': verified_target_artist_ids == target_artist_ids, 'follow_call_coverage_matches_targets': sorted(follow_results_by_artist_id) == target_artist_ids, 'follow_response_count': len(follow_results_by_artist_id), 'target_artist_count': len(target_artist_ids), 'all_follow_responses_have_message': all(isinstance(result, dict) and 'message' in result for result in follow_results_by_artist_id.values())}\nprint(verification_summary)",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [
+        "spotify.show_song"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Re-read classical songs yield the same distinct artist IDs",
+        "Every target artist ID has a corresponding public follow response",
+        "Every follow response contains the documented message field"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 10,
+      "phase": "complete",
+      "reasoning": "The action workflow has issued follow operations for all artists derived from all classical-genre playlist songs and has performed the available public verification checks, so the task can be marked successful without an answer value.",
+      "action_code": "completion_result = apis.supervisor.complete_task(status='success')",
+      "depends_on_steps": [
+        9
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The action task is marked complete with success status and no QA answer"
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

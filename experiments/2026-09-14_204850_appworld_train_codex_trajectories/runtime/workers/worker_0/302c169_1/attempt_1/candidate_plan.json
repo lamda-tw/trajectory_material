@@ -1,0 +1,185 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "302c169_1",
+  "task_family": "302c169",
+  "completion_mode": "status_only",
+  "plan_summary": "Inspect the required public API contracts, authenticate without exposing secrets, paginate through all alarms, identify the uniquely labeled go-to-sleep alarm, move it one hour later, disable every enabled alarm other than that target, re-query after each mutation phase, verify all requested postconditions, and complete the action task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public API contracts must be inspected before any task API is called so subsequent calls use only documented parameters and response fields.",
+      "action_code": "api_documentation = {}\nfor app_name, api_name in [\n    (\"supervisor\", \"show_profile\"),\n    (\"supervisor\", \"show_account_passwords\"),\n    (\"phone\", \"login\"),\n    (\"phone\", \"show_alarms\"),\n    (\"phone\", \"update_alarm\"),\n    (\"supervisor\", \"complete_task\"),\n]:\n    api_documentation[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public documentation for every task API is available before first use"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "With the contracts inspected, obtain the supervisor's phone username and corresponding app password, then log in while keeping all credentials and tokens unprinted.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\nphone_account_record = next(\n    record for record in account_password_records\n    if record[\"account_name\"].strip().lower() == \"phone\"\n)\nphone_password = phone_account_record[\"password\"]\nphone_login_response = apis.phone.login(\n    username=supervisor_profile[\"phone_number\"],\n    password=phone_password,\n)\nphone_access_token = phone_login_response[\"access_token\"]",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords",
+        "phone.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A phone access token is stored without printing credentials or token values"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "observe",
+      "reasoning": "The authenticated alarm collection must be read completely before selecting the target or deciding which other alarms require disabling.",
+      "action_code": "alarms_before_updates = []\npage_index = 0\npage_limit = 20\nwhile True:\n    alarm_page = apis.phone.show_alarms(\n        access_token=phone_access_token,\n        page_index=page_index,\n        page_limit=page_limit,\n    )\n    alarms_before_updates.extend(alarm_page)\n    if len(alarm_page) < page_limit:\n        break\n    page_index += 1\nprint([\n    {\n        \"alarm_id\": alarm[\"alarm_id\"],\n        \"time\": alarm[\"time\"],\n        \"label\": alarm[\"label\"],\n        \"enabled\": alarm[\"enabled\"],\n    }\n    for alarm in alarms_before_updates\n])",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "phone.show_alarms"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every pagination page of the current alarm collection is loaded"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 4,
+      "phase": "derive",
+      "reasoning": "Use the instruction's go-to-sleep wording to select exactly one alarm from the retrieved records and calculate its one-hour-later time without guessing an ID or time.",
+      "action_code": "def normalize_alarm_label(value):\n    return \" \".join(\n        \"\".join(character.lower() if character.isalnum() else \" \" for character in value).split()\n    )\n\ntarget_label = normalize_alarm_label(\"go-to-sleep\")\ntarget_alarm_candidates = [\n    alarm for alarm in alarms_before_updates\n    if normalize_alarm_label(alarm.get(\"label\", \"\")) == target_label\n]\nif len(target_alarm_candidates) != 1:\n    raise RuntimeError(\"Expected exactly one alarm whose normalized label is go to sleep\")\ntarget_alarm = target_alarm_candidates[0]\ntarget_alarm_id = target_alarm[\"alarm_id\"]\ntime_parts = target_alarm[\"time\"].split(\":\")\nif len(time_parts) != 2:\n    raise RuntimeError(\"Target alarm time is not in HH:MM format\")\ntarget_hour = int(time_parts[0])\ntarget_minute = int(time_parts[1])\nif not (0 <= target_hour <= 23 and 0 <= target_minute <= 59):\n    raise RuntimeError(\"Target alarm time is outside the valid HH:MM range\")\nnew_target_time = f\"{(target_hour + 1) % 24:02d}:{target_minute:02d}\"\nprint({\n    \"target_alarm_id\": target_alarm_id,\n    \"label\": target_alarm[\"label\"],\n    \"current_time\": target_alarm[\"time\"],\n    \"reviewed_new_time\": new_target_time,\n})",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Exactly one target alarm is selected from public records",
+        "The reviewed replacement time is exactly one hour later with midnight wraparound"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 5,
+      "phase": "act",
+      "reasoning": "The target alarm ID and replacement time have been derived and reviewed from the retrieved alarm record, so the requested time mutation can now be applied.",
+      "action_code": "target_time_update_response = apis.phone.update_alarm(\n    alarm_id=target_alarm_id,\n    access_token=phone_access_token,\n    time=new_target_time,\n)",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "phone.update_alarm"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The target alarm receives the reviewed one-hour-later time update"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 6,
+      "phase": "verify",
+      "reasoning": "A mutation response alone does not establish stored state, so re-read every alarm page and verify the target's time before planning changes to the remaining alarms.",
+      "action_code": "alarms_after_time_update = []\npage_index = 0\nwhile True:\n    alarm_page = apis.phone.show_alarms(\n        access_token=phone_access_token,\n        page_index=page_index,\n        page_limit=page_limit,\n    )\n    alarms_after_time_update.extend(alarm_page)\n    if len(alarm_page) < page_limit:\n        break\n    page_index += 1\nrefreshed_target_candidates = [\n    alarm for alarm in alarms_after_time_update\n    if alarm[\"alarm_id\"] == target_alarm_id\n]\nif len(refreshed_target_candidates) != 1:\n    raise RuntimeError(\"The selected target alarm was not found exactly once after its update\")\nrefreshed_target_alarm = refreshed_target_candidates[0]\ntime_update_verified = refreshed_target_alarm[\"time\"] == new_target_time\nprint({\n    \"target_alarm_id\": target_alarm_id,\n    \"stored_time\": refreshed_target_alarm[\"time\"],\n    \"expected_time\": new_target_time,\n    \"time_update_verified\": time_update_verified,\n})\nif not time_update_verified:\n    raise RuntimeError(\"The target alarm time update was not persisted\")",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [
+        "phone.show_alarms"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "The target alarm exists exactly once after mutation",
+        "The target alarm's stored time equals the computed one-hour-later time",
+        "Every pagination page is re-read"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 7,
+      "phase": "derive",
+      "reasoning": "Using the refreshed alarm records, derive and review the exact set of non-target alarms that are still enabled; already-disabled alarms need no redundant mutation.",
+      "action_code": "disable_alarm_plan = [\n    {\"alarm_id\": alarm[\"alarm_id\"], \"enabled\": False}\n    for alarm in alarms_after_time_update\n    if alarm[\"alarm_id\"] != target_alarm_id and alarm[\"enabled\"]\n]\nother_alarm_count = sum(\n    1 for alarm in alarms_after_time_update\n    if alarm[\"alarm_id\"] != target_alarm_id\n)\nalready_disabled_other_count = other_alarm_count - len(disable_alarm_plan)\nprint({\n    \"target_alarm_id_excluded\": target_alarm_id,\n    \"disable_alarm_ids\": [item[\"alarm_id\"] for item in disable_alarm_plan],\n    \"already_disabled_other_count\": already_disabled_other_count,\n})",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every planned mutation targets an enabled non-target alarm",
+        "The selected go-to-sleep alarm is excluded from the disable plan"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 8,
+      "phase": "act",
+      "reasoning": "The per-alarm disable plan has been derived and reviewed from refreshed public records, so apply each planned non-target mutation and retain every response.",
+      "action_code": "disable_update_responses = []\nfor disable_item in disable_alarm_plan:\n    disable_update_responses.append(\n        apis.phone.update_alarm(\n            alarm_id=disable_item[\"alarm_id\"],\n            access_token=phone_access_token,\n            enabled=disable_item[\"enabled\"],\n        )\n    )",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "phone.update_alarm"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Each reviewed enabled non-target alarm is requested to be disabled"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 9,
+      "phase": "verify",
+      "reasoning": "After all requested mutations, re-query every page and compute both postconditions from the stored public records before allowing task completion.",
+      "action_code": "alarms_after_all_updates = []\npage_index = 0\nwhile True:\n    alarm_page = apis.phone.show_alarms(\n        access_token=phone_access_token,\n        page_index=page_index,\n        page_limit=page_limit,\n    )\n    alarms_after_all_updates.extend(alarm_page)\n    if len(alarm_page) < page_limit:\n        break\n    page_index += 1\nfinal_target_candidates = [\n    alarm for alarm in alarms_after_all_updates\n    if alarm[\"alarm_id\"] == target_alarm_id\n]\nfinal_target_unique = len(final_target_candidates) == 1\nfinal_target_time_correct = (\n    final_target_unique and final_target_candidates[0][\"time\"] == new_target_time\n)\nall_other_alarms_disabled = all(\n    not alarm[\"enabled\"]\n    for alarm in alarms_after_all_updates\n    if alarm[\"alarm_id\"] != target_alarm_id\n)\nfinal_verification = {\n    \"target_alarm_id\": target_alarm_id,\n    \"target_unique\": final_target_unique,\n    \"target_time_correct\": final_target_time_correct,\n    \"all_other_alarms_disabled\": all_other_alarms_disabled,\n    \"checked_alarm_count\": len(alarms_after_all_updates),\n}\nprint(final_verification)\nif not (\n    final_target_unique\n    and final_target_time_correct\n    and all_other_alarms_disabled\n):\n    raise RuntimeError(\"One or more requested alarm postconditions were not satisfied\")",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [
+        "phone.show_alarms"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "The go-to-sleep alarm still exists exactly once",
+        "Its stored time is exactly one hour later than its original time",
+        "Every other alarm is disabled",
+        "Every final pagination page is checked"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 10,
+      "phase": "complete",
+      "reasoning": "The preceding verification computes the requested postconditions from a fresh full read and stops execution on any failure, so the action task can now be marked successful.",
+      "action_code": "task_completion_response = apis.supervisor.complete_task(status=\"success\")",
+      "depends_on_steps": [
+        9
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The action task is marked complete only after all alarm postconditions are verified"
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

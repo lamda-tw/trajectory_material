@@ -1,0 +1,160 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "82e2fac_1",
+  "task_family": "82e2fac",
+  "completion_mode": "answer_variable",
+  "plan_summary": "Authenticate with Supervisor-provided Spotify credentials, exhaustively paginate the playlist library, fetch each unique song, derive and verify the title with the greatest song like count, then submit that answer.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public documentation for every required task API must be inspected before any task API is called, including the final completion contract.",
+      "action_code": "api_docs = {}\nfor app_name, api_name in [(\"supervisor\", \"show_profile\"), (\"supervisor\", \"show_account_passwords\"), (\"spotify\", \"login\"), (\"spotify\", \"show_playlist_library\"), (\"spotify\", \"show_song\"), (\"supervisor\", \"complete_task\")]:\n    api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public contracts for all required APIs are available before their use"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "The live Supervisor profile supplies the Spotify username candidate, while the account-password records supply the corresponding password without exposing credentials.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\nspotify_password_records = [record for record in account_password_records if record[\"account_name\"].strip().lower() == \"spotify\"]\nif len(spotify_password_records) != 1:\n    raise ValueError(\"A unique Spotify credential record could not be identified\")\nspotify_username = supervisor_profile[\"email\"]\nspotify_password = spotify_password_records[0][\"password\"]",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Exactly one Spotify password record is selected from live Supervisor data"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "authenticate",
+      "reasoning": "The Spotify username and password derived from Supervisor data can now be used to obtain the access token required by the playlist-library API.",
+      "action_code": "spotify_login_result = apis.spotify.login(username=spotify_username, password=spotify_password)\nspotify_access_token = spotify_login_result[\"access_token\"]",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "spotify.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A Spotify access token is obtained from the login response"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 4,
+      "phase": "observe",
+      "reasoning": "All playlists in the authenticated library must be read, so pages are requested sequentially until the API returns an empty page.",
+      "action_code": "playlist_records = []\nplaylist_page_index = 0\nwhile True:\n    playlist_page = apis.spotify.show_playlist_library(access_token=spotify_access_token, page_index=playlist_page_index)\n    if not playlist_page:\n        break\n    playlist_records.extend(playlist_page)\n    playlist_page_index += 1",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "spotify.show_playlist_library"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every playlist-library page is consumed through the first empty page"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 5,
+      "phase": "derive",
+      "reasoning": "The song lookup targets must come from the collected playlists, with duplicate song IDs removed so each song is evaluated once.",
+      "action_code": "playlist_song_ids = sorted({song_id for playlist in playlist_records for song_id in playlist[\"song_ids\"]})\nif not playlist_song_ids:\n    raise ValueError(\"No songs were found in the Spotify playlist library\")\nprint({\"playlist_count\": len(playlist_records), \"unique_song_count\": len(playlist_song_ids)})",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "A nonempty unique set of song IDs is derived only from playlist records"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 6,
+      "phase": "observe",
+      "reasoning": "Each unique playlist song must be fetched because its public detail record contains the title and like count needed for comparison.",
+      "action_code": "song_records = []\nfor song_id in playlist_song_ids:\n    song_records.append(apis.spotify.show_song(song_id=song_id))\nsong_candidate_summaries = [{\"song_id\": song[\"song_id\"], \"title\": song[\"title\"], \"like_count\": song[\"like_count\"]} for song in song_records]\nprint(song_candidate_summaries)",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [
+        "spotify.show_song"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A public detail record is retrieved for every unique playlist song ID"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 7,
+      "phase": "derive",
+      "reasoning": "The answer can now be derived from real song records by finding the maximum like count and retaining only titles at that maximum.",
+      "action_code": "highest_like_count = max(song[\"like_count\"] for song in song_records)\nmost_liked_song_records = [song for song in song_records if song[\"like_count\"] == highest_like_count]\nmost_liked_titles = sorted({song[\"title\"] for song in most_liked_song_records})\nif len(most_liked_titles) != 1:\n    raise ValueError(\"The most-liked song title is not uniquely determined\")\nanswer = most_liked_titles[0]",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "The answer is derived solely from titles whose like count equals the observed maximum",
+        "The resulting title is unique"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 8,
+      "phase": "verify",
+      "reasoning": "Before submission, the selected title should be checked against all retrieved song records to ensure no song has a greater like count and that a matching maximum-liked record exists.",
+      "action_code": "selected_song_records = [song for song in song_records if song[\"title\"] == answer and song[\"like_count\"] == highest_like_count]\nif not selected_song_records:\n    raise ValueError(\"The selected answer does not match a maximum-liked song record\")\nif any(song[\"like_count\"] > highest_like_count for song in song_records):\n    raise ValueError(\"A song exceeds the selected maximum like count\")\nprint({\"selected_title\": answer, \"like_count\": highest_like_count})",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "The selected title occurs among the maximum-liked records",
+        "No retrieved playlist song has a greater like count"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 9,
+      "phase": "complete",
+      "reasoning": "The verified answer variable is ready to be submitted as the response to this QA task.",
+      "action_code": "completion_result = apis.supervisor.complete_task(answer=answer, status=\"success\")",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The computed answer variable is submitted with success status"
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

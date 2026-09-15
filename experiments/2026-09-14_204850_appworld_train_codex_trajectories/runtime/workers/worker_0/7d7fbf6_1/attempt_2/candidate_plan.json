@@ -1,0 +1,148 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "7d7fbf6_1",
+  "task_family": "7d7fbf6",
+  "completion_mode": "status_only",
+  "plan_summary": "Authenticate safely, discover vacation-spot directories using both direct directory and recursive file listings, derive one compression job per spot, compress each into the vacations directory while deleting its source, then re-query and verify the archives and removals before completing the task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public documentation for every API used later must be inspected before the first task API call.",
+      "action_code": "api_documentation = {}\nfor app_name, api_name in [(\"supervisor\", \"show_profile\"), (\"supervisor\", \"show_account_passwords\"), (\"file_system\", \"login\"), (\"file_system\", \"show_directory\"), (\"file_system\", \"compress_directory\"), (\"supervisor\", \"complete_task\")]:\n    api_documentation[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public documentation is obtained for all later APIs."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "The supervisor profile supplies the account email, while the account-password records supply the file-system password without exposing it.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\nfile_system_password_record = next(record for record in account_password_records if record[\"account_name\"].casefold().replace(\"_\", \"\").replace(\"-\", \"\").replace(\" \", \"\") == \"filesystem\")\nfile_system_username = supervisor_profile[\"email\"]\nfile_system_password = file_system_password_record[\"password\"]",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "File-system username and password are held only in variables."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "authenticate",
+      "reasoning": "A file-system access token is required for all directory reads and compression calls.",
+      "action_code": "file_system_login_result = apis.file_system.login(username=file_system_username, password=file_system_password)\nfile_system_access_token = file_system_login_result[\"access_token\"]",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "file_system.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A file-system access token is stored without printing it."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 4,
+      "phase": "observe",
+      "reasoning": "Direct directory entries identify immediate children, while a recursive file listing provides a format-tolerant fallback for inferring their first path components.",
+      "action_code": "photograph_directories = apis.file_system.show_directory(access_token=file_system_access_token, directory_path=\"~/photographs/\", entry_type=\"directories\", recursive=False)\nphotograph_files = apis.file_system.show_directory(access_token=file_system_access_token, directory_path=\"~/photographs/\", entry_type=\"files\", recursive=True)\nprint({\"direct_directory_count\": len(photograph_directories), \"recursive_file_count\": len(photograph_files)})",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "file_system.show_directory"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Immediate subdirectories and recursively listed photo files are available for candidate derivation."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 5,
+      "phase": "derive",
+      "reasoning": "The compression targets must be derived from the real listings, excluding the literal vacations destination, and reviewed separately before any mutation.",
+      "action_code": "def relative_to_photographs(entry):\n    normalized = str(entry).replace(\"\\\\\", \"/\").strip(\"/\")\n    marker = \"photographs/\"\n    return normalized.split(marker, 1)[1].strip(\"/\") if marker in normalized else normalized\n\nvacation_spot_names = set()\nfor entry in photograph_directories:\n    relative_entry = relative_to_photographs(entry)\n    spot_name = relative_entry.split(\"/\", 1)[0] if relative_entry else \"\"\n    if spot_name and spot_name.casefold() != \"vacations\":\n        vacation_spot_names.add(spot_name)\nfor entry in photograph_files:\n    relative_entry = relative_to_photographs(entry)\n    if \"/\" in relative_entry:\n        spot_name = relative_entry.split(\"/\", 1)[0]\n        if spot_name and spot_name.casefold() != \"vacations\":\n            vacation_spot_names.add(spot_name)\n\nvacation_jobs = [{\"vacation_spot\": spot_name, \"source_directory\": \"~/photographs/\" + spot_name, \"archive_path\": \"~/photographs/vacations/\" + spot_name + \".zip\"} for spot_name in sorted(vacation_spot_names)]\nprint({\"vacation_spots\": [job[\"vacation_spot\"] for job in vacation_jobs], \"compression_job_count\": len(vacation_jobs)})",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Each discovered vacation spot has a source directory and exact destination zip path derived from its name.",
+        "The vacations destination is not treated as a source directory."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 6,
+      "phase": "act",
+      "reasoning": "The reviewed jobs now provide all source and destination paths; each source can be compressed with deletion enabled as requested.",
+      "action_code": "compression_results = []\nfor job in vacation_jobs:\n    compression_results.append(apis.file_system.compress_directory(access_token=file_system_access_token, directory_path=job[\"source_directory\"], compressed_file_path=job[\"archive_path\"], delete_directory=True, overwrite=True))",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [
+        "file_system.compress_directory"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Every derived vacation directory is submitted for zip compression and source deletion."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 7,
+      "phase": "verify",
+      "reasoning": "Fresh public listings are needed after the mutations to check both required outcomes: every expected zip exists and no vacation-spot source directory remains.",
+      "action_code": "post_compression_directories = apis.file_system.show_directory(access_token=file_system_access_token, directory_path=\"~/photographs/\", entry_type=\"directories\", recursive=False)\npost_compression_archives = apis.file_system.show_directory(access_token=file_system_access_token, directory_path=\"~/photographs/vacations/\", entry_type=\"files\", recursive=False)\n\npost_directory_names = set()\nfor entry in post_compression_directories:\n    relative_entry = relative_to_photographs(entry)\n    name = relative_entry.split(\"/\", 1)[0] if relative_entry else \"\"\n    if name:\n        post_directory_names.add(name)\npost_archive_names = {str(entry).replace(\"\\\\\", \"/\").rstrip(\"/\").rsplit(\"/\", 1)[-1] for entry in post_compression_archives}\nexpected_archive_names = {job[\"vacation_spot\"] + \".zip\" for job in vacation_jobs}\nmissing_archive_names = sorted(expected_archive_names - post_archive_names)\nremaining_vacation_spots = sorted(name for name in post_directory_names if name.casefold() != \"vacations\")\nverification_summary = {\"expected_archive_count\": len(expected_archive_names), \"missing_archives\": missing_archive_names, \"remaining_vacation_spot_directories\": remaining_vacation_spots}\nprint(verification_summary)\nassert not missing_archive_names, \"One or more expected vacation archives are missing.\"\nassert not remaining_vacation_spots, \"One or more vacation spot directories remain.\"",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [
+        "file_system.show_directory"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A <vacation_spot>.zip file exists in ~/photographs/vacations/ for every derived spot.",
+        "All vacation-spot subdirectories have been removed from ~/photographs/.",
+        "The ~/photographs/vacations/ destination directory is retained."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 8,
+      "phase": "complete",
+      "reasoning": "The action task can be marked successful only after the post-mutation assertions have completed.",
+      "action_code": "task_completion = apis.supervisor.complete_task(status=\"success\")",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The task is reported complete with success status."
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

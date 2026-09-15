@@ -1,0 +1,150 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "cf6abd2_1",
+  "task_family": "cf6abd2",
+  "completion_mode": "status_only",
+  "plan_summary": "Authenticate to Simple Note, paginate a search for the Bucket List note, inspect matching note content, derive a checkbox-only content update for the requested item, apply it, verify the saved content, and complete the task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "Public documentation must be inspected before any task API call, so load the documentation for every API the plan will use.",
+      "action_code": "api_doc_specs = ((\"supervisor\", \"show_profile\"), (\"supervisor\", \"show_account_passwords\"), (\"simple_note\", \"login\"), (\"simple_note\", \"search_notes\"), (\"simple_note\", \"show_note\"), (\"simple_note\", \"update_note\"), (\"supervisor\", \"complete_task\"))\npublic_api_docs = {(app_name, api_name): apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name) for app_name, api_name in api_doc_specs}",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Documentation is loaded before the first task API call."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "The supervisor profile supplies the account email, and the password API supplies the Simple Note credential needed to log in without exposing secrets.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\nsupervisor_account_passwords = apis.supervisor.show_account_passwords()\nsimple_note_credentials = [record for record in supervisor_account_passwords if \"\".join(character for character in record[\"account_name\"].lower() if character.isalnum()) == \"simplenote\"]\nif len(simple_note_credentials) != 1:\n    raise RuntimeError(\"Could not uniquely resolve the Simple Note credential\")\nsimple_note_password = simple_note_credentials[0][\"password\"]\nsimple_note_session = apis.simple_note.login(username=supervisor_profile[\"email\"], password=simple_note_password)\nsimple_note_access_token = simple_note_session[\"access_token\"]",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords",
+        "simple_note.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A Simple Note access token is stored without printing the password or token."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "observe",
+      "reasoning": "The instruction identifies the Bucket List note, so search for that title and exhaust every result page before selecting candidates.",
+      "action_code": "note_search_query = \"Bucket List\"\nall_note_summaries = []\npage_index = 0\nwhile True:\n    note_page = apis.simple_note.search_notes(access_token=simple_note_access_token, query=note_search_query, page_index=page_index, page_limit=20)\n    all_note_summaries.extend(note_page)\n    if len(note_page) < 20:\n        break\n    page_index += 1\nbucket_list_summaries = [note for note in all_note_summaries if note[\"title\"].strip().casefold() == note_search_query.casefold()]\nprint(bucket_list_summaries)",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "simple_note.search_notes"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every page for the Bucket List search is read.",
+        "Exact-title candidate summaries are retained."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 4,
+      "phase": "observe",
+      "reasoning": "Search results omit note content, so fetch every exact-title candidate to locate the requested checklist item using public note data.",
+      "action_code": "target_item = \"Learning to cook a signature dish from scratch\"\nbucket_list_details = [apis.simple_note.show_note(note_id=summary[\"note_id\"], access_token=simple_note_access_token) for summary in bucket_list_summaries]\ncontent_candidate_summaries = [{\"note_id\": note[\"note_id\"], \"title\": note[\"title\"], \"matching_lines\": [line for line in note[\"content\"].splitlines() if target_item in line]} for note in bucket_list_details]\nprint(content_candidate_summaries)",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "simple_note.show_note"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Detailed content is fetched for every exact-title candidate.",
+        "Candidate lines containing the requested item are exposed for review."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 5,
+      "phase": "derive",
+      "reasoning": "The fetched contents now permit a separate pre-mutation review that uniquely selects the item and derives a minimal checkbox-marker replacement while preserving all other content.",
+      "action_code": "incomplete_to_done = ((\"[ ]\", \"[x]\"), (\"☐\", \"☑\"), (\"□\", \"☑\"), (\"⬜\", \"✅\"))\ndone_markers = (\"[x]\", \"[X]\", \"☑\", \"✅\")\neditable_candidates = []\nalready_done_candidates = []\nfor note in bucket_list_details:\n    lines = note[\"content\"].splitlines(keepends=True)\n    for line_index, line in enumerate(lines):\n        if target_item not in line:\n            continue\n        marker_pair = next((pair for pair in incomplete_to_done if pair[0] in line), None)\n        if marker_pair is not None:\n            updated_lines = list(lines)\n            updated_lines[line_index] = line.replace(marker_pair[0], marker_pair[1], 1)\n            editable_candidates.append({\"note\": note, \"line_before\": line, \"line_after\": updated_lines[line_index], \"content_after\": \"\".join(updated_lines)})\n        elif any(marker in line for marker in done_markers):\n            already_done_candidates.append({\"note\": note, \"line_before\": line, \"line_after\": line, \"content_after\": note[\"content\"]})\nif len(editable_candidates) == 1:\n    selected_candidate = editable_candidates[0]\n    needs_update = True\nelif len(editable_candidates) == 0 and len(already_done_candidates) == 1:\n    selected_candidate = already_done_candidates[0]\n    needs_update = False\nelse:\n    raise RuntimeError(\"Could not uniquely resolve the requested checklist item and state\")\nselected_note_id = selected_candidate[\"note\"][\"note_id\"]\nexpected_content = selected_candidate[\"content_after\"]\nprint({\"note_id\": selected_note_id, \"title\": selected_candidate[\"note\"][\"title\"], \"target_item\": target_item, \"needs_update\": needs_update, \"line_before\": selected_candidate[\"line_before\"], \"line_after\": selected_candidate[\"line_after\"]})",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Exactly one applicable checklist item is selected from fetched records.",
+        "The proposed content changes only its incomplete marker to a done marker."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 6,
+      "phase": "act",
+      "reasoning": "The reviewed note ID and expected content are derived solely from prior reads, so apply the content update when the item is not already done.",
+      "action_code": "update_result = apis.simple_note.update_note(note_id=selected_note_id, access_token=simple_note_access_token, content=expected_content) if needs_update else None",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [
+        "simple_note.update_note"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The selected note receives the reviewed content when an update is required."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 7,
+      "phase": "verify",
+      "reasoning": "Re-read the selected public note after the mutation and compute all postconditions from its actual saved state before completing the task.",
+      "action_code": "verification_note = apis.simple_note.show_note(note_id=selected_note_id, access_token=simple_note_access_token)\nverification_target_lines = [line for line in verification_note[\"content\"].splitlines() if target_item in line]\ncontent_matches_expected = verification_note[\"content\"] == expected_content\ntarget_is_done = len(verification_target_lines) == 1 and any(marker in verification_target_lines[0] for marker in done_markers) and not any(marker in verification_target_lines[0] for marker, replacement in incomplete_to_done)\nverification_passed = verification_note[\"note_id\"] == selected_note_id and content_matches_expected and target_is_done\nprint({\"note_id\": verification_note[\"note_id\"], \"title\": verification_note[\"title\"], \"target_item\": target_item, \"content_matches_expected\": content_matches_expected, \"target_is_done\": target_is_done, \"verification_passed\": verification_passed})\nif not verification_passed:\n    raise RuntimeError(\"The requested done state was not verified\")",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [
+        "simple_note.show_note"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "The saved content exactly equals the reviewed expected content.",
+        "The requested item appears once with a done marker and no incomplete marker."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 8,
+      "phase": "complete",
+      "reasoning": "The postconditions have been computed and enforced from the re-read note, so the action task can now be marked successful.",
+      "action_code": "completion_result = apis.supervisor.complete_task(status=\"success\")",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The active action task is marked complete only after verification."
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

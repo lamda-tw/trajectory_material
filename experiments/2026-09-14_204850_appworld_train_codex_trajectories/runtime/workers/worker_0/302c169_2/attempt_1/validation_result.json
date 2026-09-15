@@ -1,0 +1,118 @@
+{
+  "accepted": true,
+  "trajectory": {
+    "task_id": "302c169_2",
+    "task_family": "302c169",
+    "instruction": "I am going on a vacation. Move my wake-up phone alarm to 40 minutes earlier and disable the rest.",
+    "supervisor": {
+      "first_name": "Katie",
+      "last_name": "Simpson",
+      "email": "kat_simp@gmail.com",
+      "phone_number": "6727300099"
+    },
+    "datetime": "2023-05-18T12:00:00",
+    "appworld_version": "0.2.0.dev0",
+    "source": "ground_truth_api_calls_guided_codex_reconstruction",
+    "steps": [
+      {
+        "step_index": 1,
+        "reasoning": "Public documentation for every required task API must be inspected before any task API is called.",
+        "action_code": "required_api_refs = [\n    (\"supervisor\", \"show_profile\"),\n    (\"supervisor\", \"show_account_passwords\"),\n    (\"phone\", \"login\"),\n    (\"phone\", \"show_alarms\"),\n    (\"phone\", \"update_alarm\"),\n    (\"supervisor\", \"complete_task\"),\n]\npublic_api_docs = {}\nfor app_name, api_name in required_api_refs:\n    public_api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 2,
+        "reasoning": "The phone username and password must come from Supervisor APIs, and the resulting password and access token must remain unprinted.",
+        "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_passwords = apis.supervisor.show_account_passwords()\nphone_password_entries = [entry for entry in account_passwords if entry[\"account_name\"].strip().lower() == \"phone\"]\nif not phone_password_entries:\n    phone_password_entries = [entry for entry in account_passwords if \"phone\" in entry[\"account_name\"].strip().lower()]\nif len(phone_password_entries) != 1:\n    raise RuntimeError(\"Could not uniquely resolve the phone account credential\")\nphone_password = phone_password_entries[0][\"password\"]\nphone_login = apis.phone.login(username=supervisor_profile[\"phone_number\"], password=phone_password)\nphone_access_token = phone_login[\"access_token\"]",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 3,
+        "reasoning": "All alarm pages must be read before selecting the target or determining which other alarms need disabling.",
+        "action_code": "initial_alarms = []\npage_index = 0\npage_limit = 20\nwhile True:\n    alarm_page = apis.phone.show_alarms(access_token=phone_access_token, page_index=page_index, page_limit=page_limit)\n    initial_alarms.extend(alarm_page)\n    if len(alarm_page) < page_limit:\n        break\n    page_index += 1\nprint([{\"alarm_id\": alarm[\"alarm_id\"], \"time\": alarm[\"time\"], \"label\": alarm[\"label\"], \"enabled\": alarm[\"enabled\"]} for alarm in initial_alarms])",
+        "observation": "[\n {\n  \"alarm_id\": 414,\n  \"time\": \"07:30\",\n  \"label\": \"Wake Up\",\n  \"enabled\": true\n },\n {\n  \"alarm_id\": 418,\n  \"time\": \"10:30\",\n  \"label\": \"Water Plants\",\n  \"enabled\": false\n },\n {\n  \"alarm_id\": 417,\n  \"time\": \"12:00\",\n  \"label\": \"Weekly Work Standup Meeting\",\n  \"enabled\": true\n },\n {\n  \"alarm_id\": 419,\n  \"time\": \"18:30\",\n  \"label\": \"Clean the House\",\n  \"enabled\": true\n },\n {\n  \"alarm_id\": 420,\n  \"time\": \"18:30\",\n  \"label\": \"Pick up Laundry\",\n  \"enabled\": false\n },\n {\n  \"alarm_id\": 416,\n  \"time\": \"23:00\",\n  \"label\": \"Go to sleep\",\n  \"enabled\": false\n }\n]\n"
+      },
+      {
+        "step_index": 4,
+        "reasoning": "The singular wake-up alarm must be selected from observed labels, and its new daily time must be computed from its observed time before mutation.",
+        "action_code": "def normalize_alarm_label(value):\n    return \" \".join(\"\".join(ch.lower() if ch.isalnum() else \" \" for ch in str(value)).split())\n\ndef wake_label_rank(alarm):\n    normalized = normalize_alarm_label(alarm.get(\"label\", \"\"))\n    compact = normalized.replace(\" \", \"\")\n    if normalized in {\"wake up\", \"wake up alarm\", \"wake alarm\"}:\n        return 0\n    if \"wake up\" in normalized or \"wakeup\" in compact:\n        return 1\n    if \"wake\" in normalized.split():\n        return 2\n    return None\n\nranked_wake_candidates = []\nfor alarm in initial_alarms:\n    candidate_rank = wake_label_rank(alarm)\n    if candidate_rank is not None:\n        ranked_wake_candidates.append((candidate_rank, alarm))\nprint({\"wake_candidates\": [{\"alarm_id\": alarm[\"alarm_id\"], \"label\": alarm[\"label\"], \"time\": alarm[\"time\"], \"rank\": rank} for rank, alarm in ranked_wake_candidates]})\nif not ranked_wake_candidates:\n    raise RuntimeError(\"No alarm label identifies a wake-up alarm\")\nbest_wake_rank = min(rank for rank, alarm in ranked_wake_candidates)\nbest_wake_candidates = [alarm for rank, alarm in ranked_wake_candidates if rank == best_wake_rank]\nif len(best_wake_candidates) != 1:\n    raise RuntimeError(\"The wake-up alarm is ambiguous\")\ntarget_before = best_wake_candidates[0]\ntarget_alarm_id = target_before[\"alarm_id\"]\ntime_parts = target_before[\"time\"].split(\":\")\nif len(time_parts) != 2:\n    raise RuntimeError(\"The wake-up alarm time is not in HH:MM format\")\noriginal_minutes = int(time_parts[0]) * 60 + int(time_parts[1])\nnew_minutes = (original_minutes - 40) % (24 * 60)\nnew_wake_time = f\"{new_minutes // 60:02d}:{new_minutes % 60:02d}\"\nprint({\"target_alarm_id\": target_alarm_id, \"original_time\": target_before[\"time\"], \"new_time\": new_wake_time})",
+        "observation": "{\"wake_candidates\": [{\"alarm_id\": 414, \"label\": \"Wake Up\", \"time\": \"07:30\", \"rank\": 0}]}\n{\"target_alarm_id\": 414, \"original_time\": \"07:30\", \"new_time\": \"06:50\"}\n"
+      },
+      {
+        "step_index": 5,
+        "reasoning": "The reviewed target identifier and computed time are now available, so only the wake-up alarm's time should be patched.",
+        "action_code": "target_update_result = apis.phone.update_alarm(alarm_id=target_alarm_id, access_token=phone_access_token, time=new_wake_time)",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 6,
+        "reasoning": "The target alarm must be re-read from all pages to confirm the time change before any other alarms are modified.",
+        "action_code": "after_time_alarms = []\npage_index = 0\nwhile True:\n    alarm_page = apis.phone.show_alarms(access_token=phone_access_token, page_index=page_index, page_limit=page_limit)\n    after_time_alarms.extend(alarm_page)\n    if len(alarm_page) < page_limit:\n        break\n    page_index += 1\nafter_time_target_matches = [alarm for alarm in after_time_alarms if alarm[\"alarm_id\"] == target_alarm_id]\ntarget_time_updated = len(after_time_target_matches) == 1 and after_time_target_matches[0][\"time\"] == new_wake_time\ntarget_enabled_preserved = len(after_time_target_matches) == 1 and after_time_target_matches[0][\"enabled\"] == target_before[\"enabled\"]\nprint({\"target_alarm_id\": target_alarm_id, \"expected_time\": new_wake_time, \"observed_time\": after_time_target_matches[0][\"time\"] if len(after_time_target_matches) == 1 else None, \"time_updated\": target_time_updated, \"enabled_preserved\": target_enabled_preserved})\nif not target_time_updated or not target_enabled_preserved:\n    raise RuntimeError(\"The wake-up alarm update could not be verified\")",
+        "observation": "{\n \"target_alarm_id\": 414,\n \"expected_time\": \"06:50\",\n \"observed_time\": \"06:50\",\n \"time_updated\": true,\n \"enabled_preserved\": true\n}\n"
+      },
+      {
+        "step_index": 7,
+        "reasoning": "With the target update verified, the currently enabled non-target alarms can be derived for a minimal disable-only mutation pass.",
+        "action_code": "all_other_alarm_ids = [alarm[\"alarm_id\"] for alarm in after_time_alarms if alarm[\"alarm_id\"] != target_alarm_id]\nother_alarm_ids_to_disable = [alarm[\"alarm_id\"] for alarm in after_time_alarms if alarm[\"alarm_id\"] != target_alarm_id and alarm[\"enabled\"]]\nprint({\"target_alarm_id\": target_alarm_id, \"other_alarm_ids\": all_other_alarm_ids, \"alarm_ids_to_disable\": other_alarm_ids_to_disable})",
+        "observation": "{\n \"target_alarm_id\": 414,\n \"other_alarm_ids\": [\n  418,\n  417,\n  419,\n  420,\n  416\n ],\n \"alarm_ids_to_disable\": [\n  417,\n  419\n ]\n}\n"
+      },
+      {
+        "step_index": 8,
+        "reasoning": "The reviewed non-target identifiers now determine the exact alarms that require disabling.",
+        "action_code": "disable_results = []\nfor alarm_id in other_alarm_ids_to_disable:\n    disable_results.append(apis.phone.update_alarm(alarm_id=alarm_id, access_token=phone_access_token, enabled=False))",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 9,
+        "reasoning": "After all mutations, every alarm page must be read again to verify the target's earlier time and the disabled state of every other alarm.",
+        "action_code": "final_alarms = []\npage_index = 0\nwhile True:\n    alarm_page = apis.phone.show_alarms(access_token=phone_access_token, page_index=page_index, page_limit=page_limit)\n    final_alarms.extend(alarm_page)\n    if len(alarm_page) < page_limit:\n        break\n    page_index += 1\nfinal_target_matches = [alarm for alarm in final_alarms if alarm[\"alarm_id\"] == target_alarm_id]\nfinal_target_time_correct = len(final_target_matches) == 1 and final_target_matches[0][\"time\"] == new_wake_time\nfinal_target_enabled_preserved = len(final_target_matches) == 1 and final_target_matches[0][\"enabled\"] == target_before[\"enabled\"]\nall_other_alarms_disabled = all(not alarm[\"enabled\"] for alarm in final_alarms if alarm[\"alarm_id\"] != target_alarm_id)\nall_original_alarm_ids_present = {alarm[\"alarm_id\"] for alarm in initial_alarms}.issubset({alarm[\"alarm_id\"] for alarm in final_alarms})\nrequested_postconditions_met = final_target_time_correct and final_target_enabled_preserved and all_other_alarms_disabled and all_original_alarm_ids_present\nprint({\"target_alarm_id\": target_alarm_id, \"target_time_correct\": final_target_time_correct, \"target_enabled_preserved\": final_target_enabled_preserved, \"all_other_alarms_disabled\": all_other_alarms_disabled, \"all_original_alarm_ids_present\": all_original_alarm_ids_present, \"final_alarm_count\": len(final_alarms)})\nif not requested_postconditions_met:\n    raise RuntimeError(\"The requested final alarm state could not be verified\")",
+        "observation": "{\n \"target_alarm_id\": 414,\n \"target_time_correct\": true,\n \"target_enabled_preserved\": true,\n \"all_other_alarms_disabled\": true,\n \"all_original_alarm_ids_present\": true,\n \"final_alarm_count\": 6\n}\n"
+      },
+      {
+        "step_index": 10,
+        "reasoning": "The action task can be marked successful only after the final public read has established every requested postcondition.",
+        "action_code": "completion_result = apis.supervisor.complete_task(status=\"success\")",
+        "observation": "Execution successful."
+      }
+    ],
+    "final_status": "success",
+    "evaluation": {
+      "success": true,
+      "num_tests": 8,
+      "num_passes": 8,
+      "num_failures": 0
+    },
+    "replay_evaluation": {
+      "success": true,
+      "num_tests": 8,
+      "num_passes": 8,
+      "num_failures": 0
+    },
+    "replay_verified": true,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0,
+    "api_call_count": 16,
+    "api_call_count_source": "appworld_api_calls_log",
+    "replay_api_call_count": 16,
+    "step_count": 10,
+    "provenance": {
+      "specs_sha256": "f21066dc4a8d5e2f68ad37140dcbed6a5febf2e809b11d48bed1103cd16eeb23",
+      "api_calls_sha256": "c5fabea5df45b9d387b9f84d8e661141a0e7e69da31cbec18ea7127d78a86b81",
+      "plan_sha256": "784113c0400a3ed131b6c655351f4cf13d7bc8f3f3299cd9929a29da1ad1e7d6"
+    }
+  },
+  "task_result": {
+    "task_id": "302c169_2",
+    "status": "verified",
+    "attempts": 1,
+    "generation_error": null,
+    "execution_error": null,
+    "evaluation_success": true,
+    "replay_success": true,
+    "step_count": 10,
+    "api_call_count": 16,
+    "rejection_reason": null,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0
+  }
+}

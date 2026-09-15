@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AppWorldCodexPlanV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "status",
+    "failure_reason",
+    "missing_public_schema_fields",
+    "task_id",
+    "task_family",
+    "completion_mode",
+    "plan_summary",
+    "steps"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "appworld-codex-plan-v1"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "candidate",
+        "needs_more_public_schema"
+      ]
+    },
+    "failure_reason": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "missing_public_schema_fields": {
+      "type": "array",
+      "maxItems": 30,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 160
+      }
+    },
+    "task_id": {
+      "type": "string",
+      "const": "3c13f5a_3"
+    },
+    "task_family": {
+      "type": "string",
+      "const": "3c13f5a"
+    },
+    "completion_mode": {
+      "type": "string",
+      "enum": [
+        "status_only",
+        "answer_variable"
+      ]
+    },
+    "plan_summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 600
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 40,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "step_index",
+          "phase",
+          "reasoning",
+          "action_code",
+          "depends_on_steps",
+          "api_names_used",
+          "mutates_state",
+          "verification_targets",
+          "output_policy"
+        ],
+        "properties": {
+          "step_index": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 40
+          },
+          "phase": {
+            "type": "string",
+            "enum": [
+              "act",
+              "authenticate",
+              "complete",
+              "derive",
+              "inspect",
+              "observe",
+              "verify"
+            ]
+          },
+          "reasoning": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 900
+          },
+          "action_code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 12000
+          },
+          "depends_on_steps": {
+            "type": "array",
+            "maxItems": 39,
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 39
+            }
+          },
+          "api_names_used": {
+            "type": "array",
+            "maxItems": 40,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*\\.[a-z][a-z0-9_]*$"
+            }
+          },
+          "mutates_state": {
+            "type": "boolean"
+          },
+          "verification_targets": {
+            "type": "array",
+            "maxItems": 30,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 180
+            }
+          },
+          "output_policy": {
+            "type": "string",
+            "enum": [
+              "no_print",
+              "public_records",
+              "safe_aggregate"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

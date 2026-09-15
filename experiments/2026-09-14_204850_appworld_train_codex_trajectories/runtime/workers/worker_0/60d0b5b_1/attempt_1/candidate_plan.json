@@ -1,0 +1,186 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "60d0b5b_1",
+  "task_family": "60d0b5b",
+  "completion_mode": "status_only",
+  "plan_summary": "Securely authenticate, resolve Robert from contacts, find the latest sent request to that contact and confirm it was approved, refund its exact amount, re-read public records for verification, then complete the task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "Inspect every required public API contract before making any task API call so subsequent calls use only documented parameters and fields.",
+      "action_code": "api_doc_specs = [\n    (\"supervisor\", \"show_profile\"),\n    (\"supervisor\", \"show_account_passwords\"),\n    (\"phone\", \"login\"),\n    (\"phone\", \"search_contacts\"),\n    (\"venmo\", \"login\"),\n    (\"venmo\", \"show_sent_payment_requests\"),\n    (\"venmo\", \"create_transaction\"),\n    (\"supervisor\", \"complete_task\"),\n]\npublic_api_docs = {\n    (app_name, api_name): apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)\n    for app_name, api_name in api_doc_specs\n}",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public documentation for every task API is inspected before use."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "observe",
+      "reasoning": "Retrieve the supervisor profile and app credential records needed for documented phone and Venmo authentication, while keeping passwords private.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\npassword_by_account = {\n    record[\"account_name\"].strip().casefold(): record[\"password\"]\n    for record in account_password_records\n}\nphone_password = password_by_account[\"phone\"]\nvenmo_password = password_by_account[\"venmo\"]",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Supervisor profile and both required app passwords are stored in variables without printing secrets."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "authenticate",
+      "reasoning": "Use the profile phone number and stored phone password to obtain the token required to search contacts.",
+      "action_code": "phone_login_result = apis.phone.login(\n    username=supervisor_profile[\"phone_number\"],\n    password=phone_password,\n)\nphone_access_token = phone_login_result[\"access_token\"]",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "phone.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A phone access token is stored without being printed."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 4,
+      "phase": "observe",
+      "reasoning": "Search every page of contacts for the instruction-provided name so Robert's public contact identity can be resolved without guessing an email.",
+      "action_code": "robert_contact_pages = []\ncontact_page_index = 0\nwhile True:\n    contact_page = apis.phone.search_contacts(\n        access_token=phone_access_token,\n        query=\"Robert\",\n        page_index=contact_page_index,\n        page_limit=20,\n    )\n    robert_contact_pages.append(contact_page)\n    if len(contact_page) < 20:\n        break\n    contact_page_index += 1\nrobert_contact_records = [\n    contact for page in robert_contact_pages for contact in page\n]\nprint([\n    {\n        \"contact_id\": contact[\"contact_id\"],\n        \"first_name\": contact[\"first_name\"],\n        \"last_name\": contact[\"last_name\"],\n        \"email\": contact[\"email\"],\n    }\n    for contact in robert_contact_records\n])",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "phone.search_contacts"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All pages of Robert contact search results are saved.",
+        "Only public contact candidate fields are printed."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 5,
+      "phase": "authenticate",
+      "reasoning": "Use the supervisor email and stored Venmo password to obtain the token required to inspect requests and issue the refund.",
+      "action_code": "venmo_login_result = apis.venmo.login(\n    username=supervisor_profile[\"email\"],\n    password=venmo_password,\n)\nvenmo_access_token = venmo_login_result[\"access_token\"]",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "venmo.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A Venmo access token is stored without being printed."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 6,
+      "phase": "observe",
+      "reasoning": "Read every page of sent payment requests without prematurely filtering, because the latest request to Robert must be selected before its approved state is checked.",
+      "action_code": "sent_request_pages = []\nrequest_page_index = 0\nwhile True:\n    request_page = apis.venmo.show_sent_payment_requests(\n        access_token=venmo_access_token,\n        page_index=request_page_index,\n        page_limit=20,\n    )\n    sent_request_pages.append(request_page)\n    if len(request_page) < 20:\n        break\n    request_page_index += 1\nall_sent_payment_requests = [\n    request for page in sent_request_pages for request in page\n]\nprint({\"sent_payment_request_count\": len(all_sent_payment_requests)})",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [
+        "venmo.show_sent_payment_requests"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All pages of sent payment requests are saved for selection."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 7,
+      "phase": "derive",
+      "reasoning": "Before sending money, resolve exact-first-name Robert contacts, select the newest request sent to any matching contact, confirm that selected request was approved, and derive the refund fields entirely from public records.",
+      "action_code": "exact_robert_contacts = [\n    contact for contact in robert_contact_records\n    if contact[\"first_name\"].strip().casefold() == \"robert\"\n]\nrobert_contact_emails = {\n    contact[\"email\"].strip().casefold() for contact in exact_robert_contacts\n}\nrequests_to_robert = [\n    request for request in all_sent_payment_requests\n    if request[\"receiver\"][\"email\"].strip().casefold() in robert_contact_emails\n]\nif not requests_to_robert:\n    raise RuntimeError(\"No sent payment request to an exact Robert contact was found\")\nselected_payment_request = max(\n    requests_to_robert,\n    key=lambda request: (request[\"created_at\"], request[\"payment_request_id\"]),\n)\nif not selected_payment_request.get(\"approved_at\") or selected_payment_request.get(\"denied_at\"):\n    raise RuntimeError(\"The latest payment request sent to Robert is not approved\")\nrefund_receiver_email = selected_payment_request[\"receiver\"][\"email\"]\nrefund_amount = selected_payment_request[\"amount\"]\nif refund_amount <= 0:\n    raise RuntimeError(\"The selected payment request does not have a positive amount\")\nrefund_description = \"Refund for accidental payment request\"\nselected_payment_request_id = selected_payment_request[\"payment_request_id\"]\nprint({\n    \"source_payment_request_id\": selected_payment_request_id,\n    \"receiver_email\": refund_receiver_email,\n    \"amount\": refund_amount,\n    \"created_at\": selected_payment_request[\"created_at\"],\n    \"approved_at\": selected_payment_request[\"approved_at\"],\n    \"refund_description\": refund_description,\n})",
+      "depends_on_steps": [
+        4,
+        6
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Refund target is derived from an exact Robert contact match.",
+        "The selected request is the latest request to Robert.",
+        "The selected request is approved and its amount is positive.",
+        "Proposed mutation fields are reviewed before sending money."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 8,
+      "phase": "act",
+      "reasoning": "The reviewed variables now identify the recipient and exact amount paid for the accidental approved request, so create one refund transaction using those derived values.",
+      "action_code": "refund_transaction = apis.venmo.create_transaction(\n    receiver_email=refund_receiver_email,\n    amount=refund_amount,\n    access_token=venmo_access_token,\n    description=refund_description,\n)",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "venmo.create_transaction"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "A refund transaction is created from the reviewed recipient and amount variables."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 9,
+      "phase": "verify",
+      "reasoning": "After the mutation, re-read every page of the available public request records and combine that evidence with the documented transaction response to verify the source selection and refund creation before completion.",
+      "action_code": "verification_request_pages = []\nverification_page_index = 0\nwhile True:\n    verification_page = apis.venmo.show_sent_payment_requests(\n        access_token=venmo_access_token,\n        page_index=verification_page_index,\n        page_limit=20,\n    )\n    verification_request_pages.append(verification_page)\n    if len(verification_page) < 20:\n        break\n    verification_page_index += 1\nverification_sent_requests = [\n    request for page in verification_request_pages for request in page\n]\nverification_requests_to_robert = [\n    request for request in verification_sent_requests\n    if request[\"receiver\"][\"email\"].strip().casefold() in robert_contact_emails\n]\nif not verification_requests_to_robert:\n    raise RuntimeError(\"Robert's source request is no longer visible during verification\")\nverification_latest_request = max(\n    verification_requests_to_robert,\n    key=lambda request: (request[\"created_at\"], request[\"payment_request_id\"]),\n)\nsource_matches = (\n    verification_latest_request[\"payment_request_id\"] == selected_payment_request_id\n    and verification_latest_request[\"receiver\"][\"email\"].strip().casefold() == refund_receiver_email.strip().casefold()\n    and verification_latest_request[\"amount\"] == refund_amount\n    and bool(verification_latest_request.get(\"approved_at\"))\n    and not verification_latest_request.get(\"denied_at\")\n)\ntransaction_id = refund_transaction.get(\"transaction_id\")\nif transaction_id is None or not source_matches:\n    raise RuntimeError(\"Refund creation or source-request verification failed\")\nprint({\n    \"refund_transaction_id\": transaction_id,\n    \"source_payment_request_id\": selected_payment_request_id,\n    \"receiver_email\": refund_receiver_email,\n    \"amount\": refund_amount,\n    \"source_is_latest_and_approved\": source_matches,\n})",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [
+        "venmo.show_sent_payment_requests"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "The transaction response contains a transaction identifier.",
+        "The re-read source request is still the latest request to Robert.",
+        "The re-read source request remains approved and matches the refunded recipient and amount."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 10,
+      "phase": "complete",
+      "reasoning": "Only after the refund and post-mutation checks complete without raising should this action task be marked successful.",
+      "action_code": "completion_result = apis.supervisor.complete_task(status=\"success\")",
+      "depends_on_steps": [
+        9
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The action task is marked complete with success and no QA answer."
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

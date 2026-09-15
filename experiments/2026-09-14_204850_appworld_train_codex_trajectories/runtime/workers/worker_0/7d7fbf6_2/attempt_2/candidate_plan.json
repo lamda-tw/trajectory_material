@@ -1,0 +1,131 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "7d7fbf6_2",
+  "task_family": "7d7fbf6",
+  "completion_mode": "status_only",
+  "plan_summary": "Inspect the required public API docs, authenticate through Supervisor-provided credentials, enumerate direct vacation subdirectories, derive one tar-and-delete job per spot, execute the jobs, re-read both source and destination directories to verify all postconditions, and then complete the action task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public documentation for every required task API must be inspected before any of those APIs is called.",
+      "action_code": "public_api_docs = {}\nfor app_name, api_name in [(\"supervisor\", \"show_profile\"), (\"supervisor\", \"show_account_passwords\"), (\"file_system\", \"login\"), (\"file_system\", \"show_directory\"), (\"file_system\", \"compress_directory\"), (\"supervisor\", \"complete_task\")]:\n    public_api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public documentation is obtained for every required task API before first use."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "The file-system login requires the supervisor's email and the corresponding app password, so both must be obtained through the documented Supervisor APIs and kept secret.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\nfile_system_password_records = [record for record in account_password_records if record[\"account_name\"].casefold().replace(\"-\", \"_\").replace(\" \", \"_\") == \"file_system\"]\nif len(file_system_password_records) != 1:\n    raise RuntimeError(\"Unable to identify exactly one file_system credential\")\nfile_system_password = file_system_password_records[0][\"password\"]\nfile_system_login = apis.file_system.login(username=supervisor_profile[\"email\"], password=file_system_password)\nfile_system_access_token = file_system_login[\"access_token\"]",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords",
+        "file_system.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A file-system access token is obtained without printing credentials or tokens."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "observe",
+      "reasoning": "The direct subdirectories of ~/photos/ must be read before determining which names represent vacation spots; the reserved destination directory must be distinguishable from those sources.",
+      "action_code": "photo_directory_entries = apis.file_system.show_directory(access_token=file_system_access_token, directory_path=\"~/photos/\", entry_type=\"directories\", recursive=False)\nprint(photo_directory_entries)",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "file_system.show_directory"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All direct subdirectory records under ~/photos/ are captured."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 4,
+      "phase": "derive",
+      "reasoning": "Mutation arguments must be derived from the observed directory records. Each direct source directory other than the reserved vacations destination maps to a tar file named from that directory's basename.",
+      "action_code": "vacation_spot_names = sorted({entry.rstrip(\"/\").split(\"/\")[-1] for entry in photo_directory_entries if entry.rstrip(\"/\").split(\"/\")[-1] and entry.rstrip(\"/\").split(\"/\")[-1] != \"vacations\"})\nif not vacation_spot_names:\n    raise RuntimeError(\"No vacation spot sub-directories found\")\narchive_jobs = [{\"vacation_spot\": name, \"directory_path\": \"~/photos/\" + name, \"compressed_file_path\": \"~/photos/vacations/\" + name + \".tar\"} for name in vacation_spot_names]\nprint({\"archive_jobs\": archive_jobs})",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every observed vacation-spot directory has exactly one derived .tar destination under ~/photos/vacations/.",
+        "The reserved vacations destination is not selected as a source directory."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 5,
+      "phase": "act",
+      "reasoning": "The reviewed jobs now provide every source and destination argument. Compressing with delete_directory enabled fulfills both the archive and source-removal requirements, while overwrite ensures the requested destination path is used if already present.",
+      "action_code": "compression_results = []\nfor archive_job in archive_jobs:\n    compression_results.append(apis.file_system.compress_directory(directory_path=archive_job[\"directory_path\"], access_token=file_system_access_token, compressed_file_path=archive_job[\"compressed_file_path\"], delete_directory=True, overwrite=True))",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "file_system.compress_directory"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Each derived vacation-spot source is submitted for tar compression and deletion."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 6,
+      "phase": "verify",
+      "reasoning": "Mutation responses alone are insufficient evidence of final state, so the source and destination directories must be re-read and compared with the previously derived names and archive filenames.",
+      "action_code": "remaining_photo_directory_entries = apis.file_system.show_directory(access_token=file_system_access_token, directory_path=\"~/photos/\", entry_type=\"directories\", recursive=False)\nvacation_archive_entries = apis.file_system.show_directory(access_token=file_system_access_token, directory_path=\"~/photos/vacations/\", entry_type=\"files\", recursive=False)\nremaining_photo_directory_names = {entry.rstrip(\"/\").split(\"/\")[-1] for entry in remaining_photo_directory_entries}\nvacation_archive_names = {entry.rstrip(\"/\").split(\"/\")[-1] for entry in vacation_archive_entries}\nexpected_archive_names = {name + \".tar\" for name in vacation_spot_names}\noriginal_directories_absent = all(name not in remaining_photo_directory_names for name in vacation_spot_names)\narchives_present = expected_archive_names.issubset(vacation_archive_names)\nverification_summary = {\"vacation_spot_count\": len(vacation_spot_names), \"original_directories_absent\": original_directories_absent, \"archives_present\": archives_present}\nprint(verification_summary)\nif not original_directories_absent or not archives_present:\n    raise RuntimeError(\"File-system postcondition verification failed\")",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [
+        "file_system.show_directory"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every original vacation-spot subdirectory is absent from ~/photos/.",
+        "A correspondingly named .tar file exists directly in ~/photos/vacations/ for every derived vacation spot."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 7,
+      "phase": "complete",
+      "reasoning": "This terminal step is reached only after the public read-back checks establish both requested postconditions, so the action task can be marked successful without an answer value.",
+      "action_code": "task_completion = apis.supervisor.complete_task(status=\"success\")",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The action task is marked complete only after successful postcondition verification."
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

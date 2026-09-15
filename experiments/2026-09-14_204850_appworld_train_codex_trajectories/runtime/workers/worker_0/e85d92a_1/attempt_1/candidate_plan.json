@@ -1,0 +1,131 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "e85d92a_1",
+  "task_family": "e85d92a",
+  "completion_mode": "answer_variable",
+  "plan_summary": "Inspect the required API contracts, retrieve supervisor account context without exposing secrets, enumerate exact artist and song matches across all pages, derive the title with the greatest play count, and submit that answer.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public documentation must be inspected before any task API is called so subsequent calls use only documented parameters and response fields.",
+      "action_code": "profile_doc = apis.api_docs.show_api_doc(app_name=\"supervisor\", api_name=\"show_profile\")\npasswords_doc = apis.api_docs.show_api_doc(app_name=\"supervisor\", api_name=\"show_account_passwords\")\nartists_doc = apis.api_docs.show_api_doc(app_name=\"spotify\", api_name=\"search_artists\")\nsongs_doc = apis.api_docs.show_api_doc(app_name=\"spotify\", api_name=\"search_songs\")\ncomplete_doc = apis.api_docs.show_api_doc(app_name=\"supervisor\", api_name=\"complete_task\")",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public contracts for every required task API"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "The required supervisor APIs provide the account context and credentials; secrets should remain in variables because the supplied Spotify search APIs do not expose a login operation.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_passwords = apis.supervisor.show_account_passwords()\nspotify_password = next((record[\"password\"] for record in account_passwords if record.get(\"account_name\", \"\").strip().casefold() == \"spotify\"), None)",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Supervisor profile retrieved",
+        "Spotify credential retained without disclosure"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "observe",
+      "reasoning": "Searching every result page for the instructed artist name provides the public candidates needed for exact-name selection without assuming a search rank or result count.",
+      "action_code": "artist_results = []\nartist_page_index = 0\nwhile True:\n    artist_page = apis.spotify.search_artists(query=\"Velvet Echo\", page_index=artist_page_index)\n    if not artist_page:\n        break\n    artist_results.extend(artist_page)\n    artist_page_index += 1\nprint([{\"artist_id\": artist[\"artist_id\"], \"name\": artist[\"name\"], \"genre\": artist[\"genre\"], \"follower_count\": artist[\"follower_count\"]} for artist in artist_results])",
+      "depends_on_steps": [
+        1,
+        2
+      ],
+      "api_names_used": [
+        "spotify.search_artists"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All paginated artist candidates for the instructed query"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 4,
+      "phase": "derive",
+      "reasoning": "Exact normalized name matching avoids selecting a merely relevant artist and derives all applicable artist IDs solely from the retrieved public records.",
+      "action_code": "velvet_echo_artists = [artist for artist in artist_results if artist.get(\"name\", \"\").strip().casefold() == \"Velvet Echo\".casefold()]\nvelvet_echo_artist_ids = [artist[\"artist_id\"] for artist in velvet_echo_artists]\nprint([{\"artist_id\": artist[\"artist_id\"], \"name\": artist[\"name\"]} for artist in velvet_echo_artists])",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Exact Velvet Echo artist candidates and their derived IDs"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 5,
+      "phase": "observe",
+      "reasoning": "Every song page for each exact artist must be read so the maximum play count can be computed globally rather than inferred from one page; song IDs allow duplicate collaborative results to be consolidated.",
+      "action_code": "songs_by_id = {}\nfor artist_id in velvet_echo_artist_ids:\n    song_page_index = 0\n    while True:\n        song_page = apis.spotify.search_songs(artist_id=artist_id, page_index=song_page_index, sort_by=\"-play_count\")\n        if not song_page:\n            break\n        for song in song_page:\n            songs_by_id[song[\"song_id\"]] = song\n        song_page_index += 1\nvelvet_echo_songs = list(songs_by_id.values())\nprint([{\"song_id\": song[\"song_id\"], \"title\": song[\"title\"], \"play_count\": song[\"play_count\"], \"artists\": song[\"artists\"]} for song in velvet_echo_songs])",
+      "depends_on_steps": [
+        1,
+        4
+      ],
+      "api_names_used": [
+        "spotify.search_songs"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All paginated songs belonging to each exact artist candidate",
+        "Public play counts used for comparison"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 6,
+      "phase": "derive",
+      "reasoning": "The answer can now be reviewed and derived from the complete retrieved song set by selecting the record with the greatest real play count and extracting its title.",
+      "action_code": "most_played_song = max(velvet_echo_songs, key=lambda song: song[\"play_count\"])\nanswer = most_played_song[\"title\"]\nprint({\"title\": answer, \"play_count\": most_played_song[\"play_count\"]})",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Selected song has the maximum retrieved play count",
+        "Answer is the selected song title"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 7,
+      "phase": "complete",
+      "reasoning": "The reviewed title stored in the answer variable is the concise response requested by this QA task and can now be submitted.",
+      "action_code": "completion_result = apis.supervisor.complete_task(answer=answer, status=\"success\")",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Task submitted with the derived title answer"
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

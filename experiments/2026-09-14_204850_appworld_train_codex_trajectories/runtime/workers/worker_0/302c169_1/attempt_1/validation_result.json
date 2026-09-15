@@ -1,0 +1,118 @@
+{
+  "accepted": true,
+  "trajectory": {
+    "task_id": "302c169_1",
+    "task_family": "302c169",
+    "instruction": "I am going on a vacation. Move my go-to-sleep phone alarm to 1 hour later and disable the rest.",
+    "supervisor": {
+      "first_name": "Richard",
+      "last_name": "Riddle",
+      "email": "ric.riddle@gmail.com",
+      "phone_number": "4436271690"
+    },
+    "datetime": "2023-05-18T12:00:00",
+    "appworld_version": "0.2.0.dev0",
+    "source": "ground_truth_api_calls_guided_codex_reconstruction",
+    "steps": [
+      {
+        "step_index": 1,
+        "reasoning": "The public API contracts must be inspected before any task API is called so subsequent calls use only documented parameters and response fields.",
+        "action_code": "api_documentation = {}\nfor app_name, api_name in [\n    (\"supervisor\", \"show_profile\"),\n    (\"supervisor\", \"show_account_passwords\"),\n    (\"phone\", \"login\"),\n    (\"phone\", \"show_alarms\"),\n    (\"phone\", \"update_alarm\"),\n    (\"supervisor\", \"complete_task\"),\n]:\n    api_documentation[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 2,
+        "reasoning": "With the contracts inspected, obtain the supervisor's phone username and corresponding app password, then log in while keeping all credentials and tokens unprinted.",
+        "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_password_records = apis.supervisor.show_account_passwords()\nphone_account_record = next(\n    record for record in account_password_records\n    if record[\"account_name\"].strip().lower() == \"phone\"\n)\nphone_password = phone_account_record[\"password\"]\nphone_login_response = apis.phone.login(\n    username=supervisor_profile[\"phone_number\"],\n    password=phone_password,\n)\nphone_access_token = phone_login_response[\"access_token\"]",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 3,
+        "reasoning": "The authenticated alarm collection must be read completely before selecting the target or deciding which other alarms require disabling.",
+        "action_code": "alarms_before_updates = []\npage_index = 0\npage_limit = 20\nwhile True:\n    alarm_page = apis.phone.show_alarms(\n        access_token=phone_access_token,\n        page_index=page_index,\n        page_limit=page_limit,\n    )\n    alarms_before_updates.extend(alarm_page)\n    if len(alarm_page) < page_limit:\n        break\n    page_index += 1\nprint([\n    {\n        \"alarm_id\": alarm[\"alarm_id\"],\n        \"time\": alarm[\"time\"],\n        \"label\": alarm[\"label\"],\n        \"enabled\": alarm[\"enabled\"],\n    }\n    for alarm in alarms_before_updates\n])",
+        "observation": "[\n {\n  \"alarm_id\": 120,\n  \"time\": \"07:30\",\n  \"label\": \"Wake Up\",\n  \"enabled\": true\n },\n {\n  \"alarm_id\": 121,\n  \"time\": \"08:30\",\n  \"label\": \"Wake Up\",\n  \"enabled\": true\n },\n {\n  \"alarm_id\": 124,\n  \"time\": \"10:00\",\n  \"label\": \"Water Plants\",\n  \"enabled\": false\n },\n {\n  \"alarm_id\": 123,\n  \"time\": \"12:00\",\n  \"label\": \"Weekly Work Standup Meeting\",\n  \"enabled\": false\n },\n {\n  \"alarm_id\": 125,\n  \"time\": \"17:30\",\n  \"label\": \"Clean the House\",\n  \"enabled\": false\n },\n {\n  \"alarm_id\": 126,\n  \"time\": \"17:30\",\n  \"label\": \"Pick up Laundry\",\n  \"enabled\": true\n },\n {\n  \"alarm_id\": 122,\n  \"time\": \"21:30\",\n  \"label\": \"Go to sleep\",\n  \"enabled\": true\n }\n]\n"
+      },
+      {
+        "step_index": 4,
+        "reasoning": "Use the instruction's go-to-sleep wording to select exactly one alarm from the retrieved records and calculate its one-hour-later time without guessing an ID or time.",
+        "action_code": "def normalize_alarm_label(value):\n    return \" \".join(\n        \"\".join(character.lower() if character.isalnum() else \" \" for character in value).split()\n    )\n\ntarget_label = normalize_alarm_label(\"go-to-sleep\")\ntarget_alarm_candidates = [\n    alarm for alarm in alarms_before_updates\n    if normalize_alarm_label(alarm.get(\"label\", \"\")) == target_label\n]\nif len(target_alarm_candidates) != 1:\n    raise RuntimeError(\"Expected exactly one alarm whose normalized label is go to sleep\")\ntarget_alarm = target_alarm_candidates[0]\ntarget_alarm_id = target_alarm[\"alarm_id\"]\ntime_parts = target_alarm[\"time\"].split(\":\")\nif len(time_parts) != 2:\n    raise RuntimeError(\"Target alarm time is not in HH:MM format\")\ntarget_hour = int(time_parts[0])\ntarget_minute = int(time_parts[1])\nif not (0 <= target_hour <= 23 and 0 <= target_minute <= 59):\n    raise RuntimeError(\"Target alarm time is outside the valid HH:MM range\")\nnew_target_time = f\"{(target_hour + 1) % 24:02d}:{target_minute:02d}\"\nprint({\n    \"target_alarm_id\": target_alarm_id,\n    \"label\": target_alarm[\"label\"],\n    \"current_time\": target_alarm[\"time\"],\n    \"reviewed_new_time\": new_target_time,\n})",
+        "observation": "{\n \"target_alarm_id\": 122,\n \"label\": \"Go to sleep\",\n \"current_time\": \"21:30\",\n \"reviewed_new_time\": \"22:30\"\n}\n"
+      },
+      {
+        "step_index": 5,
+        "reasoning": "The target alarm ID and replacement time have been derived and reviewed from the retrieved alarm record, so the requested time mutation can now be applied.",
+        "action_code": "target_time_update_response = apis.phone.update_alarm(\n    alarm_id=target_alarm_id,\n    access_token=phone_access_token,\n    time=new_target_time,\n)",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 6,
+        "reasoning": "A mutation response alone does not establish stored state, so re-read every alarm page and verify the target's time before planning changes to the remaining alarms.",
+        "action_code": "alarms_after_time_update = []\npage_index = 0\nwhile True:\n    alarm_page = apis.phone.show_alarms(\n        access_token=phone_access_token,\n        page_index=page_index,\n        page_limit=page_limit,\n    )\n    alarms_after_time_update.extend(alarm_page)\n    if len(alarm_page) < page_limit:\n        break\n    page_index += 1\nrefreshed_target_candidates = [\n    alarm for alarm in alarms_after_time_update\n    if alarm[\"alarm_id\"] == target_alarm_id\n]\nif len(refreshed_target_candidates) != 1:\n    raise RuntimeError(\"The selected target alarm was not found exactly once after its update\")\nrefreshed_target_alarm = refreshed_target_candidates[0]\ntime_update_verified = refreshed_target_alarm[\"time\"] == new_target_time\nprint({\n    \"target_alarm_id\": target_alarm_id,\n    \"stored_time\": refreshed_target_alarm[\"time\"],\n    \"expected_time\": new_target_time,\n    \"time_update_verified\": time_update_verified,\n})\nif not time_update_verified:\n    raise RuntimeError(\"The target alarm time update was not persisted\")",
+        "observation": "{\n \"target_alarm_id\": 122,\n \"stored_time\": \"22:30\",\n \"expected_time\": \"22:30\",\n \"time_update_verified\": true\n}\n"
+      },
+      {
+        "step_index": 7,
+        "reasoning": "Using the refreshed alarm records, derive and review the exact set of non-target alarms that are still enabled; already-disabled alarms need no redundant mutation.",
+        "action_code": "disable_alarm_plan = [\n    {\"alarm_id\": alarm[\"alarm_id\"], \"enabled\": False}\n    for alarm in alarms_after_time_update\n    if alarm[\"alarm_id\"] != target_alarm_id and alarm[\"enabled\"]\n]\nother_alarm_count = sum(\n    1 for alarm in alarms_after_time_update\n    if alarm[\"alarm_id\"] != target_alarm_id\n)\nalready_disabled_other_count = other_alarm_count - len(disable_alarm_plan)\nprint({\n    \"target_alarm_id_excluded\": target_alarm_id,\n    \"disable_alarm_ids\": [item[\"alarm_id\"] for item in disable_alarm_plan],\n    \"already_disabled_other_count\": already_disabled_other_count,\n})",
+        "observation": "{\n \"target_alarm_id_excluded\": 122,\n \"disable_alarm_ids\": [\n  120,\n  121,\n  126\n ],\n \"already_disabled_other_count\": 3\n}\n"
+      },
+      {
+        "step_index": 8,
+        "reasoning": "The per-alarm disable plan has been derived and reviewed from refreshed public records, so apply each planned non-target mutation and retain every response.",
+        "action_code": "disable_update_responses = []\nfor disable_item in disable_alarm_plan:\n    disable_update_responses.append(\n        apis.phone.update_alarm(\n            alarm_id=disable_item[\"alarm_id\"],\n            access_token=phone_access_token,\n            enabled=disable_item[\"enabled\"],\n        )\n    )",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 9,
+        "reasoning": "After all requested mutations, re-query every page and compute both postconditions from the stored public records before allowing task completion.",
+        "action_code": "alarms_after_all_updates = []\npage_index = 0\nwhile True:\n    alarm_page = apis.phone.show_alarms(\n        access_token=phone_access_token,\n        page_index=page_index,\n        page_limit=page_limit,\n    )\n    alarms_after_all_updates.extend(alarm_page)\n    if len(alarm_page) < page_limit:\n        break\n    page_index += 1\nfinal_target_candidates = [\n    alarm for alarm in alarms_after_all_updates\n    if alarm[\"alarm_id\"] == target_alarm_id\n]\nfinal_target_unique = len(final_target_candidates) == 1\nfinal_target_time_correct = (\n    final_target_unique and final_target_candidates[0][\"time\"] == new_target_time\n)\nall_other_alarms_disabled = all(\n    not alarm[\"enabled\"]\n    for alarm in alarms_after_all_updates\n    if alarm[\"alarm_id\"] != target_alarm_id\n)\nfinal_verification = {\n    \"target_alarm_id\": target_alarm_id,\n    \"target_unique\": final_target_unique,\n    \"target_time_correct\": final_target_time_correct,\n    \"all_other_alarms_disabled\": all_other_alarms_disabled,\n    \"checked_alarm_count\": len(alarms_after_all_updates),\n}\nprint(final_verification)\nif not (\n    final_target_unique\n    and final_target_time_correct\n    and all_other_alarms_disabled\n):\n    raise RuntimeError(\"One or more requested alarm postconditions were not satisfied\")",
+        "observation": "{\n \"target_alarm_id\": 122,\n \"target_unique\": true,\n \"target_time_correct\": true,\n \"all_other_alarms_disabled\": true,\n \"checked_alarm_count\": 7\n}\n"
+      },
+      {
+        "step_index": 10,
+        "reasoning": "The preceding verification computes the requested postconditions from a fresh full read and stops execution on any failure, so the action task can now be marked successful.",
+        "action_code": "task_completion_response = apis.supervisor.complete_task(status=\"success\")",
+        "observation": "Execution successful."
+      }
+    ],
+    "final_status": "success",
+    "evaluation": {
+      "success": true,
+      "num_tests": 8,
+      "num_passes": 8,
+      "num_failures": 0
+    },
+    "replay_evaluation": {
+      "success": true,
+      "num_tests": 8,
+      "num_passes": 8,
+      "num_failures": 0
+    },
+    "replay_verified": true,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0,
+    "api_call_count": 17,
+    "api_call_count_source": "appworld_api_calls_log",
+    "replay_api_call_count": 17,
+    "step_count": 10,
+    "provenance": {
+      "specs_sha256": "ac6cb4dbbd041d4801d7f2d9275bfffdb582aadc0892bb046c7581f298e36593",
+      "api_calls_sha256": "b9b9c5ee009e0e3235b2c1d3eb95a73cb1363f3e9037727b1c46c9bbe12e20d1",
+      "plan_sha256": "d93d4e48b5b245b7d365915063e0f789017955e786b303a4c1ac0f172f17b91c"
+    }
+  },
+  "task_result": {
+    "task_id": "302c169_1",
+    "status": "verified",
+    "attempts": 1,
+    "generation_error": null,
+    "execution_error": null,
+    "evaluation_success": true,
+    "replay_success": true,
+    "step_count": 10,
+    "api_call_count": 17,
+    "rejection_reason": null,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0
+  }
+}

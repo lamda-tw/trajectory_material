@@ -1,0 +1,152 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "cf6abd2_1",
+  "task_family": "cf6abd2",
+  "completion_mode": "status_only",
+  "plan_summary": "Authenticate to Simple Note, exhaustively search for the Bucket List note, inspect candidate contents, derive a checkbox-preserving completion edit from the returned text, update it, verify the persisted content, and complete the task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public documentation must be inspected before any task API is called so later calls use only documented parameters and response fields.",
+      "action_code": "api_docs = {}\nfor app_name, api_name in [\n    (\"supervisor\", \"show_profile\"),\n    (\"supervisor\", \"show_account_passwords\"),\n    (\"simple_note\", \"login\"),\n    (\"simple_note\", \"search_notes\"),\n    (\"simple_note\", \"show_note\"),\n    (\"simple_note\", \"update_note\"),\n    (\"supervisor\", \"complete_task\"),\n]:\n    api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)\nprint(api_docs)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public documentation for every API used later"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "The supervisor APIs provide the account email and app password required for login; secrets must remain in variables and must not be printed.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_passwords = apis.supervisor.show_account_passwords()\n\ndef normalize_account_name(value):\n    return \"\".join(ch for ch in value.casefold() if ch.isalnum())\n\nsimple_note_accounts = [\n    account for account in account_passwords\n    if normalize_account_name(account[\"account_name\"]) == \"simplenote\"\n]\nif len(simple_note_accounts) != 1:\n    raise RuntimeError(\"Could not resolve exactly one Simple Note account credential\")\nsimple_note_password = simple_note_accounts[0][\"password\"]\nsimple_note_login = apis.simple_note.login(\n    username=supervisor_profile[\"email\"],\n    password=simple_note_password,\n)\nsimple_note_access_token = simple_note_login[\"access_token\"]\nprint({\n    \"account_email\": supervisor_profile[\"email\"],\n    \"simple_note_account_matches\": len(simple_note_accounts),\n    \"authenticated\": bool(simple_note_access_token),\n})",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords",
+        "simple_note.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "One Simple Note credential selected",
+        "Simple Note access token obtained"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 3,
+      "phase": "observe",
+      "reasoning": "The note must be located from real search results. Searching both the note name and requested item, following each query through an empty page, reduces ambiguity while covering all pagination pages.",
+      "action_code": "target_item = \"Learning to cook a signature dish from scratch\"\nnote_search_queries = [\"Bucket List\", target_item]\nnote_candidates_by_id = {}\nnote_candidate_order = []\n\nfor search_query in note_search_queries:\n    page_index = 0\n    while True:\n        search_page = apis.simple_note.search_notes(\n            access_token=simple_note_access_token,\n            query=search_query,\n            dont_reorder_pinned=True,\n            page_index=page_index,\n            page_limit=20,\n        )\n        if not search_page:\n            break\n        for note_record in search_page:\n            note_id = note_record[\"note_id\"]\n            if note_id not in note_candidates_by_id:\n                note_candidates_by_id[note_id] = note_record\n                note_candidate_order.append(note_id)\n        page_index += 1\n\nif not note_candidate_order:\n    page_index = 0\n    while True:\n        search_page = apis.simple_note.search_notes(\n            access_token=simple_note_access_token,\n            query=\"\",\n            dont_reorder_pinned=True,\n            page_index=page_index,\n            page_limit=20,\n        )\n        if not search_page:\n            break\n        for note_record in search_page:\n            note_id = note_record[\"note_id\"]\n            if note_id not in note_candidates_by_id:\n                note_candidates_by_id[note_id] = note_record\n                note_candidate_order.append(note_id)\n        page_index += 1\n\nnote_search_candidates = [note_candidates_by_id[note_id] for note_id in note_candidate_order]\nprint(note_search_candidates)",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "simple_note.search_notes"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every page for each executed search query read",
+        "Candidate note IDs and titles collected from public results"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 4,
+      "phase": "observe",
+      "reasoning": "Search results omit note contents, so each distinct candidate must be opened before selecting the note or editing its checklist item.",
+      "action_code": "note_details_by_id = {}\nfor note_id in note_candidate_order:\n    note_details_by_id[note_id] = apis.simple_note.show_note(\n        note_id=note_id,\n        access_token=simple_note_access_token,\n    )\nnote_details = [note_details_by_id[note_id] for note_id in note_candidate_order]\nprint(note_details)",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "simple_note.show_note"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Detailed content of every distinct candidate note"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 5,
+      "phase": "derive",
+      "reasoning": "The returned titles and contents now permit a deterministic selection and a reviewable edit. Ranking item-containing notes by exact Bucket List title and then search order avoids requiring an artificially unique syntactic match.",
+      "action_code": "def normalize_words(value):\n    return \" \".join(value.casefold().split())\n\ndef compact_words(value):\n    return \"\".join(ch for ch in value.casefold() if ch.isalnum())\n\ndef target_line_indexes(content):\n    target_key = normalize_words(target_item)\n    return [\n        index for index, line in enumerate(content.splitlines(keepends=True))\n        if target_key in normalize_words(line)\n    ]\n\nitem_notes = [detail for detail in note_details if target_line_indexes(detail[\"content\"])]\nif not item_notes:\n    raise RuntimeError(\"No searched note contains the requested Bucket List item\")\nsearch_position = {note_id: index for index, note_id in enumerate(note_candidate_order)}\n\ndef note_rank(detail):\n    title_key = compact_words(detail[\"title\"])\n    if title_key == \"bucketlist\":\n        title_rank = 0\n    elif \"bucketlist\" in title_key:\n        title_rank = 1\n    else:\n        title_rank = 2\n    return (title_rank, search_position[detail[\"note_id\"]])\n\nselected_note = min(item_notes, key=note_rank)\nselected_note_id = selected_note[\"note_id\"]\noriginal_content = selected_note[\"content\"]\n\ndef checkbox_span_and_state(line):\n    start = 0\n    while True:\n        left = line.find(\"[\", start)\n        if left < 0:\n            return None, None\n        right = line.find(\"]\", left + 1)\n        if right < 0:\n            return None, None\n        inside = line[left + 1:right].strip().casefold()\n        if inside == \"\":\n            return (left, right), \"unchecked\"\n        if inside == \"x\":\n            return (left, right), \"checked\"\n        start = right + 1\n\ndef line_is_done(line):\n    span, state = checkbox_span_and_state(line)\n    if state == \"checked\":\n        return True\n    if any(marker in line for marker in (\"☑\", \"✅\", \"✔\")):\n        return True\n    exact_index = line.casefold().find(target_item.casefold())\n    if exact_index >= 2:\n        exact_end = exact_index + len(target_item)\n        if line[exact_index - 2:exact_index] == \"~~\" and line[exact_end:exact_end + 2] == \"~~\":\n            return True\n    return False\n\ndef mark_line_done(line):\n    span, state = checkbox_span_and_state(line)\n    if state == \"checked\":\n        return line\n    if state == \"unchecked\":\n        left, right = span\n        return line[:left] + \"[x]\" + line[right + 1:]\n    for old_marker, new_marker in ((\"☐\", \"☑\"), (\"⬜\", \"✅\"), (\"❌\", \"✅\")):\n        if old_marker in line:\n            return line.replace(old_marker, new_marker, 1)\n    if line_is_done(line):\n        return line\n    indentation_length = len(line) - len(line.lstrip(\" \\t\"))\n    indentation = line[:indentation_length]\n    body = line[indentation_length:]\n    for bullet in (\"- \", \"* \", \"+ \"):\n        if body.startswith(bullet):\n            return indentation + bullet + \"[x] \" + body[len(bullet):]\n    dot_space = body.find(\". \")\n    if dot_space > 0 and body[:dot_space].isdigit():\n        insertion = dot_space + 2\n        return indentation + body[:insertion] + \"[x] \" + body[insertion:]\n    return indentation + \"[x] \" + body\n\ncontent_lines = original_content.splitlines(keepends=True)\nmatched_line_indexes = target_line_indexes(original_content)\nline_changes = []\nfor line_index in matched_line_indexes:\n    before_line = content_lines[line_index]\n    after_line = mark_line_done(before_line)\n    content_lines[line_index] = after_line\n    line_changes.append({\"before\": before_line, \"after\": after_line})\nupdated_content = \"\".join(content_lines)\nneeds_update = updated_content != original_content\nprint({\n    \"selected_note\": {\"note_id\": selected_note_id, \"title\": selected_note[\"title\"]},\n    \"matching_item_lines\": len(matched_line_indexes),\n    \"line_changes\": line_changes,\n    \"needs_update\": needs_update,\n})",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Selected note contains the requested item",
+        "Proposed content marks every matching item line done",
+        "Original content otherwise preserved"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 6,
+      "phase": "act",
+      "reasoning": "The selected ID and reviewed content were derived entirely from prior public results. A write is needed only when the item was not already represented as done.",
+      "action_code": "if needs_update:\n    update_result = apis.simple_note.update_note(\n        note_id=selected_note_id,\n        access_token=simple_note_access_token,\n        content=updated_content,\n    )\n    print(update_result)\nelse:\n    update_result = None\n    print({\"mutation_requested\": False, \"reason\": \"matching item was already marked done\"})",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [
+        "simple_note.update_note"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Requested content update submitted when necessary"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 7,
+      "phase": "verify",
+      "reasoning": "The note must be re-read after the conditional mutation to verify persisted content and the requested done state before reporting success.",
+      "action_code": "verified_note = apis.simple_note.show_note(\n    note_id=selected_note_id,\n    access_token=simple_note_access_token,\n)\nverified_indexes = target_line_indexes(verified_note[\"content\"])\nverified_lines = verified_note[\"content\"].splitlines(keepends=True)\ncontent_matches_proposal = verified_note[\"content\"] == updated_content\nitem_is_done = bool(verified_indexes) and all(line_is_done(verified_lines[index]) for index in verified_indexes)\nverification_passed = content_matches_proposal and item_is_done\nprint({\n    \"note\": verified_note,\n    \"content_matches_proposal\": content_matches_proposal,\n    \"matching_item_lines\": len(verified_indexes),\n    \"item_is_done\": item_is_done,\n    \"verification_passed\": verification_passed,\n})\nif not verification_passed:\n    raise RuntimeError(\"The persisted note did not satisfy the requested done state\")",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [
+        "simple_note.show_note"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Selected note persisted the proposed content",
+        "Requested item remains present",
+        "Every matching requested item line is marked done"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 8,
+      "phase": "complete",
+      "reasoning": "The preceding re-query computes and enforces the requested postcondition, so the action task can now be marked successful.",
+      "action_code": "completion_result = apis.supervisor.complete_task(status=\"success\")\nprint(completion_result)",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Supervisor records successful task completion"
+      ],
+      "output_policy": "public_records"
+    }
+  ]
+}

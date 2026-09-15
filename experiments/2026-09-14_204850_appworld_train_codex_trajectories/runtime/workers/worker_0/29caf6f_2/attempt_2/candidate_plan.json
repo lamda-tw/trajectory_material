@@ -1,0 +1,270 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "29caf6f_2",
+  "task_family": "29caf6f",
+  "completion_mode": "status_only",
+  "plan_summary": "Authenticate to Phone and Simple Note, identify Laura's relevant inbound movie request, derive the matching note and its movie-title list, send the comma-separated titles, verify the outgoing text, and complete the task.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "The public documentation for every required API must be inspected before any task API is called, including the completion API needed at the end.",
+      "action_code": "doc_specs = [(\"supervisor\", \"show_profile\"), (\"supervisor\", \"show_account_passwords\"), (\"phone\", \"login\"), (\"phone\", \"search_contacts\"), (\"phone\", \"search_text_messages\"), (\"phone\", \"send_text_message\"), (\"simple_note\", \"login\"), (\"simple_note\", \"search_notes\"), (\"simple_note\", \"show_note\"), (\"supervisor\", \"complete_task\")]\npublic_api_docs = {}\nfor app_name, api_name in doc_specs:\n    public_api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Public documentation inspected for every task API before first use"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "observe",
+      "reasoning": "The supervisor profile supplies the account usernames, while the password records supply credentials without requiring any hardcoded secrets.",
+      "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_passwords = apis.supervisor.show_account_passwords()",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Supervisor profile saved",
+        "Account password records saved without printing secrets"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "authenticate",
+      "reasoning": "Phone access is needed to locate Laura and inspect the request; the username and password can now be derived from the saved supervisor data.",
+      "action_code": "def normalize_account_name(value):\n    return \"\".join(ch for ch in value.casefold() if ch.isalnum())\nphone_password_records = [row for row in account_passwords if normalize_account_name(row[\"account_name\"]) == \"phone\"]\nif not phone_password_records:\n    phone_password_records = [row for row in account_passwords if \"phone\" in normalize_account_name(row[\"account_name\"])]\nassert len(phone_password_records) == 1\nphone_password = phone_password_records[0][\"password\"]\nphone_login_result = apis.phone.login(username=supervisor_profile[\"phone_number\"], password=phone_password)\nphone_access_token = phone_login_result[\"access_token\"]",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [
+        "phone.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Phone access token obtained from derived credentials"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 4,
+      "phase": "observe",
+      "reasoning": "Laura's phone number must come from the contact book, and every page of the name search must be collected before choosing a contact.",
+      "action_code": "laura_contact_search_results = []\ncontact_page_index = 0\nwhile True:\n    contact_page = apis.phone.search_contacts(access_token=phone_access_token, query=\"Laura\", page_index=contact_page_index, page_limit=20)\n    laura_contact_search_results.extend(contact_page)\n    if len(contact_page) < 20:\n        break\n    contact_page_index += 1",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "phone.search_contacts"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All pages of the Laura contact search collected"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 5,
+      "phase": "derive",
+      "reasoning": "The contact results can now be narrowed to records whose name identifies Laura, while retaining multiple candidates for disambiguation through their message threads.",
+      "action_code": "exact_laura_contacts = [contact for contact in laura_contact_search_results if contact[\"first_name\"].strip().casefold() == \"laura\"]\nlaura_contact_candidates = exact_laura_contacts if exact_laura_contacts else [contact for contact in laura_contact_search_results if \"laura\" in (contact[\"first_name\"] + \" \" + contact[\"last_name\"]).casefold()]\nassert laura_contact_candidates\nprint([{\"first_name\": contact[\"first_name\"], \"last_name\": contact[\"last_name\"], \"phone_number\": contact[\"phone_number\"], \"relationships\": contact[\"relationships\"]} for contact in laura_contact_candidates])",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "At least one Laura contact candidate derived from public contact records"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 6,
+      "phase": "observe",
+      "reasoning": "The relevant Laura must be grounded in an inbound movie-related request, so every page of each candidate's complete text thread is needed.",
+      "action_code": "laura_candidate_threads = []\nseen_candidate_numbers = set()\nfor contact in laura_contact_candidates:\n    candidate_phone = contact[\"phone_number\"]\n    if candidate_phone in seen_candidate_numbers:\n        continue\n    seen_candidate_numbers.add(candidate_phone)\n    candidate_messages = []\n    message_page_index = 0\n    while True:\n        message_page = apis.phone.search_text_messages(access_token=phone_access_token, query=\"\", phone_number=candidate_phone, only_latest_per_contact=False, page_index=message_page_index, page_limit=20, sort_by=\"-created_at\")\n        candidate_messages.extend(message_page)\n        if len(message_page) < 20:\n            break\n        message_page_index += 1\n    laura_candidate_threads.append({\"contact\": contact, \"messages\": candidate_messages})\nprint([{\"contact\": {\"first_name\": thread[\"contact\"][\"first_name\"], \"last_name\": thread[\"contact\"][\"last_name\"], \"phone_number\": thread[\"contact\"][\"phone_number\"]}, \"messages\": [{\"sender_phone\": message[\"sender\"][\"phone_number\"], \"receiver_phone\": message[\"receiver\"][\"phone_number\"], \"message\": message[\"message\"], \"sent_at\": message[\"sent_at\"]} for message in thread[\"messages\"]]} for thread in laura_candidate_threads])",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [
+        "phone.search_text_messages"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All pages of every Laura candidate thread collected",
+        "Message direction, text, and time available for request selection"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 7,
+      "phase": "derive",
+      "reasoning": "The candidate threads are available, so the most recent inbound message whose text signals a movie or recommendation request can determine both the recipient and the request context.",
+      "action_code": "movie_request_terms = (\"movie\", \"movies\", \"film\", \"films\", \"recommend\", \"recommendation\", \"recommendations\", \"suggest\", \"suggestion\", \"suggestions\")\nrequest_candidates = []\nfor thread in laura_candidate_threads:\n    contact = thread[\"contact\"]\n    for message in thread[\"messages\"]:\n        if message[\"sender\"][\"phone_number\"] != contact[\"phone_number\"]:\n            continue\n        normalized_message = message[\"message\"].casefold()\n        relevance = sum(1 for term in movie_request_terms if term in normalized_message)\n        if relevance:\n            request_candidates.append({\"contact\": contact, \"message\": message, \"relevance\": relevance})\nassert request_candidates\nselected_request_candidate = max(request_candidates, key=lambda item: (item[\"message\"][\"sent_at\"], item[\"relevance\"]))\nlaura_contact = selected_request_candidate[\"contact\"]\nlaura_phone_number = laura_contact[\"phone_number\"]\nlaura_request_message = selected_request_candidate[\"message\"]\nlaura_request_text = laura_request_message[\"message\"]\nprint({\"recipient\": {\"first_name\": laura_contact[\"first_name\"], \"last_name\": laura_contact[\"last_name\"], \"phone_number\": laura_phone_number}, \"request\": {\"message\": laura_request_text, \"sent_at\": laura_request_message[\"sent_at\"]}})",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Recipient derived from an inbound Laura message",
+        "Movie-recommendation request text saved"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 8,
+      "phase": "authenticate",
+      "reasoning": "The request context is established, and the Simple Note credential can now be selected from the saved password records without exposing it.",
+      "action_code": "simple_note_password_records = [row for row in account_passwords if normalize_account_name(row[\"account_name\"]) == \"simplenote\"]\nif not simple_note_password_records:\n    simple_note_password_records = [row for row in account_passwords if \"simplenote\" in normalize_account_name(row[\"account_name\"])]\nassert len(simple_note_password_records) == 1\nsimple_note_password = simple_note_password_records[0][\"password\"]\nsimple_note_login_result = apis.simple_note.login(username=supervisor_profile[\"email\"], password=simple_note_password)\nsimple_note_access_token = simple_note_login_result[\"access_token\"]",
+      "depends_on_steps": [
+        2,
+        7
+      ],
+      "api_names_used": [
+        "simple_note.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Simple Note access token obtained from derived credentials"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 9,
+      "phase": "observe",
+      "reasoning": "Selecting the source note requires a complete metadata inventory, so every page is read with pinned-note reordering disabled to avoid omitting candidates across pages.",
+      "action_code": "all_note_summaries = []\nnote_page_index = 0\nwhile True:\n    note_page = apis.simple_note.search_notes(access_token=simple_note_access_token, query=\"\", dont_reorder_pinned=True, page_index=note_page_index, page_limit=20)\n    all_note_summaries.extend(note_page)\n    if len(note_page) < 20:\n        break\n    note_page_index += 1\nprint([{\"note_id\": note[\"note_id\"], \"title\": note[\"title\"], \"tags\": note[\"tags\"], \"updated_at\": note[\"updated_at\"], \"pinned\": note[\"pinned\"]} for note in all_note_summaries])",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [
+        "simple_note.search_notes"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "All pages of note metadata collected",
+        "Titles and tags available for source-note selection"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 10,
+      "phase": "derive",
+      "reasoning": "The complete note metadata and Laura's request can now be compared using title and tag words, prioritizing explicit title matches and request-specific overlap without relying on fixed IDs.",
+      "action_code": "def normalized_words(value):\n    cleaned = \"\".join(ch if ch.isalnum() else \" \" for ch in value.casefold())\n    return set(cleaned.split())\ndef normalized_text(value):\n    cleaned = \"\".join(ch if ch.isalnum() else \" \" for ch in value.casefold())\n    return \" \".join(cleaned.split())\nassert all_note_summaries\nrequest_words = normalized_words(laura_request_text)\ntask_movie_words = {\"movie\", \"movies\", \"film\", \"films\", \"recommend\", \"recommendation\", \"recommendations\", \"suggest\", \"suggestion\", \"suggestions\"}\nrequest_words |= task_movie_words\nstop_words = {\"a\", \"an\", \"and\", \"are\", \"as\", \"at\", \"be\", \"can\", \"could\", \"for\", \"from\", \"have\", \"hey\", \"i\", \"in\", \"is\", \"it\", \"list\", \"me\", \"my\", \"note\", \"of\", \"on\", \"please\", \"send\", \"simple\", \"some\", \"that\", \"the\", \"them\", \"to\", \"via\", \"want\", \"with\", \"would\", \"you\", \"your\"}\nspecific_request_words = request_words - stop_words - task_movie_words\nnormalized_request = normalized_text(laura_request_text)\nnote_rankings = []\nfor note in all_note_summaries:\n    title_words = normalized_words(note[\"title\"])\n    metadata_words = normalized_words(note[\"title\"] + \" \" + \" \".join(note[\"tags\"]))\n    normalized_title = normalized_text(note[\"title\"])\n    explicit_title_match = int(bool(normalized_title) and len(title_words) >= 2 and normalized_title in normalized_request)\n    specific_overlap = len(metadata_words & specific_request_words)\n    movie_signal = len(metadata_words & task_movie_words)\n    total_overlap = len(metadata_words & request_words)\n    score = (explicit_title_match, specific_overlap, int(movie_signal > 0), total_overlap, note[\"updated_at\"])\n    note_rankings.append({\"note\": note, \"score\": score})\nselected_note_ranking = max(note_rankings, key=lambda item: item[\"score\"])\nassert any(selected_note_ranking[\"score\"][:4])\nselected_note_summary = selected_note_ranking[\"note\"]\nprint([{\"note_id\": item[\"note\"][\"note_id\"], \"title\": item[\"note\"][\"title\"], \"tags\": item[\"note\"][\"tags\"], \"score\": item[\"score\"][:4]} for item in sorted(note_rankings, key=lambda item: item[\"score\"], reverse=True)])",
+      "depends_on_steps": [
+        7,
+        9
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Source note selected from metadata using Laura's request",
+        "Selected note ID derived from a public API result"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 11,
+      "phase": "observe",
+      "reasoning": "The selected note's detailed record is required because search results do not expose note content or the movie titles to send.",
+      "action_code": "selected_note = apis.simple_note.show_note(note_id=selected_note_summary[\"note_id\"], access_token=simple_note_access_token)",
+      "depends_on_steps": [
+        10
+      ],
+      "api_names_used": [
+        "simple_note.show_note"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Selected note content retrieved by its derived note ID"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 12,
+      "phase": "derive",
+      "reasoning": "Before the mutation, the note content must be converted into a nonempty comma-separated title list and reviewed together with the derived Laura destination.",
+      "action_code": "raw_note_content = selected_note[\"content\"].strip()\nraw_content_lines = [\" \".join(line.strip().split()) for line in raw_note_content.splitlines() if line.strip()]\ncleaned_movie_titles = []\nfor raw_line in raw_content_lines:\n    line = raw_line\n    for prefix in (\"- \", \"* \", \"• \", \"[ ] \", \"[x] \", \"[X] \"):\n        if line.startswith(prefix):\n            line = line[len(prefix):].strip()\n            break\n    digit_end = 0\n    while digit_end < len(line) and line[digit_end].isdigit():\n        digit_end += 1\n    if digit_end and digit_end < len(line) and line[digit_end] in \".):\":\n        line = line[digit_end + 1:].strip()\n    if line.startswith(\"# \"):\n        line = line[2:].strip()\n    if len(raw_content_lines) > 1 and normalized_text(line) == normalized_text(selected_note[\"title\"]):\n        continue\n    if line:\n        cleaned_movie_titles.append(line)\nif len(cleaned_movie_titles) == 1 and \";\" in cleaned_movie_titles[0]:\n    cleaned_movie_titles = [part.strip() for part in cleaned_movie_titles[0].split(\";\") if part.strip()]\nassert cleaned_movie_titles\noutgoing_movie_message = \", \".join(cleaned_movie_titles)\nassert outgoing_movie_message.strip()\nprint({\"recipient\": {\"first_name\": laura_contact[\"first_name\"], \"last_name\": laura_contact[\"last_name\"], \"phone_number\": laura_phone_number}, \"source_note\": {\"note_id\": selected_note[\"note_id\"], \"title\": selected_note[\"title\"]}, \"message\": outgoing_movie_message})",
+      "depends_on_steps": [
+        11
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Outgoing body is nonempty",
+        "Outgoing body is a comma-separated transformation of the selected note content",
+        "Destination is the Laura derived from the inbound request"
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 13,
+      "phase": "act",
+      "reasoning": "The recipient and message body have been derived and reviewed from prior public records, so the requested reply can now be sent.",
+      "action_code": "send_text_result = apis.phone.send_text_message(phone_number=laura_phone_number, message=outgoing_movie_message, access_token=phone_access_token)\nsent_text_message_id = send_text_result[\"text_message_id\"]",
+      "depends_on_steps": [
+        12
+      ],
+      "api_names_used": [
+        "phone.send_text_message"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Text-message mutation returns an ID saved for verification"
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 14,
+      "phase": "verify",
+      "reasoning": "The send response alone is insufficient; every page of Laura's public message thread must be re-read and checked for the returned ID, exact recipient, and exact comma-separated body.",
+      "action_code": "post_send_thread = []\nverification_page_index = 0\nwhile True:\n    verification_page = apis.phone.search_text_messages(access_token=phone_access_token, query=\"\", phone_number=laura_phone_number, only_latest_per_contact=False, page_index=verification_page_index, page_limit=20, sort_by=\"-created_at\")\n    post_send_thread.extend(verification_page)\n    if len(verification_page) < 20:\n        break\n    verification_page_index += 1\nverified_outgoing_records = [message for message in post_send_thread if message[\"text_message_id\"] == sent_text_message_id and message[\"receiver\"][\"phone_number\"] == laura_phone_number and message[\"message\"] == outgoing_movie_message]\nverification_passed = len(verified_outgoing_records) == 1\nprint({\"verified\": verification_passed, \"matching_message_count\": len(verified_outgoing_records)})\nassert verification_passed",
+      "depends_on_steps": [
+        13
+      ],
+      "api_names_used": [
+        "phone.search_text_messages"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Sent message is present in re-queried public records",
+        "Message ID matches the mutation response",
+        "Receiver is the selected Laura phone number",
+        "Message body exactly matches the derived comma-separated titles"
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 15,
+      "phase": "complete",
+      "reasoning": "After the re-query establishes all requested postconditions, the action task can be marked successful without supplying a QA answer.",
+      "action_code": "completion_result = apis.supervisor.complete_task(status=\"success\")",
+      "depends_on_steps": [
+        14
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "Task reported complete only after message verification"
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

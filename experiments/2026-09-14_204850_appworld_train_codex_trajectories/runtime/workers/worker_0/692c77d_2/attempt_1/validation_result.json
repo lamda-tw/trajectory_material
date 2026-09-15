@@ -1,0 +1,130 @@
+{
+  "accepted": true,
+  "trajectory": {
+    "task_id": "692c77d_2",
+    "task_family": "692c77d",
+    "instruction": "Give a 1-star rating to all songs in my Spotify song library which I have not liked. If I have already rated it higher, decrease it to 1.",
+    "supervisor": {
+      "first_name": "Brenda",
+      "last_name": "Smith",
+      "email": "brenda.webe@gmail.com",
+      "phone_number": "9312015677"
+    },
+    "datetime": "2023-05-18T12:00:00",
+    "appworld_version": "0.2.0.dev0",
+    "source": "ground_truth_api_calls_guided_codex_reconstruction",
+    "steps": [
+      {
+        "step_index": 1,
+        "reasoning": "Public documentation must be inspected for every required task API before any task API is called.",
+        "action_code": "required_api_docs = [('supervisor', 'show_profile'), ('supervisor', 'show_account_passwords'), ('spotify', 'login'), ('spotify', 'show_song_library'), ('spotify', 'show_liked_songs'), ('spotify', 'show_song_reviews'), ('spotify', 'review_song'), ('spotify', 'update_song_review'), ('supervisor', 'complete_task')]\napi_documentation = {}\nfor app_name, api_name in required_api_docs:\n    api_documentation[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 2,
+        "reasoning": "The Spotify login requires the supervisor's email and Spotify password, which must be obtained through Supervisor APIs and kept out of printed output.",
+        "action_code": "profile = apis.supervisor.show_profile()\naccount_passwords = apis.supervisor.show_account_passwords()\nspotify_password_matches = [account['password'] for account in account_passwords if account['account_name'].strip().lower() == 'spotify']\nif len(spotify_password_matches) != 1:\n    raise RuntimeError('Expected exactly one Spotify account password')\nspotify_password = spotify_password_matches[0]\nspotify_login = apis.spotify.login(username=profile['email'], password=spotify_password)\naccess_token = spotify_login['access_token']",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 3,
+        "reasoning": "The full library and full liked-song set are required to identify the exact scope; both paginated APIs must be exhausted.",
+        "action_code": "library_songs = []\npage_index = 0\nwhile True:\n    library_page = apis.spotify.show_song_library(access_token=access_token, page_index=page_index, page_limit=20)\n    library_songs.extend(library_page)\n    if len(library_page) < 20:\n        break\n    page_index += 1\nliked_songs = []\npage_index = 0\nwhile True:\n    liked_page = apis.spotify.show_liked_songs(access_token=access_token, page_index=page_index, page_limit=20)\n    liked_songs.extend(liked_page)\n    if len(liked_page) < 20:\n        break\n    page_index += 1",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 4,
+        "reasoning": "Only library songs whose IDs are absent from the liked-song results are mutation candidates.",
+        "action_code": "library_by_id = {song['song_id']: song for song in library_songs}\nliked_song_ids = {song['song_id'] for song in liked_songs}\ntarget_song_ids = sorted(set(library_by_id) - liked_song_ids)\ntarget_summary = {'library_song_count': len(library_by_id), 'unliked_library_song_count': len(target_song_ids)}\nprint(target_summary)",
+        "observation": "{\"library_song_count\": 14, \"unliked_library_song_count\": 7}\n"
+      },
+      {
+        "step_index": 5,
+        "reasoning": "Each target song's complete set of reviews by the supervisor must be read to distinguish missing reviews from existing ratings that need updating.",
+        "action_code": "reviews_by_song = {}\nfor song_id in target_song_ids:\n    song_reviews = []\n    page_index = 0\n    while True:\n        review_page = apis.spotify.show_song_reviews(song_id=song_id, user_email=profile['email'], page_index=page_index, page_limit=20)\n        song_reviews.extend(review_page)\n        if len(review_page) < 20:\n            break\n        page_index += 1\n    reviews_by_song[song_id] = song_reviews",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 6,
+        "reasoning": "A new 1-star review is needed only for target songs with no existing review by the supervisor; this list must be reviewed before creation.",
+        "action_code": "create_song_ids = sorted(song_id for song_id in target_song_ids if not reviews_by_song[song_id])\ncreation_plan_summary = {'new_one_star_reviews_needed': len(create_song_ids)}\nprint(creation_plan_summary)",
+        "observation": "{\"new_one_star_reviews_needed\": 5}\n"
+      },
+      {
+        "step_index": 7,
+        "reasoning": "The reviewed creation list identifies target songs lacking any supervisor rating, so each can now receive the requested 1-star review.",
+        "action_code": "created_review_results = []\nfor song_id in create_song_ids:\n    creation_result = apis.spotify.review_song(song_id=song_id, rating=1, access_token=access_token)\n    created_review_results.append({'song_id': song_id, 'result': creation_result})",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 8,
+        "reasoning": "Existing supervisor reviews on target songs need mutation only when their returned rating is not already 1; their public review IDs must be derived before updating.",
+        "action_code": "update_review_ids = sorted({review['song_review_id'] for song_id in target_song_ids for review in reviews_by_song[song_id] if review['rating'] != 1})\nupdate_plan_summary = {'existing_reviews_to_change_to_one_star': len(update_review_ids)}\nprint(update_plan_summary)",
+        "observation": "{\"existing_reviews_to_change_to_one_star\": 2}\n"
+      },
+      {
+        "step_index": 9,
+        "reasoning": "The reviewed update IDs correspond to existing target-song reviews whose ratings must be set to 1 without altering their title or text.",
+        "action_code": "updated_review_results = []\nfor review_id in update_review_ids:\n    update_result = apis.spotify.update_song_review(review_id=review_id, access_token=access_token, rating=1)\n    updated_review_results.append({'review_id': review_id, 'result': update_result})",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 10,
+        "reasoning": "Postcondition verification requires fresh, exhaustive reads of the library, liked songs, and supervisor reviews after all mutations.",
+        "action_code": "verified_library_songs = []\npage_index = 0\nwhile True:\n    library_page = apis.spotify.show_song_library(access_token=access_token, page_index=page_index, page_limit=20)\n    verified_library_songs.extend(library_page)\n    if len(library_page) < 20:\n        break\n    page_index += 1\nverified_liked_songs = []\npage_index = 0\nwhile True:\n    liked_page = apis.spotify.show_liked_songs(access_token=access_token, page_index=page_index, page_limit=20)\n    verified_liked_songs.extend(liked_page)\n    if len(liked_page) < 20:\n        break\n    page_index += 1\nverified_library_by_id = {song['song_id']: song for song in verified_library_songs}\nverified_liked_song_ids = {song['song_id'] for song in verified_liked_songs}\nverified_target_song_ids = sorted(set(verified_library_by_id) - verified_liked_song_ids)\npost_reviews_by_song = {}\nfor song_id in verified_target_song_ids:\n    song_reviews = []\n    page_index = 0\n    while True:\n        review_page = apis.spotify.show_song_reviews(song_id=song_id, user_email=profile['email'], page_index=page_index, page_limit=20)\n        song_reviews.extend(review_page)\n        if len(review_page) < 20:\n            break\n        page_index += 1\n    post_reviews_by_song[song_id] = song_reviews",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 11,
+        "reasoning": "Fresh results can now establish whether every currently unliked library song has at least one supervisor review and whether all such returned ratings equal 1.",
+        "action_code": "noncompliant_song_ids = []\nfor song_id in verified_target_song_ids:\n    current_reviews = post_reviews_by_song[song_id]\n    if not current_reviews or any(review['rating'] != 1 for review in current_reviews):\n        noncompliant_song_ids.append(song_id)\nverification_summary = {'unliked_library_song_count': len(verified_target_song_ids), 'noncompliant_song_count': len(noncompliant_song_ids)}\nprint(verification_summary)\nverification_ok = len(noncompliant_song_ids) == 0\nif not verification_ok:\n    raise AssertionError('Spotify rating postcondition not met for ' + str(len(noncompliant_song_ids)) + ' song(s)')",
+        "observation": "{\"unliked_library_song_count\": 7, \"noncompliant_song_count\": 0}\n"
+      },
+      {
+        "step_index": 12,
+        "reasoning": "The verification step prevents continuation unless the requested rating postcondition is satisfied, so the action task can now be marked successful.",
+        "action_code": "completion_result = apis.supervisor.complete_task(status='success')",
+        "observation": "Execution successful."
+      }
+    ],
+    "final_status": "success",
+    "evaluation": {
+      "success": true,
+      "num_tests": 7,
+      "num_passes": 7,
+      "num_failures": 0
+    },
+    "replay_evaluation": {
+      "success": true,
+      "num_tests": 7,
+      "num_passes": 7,
+      "num_failures": 0
+    },
+    "replay_verified": true,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0,
+    "api_call_count": 38,
+    "api_call_count_source": "appworld_api_calls_log",
+    "replay_api_call_count": 38,
+    "step_count": 12,
+    "provenance": {
+      "specs_sha256": "a72a708a313a4693663af35aa226eb40e611741bb297e29a1bb5ab76f0c1b427",
+      "api_calls_sha256": "3dc6287711c4d45f37f0668c135d5cbf1be431355ba69e7ed32a7d9a5e312bdc",
+      "plan_sha256": "979b88670ce62e00f1777ccf9a1d9d40511444431181528a6cdd82e9a13d7e68"
+    }
+  },
+  "task_result": {
+    "task_id": "692c77d_2",
+    "status": "verified",
+    "attempts": 1,
+    "generation_error": null,
+    "execution_error": null,
+    "evaluation_success": true,
+    "replay_success": true,
+    "step_count": 12,
+    "api_call_count": 38,
+    "rejection_reason": null,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0
+  }
+}

@@ -1,0 +1,221 @@
+{
+  "schema_version": "appworld-codex-plan-v1",
+  "status": "candidate",
+  "failure_reason": "",
+  "missing_public_schema_fields": [],
+  "task_id": "e3d6c94_2",
+  "task_family": "e3d6c94",
+  "completion_mode": "status_only",
+  "plan_summary": "Authenticate to Spotify, exhaustively read recommendations, inspect each recommended song, select R&B releases from the current or previous year, create the requested playlist, add every selected song, and verify using public responses and song reads.",
+  "steps": [
+    {
+      "step_index": 1,
+      "phase": "inspect",
+      "reasoning": "Public documentation must be inspected before any task API is called, including authentication, reads, mutations, and completion.",
+      "action_code": "required_api_docs = [(\"supervisor\", \"complete_task\"), (\"supervisor\", \"show_account_passwords\"), (\"supervisor\", \"show_profile\"), (\"phone\", \"get_current_date_and_time\"), (\"spotify\", \"add_song_to_playlist\"), (\"spotify\", \"create_playlist\"), (\"spotify\", \"login\"), (\"spotify\", \"show_recommendations\"), (\"spotify\", \"show_song\")]\napi_documentation = {}\nfor app_name, api_name in required_api_docs:\n    api_documentation[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+      "depends_on_steps": [],
+      "api_names_used": [
+        "api_docs.show_api_doc"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Documentation for every subsequently used task API is available."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 2,
+      "phase": "authenticate",
+      "reasoning": "The current year, supervisor identity, and Spotify credential record are needed before logging in or selecting songs.",
+      "action_code": "current_datetime = apis.phone.get_current_date_and_time()\nsupervisor_profile = apis.supervisor.show_profile()\naccount_passwords = apis.supervisor.show_account_passwords()",
+      "depends_on_steps": [
+        1
+      ],
+      "api_names_used": [
+        "phone.get_current_date_and_time",
+        "supervisor.show_profile",
+        "supervisor.show_account_passwords"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Current date data, supervisor profile data, and account credential records are saved without exposing secrets."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 3,
+      "phase": "derive",
+      "reasoning": "The Spotify username and password must be selected from the supervisor results, and the two eligible release years must come from the current date result.",
+      "action_code": "spotify_username = supervisor_profile[\"email\"]\nspotify_password = next(record[\"password\"] for record in account_passwords if record[\"account_name\"].strip().casefold() == \"spotify\")\ncurrent_year = int(current_datetime[\"date\"][:4])\neligible_release_years = {current_year, current_year - 1}",
+      "depends_on_steps": [
+        2
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Spotify credentials remain in variables only.",
+        "Eligible years are derived from the runtime current date."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 4,
+      "phase": "authenticate",
+      "reasoning": "An access token is required for personalized recommendations and playlist mutations.",
+      "action_code": "spotify_login = apis.spotify.login(username=spotify_username, password=spotify_password)\nspotify_access_token = spotify_login[\"access_token\"]",
+      "depends_on_steps": [
+        3
+      ],
+      "api_names_used": [
+        "spotify.login"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A Spotify access token is saved without being printed."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 5,
+      "phase": "observe",
+      "reasoning": "All personalized recommendation pages must be read before determining the complete candidate set.",
+      "action_code": "recommendation_pages = []\nall_recommendations = []\npage_index = 0\npage_limit = 20\nwhile True:\n    recommendation_page = apis.spotify.show_recommendations(access_token=spotify_access_token, page_index=page_index, page_limit=page_limit)\n    recommendation_pages.append(recommendation_page)\n    all_recommendations.extend(recommendation_page)\n    if len(recommendation_page) < page_limit:\n        break\n    page_index += 1\nrecommended_song_ids = list(dict.fromkeys(record[\"song_id\"] for record in all_recommendations))\nprint({\"pages_read\": len(recommendation_pages), \"unique_recommended_songs\": len(recommended_song_ids)})",
+      "depends_on_steps": [
+        4
+      ],
+      "api_names_used": [
+        "spotify.show_recommendations"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "Pagination continues through the first short or empty page.",
+        "Unique song IDs retain recommendation order."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 6,
+      "phase": "observe",
+      "reasoning": "Recommendation summaries omit release dates and full genre details, so each unique recommended song must be inspected.",
+      "action_code": "recommended_song_details = [apis.spotify.show_song(song_id=song_id) for song_id in recommended_song_ids]\nrecommended_song_details_by_id = {song[\"song_id\"]: song for song in recommended_song_details}",
+      "depends_on_steps": [
+        5
+      ],
+      "api_names_used": [
+        "spotify.show_song"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "A public detail record is saved for every unique recommended song ID."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 7,
+      "phase": "derive",
+      "reasoning": "Before creating the playlist, the target title and complete qualifying song set must be reviewed from recommendation-derived detail records.",
+      "action_code": "playlist_title = \"Spotify R&B Recommendations\"\neligible_song_details = [song for song in recommended_song_details if str(song.get(\"genre\", \"\")).strip().casefold() == \"r&b\" and int(song[\"release_date\"][:4]) in eligible_release_years]\neligible_song_ids = [song[\"song_id\"] for song in eligible_song_details]\ncandidate_summary = [{\"song_id\": song[\"song_id\"], \"title\": song[\"title\"], \"genre\": song[\"genre\"], \"release_date\": song[\"release_date\"]} for song in eligible_song_details]\nprint({\"playlist_title\": playlist_title, \"eligible_years\": sorted(eligible_release_years), \"songs\": candidate_summary})",
+      "depends_on_steps": [
+        6
+      ],
+      "api_names_used": [],
+      "mutates_state": false,
+      "verification_targets": [
+        "Every candidate originated in the exhaustive recommendation results.",
+        "Every candidate has genre R&B and a release year in the runtime-derived two-year window.",
+        "The exact requested playlist title is prepared."
+      ],
+      "output_policy": "public_records"
+    },
+    {
+      "step_index": 8,
+      "phase": "act",
+      "reasoning": "The reviewed title and candidate set are ready, so the new playlist can be created and its returned ID retained for additions.",
+      "action_code": "playlist_creation = apis.spotify.create_playlist(title=playlist_title, access_token=spotify_access_token)\nnew_playlist_id = playlist_creation[\"playlist_id\"]",
+      "depends_on_steps": [
+        7
+      ],
+      "api_names_used": [
+        "spotify.create_playlist"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The creation response supplies the playlist ID used by later calls."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 9,
+      "phase": "derive",
+      "reasoning": "Before adding songs, the mutation IDs should be re-derived from fresh public song reads and reviewed against the same genre and year criteria.",
+      "action_code": "pre_add_song_details = [apis.spotify.show_song(song_id=song_id) for song_id in eligible_song_ids]\nreviewed_song_ids = [song[\"song_id\"] for song in pre_add_song_details if str(song.get(\"genre\", \"\")).strip().casefold() == \"r&b\" and int(song[\"release_date\"][:4]) in eligible_release_years]\npre_add_review = {\"playlist_id\": new_playlist_id, \"playlist_title\": playlist_title, \"reviewed_song_count\": len(reviewed_song_ids), \"all_candidates_still_eligible\": reviewed_song_ids == eligible_song_ids}\nprint(pre_add_review)",
+      "depends_on_steps": [
+        8
+      ],
+      "api_names_used": [
+        "spotify.show_song"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "The destination playlist ID comes from the creation response.",
+        "Song mutation IDs come from fresh reads of the previously selected recommendation candidates.",
+        "Fresh details satisfy the R&B and eligible-year criteria."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 10,
+      "phase": "act",
+      "reasoning": "The reviewed playlist ID and song IDs now provide all arguments needed to add every qualifying recommendation.",
+      "action_code": "add_song_results = []\nfor song_id in reviewed_song_ids:\n    add_song_results.append(apis.spotify.add_song_to_playlist(playlist_id=new_playlist_id, song_id=song_id, access_token=spotify_access_token))",
+      "depends_on_steps": [
+        9
+      ],
+      "api_names_used": [
+        "spotify.add_song_to_playlist"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "One add operation is issued for every reviewed qualifying song ID."
+      ],
+      "output_policy": "no_print"
+    },
+    {
+      "step_index": 11,
+      "phase": "verify",
+      "reasoning": "After the mutations, public song reads and the saved mutation responses can verify the selected identities, eligibility criteria, and that every planned addition produced a response.",
+      "action_code": "verified_song_details = [apis.spotify.show_song(song_id=song_id) for song_id in reviewed_song_ids]\nverification_summary = {\"playlist_title_requested\": playlist_title, \"playlist_creation_has_id\": isinstance(new_playlist_id, int), \"planned_song_count\": len(reviewed_song_ids), \"addition_response_count\": len(add_song_results), \"one_response_per_planned_song\": len(add_song_results) == len(reviewed_song_ids), \"all_addition_responses_have_messages\": all(isinstance(result, dict) and \"message\" in result for result in add_song_results), \"all_song_ids_match\": [song[\"song_id\"] for song in verified_song_details] == reviewed_song_ids, \"all_songs_are_r_and_b\": all(str(song.get(\"genre\", \"\")).strip().casefold() == \"r&b\" for song in verified_song_details), \"all_songs_are_in_eligible_years\": all(int(song[\"release_date\"][:4]) in eligible_release_years for song in verified_song_details)}\nprint(verification_summary)",
+      "depends_on_steps": [
+        10
+      ],
+      "api_names_used": [
+        "spotify.show_song"
+      ],
+      "mutates_state": false,
+      "verification_targets": [
+        "The playlist creation returned an integer ID.",
+        "Every planned song addition returned a public response.",
+        "Re-queried song IDs match the mutation plan.",
+        "Every re-queried song remains R&B and within the eligible release years."
+      ],
+      "output_policy": "safe_aggregate"
+    },
+    {
+      "step_index": 12,
+      "phase": "complete",
+      "reasoning": "This is an action task, so after all requested mutations and public verification attempts, the task must be completed with success and no answer value.",
+      "action_code": "completion_result = apis.supervisor.complete_task(status=\"success\")",
+      "depends_on_steps": [
+        11
+      ],
+      "api_names_used": [
+        "supervisor.complete_task"
+      ],
+      "mutates_state": true,
+      "verification_targets": [
+        "The task is marked complete with action-task status success and no answer argument."
+      ],
+      "output_policy": "no_print"
+    }
+  ]
+}

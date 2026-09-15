@@ -1,0 +1,112 @@
+{
+  "accepted": true,
+  "trajectory": {
+    "task_id": "82e2fac_3",
+    "task_family": "82e2fac",
+    "instruction": "What is the title of the most-played song in my Spotify album library.",
+    "supervisor": {
+      "first_name": "Paul",
+      "last_name": "Miller",
+      "email": "paul_mill@gmail.com",
+      "phone_number": "3379617841"
+    },
+    "datetime": "2023-05-18T12:00:00",
+    "appworld_version": "0.2.0.dev0",
+    "source": "ground_truth_api_calls_guided_codex_reconstruction",
+    "steps": [
+      {
+        "step_index": 1,
+        "reasoning": "The public documentation for every API used must be inspected before making the first task API call.",
+        "action_code": "api_doc_requests = [\n    (\"supervisor\", \"show_profile\"),\n    (\"supervisor\", \"show_account_passwords\"),\n    (\"spotify\", \"login\"),\n    (\"spotify\", \"show_album_library\"),\n    (\"spotify\", \"show_song\"),\n    (\"supervisor\", \"complete_task\"),\n]\napi_docs = {}\nfor app_name, api_name in api_doc_requests:\n    api_docs[(app_name, api_name)] = apis.api_docs.show_api_doc(app_name=app_name, api_name=api_name)",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 2,
+        "reasoning": "The supervisor APIs provide the account identity and app password needed for authentication without exposing secrets in output.",
+        "action_code": "supervisor_profile = apis.supervisor.show_profile()\naccount_passwords = apis.supervisor.show_account_passwords()",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 3,
+        "reasoning": "The Spotify username and password must be selected from the retrieved supervisor records before login, while keeping the secret unprinted.",
+        "action_code": "spotify_password_candidates = [\n    record for record in account_passwords\n    if \"spotify\" in record[\"account_name\"].strip().casefold()\n]\nif len(spotify_password_candidates) != 1:\n    raise RuntimeError(\"Unable to identify exactly one Spotify credential record\")\nspotify_username = supervisor_profile[\"email\"]\nspotify_password = spotify_password_candidates[0][\"password\"]",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 4,
+        "reasoning": "Authenticated access is required before reading the user's Spotify album library.",
+        "action_code": "spotify_login_result = apis.spotify.login(username=spotify_username, password=spotify_password)\nspotify_access_token = spotify_login_result[\"access_token\"]",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 5,
+        "reasoning": "The full album library must be read page by page so songs from no saved album are omitted.",
+        "action_code": "album_library = []\npage_index = 0\npage_limit = 20\nwhile True:\n    album_page = apis.spotify.show_album_library(\n        access_token=spotify_access_token,\n        page_index=page_index,\n        page_limit=page_limit,\n    )\n    album_library.extend(album_page)\n    if len(album_page) < page_limit:\n        break\n    page_index += 1",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 6,
+        "reasoning": "Song-detail requests must be based only on song IDs found in the retrieved album records, with duplicates removed.",
+        "action_code": "album_song_ids = []\nseen_song_ids = set()\nfor album in album_library:\n    for song_id in album[\"song_ids\"]:\n        if song_id not in seen_song_ids:\n            seen_song_ids.add(song_id)\n            album_song_ids.append(song_id)\nif not album_song_ids:\n    raise RuntimeError(\"The album library contains no songs\")",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 7,
+        "reasoning": "Each library song's public details are needed because play count and title are provided by the song-detail API.",
+        "action_code": "album_song_records = []\nfor song_id in album_song_ids:\n    song_record = apis.spotify.show_song(song_id=song_id)\n    album_song_records.append(song_record)",
+        "observation": "Execution successful."
+      },
+      {
+        "step_index": 8,
+        "reasoning": "The requested answer is the title from the retrieved song record having the greatest play count.",
+        "action_code": "most_played_song = max(album_song_records, key=lambda song: song[\"play_count\"])\nanswer = most_played_song[\"title\"]\nprint({\n    \"song_id\": most_played_song[\"song_id\"],\n    \"title\": answer,\n    \"play_count\": most_played_song[\"play_count\"],\n})",
+        "observation": "{\"song_id\": 80, \"title\": \"Wandering the Streets Alone\", \"play_count\": 863}\n"
+      },
+      {
+        "step_index": 9,
+        "reasoning": "The answer has been computed from the complete set of public album-library song records and can now be submitted.",
+        "action_code": "completion_result = apis.supervisor.complete_task(answer=answer)",
+        "observation": "Execution successful."
+      }
+    ],
+    "final_status": "success",
+    "evaluation": {
+      "success": true,
+      "num_tests": 2,
+      "num_passes": 2,
+      "num_failures": 0
+    },
+    "replay_evaluation": {
+      "success": true,
+      "num_tests": 2,
+      "num_passes": 2,
+      "num_failures": 0
+    },
+    "replay_verified": true,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0,
+    "api_call_count": 27,
+    "api_call_count_source": "appworld_api_calls_log",
+    "replay_api_call_count": 27,
+    "step_count": 9,
+    "provenance": {
+      "specs_sha256": "ff908ae86398fcfc068d4d3df98e2a4d9c2898f2b38755bb53cae50df23346de",
+      "api_calls_sha256": "a63779fbf0aadc4f37b63332e364c0ba158cc26a2005df35133fd7d731f7f99b",
+      "plan_sha256": "6503320fac874539172a6cbd54b5eb6a9bff7c4d1e1b491192287eb6874d9701"
+    }
+  },
+  "task_result": {
+    "task_id": "82e2fac_3",
+    "status": "verified",
+    "attempts": 1,
+    "generation_error": null,
+    "execution_error": null,
+    "evaluation_success": true,
+    "replay_success": true,
+    "step_count": 9,
+    "api_call_count": 27,
+    "rejection_reason": null,
+    "credential_leaks": 0,
+    "privileged_context_leaks": 0
+  }
+}
