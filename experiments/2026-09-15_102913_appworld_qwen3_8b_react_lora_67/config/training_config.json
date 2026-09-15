@@ -1,0 +1,49 @@
+{
+  "created_at_utc": "2026-09-15T02:29:21.065560+00:00",
+  "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+  "dataset_dir": "/root/autodl-tmp/workspace-tw/data/2026-09-15_appworld_qwen3-8b_react_sft_67",
+  "train_json": "/root/autodl-tmp/workspace-tw/data/2026-09-15_appworld_qwen3-8b_react_sft_67/train.jsonl",
+  "diagnostic_validation_json": "/root/autodl-tmp/workspace-tw/data/2026-09-15_appworld_qwen3-8b_react_sft_67/splits/task_holdout_60_7/validation.jsonl",
+  "dataset_manifest_sha256": "8014937008cd2bea5db00b6d1af662f2e70b7c985068a34178919253214f7470",
+  "dataset_validation_sha256": "037f40c9ab5d2669494703a03f440e73e70e11f5363d2a50d8f54d134024597f",
+  "train_sha256": "949261ed03ce9eb7388802ff0c333b50678b4c57a44f895aeb5b34d9c3555a14",
+  "diagnostic_validation_sha256": "7a6ce4b3d5c465ebfaeaf8115e649f5f9439bbe5cb5ddf7850b6fb6fda2f1ece",
+  "train_tasks": 67,
+  "train_decision_samples": 640,
+  "diagnostic_validation_tasks": 7,
+  "diagnostic_validation_samples": 71,
+  "validation_overlap_policy": "The 7-task validation subset is included in the 67-task all-data training set; its loss is diagnostic only. AppWorld Dev is the held-out end-to-end evaluation.",
+  "max_length": 32768,
+  "enable_thinking": false,
+  "loss_policy": "assistant_completion_only",
+  "epochs": 1,
+  "per_gpu_batch_size": 1,
+  "world_size": 2,
+  "global_batch_size": 2,
+  "learning_rate": 0.0002,
+  "optimizer": "AdamW",
+  "lora_r": 8,
+  "lora_alpha": 16,
+  "lora_dropout": 0.0,
+  "seed": 20260915,
+  "attention": "sdpa",
+  "dtype": "bfloat16",
+  "probe_samples": [
+    {
+      "id": "22cc237_1::assistant-0010",
+      "tokens": 25070
+    },
+    {
+      "id": "22cc237_1::assistant-0009",
+      "tokens": 24843
+    }
+  ],
+  "token_lengths": {
+    "min": 3277,
+    "max": 25070,
+    "over_16384": 8,
+    "over_20480": 6,
+    "over_24576": 2,
+    "over_32768": 0
+  }
+}

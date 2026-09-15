@@ -1,0 +1,183 @@
+{
+  "status": "PROBE_SUCCESS",
+  "finished_at_utc": "2026-09-15T05:01:26.364123+00:00",
+  "hostname": "autodl-container-65d14488ce-cd05d5ef",
+  "arguments": {
+    "model": "/root/autodl-tmp/models/Qwen3-8B",
+    "train_json": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_130022_appworld_qwen3_8b_react_full_sft_67/data/probe_longest.jsonl",
+    "validation_json": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_130022_appworld_qwen3_8b_react_full_sft_67/data/probe_longest.jsonl",
+    "experiment_dir": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_130022_appworld_qwen3_8b_react_full_sft_67/probe",
+    "max_length": 32768,
+    "epochs": 1,
+    "learning_rate": 0.0002,
+    "weight_decay": 0.0,
+    "seed": 20260915,
+    "max_steps": 1,
+    "skip_validation": true,
+    "skip_model_save": true,
+    "save_every_epoch": false
+  },
+  "distributed": {
+    "backend": "nccl",
+    "world_size": 2,
+    "sharding": "FSDP FULL_SHARD",
+    "ranks": [
+      {
+        "rank": 0,
+        "local_rank": 0,
+        "device_name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "device_capability": [
+          12,
+          0
+        ],
+        "peak_allocated_gib": 61.136202812194824,
+        "peak_reserved_gib": 78.208984375
+      },
+      {
+        "rank": 1,
+        "local_rank": 1,
+        "device_name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "device_capability": [
+          12,
+          0
+        ],
+        "peak_allocated_gib": 60.676960468292236,
+        "peak_reserved_gib": 77.740234375
+      }
+    ]
+  },
+  "model": {
+    "source_base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "method": "full_parameter_sft",
+    "dtype": "bfloat16",
+    "attention": "sdpa",
+    "trainable_parameters": 8190735360,
+    "total_parameters": 8190735360,
+    "trainable_percent": 100.0,
+    "final_model": null
+  },
+  "data": {
+    "train": {
+      "count": 2,
+      "samples": [
+        {
+          "id": "22cc237_1::assistant-0010",
+          "tokens": 25070,
+          "prompt_tokens": 25008,
+          "completion_tokens": 62,
+          "original_tokens": 25070,
+          "truncated_prompt_tokens": 0
+        },
+        {
+          "id": "22cc237_1::assistant-0009",
+          "tokens": 24843,
+          "prompt_tokens": 24092,
+          "completion_tokens": 751,
+          "original_tokens": 24843,
+          "truncated_prompt_tokens": 0
+        }
+      ],
+      "tokens": {
+        "min": 24843,
+        "max": 25070,
+        "mean": 24956.5
+      },
+      "prompt_tokens": {
+        "min": 24092,
+        "max": 25008,
+        "mean": 24550.0
+      },
+      "completion_tokens": {
+        "min": 62,
+        "max": 751,
+        "mean": 406.5
+      },
+      "original_tokens": {
+        "min": 24843,
+        "max": 25070,
+        "mean": 24956.5
+      },
+      "truncated_samples": 0,
+      "truncated_prompt_tokens_total": 0
+    },
+    "validation": {
+      "count": 2,
+      "samples": [
+        {
+          "id": "22cc237_1::assistant-0010",
+          "tokens": 25070,
+          "prompt_tokens": 25008,
+          "completion_tokens": 62,
+          "original_tokens": 25070,
+          "truncated_prompt_tokens": 0
+        },
+        {
+          "id": "22cc237_1::assistant-0009",
+          "tokens": 24843,
+          "prompt_tokens": 24092,
+          "completion_tokens": 751,
+          "original_tokens": 24843,
+          "truncated_prompt_tokens": 0
+        }
+      ],
+      "tokens": {
+        "min": 24843,
+        "max": 25070,
+        "mean": 24956.5
+      },
+      "prompt_tokens": {
+        "min": 24092,
+        "max": 25008,
+        "mean": 24550.0
+      },
+      "completion_tokens": {
+        "min": 62,
+        "max": 751,
+        "mean": 406.5
+      },
+      "original_tokens": {
+        "min": 24843,
+        "max": 25070,
+        "mean": 24956.5
+      },
+      "truncated_samples": 0,
+      "truncated_prompt_tokens_total": 0
+    }
+  },
+  "training": {
+    "epochs_requested": 1,
+    "epochs_completed": 0,
+    "global_steps": 1,
+    "per_gpu_batch_size": 1,
+    "global_batch_size": 2,
+    "gradient_accumulation_steps": 1,
+    "learning_rate": 0.0002,
+    "weight_decay": 0.0,
+    "optimizer": "fused AdamW",
+    "loss_policy": "assistant_completion_only",
+    "enable_thinking": false,
+    "gradient_checkpointing": true,
+    "max_length": 32768,
+    "elapsed_seconds": 31.668555974960327,
+    "epoch_summaries": [
+      {
+        "epoch": 1,
+        "steps": 1,
+        "mean_loss": 2.4866292476654053,
+        "first_20_mean_loss": 2.4866292476654053,
+        "last_20_mean_loss": 2.4866292476654053,
+        "min_loss": 2.4866292476654053,
+        "max_loss": 2.4866292476654053
+      }
+    ],
+    "history": [
+      {
+        "epoch": 1,
+        "step": 1,
+        "train_loss": 2.4866292476654053,
+        "elapsed_seconds": 31.66595435142517
+      }
+    ]
+  },
+  "validation": null
+}

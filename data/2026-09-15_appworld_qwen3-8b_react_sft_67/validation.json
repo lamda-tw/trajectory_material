@@ -1,0 +1,39 @@
+{
+  "status": "PASS",
+  "schema_version": "appworld-react-sft-v1",
+  "task_count": 67,
+  "decision_sample_count": 640,
+  "per_task_json_count": 67,
+  "source_verification": {
+    "official_evaluator_success_tasks": 67,
+    "clean_replay_success_tasks": 67,
+    "credential_leak_tasks": 0,
+    "privileged_context_leak_tasks": 0
+  },
+  "structure": {
+    "unique_sample_ids": 640,
+    "task_shards_exactly_cover_train": true,
+    "completion_python_block_count": 1,
+    "chat_template_prefix_invariant": true,
+    "monitor_split_task_disjoint": true,
+    "monitor_train_tasks": 60,
+    "monitor_validation_tasks": 7
+  },
+  "dynamic_leak_scan_findings": {},
+  "tokenizer": {
+    "model_path": "/root/autodl-tmp/models/Qwen3-8B",
+    "enable_thinking": false,
+    "min_full_tokens": 3277,
+    "p50_full_tokens": 4150,
+    "p95_full_tokens": 9009,
+    "max_full_tokens": 25070,
+    "max_prompt_tokens": 25008,
+    "max_completion_tokens": 1971,
+    "samples_over_limit": {
+      "4096": 331,
+      "8192": 34,
+      "16384": 8,
+      "32768": 0
+    }
+  }
+}

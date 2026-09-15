@@ -1,0 +1,8 @@
+CUDA_VISIBLE_DEVICES=0,1 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
+/root/autodl-tmp/workspace-tw/.conda-training/bin/torchrun --standalone --nproc_per_node=2 scripts/full_sft_train_fsdp.py \
+  --model /root/autodl-tmp/models/Qwen3-8B \
+  --train-json /root/autodl-tmp/workspace-tw/data/2026-09-15_appworld_qwen3-8b_react_sft_67/train.jsonl \
+  --validation-json /root/autodl-tmp/workspace-tw/data/2026-09-15_appworld_qwen3-8b_react_sft_67/splits/task_holdout_60_7/validation.jsonl \
+  --experiment-dir /root/autodl-tmp/workspace-tw/experiments/2026-09-15_130022_appworld_qwen3_8b_react_full_sft_67 \
+  --max-length 32768 --epochs 5 --learning-rate 0.0002 --weight-decay 0 \
+  --seed 20260915 --save-every-epoch
