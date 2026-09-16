@@ -73,7 +73,7 @@
 
 本阶段研究如何把 AppWorld 中通过官方 evaluator 且能在干净环境中重放成功的 ReAct 轨迹，转换为 Qwen3-8B 可学习的 completion-only 监督数据，并比较 LoRA 与全参数 SFT 对工具型智能体能力的影响。
 
-原始 Qwen3-8B 已在完整 AppWorld Dev 集上取得 5/57 task success，作为后续评测基线。训练只使用 AppWorld train 任务；Dev 数据不参与训练，后续继续使用官方 evaluator 进行独立对照。
+原始 Qwen3-8B 已在完整 AppWorld Dev 集上取得 5/57 task success，并作为本轮评测基线。训练只使用 AppWorld train 任务；Dev 数据不参与训练。LoRA epoch 5、全参数 SFT epoch 2 和 epoch 5 均已使用同一套 57 题 Dev 官方 evaluator 完成独立对照。
 
 ### 训练数据
 
@@ -98,7 +98,7 @@
 | 第 5 轮平均 loss | 0.106259 | 0.166918 |
 | 模型重载与生成检查 | PASS | PASS |
 
-训练 loss 只说明模型对这 67 条教师轨迹的拟合情况，不能直接代表 AppWorld 泛化能力。最终结论需要比较原始模型、LoRA 模型和全参数 SFT 模型在同一套 57 题 Dev 官方评测上的 task success、scenario goal completion 和运行稳定性。
+训练 loss 只说明模型对这 67 条教师轨迹的拟合情况，不能直接代表 AppWorld 泛化能力。本轮已在同一套 57 题 Dev 官方评测上比较原始模型、LoRA 模型和全参数 SFT 模型的 task success、scenario goal completion 和运行稳定性，结果见下节。
 
 ### 实验产物
 
@@ -119,9 +119,30 @@ LoRA 五轮实验：
 
 Git 保存训练数据、通用脚本、配置、指标、Loss 图、中文报告和 SHA256 清单。LoRA adapter、全参数模型权重和中间 checkpoint 体积较大，均由 `.gitignore` 排除并保留在训练服务器上。
 
-### 后续 Dev 评测入口
+### Dev 评测入口（已完成）
 
 - LoRA：[scripts/run_appworld_qwen3_react_lora_full_dev.sh](scripts/run_appworld_qwen3_react_lora_full_dev.sh)
 - 全参数 SFT：[scripts/run_appworld_qwen3_react_full_sft_full_dev.sh](scripts/run_appworld_qwen3_react_full_sft_full_dev.sh)
 
-两份入口脚本分别加载 LoRA adapter 与独立完整模型，并复用原始模型 Dev 基线的 AppWorld ReAct 评测协议。
+两份入口脚本分别加载 LoRA adapter 与独立完整模型，并复用原始模型 Dev 基线的 AppWorld ReAct 评测协议；本轮正式对齐评测已经完成。
+
+### 正式 Dev 对齐评测结果
+
+四组结果均覆盖 Dev 的 57 个唯一任务和 19 个 scenario，并使用同一套 AppWorld ReAct 提示、工具接口与官方 evaluator。
+
+| 模型 | Task Goal Completion（TGC） | Scenario Goal Completion（SGC） | 测试项通过 |
+|---|---:|---:|---:|
+| Base Qwen3-8B | 5/57（8.8%） | 0/19（0%） | 114/291（39.2%） |
+| LoRA epoch 5 | 5/57（8.8%） | 1/19（5.3%） | 105/291（36.1%） |
+| Full-SFT epoch 2 | 0/57（0%） | 0/19（0%） | 64/291（22.0%） |
+| Full-SFT epoch 5 | 0/57（0%） | 0/19（0%） | 86/291（29.6%） |
+
+正式评测目录和报告：
+
+- LoRA epoch 5：[experiments/2026-09-15_174500_appworld_qwen3-8b_react_lora_aligned_full_dev/](experiments/2026-09-15_174500_appworld_qwen3-8b_react_lora_aligned_full_dev/)；[REPORT.md](experiments/2026-09-15_174500_appworld_qwen3-8b_react_lora_aligned_full_dev/REPORT.md)
+- Full-SFT epoch 2：[experiments/2026-09-15_220731_appworld_qwen3-8b_react_full_sft_epoch2_aligned_full_dev/](experiments/2026-09-15_220731_appworld_qwen3-8b_react_full_sft_epoch2_aligned_full_dev/)；[REPORT.md](experiments/2026-09-15_220731_appworld_qwen3-8b_react_full_sft_epoch2_aligned_full_dev/REPORT.md)
+- Full-SFT epoch 5：[experiments/2026-09-15_205155_appworld_qwen3-8b_react_full_sft_epoch5_aligned_full_dev/](experiments/2026-09-15_205155_appworld_qwen3-8b_react_full_sft_epoch5_aligned_full_dev/)；[REPORT.md](experiments/2026-09-15_205155_appworld_qwen3-8b_react_full_sft_epoch5_aligned_full_dev/REPORT.md)
+
+Full-SFT epoch 2 和 epoch 5 的 57 个任务中，`content=null` 均为 0。两次全参数 SFT 的退化不是接口层吞掉模型输出，而是模型输出和工具决策质量下降。
+
+Git 只保留轻量报告、聚合元数据和复现配置；`logs/`、`cache/`、`outputs/`、运行时数据库、模型文件和指向服务器绝对路径的 symlink 均排除在版本控制之外。`artifacts.sha256` 可能引用仅保留在服务器上的 ignored 产物，因此 clone 后不保证能够完成全部离线哈希复验。

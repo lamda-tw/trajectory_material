@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run AppWorld Dev with a local Qwen3 base and a vLLM LoRA adapter."""
+"""Run AppWorld with a full Hugging Face Qwen3 checkpoint served by vLLM."""
 
 from __future__ import annotations
 
@@ -15,18 +15,15 @@ def main() -> None:
     parser.add_argument("--root", required=True)
     parser.add_argument("--config-root", required=True)
     parser.add_argument("--model-path", required=True)
-    parser.add_argument("--adapter-path", required=True)
     parser.add_argument("--vllm-bin", required=True)
-    parser.add_argument("--served-adapter-name", default="appworld-qwen3-8b-react-lora-67")
+    parser.add_argument("--served-model-name", default="appworld-qwen3-8b-full-sft")
     parser.add_argument(
         "--model-config-name",
         choices=("qwen3-8b-with-reasoning", "qwen3-8b-without-reasoning"),
         default="qwen3-8b-with-reasoning",
     )
     parser.add_argument(
-        "--reasoning-parser",
-        choices=("deepseek_r1", "none"),
-        default="deepseek_r1",
+        "--reasoning-parser", choices=("deepseek_r1", "none"), default="none"
     )
     parser.add_argument("--dataset-name", default="dev")
     parser.add_argument("--task-id")
@@ -59,15 +56,40 @@ def main() -> None:
 
         status_path = os.path.abspath(args.per_task_status_path)
         os.makedirs(os.path.dirname(status_path), exist_ok=True)
+        completed_task_ids = set()
+        if os.path.isfile(status_path):
+            with open(status_path, "r", encoding="utf-8") as existing_status_file:
+                for line in existing_status_file:
+                    if line.strip():
+                        completed_task_ids.add(json.loads(line)["task_id"])
         expected_experiment_name = (
             f"simplified_react_code_agent/alibaba/{args.model_config_name}/{args.dataset_name}"
         )
         original_solve_task = Agent.solve_task
-        per_task_counter = {"completed": 0}
+        per_task_counter = {"completed": len(completed_task_ids)}
 
         def solve_task_with_per_task_evaluation(self, task_id):
+            if task_id in completed_task_ids:
+                print(f"PER_TASK_SKIP already_completed task_id={task_id}", flush=True)
+                return
             started_at = time.monotonic()
-            original_solve_task(self, task_id)
+            solve_exception = None
+            try:
+                original_solve_task(self, task_id)
+            except Exception as exception:
+                solve_exception = exception
+                print(
+                    "MODEL_EXECUTION_ERROR "
+                    + json.dumps(
+                        {
+                            "task_id": task_id,
+                            "error_type": type(exception).__name__,
+                            "error": str(exception),
+                        },
+                        ensure_ascii=False,
+                    ),
+                    flush=True,
+                )
             CachedDBHandler.reset()
             try:
                 tracker = evaluate_task(
@@ -81,7 +103,11 @@ def main() -> None:
                 record = {
                     "completed_index": per_task_counter["completed"],
                     "task_id": task_id,
-                    "status": "success" if succeeded else "failed",
+                    "status": (
+                        "model_execution_error"
+                        if solve_exception is not None
+                        else ("success" if succeeded else "failed")
+                    ),
                     "task_goal_completion": 100.0 if succeeded else 0.0,
                     "test_pass_percentage": tracker.pass_percentage,
                     "passed_tests": tracker.pass_count,
@@ -90,17 +116,27 @@ def main() -> None:
                     "difficulty": tracker.difficulty,
                     "elapsed_seconds": round(time.monotonic() - started_at, 3),
                 }
+                if solve_exception is not None:
+                    record["execution_error_type"] = type(solve_exception).__name__
+                    record["execution_error"] = str(solve_exception)
             except Exception as exception:
                 per_task_counter["completed"] += 1
                 record = {
                     "completed_index": per_task_counter["completed"],
                     "task_id": task_id,
-                    "status": "evaluation_error",
+                    "status": (
+                        "model_execution_and_evaluation_error"
+                        if solve_exception is not None
+                        else "evaluation_error"
+                    ),
                     "task_goal_completion": None,
                     "error_type": type(exception).__name__,
                     "error": str(exception),
                     "elapsed_seconds": round(time.monotonic() - started_at, 3),
                 }
+                if solve_exception is not None:
+                    record["execution_error_type"] = type(solve_exception).__name__
+                    record["execution_error"] = str(solve_exception)
             finally:
                 CachedDBHandler.reset()
             with open(status_path, "a", encoding="utf-8") as status_file:
@@ -115,25 +151,21 @@ def main() -> None:
 
     q = shlex.quote
     reasoning_parser_arg = (
-        "" if args.reasoning_parser == "none"
+        ""
+        if args.reasoning_parser == "none"
         else f"--reasoning-parser {q(args.reasoning_parser)} "
     )
     server_command = (
         f"{q(args.vllm_bin)} serve {q(args.model_path)} "
-        f"--served-model-name Qwen/Qwen3-8B "
-        f"--enable-lora --lora-modules {q(args.served_adapter_name)}={q(args.adapter_path)} "
-        f"--max-lora-rank 8 "
+        f"--served-model-name {q(args.served_model_name)} "
         f"{reasoning_parser_arg}"
-        f"--max-num-seqs 3 "
-        f"--max-model-len 32000 "
-        f"--enable-auto-tool-choice "
-        f"--tool-call-parser hermes "
-        f"--port {{port}}"
+        f"--max-num-seqs 3 --max-model-len 32000 "
+        f"--enable-auto-tool-choice --tool-call-parser hermes --port {{port}}"
     )
     override = json.dumps(
         {
             "config": {
-                "agent": {"model_config": {"name": args.served_adapter_name}},
+                "agent": {"model_config": {"name": args.served_model_name}},
                 "model_server": {
                     "command": server_command,
                     "timeout": 1200,

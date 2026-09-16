@@ -1,61 +1,52 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-if [[ $# -lt 2 || $# -gt 5 ]]; then
-  echo "Usage: $0 EVALUATION_EXPERIMENT_ROOT LORA_ADAPTER_PATH [MODEL_CONFIG_NAME] [TASK_ID] [REASONING_PARSER]" >&2
+if [[ $# -lt 2 || $# -gt 6 ]]; then
+  echo "Usage: $0 EVALUATION_EXPERIMENT_ROOT FULL_MODEL_PATH [MODEL_LABEL] [MODEL_CONFIG_NAME] [TASK_ID] [REASONING_PARSER]" >&2
   exit 2
 fi
 
 workspace="/root/autodl-tmp/workspace-tw"
 appworld_env="/root/autodl-tmp/envs/appworld-0.2.0-py312"
 vllm_env="/root/autodl-tmp/envs/qwen3-vllm-py312"
-model_path="$workspace/models/Qwen3-8B"
-if [[ ! -d "$model_path" ]]; then
-  model_path="/root/autodl-tmp/models/Qwen3-8B"
-fi
 source_data="/root/autodl-tmp/data/benchmarks/appworld/runtime/data"
 source_tests="$workspace/experiments/2026-09-10_173848_appworld_qwen3-8b_react_oneshot_smoke/cache/tests"
 installed_agent_configs="$appworld_env/lib/python3.12/site-packages/appworld_agents/configs"
-launcher="$workspace/scripts/appworld_run_isolated_lora_config.py"
+launcher="$workspace/scripts/appworld_run_isolated_full_model_config.py"
 experiment_root="$1"
-adapter_path="$2"
-model_config_name="${3:-qwen3-8b-with-reasoning}"
-task_id="${4:-}"
-if [[ "$task_id" == "-" ]]; then
-  task_id=""
-fi
-reasoning_parser="${5:-auto}"
-if [[ "$reasoning_parser" == "auto" ]]; then
-  reasoning_parser="deepseek_r1"
-  if [[ "$model_config_name" == "qwen3-8b-without-reasoning" ]]; then
-    reasoning_parser="none"
-  fi
-fi
-if [[ "$reasoning_parser" != "deepseek_r1" && "$reasoning_parser" != "none" ]]; then
-  echo "Unsupported reasoning parser: $reasoning_parser" >&2
-  exit 2
-fi
+model_path="$2"
+model_label="${3:-full-sft}"
+model_config_name="${4:-qwen3-8b-with-reasoning}"
+task_id="${5:-}"
+[[ "$task_id" != "-" ]] || task_id=""
+reasoning_parser="${6:-none}"
 run_log="$experiment_root/logs/run.log"
 status_file="$experiment_root/logs/run_exit_code.txt"
+served_model_name="appworld-qwen3-8b-$model_label"
 model_server_pattern="^${vllm_env}/bin/python ${vllm_env}/bin/vllm serve ${model_path} "
 
-if [[ "$experiment_root" != "$workspace"/experiments/*_appworld_qwen3-8b_react_lora_* ]]; then
+if [[ "$experiment_root" != "$workspace"/experiments/*_appworld_qwen3-8b_react_full_sft_* ]]; then
   echo "Refusing unexpected evaluation root: $experiment_root" >&2
+  exit 2
+fi
+training_root="$workspace/experiments/2026-09-15_130022_appworld_qwen3_8b_react_full_sft_67"
+if [[ "$model_path" != "$training_root/artifacts/model" && "$model_path" != "$training_root"/artifacts/checkpoints/epoch_*_model ]]; then
+  echo "Refusing model path outside the expected full-SFT experiment: $model_path" >&2
   exit 2
 fi
 if [[ "$model_config_name" != "qwen3-8b-with-reasoning" && "$model_config_name" != "qwen3-8b-without-reasoning" ]]; then
   echo "Unsupported model config: $model_config_name" >&2
   exit 2
 fi
-if [[ "$adapter_path" != "$workspace"/experiments/*/artifacts/* ]]; then
-  echo "Refusing adapter path outside a workspace experiment: $adapter_path" >&2
+if [[ "$reasoning_parser" != "deepseek_r1" && "$reasoning_parser" != "none" ]]; then
+  echo "Unsupported reasoning parser: $reasoning_parser" >&2
   exit 2
 fi
-for required in adapter_config.json adapter_model.safetensors tokenizer_config.json; do
-  test -f "$adapter_path/$required" || { echo "Missing adapter file: $adapter_path/$required" >&2; exit 2; }
+for required in config.json tokenizer_config.json model.safetensors.index.json; do
+  test -f "$model_path/$required" || { echo "Missing model file: $model_path/$required" >&2; exit 2; }
 done
 if pgrep -f "$model_server_pattern" >/dev/null; then
-  echo "A matching Qwen3 vLLM server is already running; refusing to interfere." >&2
+  echo "A matching full-model vLLM server is already running; refusing to interfere." >&2
   exit 1
 fi
 
@@ -97,16 +88,16 @@ cleanup_model_server() {
 }
 trap cleanup_model_server EXIT
 printf 'run_started_at=%s\n' "$(date --iso-8601=seconds)"
-printf 'experiment_root=%s\nadapter_path=%s\nmodel_config_name=%s\nreasoning_parser=%s\ntask_id=%s\n' \
-  "$experiment_root" "$adapter_path" "$model_config_name" "$reasoning_parser" "$task_id"
+printf 'experiment_root=%s\nmodel_path=%s\nmodel_label=%s\nmodel_config_name=%s\nreasoning_parser=%s\ntask_id=%s\n' \
+  "$experiment_root" "$model_path" "$model_label" "$model_config_name" "$reasoning_parser" "$task_id"
 nvidia-smi --query-gpu=index,name,memory.total,memory.free --format=csv,noheader
 
 launcher_args=(
   --root "$experiment_root"
   --config-root "$experiment_root/config/agent_configs"
   --model-path "$model_path"
-  --adapter-path "$adapter_path"
   --vllm-bin "$vllm_env/bin/vllm"
+  --served-model-name "$served_model_name"
   --model-config-name "$model_config_name"
   --reasoning-parser "$reasoning_parser"
   --per-task-status-path "$experiment_root/task_status.jsonl"

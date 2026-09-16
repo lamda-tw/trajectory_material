@@ -1,0 +1,468 @@
+{
+  "experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_220731_appworld_qwen3-8b_react_full_sft_epoch2_aligned_full_dev",
+  "task_count": 57,
+  "dataset_unique_count": 57,
+  "scenario_count": 19,
+  "target": {
+    "label": "full-SFT epoch2",
+    "experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_220731_appworld_qwen3-8b_react_full_sft_epoch2_aligned_full_dev",
+    "output_root": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_220731_appworld_qwen3-8b_react_full_sft_epoch2_aligned_full_dev/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev",
+    "evaluation_path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_220731_appworld_qwen3-8b_react_full_sft_epoch2_aligned_full_dev/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev/evaluations/dev.json",
+    "evaluation_sha256": "ef57bc3a14bac056c3faeb1e1797103f43124b36bd84ec62c09e4fa5ae2857c9",
+    "aggregate": {
+      "task_goal_completion": 0.0,
+      "scenario_goal_completion": 0.0
+    },
+    "success_count": 0,
+    "success_ids": [],
+    "successful_scenario_count": 0,
+    "successful_scenarios": [],
+    "difficulty": {
+      "1": {
+        "total": 30,
+        "successes": 0,
+        "tgc": 0.0
+      },
+      "2": {
+        "total": 24,
+        "successes": 0,
+        "tgc": 0.0
+      },
+      "3": {
+        "total": 3,
+        "successes": 0,
+        "tgc": 0.0
+      }
+    },
+    "evaluator_tests": {
+      "passed": 64,
+      "failed": 227,
+      "total": 291,
+      "pass_percentage": 22.0
+    }
+  },
+  "comparisons": [
+    {
+      "label": "原始 Qwen3-8B",
+      "experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-09-10_210441_appworld_qwen3-8b_react_oneshot_full_dev",
+      "output_root": "/root/autodl-tmp/workspace-tw/experiments/2026-09-10_210441_appworld_qwen3-8b_react_oneshot_full_dev/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev",
+      "evaluation_path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-10_210441_appworld_qwen3-8b_react_oneshot_full_dev/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev/evaluations/dev.json",
+      "evaluation_sha256": "f8507888b4cb5cface5a175d55ab1cbfe95da082b0d45c9db6c640969746d2e0",
+      "aggregate": {
+        "task_goal_completion": 8.8,
+        "scenario_goal_completion": 0.0
+      },
+      "success_count": 5,
+      "success_ids": [
+        "23cf851_2",
+        "68ee2c9_3",
+        "6c2c621_1",
+        "6c2c621_2",
+        "fac291d_1"
+      ],
+      "successful_scenario_count": 0,
+      "successful_scenarios": [],
+      "difficulty": {
+        "1": {
+          "total": 30,
+          "successes": 2,
+          "tgc": 6.7
+        },
+        "2": {
+          "total": 24,
+          "successes": 3,
+          "tgc": 12.5
+        },
+        "3": {
+          "total": 3,
+          "successes": 0,
+          "tgc": 0.0
+        }
+      },
+      "evaluator_tests": {
+        "passed": 114,
+        "failed": 177,
+        "total": 291,
+        "pass_percentage": 39.2
+      }
+    },
+    {
+      "label": "LoRA",
+      "experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_174500_appworld_qwen3-8b_react_lora_aligned_full_dev",
+      "output_root": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_174500_appworld_qwen3-8b_react_lora_aligned_full_dev/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev",
+      "evaluation_path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_174500_appworld_qwen3-8b_react_lora_aligned_full_dev/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev/evaluations/dev.json",
+      "evaluation_sha256": "c3e0913fd2cef855cf6fb0c6b97ad09b3793e6c471a524c16c16240d7691b8ef",
+      "aggregate": {
+        "task_goal_completion": 8.8,
+        "scenario_goal_completion": 5.3
+      },
+      "success_count": 5,
+      "success_ids": [
+        "50e1ac9_1",
+        "6171bbc_1",
+        "d4e9306_1",
+        "d4e9306_2",
+        "d4e9306_3"
+      ],
+      "successful_scenario_count": 1,
+      "successful_scenarios": [
+        "d4e9306"
+      ],
+      "difficulty": {
+        "1": {
+          "total": 30,
+          "successes": 3,
+          "tgc": 10.0
+        },
+        "2": {
+          "total": 24,
+          "successes": 2,
+          "tgc": 8.3
+        },
+        "3": {
+          "total": 3,
+          "successes": 0,
+          "tgc": 0.0
+        }
+      },
+      "evaluator_tests": {
+        "passed": 105,
+        "failed": 186,
+        "total": 291,
+        "pass_percentage": 36.1
+      }
+    },
+    {
+      "label": "full-SFT epoch5",
+      "experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_205155_appworld_qwen3-8b_react_full_sft_epoch5_aligned_full_dev",
+      "output_root": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_205155_appworld_qwen3-8b_react_full_sft_epoch5_aligned_full_dev/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev",
+      "evaluation_path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_205155_appworld_qwen3-8b_react_full_sft_epoch5_aligned_full_dev/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev/evaluations/dev.json",
+      "evaluation_sha256": "ae2c6f08b3beaa37f885f4191513b05ee3a233cefafcf25ae33fc92984d9d3d2",
+      "aggregate": {
+        "task_goal_completion": 0.0,
+        "scenario_goal_completion": 0.0
+      },
+      "success_count": 0,
+      "success_ids": [],
+      "successful_scenario_count": 0,
+      "successful_scenarios": [],
+      "difficulty": {
+        "1": {
+          "total": 30,
+          "successes": 0,
+          "tgc": 0.0
+        },
+        "2": {
+          "total": 24,
+          "successes": 0,
+          "tgc": 0.0
+        },
+        "3": {
+          "total": 3,
+          "successes": 0,
+          "tgc": 0.0
+        }
+      },
+      "evaluator_tests": {
+        "passed": 86,
+        "failed": 205,
+        "total": 291,
+        "pass_percentage": 29.6
+      }
+    }
+  ],
+  "transitions": [
+    {
+      "comparison_label": "原始 Qwen3-8B",
+      "both_success": 0,
+      "comparison_only_success": 5,
+      "target_only_success": 0,
+      "both_failed": 52,
+      "gained_task_ids": [],
+      "regressed_task_ids": [
+        "23cf851_2",
+        "68ee2c9_3",
+        "6c2c621_1",
+        "6c2c621_2",
+        "fac291d_1"
+      ],
+      "common_success_task_ids": []
+    },
+    {
+      "comparison_label": "LoRA",
+      "both_success": 0,
+      "comparison_only_success": 5,
+      "target_only_success": 0,
+      "both_failed": 52,
+      "gained_task_ids": [],
+      "regressed_task_ids": [
+        "50e1ac9_1",
+        "6171bbc_1",
+        "d4e9306_1",
+        "d4e9306_2",
+        "d4e9306_3"
+      ],
+      "common_success_task_ids": []
+    },
+    {
+      "comparison_label": "full-SFT epoch5",
+      "both_success": 0,
+      "comparison_only_success": 0,
+      "target_only_success": 0,
+      "both_failed": 57,
+      "gained_task_ids": [],
+      "regressed_task_ids": [],
+      "common_success_task_ids": []
+    }
+  ],
+  "runtime": {
+    "finished_markers": 57,
+    "lm_calls": 1461,
+    "api_calls": 872,
+    "input_tokens": 12406336,
+    "output_tokens": 416706,
+    "content_non_null": 1461,
+    "reasoning_content_null": 1461,
+    "no_code_observations": 0,
+    "complete_task_action_count": 33,
+    "complete_task_api_calls": 21,
+    "complete_task_task_count": 21,
+    "lm_messages_without_python_code": 13,
+    "total_tokens": 12823042,
+    "content_null": 0,
+    "malformed_lm_log_rows": 0,
+    "malformed_api_log_rows": 0,
+    "malformed_usage_files": 0,
+    "python_error_task_count": 57,
+    "python_error_task_ids": [
+      "0d8a4ee_1",
+      "0d8a4ee_2",
+      "0d8a4ee_3",
+      "23cf851_1",
+      "23cf851_2",
+      "23cf851_3",
+      "37a8675_1",
+      "37a8675_2",
+      "37a8675_3",
+      "383cbac_1",
+      "383cbac_2",
+      "383cbac_3",
+      "396c5a2_1",
+      "396c5a2_2",
+      "396c5a2_3",
+      "3ab5b8b_1",
+      "3ab5b8b_2",
+      "3ab5b8b_3",
+      "4ec8de5_1",
+      "4ec8de5_2",
+      "4ec8de5_3",
+      "4fab96f_1",
+      "4fab96f_2",
+      "4fab96f_3",
+      "50e1ac9_1",
+      "50e1ac9_2",
+      "50e1ac9_3",
+      "530b157_1",
+      "530b157_2",
+      "530b157_3",
+      "57c3486_1",
+      "57c3486_2",
+      "57c3486_3",
+      "6171bbc_1",
+      "6171bbc_2",
+      "6171bbc_3",
+      "68ee2c9_1",
+      "68ee2c9_2",
+      "68ee2c9_3",
+      "6bdbc26_1",
+      "6bdbc26_2",
+      "6bdbc26_3",
+      "6c2c621_1",
+      "6c2c621_2",
+      "6c2c621_3",
+      "b119b1f_1",
+      "b119b1f_2",
+      "b119b1f_3",
+      "d4e9306_1",
+      "d4e9306_2",
+      "d4e9306_3",
+      "df61dc5_1",
+      "df61dc5_2",
+      "df61dc5_3",
+      "fac291d_1",
+      "fac291d_2",
+      "fac291d_3"
+    ],
+    "syntax_error_task_count": 49,
+    "syntax_error_task_ids": [
+      "0d8a4ee_1",
+      "0d8a4ee_2",
+      "23cf851_1",
+      "23cf851_2",
+      "23cf851_3",
+      "37a8675_1",
+      "37a8675_2",
+      "37a8675_3",
+      "383cbac_1",
+      "383cbac_2",
+      "383cbac_3",
+      "396c5a2_1",
+      "396c5a2_2",
+      "396c5a2_3",
+      "3ab5b8b_1",
+      "3ab5b8b_2",
+      "3ab5b8b_3",
+      "4ec8de5_1",
+      "4ec8de5_2",
+      "4ec8de5_3",
+      "4fab96f_1",
+      "4fab96f_2",
+      "4fab96f_3",
+      "50e1ac9_1",
+      "50e1ac9_2",
+      "50e1ac9_3",
+      "530b157_1",
+      "530b157_2",
+      "530b157_3",
+      "57c3486_1",
+      "57c3486_2",
+      "57c3486_3",
+      "68ee2c9_1",
+      "68ee2c9_2",
+      "68ee2c9_3",
+      "6bdbc26_1",
+      "6bdbc26_2",
+      "6bdbc26_3",
+      "6c2c621_1",
+      "6c2c621_2",
+      "6c2c621_3",
+      "b119b1f_2",
+      "b119b1f_3",
+      "d4e9306_2",
+      "df61dc5_2",
+      "df61dc5_3",
+      "fac291d_1",
+      "fac291d_2",
+      "fac291d_3"
+    ],
+    "no_code_task_count": 13,
+    "no_code_task_ids": [
+      "23cf851_1",
+      "23cf851_3",
+      "37a8675_1",
+      "37a8675_2",
+      "37a8675_3",
+      "383cbac_2",
+      "383cbac_3",
+      "4fab96f_1",
+      "4fab96f_2",
+      "4fab96f_3",
+      "6bdbc26_2",
+      "6bdbc26_3",
+      "6c2c621_2"
+    ],
+    "max_step_task_count": 23,
+    "max_step_task_ids": [
+      "0d8a4ee_1",
+      "0d8a4ee_3",
+      "383cbac_1",
+      "396c5a2_1",
+      "396c5a2_2",
+      "396c5a2_3",
+      "3ab5b8b_1",
+      "50e1ac9_1",
+      "50e1ac9_2",
+      "50e1ac9_3",
+      "57c3486_3",
+      "6171bbc_1",
+      "6171bbc_2",
+      "6171bbc_3",
+      "68ee2c9_2",
+      "6c2c621_1",
+      "b119b1f_1",
+      "b119b1f_2",
+      "b119b1f_3",
+      "d4e9306_1",
+      "d4e9306_3",
+      "df61dc5_1",
+      "df61dc5_3"
+    ],
+    "missing_task_dir_ids": [],
+    "missing_lm_log_ids": [],
+    "missing_api_log_ids": []
+  },
+  "task_status_audit": {
+    "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_220731_appworld_qwen3-8b_react_full_sft_epoch2_aligned_full_dev/task_status.jsonl",
+    "exists": true,
+    "raw_row_count": 57,
+    "malformed_line_numbers": [],
+    "rows_without_task_id": 0,
+    "unique_task_count": 57,
+    "duplicate_task_ids": [],
+    "duplicate_row_counts": {},
+    "missing_task_ids": [],
+    "extra_task_ids": [],
+    "evaluation_error_task_ids": [],
+    "status_success_mismatch_ids": [],
+    "test_count_mismatch_ids": [],
+    "completed_index_duplicate_count": 0,
+    "strictly_one_row_per_task": true,
+    "latest_rows_cover_dataset": true
+  },
+  "run_audit": {
+    "run_log": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_220731_appworld_qwen3-8b_react_full_sft_epoch2_aligned_full_dev/logs/run.log",
+    "launcher_log": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_220731_appworld_qwen3-8b_react_full_sft_epoch2_aligned_full_dev/logs/launcher.log",
+    "run_attempt_count": 1,
+    "run_finish_count": 1,
+    "recovery_detected": false,
+    "run_started_at": "2026-09-15T22:07:31+08:00",
+    "run_finished_at": "2026-09-15T23:49:50+08:00",
+    "duration_seconds": 6139.0,
+    "embedded_exit_codes": [
+      0
+    ],
+    "final_exit_code": 0,
+    "task_execution_failure_observations": 746,
+    "task_syntax_error_observations": 373,
+    "context_overflow_events": 13,
+    "context_overflow_task_count": 13,
+    "context_overflow_task_ids": [
+      "23cf851_1",
+      "23cf851_3",
+      "37a8675_1",
+      "37a8675_2",
+      "37a8675_3",
+      "383cbac_2",
+      "383cbac_3",
+      "4fab96f_1",
+      "4fab96f_2",
+      "4fab96f_3",
+      "6bdbc26_2",
+      "6bdbc26_3",
+      "6c2c621_2"
+    ],
+    "fatal_pattern_counts": {
+      "cuda_oom": 0,
+      "killed": 0,
+      "engine_failure": 0,
+      "connection_failure": 0,
+      "uncaught_runtime_error": 0
+    },
+    "anomalies": []
+  },
+  "checkpoint": {
+    "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_130022_appworld_qwen3_8b_react_full_sft_67/artifacts/checkpoints/epoch_2_model",
+    "exists": true,
+    "config.json_sha256": "c8594890253c8539bf90f33feb507d8b50e164a8379643e04e61e9b7ac0f531c",
+    "model.safetensors.index.json_sha256": "060d3f0a55add8d530554c96fbb9ff7febc0a97edf833c278b2a5c4ef1128bf2",
+    "tokenizer_config.json_sha256": "cd5c1909da4950a610a9e3a6cb6763cff0381d91c6f0838855db8d5ae83d6c9f",
+    "safetensor_shard_count": 5,
+    "safetensor_total_bytes": 16381516776,
+    "label": "full-SFT epoch2",
+    "epoch": 2,
+    "weights_sha256": "cabbcef25a5022d26becdaf75588f6be37554bf73650b940dea26aa7d38864d8",
+    "global_step": 640,
+    "model_shard_manifest_fingerprint": "cabbcef25a5022d26becdaf75588f6be37554bf73650b940dea26aa7d38864d8",
+    "all15_files_fingerprint": "c519ab99d35ff04372a3761aee4859baac0618248d967f42aa0a9934a736117b"
+  }
+}

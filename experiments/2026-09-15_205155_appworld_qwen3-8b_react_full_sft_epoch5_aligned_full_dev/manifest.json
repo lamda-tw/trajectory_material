@@ -1,0 +1,253 @@
+{
+  "created_at_utc": "2026-09-15T14:06:48.417950+00:00",
+  "created_for": "full-SFT epoch5 AppWorld dev evaluation report",
+  "workspace": "/root/autodl-tmp/workspace-tw",
+  "workspace_git_commit": "6d3bc06727fb5b256d55f7ca1466218b1703c861",
+  "report_builder": "/root/autodl-tmp/workspace-tw/scripts/build_appworld_full_sft_aligned_dev_report.py",
+  "report_builder_sha256": "1090619a29e1062d6d79ce6b236c97ead658b775d1f14106d3d013fa9bedbd37",
+  "appworld_version": "0.2.0",
+  "dataset": "dev",
+  "dataset_file": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_205155_appworld_qwen3-8b_react_full_sft_epoch5_aligned_full_dev/data/datasets/dev.txt",
+  "dataset_sha256": "9fa976589300ea8905708257144d801d1604b06d85fb0181e381df8a3ba85001",
+  "expected_task_count": 57,
+  "appworld_experiment_name": "simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev",
+  "target_evaluation": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_205155_appworld_qwen3-8b_react_full_sft_epoch5_aligned_full_dev/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev/evaluations/dev.json",
+  "target_evaluation_sha256": "ae2c6f08b3beaa37f885f4191513b05ee3a233cefafcf25ae33fc92984d9d3d2",
+  "comparison_evaluations": [
+    {
+      "label": "原始 Qwen3-8B",
+      "experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-09-10_210441_appworld_qwen3-8b_react_oneshot_full_dev",
+      "evaluation": "/root/autodl-tmp/workspace-tw/experiments/2026-09-10_210441_appworld_qwen3-8b_react_oneshot_full_dev/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev/evaluations/dev.json",
+      "sha256": "f8507888b4cb5cface5a175d55ab1cbfe95da082b0d45c9db6c640969746d2e0"
+    },
+    {
+      "label": "LoRA",
+      "experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_174500_appworld_qwen3-8b_react_lora_aligned_full_dev",
+      "evaluation": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_174500_appworld_qwen3-8b_react_lora_aligned_full_dev/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev/evaluations/dev.json",
+      "sha256": "c3e0913fd2cef855cf6fb0c6b97ad09b3793e6c471a524c16c16240d7691b8ef"
+    }
+  ],
+  "checkpoint": {
+    "status": "SUCCESS",
+    "finished_at_utc": "2026-09-15T06:31:25.116166+00:00",
+    "hostname": "autodl-container-65d14488ce-cd05d5ef",
+    "arguments": {
+      "model": "/root/autodl-tmp/models/Qwen3-8B",
+      "train_json": "/root/autodl-tmp/workspace-tw/data/2026-09-15_appworld_qwen3-8b_react_sft_67/train.jsonl",
+      "validation_json": "/root/autodl-tmp/workspace-tw/data/2026-09-15_appworld_qwen3-8b_react_sft_67/splits/task_holdout_60_7/validation.jsonl",
+      "experiment_dir": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_130022_appworld_qwen3_8b_react_full_sft_67",
+      "max_length": 32768,
+      "epochs": 5,
+      "learning_rate": 0.0002,
+      "weight_decay": 0.0,
+      "seed": 20260915,
+      "max_steps": 0,
+      "skip_validation": false,
+      "skip_model_save": false,
+      "save_every_epoch": true
+    },
+    "distributed": {
+      "backend": "nccl",
+      "world_size": 2,
+      "sharding": "FSDP FULL_SHARD",
+      "ranks": [
+        {
+          "rank": 0,
+          "local_rank": 0,
+          "device_name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+          "device_capability": [
+            12,
+            0
+          ],
+          "peak_allocated_gib": 76.40076065063477,
+          "peak_reserved_gib": 92.603515625
+        },
+        {
+          "rank": 1,
+          "local_rank": 1,
+          "device_name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+          "device_capability": [
+            12,
+            0
+          ],
+          "peak_allocated_gib": 76.4006576538086,
+          "peak_reserved_gib": 92.703125
+        }
+      ]
+    },
+    "model": {
+      "source_base_model": "/root/autodl-tmp/models/Qwen3-8B",
+      "method": "full_parameter_sft",
+      "dtype": "bfloat16",
+      "attention": "sdpa",
+      "trainable_parameters": 8190735360,
+      "total_parameters": 8190735360,
+      "trainable_percent": 100.0,
+      "final_model": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_130022_appworld_qwen3_8b_react_full_sft_67/artifacts/model"
+    },
+    "data": {
+      "train": {
+        "count": 640,
+        "samples": {
+          "collection_omitted": true,
+          "item_count": 640
+        },
+        "tokens": {
+          "min": 3277,
+          "max": 25070,
+          "mean": 4877.6453125
+        },
+        "prompt_tokens": {
+          "min": 3145,
+          "max": 25008,
+          "mean": 4710.7375
+        },
+        "completion_tokens": {
+          "min": 38,
+          "max": 1971,
+          "mean": 166.9078125
+        },
+        "original_tokens": {
+          "min": 3277,
+          "max": 25070,
+          "mean": 4877.6453125
+        },
+        "truncated_samples": 0,
+        "truncated_prompt_tokens_total": 0
+      },
+      "validation": {
+        "count": 71,
+        "samples": {
+          "collection_omitted": true,
+          "item_count": 71
+        },
+        "tokens": {
+          "min": 3304,
+          "max": 16203,
+          "mean": 5870.422535211268
+        },
+        "prompt_tokens": {
+          "min": 3165,
+          "max": 16161,
+          "mean": 5701.957746478874
+        },
+        "completion_tokens": {
+          "min": 41,
+          "max": 782,
+          "mean": 168.46478873239437
+        },
+        "original_tokens": {
+          "min": 3304,
+          "max": 16203,
+          "mean": 5870.422535211268
+        },
+        "truncated_samples": 0,
+        "truncated_prompt_tokens_total": 0
+      }
+    },
+    "training": {
+      "epochs_requested": 5,
+      "epochs_completed": 5,
+      "global_steps": 1600,
+      "per_gpu_batch_size": 1,
+      "global_batch_size": 2,
+      "gradient_accumulation_steps": 1,
+      "learning_rate": 0.0002,
+      "weight_decay": 0.0,
+      "optimizer": "fused AdamW",
+      "loss_policy": "assistant_completion_only",
+      "enable_thinking": false,
+      "gradient_checkpointing": true,
+      "max_length": 32768,
+      "elapsed_seconds": 5376.78849697113,
+      "epoch_summaries": [
+        {
+          "epoch": 1,
+          "steps": 320,
+          "mean_loss": 1.166161174606532,
+          "first_20_mean_loss": 1.7849091649055482,
+          "last_20_mean_loss": 1.066573628783226,
+          "min_loss": 0.2899523377418518,
+          "max_loss": 3.2837631702423096
+        },
+        {
+          "epoch": 2,
+          "steps": 320,
+          "mean_loss": 0.6290379266720265,
+          "first_20_mean_loss": 0.6120167389512062,
+          "last_20_mean_loss": 0.7075821489095688,
+          "min_loss": 0.1414947211742401,
+          "max_loss": 1.338860034942627
+        },
+        {
+          "epoch": 3,
+          "steps": 320,
+          "mean_loss": 0.3716761443763971,
+          "first_20_mean_loss": 0.3821850627660751,
+          "last_20_mean_loss": 0.3663049012422562,
+          "min_loss": 0.11870376765727997,
+          "max_loss": 0.8715250492095947
+        },
+        {
+          "epoch": 4,
+          "steps": 320,
+          "mean_loss": 0.2393895993824117,
+          "first_20_mean_loss": 0.2252083569765091,
+          "last_20_mean_loss": 0.24982265718281269,
+          "min_loss": 0.04999905452132225,
+          "max_loss": 0.8413100242614746
+        },
+        {
+          "epoch": 5,
+          "steps": 320,
+          "mean_loss": 0.1669180854165461,
+          "first_20_mean_loss": 0.17414458822458984,
+          "last_20_mean_loss": 0.1347834937274456,
+          "min_loss": 0.01540694572031498,
+          "max_loss": 0.4771343469619751
+        }
+      ],
+      "history": {
+        "collection_omitted": true,
+        "item_count": 1600
+      }
+    },
+    "validation": {
+      "scope": "diagnostic subset overlapping all-data training",
+      "loss": 0.07892354130516303,
+      "perplexity": 1.0821215813034681,
+      "completion_target_tokens": 12139
+    },
+    "omitted_large_collections": {
+      "data.train.samples": 640,
+      "data.validation.samples": 71,
+      "training.history": 1600
+    },
+    "metadata_file": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_130022_appworld_qwen3_8b_react_full_sft_67/metrics/metrics.json",
+    "metadata_file_sha256": "d5c45150157b041790420c132325cac4e4a1b9410e0e71c080586cc7f0910f6e",
+    "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_130022_appworld_qwen3_8b_react_full_sft_67/artifacts/model",
+    "exists": true,
+    "config.json_sha256": "c8594890253c8539bf90f33feb507d8b50e164a8379643e04e61e9b7ac0f531c",
+    "model.safetensors.index.json_sha256": "060d3f0a55add8d530554c96fbb9ff7febc0a97edf833c278b2a5c4ef1128bf2",
+    "tokenizer_config.json_sha256": "cd5c1909da4950a610a9e3a6cb6763cff0381d91c6f0838855db8d5ae83d6c9f",
+    "safetensor_shard_count": 5,
+    "safetensor_total_bytes": 16381516776,
+    "label": "full-SFT epoch5",
+    "epoch": 5,
+    "global_step": 1600,
+    "recovery_cause": "RecursionError",
+    "recovery_incomplete_task": "df61dc5_3",
+    "recovery_action": "cleared_single_incomplete_task_then_resumed",
+    "first_run_exit_code": 1,
+    "resumed_run_exit_code": 0
+  },
+  "integrity_rules": {
+    "dataset_exactly_57_unique": true,
+    "official_individual_matches_dataset": true,
+    "latest_task_status_covers_dataset": true,
+    "duplicate_status_rows_reported_and_latest_row_used": true,
+    "evaluator_assertions_omitted_from_report_artifacts": true
+  },
+  "run_command_sha256": "0916fa8bce05b8a8fc1dbb626a43261ebccd42266e911e5468532e55d3fd6a15",
+  "summary_sha256": "545b7a9388e241b5b10fb634e8209ba00376743faa28151173ef2fa61e029792"
+}
