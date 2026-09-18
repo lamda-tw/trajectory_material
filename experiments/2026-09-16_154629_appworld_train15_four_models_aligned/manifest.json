@@ -1,0 +1,156 @@
+{
+  "artifact_paths": {
+    "REPORT.md": "/root/autodl-tmp/workspace-tw/experiments/2026-09-16_154629_appworld_train15_four_models_aligned/artifacts/REPORT.md",
+    "diagnostics.json": "/root/autodl-tmp/workspace-tw/experiments/2026-09-16_154629_appworld_train15_four_models_aligned/artifacts/diagnostics.json",
+    "final_validation.json": "/root/autodl-tmp/workspace-tw/experiments/2026-09-16_154629_appworld_train15_four_models_aligned/artifacts/final_validation.json",
+    "summary.json": "/root/autodl-tmp/workspace-tw/experiments/2026-09-16_154629_appworld_train15_four_models_aligned/artifacts/summary.json",
+    "task_details.csv": "/root/autodl-tmp/workspace-tw/experiments/2026-09-16_154629_appworld_train15_four_models_aligned/artifacts/task_details.csv"
+  },
+  "base_smoke": {
+    "agent_consumed_field": "content",
+    "api_server_pid": 169285,
+    "content_empty_count": 1,
+    "content_null_count": 1,
+    "engine_core_pid": 169710,
+    "executable_code_response_count": 1,
+    "finish_reasons": [
+      "length",
+      "stop"
+    ],
+    "followup_variants_started": false,
+    "gpu0_peak_observed_mib": 88315,
+    "health_http": 200,
+    "interface_pass": true,
+    "lm_calls": 2,
+    "num_tests": 2,
+    "official_evaluator_written": true,
+    "passed_tests": 1,
+    "port": 59825,
+    "processes_cleaned": true,
+    "raw_sha256": "5d7a31f3196d98a2f8ca2d0d496415e3eb79717781d1d5a52dc978db776cd04b",
+    "reasoning_parser": "deepseek_r1",
+    "runner_pid": 169274,
+    "task_id": "e85d92a_1",
+    "task_success": false,
+    "wrapper_pid": 169266
+  },
+  "completed_at_utc": "2026-09-16T11:19:43.448352+00:00",
+  "created_at_utc": "2026-09-16T08:15:13.020255+00:00",
+  "dataset": "train_15",
+  "diagnostics": [
+    {
+      "error": "task list contained literal backslash-n separators and runner expected 15 tasks in smoke mode",
+      "fix": "real-newline frozen list; explicit smoke=1/formal=15 count and subset validation",
+      "followup_variants_started": false,
+      "gpu_memory_used_mib": 0,
+      "no_model_request": true,
+      "stage": "base_smoke_runner_preflight",
+      "time": "2026-09-16T16:17:47+08:00",
+      "type": "runner_preflight_failure",
+      "vllm_started": false
+    },
+    {
+      "effect": "post-Base variants skipped before model start",
+      "recovery": "LoRA, Full2 and Full5 run individually and serially after cleanup; Base not rerun",
+      "stage": "formal_suite_transition_guard",
+      "type": "safe_concurrency_guard"
+    }
+  ],
+  "execution_guards": {
+    "formal_requires_four_smoke_interface_passes": true,
+    "independent_roots": true,
+    "official_per_task_evaluator": true,
+    "raw_openai_responses": true,
+    "serial_variants": true,
+    "smoke_excluded_from_formal": true,
+    "status_flush_fsync": true
+  },
+  "files": {
+    "README.md": "75fbcf0ce8bf69e08c89b8bb577f226f8528d30b7b4a9970aac121c8fe78669f",
+    "command.txt": "e226c4515174fa1b1f29c78a8951ce703680ee51daf599a386bcb951e2ab5bb4",
+    "scripts_snapshot/appworld_run_isolated_train15.py": "7b2d2fa96c0d2f6a07750ffeb75a224da39a2788013fc529ac15c1ca5b051f9c",
+    "scripts_snapshot/build_train15_report.py": "49c5b579c794ec1bd1769f4d5b165a53a4c58f3b8a86874c8ff836fa91e26820",
+    "scripts_snapshot/qwen3-8b-with-reasoning.train_15.jsonnet": "1466914cd912f3b52651fb1bc5f0316f2e94e165643485d6a171357848f08cc3",
+    "scripts_snapshot/react_code_agent_instructions.txt": "c41f7852217d46586047a38f68e88b827cb9dcbe624e9651f9db8301547a534b",
+    "scripts_snapshot/run_smoke_failfast.sh": "93777ab88f1472bd4b53b498d81419ce3610fa049a4cc272d9b5bc75864d7542",
+    "scripts_snapshot/run_train15_suite.sh": "1ae0f7ede2f5e29a1d980a0f488407e47dd6c18c1a081e3624ddea6dc30911f5",
+    "scripts_snapshot/run_train15_variant.sh": "d5e4e4b734b2086c1726ea3b1535f97ef611230c0b1a9a3a17c8279da3f7ac72",
+    "scripts_snapshot/validate_suite_static.py": "c03d813347a8e31bafabfdf4492eca5b3ebe257ab9635efcbe30df239176e8a4",
+    "selection/selection.json": "2c09e25e9f08e40893194a11352ac56a92aa68f6737966a3131043ec9be2def2",
+    "selection/train_15.txt": "567c09cfacad82b90ed1b680a17541e9f74a42ac43b2938068e2b6980c2f9251"
+  },
+  "final_validation_path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-16_154629_appworld_train15_four_models_aligned/artifacts/final_validation.json",
+  "models": {
+    "base": "/root/autodl-tmp/models/Qwen3-8B",
+    "full2": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_130022_appworld_qwen3_8b_react_full_sft_67/artifacts/checkpoints/epoch_2_model",
+    "full5": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_130022_appworld_qwen3_8b_react_full_sft_67/artifacts/model",
+    "lora_adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_102913_appworld_qwen3_8b_react_lora_67/artifacts/continuation/adapter_epoch5"
+  },
+  "models_started": true,
+  "public_scripts_modified": false,
+  "runtime_environment": {
+    "actual_appworld_python": "/root/autodl-tmp/envs/appworld-0.2.0-py312/bin/python",
+    "actual_appworld_version": "0.2.0.dev0",
+    "actual_vllm_executable": "/root/autodl-tmp/envs/qwen3-vllm-py312/bin/vllm",
+    "actual_vllm_python": "/root/autodl-tmp/envs/qwen3-vllm-py312/bin/python",
+    "matches_formal_dev_experiments": true,
+    "python_version": "3.12.3",
+    "requested_workspace_envs": "/root/autodl-tmp/workspace-tw/envs",
+    "requested_workspace_envs_exists": false,
+    "selection_reason": "same split AppWorld runner and qwen3-vllm executable used by formal Base/LoRA/Full Dev evaluations",
+    "torch_version": "2.8.0+cu128",
+    "vllm_version": "0.10.2"
+  },
+  "scenario_count": 5,
+  "schema_version": 1,
+  "selection_sha256": "2c09e25e9f08e40893194a11352ac56a92aa68f6737966a3131043ec9be2def2",
+  "shared_contract": {
+    "agent_consumed_field": "content",
+    "enable_auto_tool_choice": true,
+    "max_completion_tokens": 3000,
+    "max_model_len": 32000,
+    "max_num_seqs": 3,
+    "max_steps": 50,
+    "seed": 100,
+    "temperature": 0,
+    "tool_call_parser": "hermes"
+  },
+  "static_validation": {
+    "bash_n": true,
+    "py_compile": true,
+    "report_fixture": true,
+    "result": "PASS_AFTER_SMOKE_MODE_FIX",
+    "runner_fixtures": true,
+    "selection_and_source_hashes": true
+  },
+  "status": "COMPLETE",
+  "suite_root": "/root/autodl-tmp/workspace-tw/experiments/2026-09-16_154629_appworld_train15_four_models_aligned",
+  "task_count": 15,
+  "task_list_sha256": "567c09cfacad82b90ed1b680a17541e9f74a42ac43b2938068e2b6980c2f9251",
+  "variant_interfaces": {
+    "base": {
+      "enable_thinking": "implicit_default_true",
+      "normalization": null,
+      "reasoning_parser": "deepseek_r1",
+      "source_runner_sha256": "605798a65664523fd37207e865b58e754c5d6db4718b7bbcf471d35261d3d8eb"
+    },
+    "full2": {
+      "enable_thinking": false,
+      "normalization": "reasoning_content None to empty",
+      "reasoning_parser": null,
+      "source_runner_sha256": "c739365d86ae1e0a923fd01ba0b2aa5630c0d22c5225290637dbad41ed95cdcb"
+    },
+    "full5": {
+      "enable_thinking": false,
+      "normalization": "reasoning_content None to empty",
+      "reasoning_parser": null,
+      "source_runner_sha256": "c739365d86ae1e0a923fd01ba0b2aa5630c0d22c5225290637dbad41ed95cdcb"
+    },
+    "lora": {
+      "normalization": "reasoning_content None to empty",
+      "reasoning_parser": null,
+      "source_runner_sha256": "ccbd349cc20853e7f15bc2baac0c02df5d9d29ca7bbb3898520a2e32066a1979"
+    }
+  },
+  "workspace_git_commit": "3e1cfa249b4d923ea8066b7cb3d0079030fc3ef2"
+}

@@ -1,0 +1,5 @@
+SUITE=/root/autodl-tmp/workspace-tw/experiments/2026-09-16_154629_appworld_train15_four_models_aligned
+bash "$SUITE/scripts_snapshot/run_train15_suite.sh" "$SUITE" --smoke-only
+bash "$SUITE/scripts_snapshot/run_train15_suite.sh" "$SUITE" --formal-only
+python3 "$SUITE/scripts_snapshot/build_train15_report.py" --suite "$SUITE"
+

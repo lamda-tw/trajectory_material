@@ -115,7 +115,7 @@ LoRA 五轮实验：
 - 中文报告：[REPORT.md](experiments/2026-09-15_130022_appworld_qwen3_8b_react_full_sft_67/REPORT.md)
 - Dev 评测说明：[DEV_EVAL_READY.md](experiments/2026-09-15_130022_appworld_qwen3_8b_react_full_sft_67/DEV_EVAL_READY.md)
 - 本地最终完整模型：`artifacts/model`
-- epoch 1–4 本地完整权重：`artifacts/checkpoints`
+- epoch 1–4 中间完整权重原位于 `artifacts/checkpoints`，已于 2026-09-18 清理；最终模型仍保留在 `artifacts/model`
 
 Git 保存训练数据、通用脚本、配置、指标、Loss 图、中文报告和 SHA256 清单。LoRA adapter、全参数模型权重和中间 checkpoint 体积较大，均由 `.gitignore` 排除并保留在训练服务器上。
 
@@ -146,3 +146,27 @@ Git 保存训练数据、通用脚本、配置、指标、Loss 图、中文报�
 Full-SFT epoch 2 和 epoch 5 的 57 个任务中，`content=null` 均为 0。两次全参数 SFT 的退化不是接口层吞掉模型输出，而是模型输出和工具决策质量下降。
 
 Git 只保留轻量报告、聚合元数据和复现配置；`logs/`、`cache/`、`outputs/`、运行时数据库、模型文件和指向服务器绝对路径的 symlink 均排除在版本控制之外。`artifacts.sha256` 可能引用仅保留在服务器上的 ignored 产物，因此 clone 后不保证能够完成全部离线哈希复验。
+
+## 2026-09-16：Train-15 四模型对齐诊断
+
+- 从 `SFT67 ∩ Train90` 固定选择 5 个完整 scenario、每个 3 个任务，共 15 个训练内任务；该结果用于诊断轨迹学习，不作为未见任务泛化分数。
+- 四组均使用官方 ReAct prompt、temperature `0`、seed `100`、每题最多 `50` steps 和官方 evaluator；Base 与三个训练模型分别复用各自正式 Dev 评测的接口设置。
+- Base 为 1/15 TGC、0/5 SGC、32/84 条断言通过；LoRA epoch 5 为 4/15 TGC、1/5 SGC、43/84 条断言通过。
+- Full-SFT epoch 2 和 epoch 5 均为 0/15 TGC，断言通过分别为 15/84 和 25/84；说明全参数训练未形成端到端可用策略，问题不只是 Dev 泛化。
+- LoRA 的成功集中于较简单场景，体现明确的 seen-task 优势，但尚不足以证明通用工具策略能力提升。
+- 实验目录：[experiments/2026-09-16_154629_appworld_train15_four_models_aligned/](experiments/2026-09-16_154629_appworld_train15_four_models_aligned/)
+- 中文报告：[artifacts/REPORT.md](experiments/2026-09-16_154629_appworld_train15_four_models_aligned/artifacts/REPORT.md)
+- 结构化汇总：[artifacts/summary.json](experiments/2026-09-16_154629_appworld_train15_four_models_aligned/artifacts/summary.json)
+
+## 2026-09-18：裸 Qwen3-8B AppWorld test_normal
+
+- 使用本地裸 `Qwen3-8B`、官方 `simplified_react_code_agent`、官方 one-shot ReAct prompt 与 AppWorld 0.2.0.dev0 evaluator，对 `test_normal` 全部 168 个任务（56 个 scenario）完成推理和评分。
+- 协议与 2026-09-10 的完整 Dev 基线一致：temperature `0`、seed `100`、单次最多 `3000` completion tokens、每题最多 `50` steps、context `32000`，GPU0 单进程顺序执行。
+- 官方结果为 12/168 task success，TGC `7.1`、SGC `0.0`；难度 1/2/3 的 TGC 分别为 `19.3`、`2.1`、`0.0`。
+- evaluator 条件通过 386/1077（35.8%）。主要错误不是单一类型：最终答案不匹配涉及 90 题，交易或购物状态错误 48 题，Venmo 状态错误 39 题，Spotify 状态错误 38 题；23 题达到 50 步上限。
+- 接口审计发现 3 次空 `content`，分布于 3 个 scenario，占 2859 次 LM 调用的 0.105%，因此触发风险提示但不足以解释主体失败；80 次 `content=null` 均为可解释的纯 reasoning 长度截断，无法解释的空响应为 0。
+- 168 个任务目录、`finished` 标记、官方逐题报告、逐题“正确/错误”记录和官方聚合 ID 均完成一致性校验；运行退出码为 0。
+- 实验目录：[experiments/2026-09-17_105709_appworld_qwen3-8b_react_oneshot_test_normal/](experiments/2026-09-17_105709_appworld_qwen3-8b_react_oneshot_test_normal/)
+- 中文报告：[REPORT.md](experiments/2026-09-17_105709_appworld_qwen3-8b_react_oneshot_test_normal/REPORT.md)
+- 逐题结果：[task_status.jsonl](experiments/2026-09-17_105709_appworld_qwen3-8b_react_oneshot_test_normal/task_status.jsonl)
+- 结构化汇总：[summary.json](experiments/2026-09-17_105709_appworld_qwen3-8b_react_oneshot_test_normal/summary.json)

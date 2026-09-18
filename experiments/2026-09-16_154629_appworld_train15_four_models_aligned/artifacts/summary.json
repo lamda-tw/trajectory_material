@@ -1,0 +1,115 @@
+{
+  "interface": {
+    "base": "deepseek_r1; implicit default thinking; no normalization",
+    "full2": "no reasoning parser; enable_thinking false checkpoint; None to empty normalization",
+    "full5": "no reasoning parser; enable_thinking false checkpoint; None to empty normalization",
+    "lora": "no reasoning parser; None to empty normalization"
+  },
+  "scope": "seen-train diagnostic; not unseen generalization",
+  "shared": {
+    "agent_consumed_field": "content",
+    "max_completion_tokens": 3000,
+    "max_model_len": 32000,
+    "max_num_seqs": 3,
+    "max_steps": 50,
+    "prompt_sha256": "c41f7852217d46586047a38f68e88b827cb9dcbe624e9651f9db8301547a534b",
+    "seed": 100,
+    "temperature": 0,
+    "tool_parser": "hermes"
+  },
+  "task_ids": [
+    "e85d92a_1",
+    "e85d92a_2",
+    "e85d92a_3",
+    "302c169_1",
+    "302c169_2",
+    "302c169_3",
+    "34d9492_1",
+    "34d9492_2",
+    "34d9492_3",
+    "60d0b5b_1",
+    "60d0b5b_2",
+    "60d0b5b_3",
+    "3c13f5a_1",
+    "3c13f5a_2",
+    "3c13f5a_3"
+  ],
+  "variants": {
+    "base": {
+      "evaluation": "/root/autodl-tmp/workspace-tw/experiments/2026-09-16_154629_appworld_train15_four_models_aligned/runs/base/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/train_15/evaluations/train_15.json",
+      "evaluation_sha256": "60c79e382c0e10dd3bdc50f33ec334a418258414b7fc6dc0e5184718a4875155",
+      "interface_audit": {
+        "content_empty": 9,
+        "content_null": 8,
+        "interface_fail_tasks": 1,
+        "no_code_tasks": 1
+      },
+      "label": "原始 Qwen3-8B",
+      "sgc": 0.0,
+      "successes": 1,
+      "tests": {
+        "failed": 52,
+        "passed": 32,
+        "total": 84
+      },
+      "tgc": 6.7
+    },
+    "full2": {
+      "evaluation": "/root/autodl-tmp/workspace-tw/experiments/2026-09-16_154629_appworld_train15_four_models_aligned/runs/full2/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/train_15/evaluations/train_15.json",
+      "evaluation_sha256": "e582917c452b4114248ef4951ccc1ae87498663d223fee2282c0187dcd9b73d3",
+      "interface_audit": {
+        "content_empty": 4,
+        "content_null": 0,
+        "interface_fail_tasks": 0,
+        "no_code_tasks": 0
+      },
+      "label": "Full-SFT epoch2",
+      "sgc": 0.0,
+      "successes": 0,
+      "tests": {
+        "failed": 69,
+        "passed": 15,
+        "total": 84
+      },
+      "tgc": 0.0
+    },
+    "full5": {
+      "evaluation": "/root/autodl-tmp/workspace-tw/experiments/2026-09-16_154629_appworld_train15_four_models_aligned/runs/full5/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/train_15/evaluations/train_15.json",
+      "evaluation_sha256": "0b715c1453ca0d2609c508d2b114d8ad61b60500b0a32cfa4dac974642065c16",
+      "interface_audit": {
+        "content_empty": 2,
+        "content_null": 0,
+        "interface_fail_tasks": 0,
+        "no_code_tasks": 0
+      },
+      "label": "Full-SFT epoch5",
+      "sgc": 0.0,
+      "successes": 0,
+      "tests": {
+        "failed": 59,
+        "passed": 25,
+        "total": 84
+      },
+      "tgc": 0.0
+    },
+    "lora": {
+      "evaluation": "/root/autodl-tmp/workspace-tw/experiments/2026-09-16_154629_appworld_train15_four_models_aligned/runs/lora/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/train_15/evaluations/train_15.json",
+      "evaluation_sha256": "a523e05396655b404159cd4004204332885d0c0ba2e0f72ccdff2d411c4ef612",
+      "interface_audit": {
+        "content_empty": 1,
+        "content_null": 0,
+        "interface_fail_tasks": 0,
+        "no_code_tasks": 0
+      },
+      "label": "LoRA epoch5",
+      "sgc": 20.0,
+      "successes": 4,
+      "tests": {
+        "failed": 41,
+        "passed": 43,
+        "total": 84
+      },
+      "tgc": 26.7
+    }
+  }
+}

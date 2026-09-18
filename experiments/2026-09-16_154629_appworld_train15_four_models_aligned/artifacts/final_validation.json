@@ -1,0 +1,43 @@
+{
+  "all_exit_codes_zero": true,
+  "deviations": [
+    "First Base smoke hit a runner-only task-count preflight error before any model request; fixed and retained in logs.",
+    "The initial formal suite wrapper reached the post-Base variants before Base vLLM asynchronous cleanup completed; the concurrency guard safely skipped them. LoRA, Full2 and Full5 were then run individually and serially after verified cleanup; Base was not rerun."
+  ],
+  "exact_task_coverage": true,
+  "formal": {
+    "base": {
+      "evaluation": "/root/autodl-tmp/workspace-tw/experiments/2026-09-16_154629_appworld_train15_four_models_aligned/runs/base/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/train_15/evaluations/train_15.json",
+      "evaluation_sha256": "60c79e382c0e10dd3bdc50f33ec334a418258414b7fc6dc0e5184718a4875155",
+      "exit_code": 0,
+      "task_count": 15
+    },
+    "full2": {
+      "evaluation": "/root/autodl-tmp/workspace-tw/experiments/2026-09-16_154629_appworld_train15_four_models_aligned/runs/full2/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/train_15/evaluations/train_15.json",
+      "evaluation_sha256": "e582917c452b4114248ef4951ccc1ae87498663d223fee2282c0187dcd9b73d3",
+      "exit_code": 0,
+      "task_count": 15
+    },
+    "full5": {
+      "evaluation": "/root/autodl-tmp/workspace-tw/experiments/2026-09-16_154629_appworld_train15_four_models_aligned/runs/full5/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/train_15/evaluations/train_15.json",
+      "evaluation_sha256": "0b715c1453ca0d2609c508d2b114d8ad61b60500b0a32cfa4dac974642065c16",
+      "exit_code": 0,
+      "task_count": 15
+    },
+    "lora": {
+      "evaluation": "/root/autodl-tmp/workspace-tw/experiments/2026-09-16_154629_appworld_train15_four_models_aligned/runs/lora/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/train_15/evaluations/train_15.json",
+      "evaluation_sha256": "a523e05396655b404159cd4004204332885d0c0ba2e0f72ccdff2d411c4ef612",
+      "exit_code": 0,
+      "task_count": 15
+    }
+  },
+  "gpu_compute_processes_cleaned": true,
+  "smoke_interface_pass": {
+    "base": true,
+    "full2": true,
+    "full5": true,
+    "lora": true
+  },
+  "validated_at_utc": "2026-09-16T11:19:43.448352+00:00",
+  "vllm_and_runner_processes_cleaned": true
+}

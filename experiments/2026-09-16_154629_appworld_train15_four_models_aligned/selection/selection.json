@@ -1,0 +1,396 @@
+{
+  "schema_version": "appworld-train15-selection-v1",
+  "created_at_utc": "2026-09-16T07:49:15.190696+00:00",
+  "suite_root": "/root/autodl-tmp/workspace-tw/experiments/2026-09-16_154629_appworld_train15_four_models_aligned",
+  "counts": {
+    "train90": 90,
+    "sft67": 67,
+    "intersection": 67,
+    "complete_candidate_scenarios": 20,
+    "selected_scenarios": 5,
+    "selected_tasks": 15
+  },
+  "complete_candidate_scenarios": [
+    "82e2fac",
+    "692c77d",
+    "afc0fce",
+    "287e338",
+    "27e1026",
+    "d0b1f43",
+    "b7a9ee9",
+    "34d9492",
+    "ce359b5",
+    "229360a",
+    "e3d6c94",
+    "60d0b5b",
+    "771d8fc",
+    "3c13f5a",
+    "302c169",
+    "e7a10f8",
+    "c901732",
+    "6ea6792",
+    "e85d92a",
+    "aa8502b"
+  ],
+  "selection_rule": {
+    "scenario_order": [
+      "e85d92a",
+      "302c169",
+      "34d9492",
+      "60d0b5b",
+      "3c13f5a"
+    ],
+    "variants_per_scenario": [
+      1,
+      2,
+      3
+    ],
+    "description": "Fixed stratified selection mandated for the four-model aligned Train-15 diagnostic. It covers all five required-app combinations represented by the selected scenarios and spans 7/8-step short, 10-step medium, and 13-step long trajectories with API and prompt-complexity gradients. No task was selected after observing evaluation outputs.",
+    "diagnostic_scope": "All selected tasks are members of the 67-task SFT/LoRA training corpus; results measure seen-train fit and must not be interpreted as held-out generalization."
+  },
+  "task_ids": [
+    "e85d92a_1",
+    "e85d92a_2",
+    "e85d92a_3",
+    "302c169_1",
+    "302c169_2",
+    "302c169_3",
+    "34d9492_1",
+    "34d9492_2",
+    "34d9492_3",
+    "60d0b5b_1",
+    "60d0b5b_2",
+    "60d0b5b_3",
+    "3c13f5a_1",
+    "3c13f5a_2",
+    "3c13f5a_3"
+  ],
+  "tasks": [
+    {
+      "task_id": "e85d92a_1",
+      "scenario": "e85d92a",
+      "required_apps": [
+        "spotify"
+      ],
+      "step_count": 7,
+      "assistant_completion_count": 7,
+      "api_call_count": 22,
+      "target_chars": 3548,
+      "max_prompt_chars": 22206,
+      "train_membership": true,
+      "sft67_membership": true,
+      "source_row_sha256": "600a3a7c9af562d2ab5e767fad1503b8a67d8908df1e7ff7196063819d2bdfd8",
+      "specs_sha256": "d8856875a5c2ffb0db5f02c1cb5d89e645c0f9ae11c3ed8acd10e2557ae844b3",
+      "required_apps_sha256": "ab5e6144ccf1f6697353cfb7d269f4b700c79512d708ba1c845bdf8f59fd4296",
+      "sft_task_json_sha256": "56577088f39d22f814cbc3933a9147c78c0e03ca753fdbba01cfd762e2b68663"
+    },
+    {
+      "task_id": "e85d92a_2",
+      "scenario": "e85d92a",
+      "required_apps": [
+        "spotify"
+      ],
+      "step_count": 7,
+      "assistant_completion_count": 7,
+      "api_call_count": 15,
+      "target_chars": 3723,
+      "max_prompt_chars": 16284,
+      "train_membership": true,
+      "sft67_membership": true,
+      "source_row_sha256": "a5ae36776fffe4e806a58345d822dc6aeb773f5b994ccc1f6213e2820dff1203",
+      "specs_sha256": "037e3e4bb16fb81cb43abb9a2b16b3f7836d96e7216a2e2b711559e0f7113d63",
+      "required_apps_sha256": "ab5e6144ccf1f6697353cfb7d269f4b700c79512d708ba1c845bdf8f59fd4296",
+      "sft_task_json_sha256": "92a87781163333f04ad6bba69e5ccd208f782155aa56656003e4521404079c65"
+    },
+    {
+      "task_id": "e85d92a_3",
+      "scenario": "e85d92a",
+      "required_apps": [
+        "spotify"
+      ],
+      "step_count": 7,
+      "assistant_completion_count": 7,
+      "api_call_count": 13,
+      "target_chars": 3809,
+      "max_prompt_chars": 19006,
+      "train_membership": true,
+      "sft67_membership": true,
+      "source_row_sha256": "5df15919d71d492ef7474cc236f19333fbe4a27e3681aed09b4a5c792d592363",
+      "specs_sha256": "6f0c70849b5c6ccb6063d3a27b594b1b18ad8b4ba92c31628f3a7b569bd50067",
+      "required_apps_sha256": "ab5e6144ccf1f6697353cfb7d269f4b700c79512d708ba1c845bdf8f59fd4296",
+      "sft_task_json_sha256": "c45db6ccfaf3bb4294c1e84b9cbb9e913ddda3ab0fca47d4e4f1b8b3cccc5b4d"
+    },
+    {
+      "task_id": "302c169_1",
+      "scenario": "302c169",
+      "required_apps": [
+        "phone"
+      ],
+      "step_count": 10,
+      "assistant_completion_count": 10,
+      "api_call_count": 17,
+      "target_chars": 7653,
+      "max_prompt_chars": 21233,
+      "train_membership": true,
+      "sft67_membership": true,
+      "source_row_sha256": "68489ae6a6fe2783d41871b7cb9fd413e84351bd831a5592963bdbe0ca272449",
+      "specs_sha256": "ac6cb4dbbd041d4801d7f2d9275bfffdb582aadc0892bb046c7581f298e36593",
+      "required_apps_sha256": "e9f411e3a00f4213f6c79b447d7ef78283e1fb8a522cfd80bd4d7a633d81b059",
+      "sft_task_json_sha256": "bf32ca7a803f58aa3394783507608e7d6658c8502d06694e53e23d21062dabbd"
+    },
+    {
+      "task_id": "302c169_2",
+      "scenario": "302c169",
+      "required_apps": [
+        "phone"
+      ],
+      "step_count": 10,
+      "assistant_completion_count": 10,
+      "api_call_count": 16,
+      "target_chars": 7891,
+      "max_prompt_chars": 21571,
+      "train_membership": true,
+      "sft67_membership": true,
+      "source_row_sha256": "b519713b2d5dad6467f912744b8e9cd52681c589dc02989b518043325463e527",
+      "specs_sha256": "f21066dc4a8d5e2f68ad37140dcbed6a5febf2e809b11d48bed1103cd16eeb23",
+      "required_apps_sha256": "e9f411e3a00f4213f6c79b447d7ef78283e1fb8a522cfd80bd4d7a633d81b059",
+      "sft_task_json_sha256": "5239f193ca0a70cbabe86aa1cb648cfd3777b128c98f8f0a818be876b7c8186a"
+    },
+    {
+      "task_id": "302c169_3",
+      "scenario": "302c169",
+      "required_apps": [
+        "phone"
+      ],
+      "step_count": 10,
+      "assistant_completion_count": 10,
+      "api_call_count": 17,
+      "target_chars": 7264,
+      "max_prompt_chars": 21455,
+      "train_membership": true,
+      "sft67_membership": true,
+      "source_row_sha256": "fd78cde8f20c3ae18b2ab44910f5342532c6f07bd65d0f3fb3bf6c58ea725a7f",
+      "specs_sha256": "b8f17868e3ca57a0e1cb57b3ddd1d6211e28e38d21bfa1f26c9628bda47d74e7",
+      "required_apps_sha256": "e9f411e3a00f4213f6c79b447d7ef78283e1fb8a522cfd80bd4d7a633d81b059",
+      "sft_task_json_sha256": "d7d30497264407e711d996c33358943dc83c3cbe57076c4e3a8517f3ee2a1e0d"
+    },
+    {
+      "task_id": "34d9492_1",
+      "scenario": "34d9492",
+      "required_apps": [
+        "file_system"
+      ],
+      "step_count": 8,
+      "assistant_completion_count": 8,
+      "api_call_count": 144,
+      "target_chars": 7392,
+      "max_prompt_chars": 33891,
+      "train_membership": true,
+      "sft67_membership": true,
+      "source_row_sha256": "01e22e63917eb7118ee09abaaa8badf345f354567a3cda4adccf55041de634b4",
+      "specs_sha256": "7442a0f0ceef8f5313ed30340069190d8142483eddcf6f41c4df6565591980a5",
+      "required_apps_sha256": "dff6f67e017f77e47f8f0a64d4ef8eda485653064858b22777c26ec52e85ed65",
+      "sft_task_json_sha256": "e8fd939285f50de2617d310e5e42cf900e3cd637ffc719ff04ac3392ea1f8819"
+    },
+    {
+      "task_id": "34d9492_2",
+      "scenario": "34d9492",
+      "required_apps": [
+        "file_system"
+      ],
+      "step_count": 8,
+      "assistant_completion_count": 8,
+      "api_call_count": 129,
+      "target_chars": 7867,
+      "max_prompt_chars": 34018,
+      "train_membership": true,
+      "sft67_membership": true,
+      "source_row_sha256": "cdabc6ced35af0c5d03331aa8f6c3ddc18d1a2fe7f28ff0f8dbd53b243f90175",
+      "specs_sha256": "f7c4880efa233b3405e8c8222b871082c1ca84083244e751f40e306540e4c3aa",
+      "required_apps_sha256": "dff6f67e017f77e47f8f0a64d4ef8eda485653064858b22777c26ec52e85ed65",
+      "sft_task_json_sha256": "ad8e40ee9af77ace70504c646564cb584fa546c8427dde92f049eb992f5079fa"
+    },
+    {
+      "task_id": "34d9492_3",
+      "scenario": "34d9492",
+      "required_apps": [
+        "file_system"
+      ],
+      "step_count": 8,
+      "assistant_completion_count": 8,
+      "api_call_count": 110,
+      "target_chars": 7849,
+      "max_prompt_chars": 33694,
+      "train_membership": true,
+      "sft67_membership": true,
+      "source_row_sha256": "30e56707bb13ea169c975d54fd9dd2a8ad0018ac4ec8ebbafed747cfa3b51bda",
+      "specs_sha256": "ae395ab188f1430b792b1bce686038788fe578525fddd7b2f26ecee7edfa2923",
+      "required_apps_sha256": "dff6f67e017f77e47f8f0a64d4ef8eda485653064858b22777c26ec52e85ed65",
+      "sft_task_json_sha256": "e379c7587813d70caed076a7630432da630921f0896e76efbf4e91e7d0ff5069"
+    },
+    {
+      "task_id": "60d0b5b_1",
+      "scenario": "60d0b5b",
+      "required_apps": [
+        "phone",
+        "venmo"
+      ],
+      "step_count": 10,
+      "assistant_completion_count": 10,
+      "api_call_count": 24,
+      "target_chars": 7615,
+      "max_prompt_chars": 23116,
+      "train_membership": true,
+      "sft67_membership": true,
+      "source_row_sha256": "f68d7f6caa17be154ad1da51f45cb8d12d92b60d982b64b025a8239c43fd9971",
+      "specs_sha256": "1a040c4f7fd218548da13b18c95bf430cc1f550975b420fc8f7c48159f6d6a7c",
+      "required_apps_sha256": "670941b20e2d022bde4a0dacb4530890776ab16eba4f498adb1f86bbb72d3c33",
+      "sft_task_json_sha256": "14fac146686567f78f8745b98b3dab69b1b535cd89379487abce234d98ea22ea"
+    },
+    {
+      "task_id": "60d0b5b_2",
+      "scenario": "60d0b5b",
+      "required_apps": [
+        "phone",
+        "venmo"
+      ],
+      "step_count": 10,
+      "assistant_completion_count": 10,
+      "api_call_count": 26,
+      "target_chars": 6603,
+      "max_prompt_chars": 22172,
+      "train_membership": true,
+      "sft67_membership": true,
+      "source_row_sha256": "6d5238955fe0d31c2f5786680fe3569a1730d975156eda2c068d3d860072e531",
+      "specs_sha256": "dde356b5b82f89165e365cab7aa3d3c20eb6ec4317f09e25fa9eaec1c205392c",
+      "required_apps_sha256": "670941b20e2d022bde4a0dacb4530890776ab16eba4f498adb1f86bbb72d3c33",
+      "sft_task_json_sha256": "4282db82daa725a55fa394ff6e5cad6757ca2da5106a15bf24f4c456b120aec0"
+    },
+    {
+      "task_id": "60d0b5b_3",
+      "scenario": "60d0b5b",
+      "required_apps": [
+        "phone",
+        "venmo"
+      ],
+      "step_count": 10,
+      "assistant_completion_count": 10,
+      "api_call_count": 22,
+      "target_chars": 7333,
+      "max_prompt_chars": 23185,
+      "train_membership": true,
+      "sft67_membership": true,
+      "source_row_sha256": "2104492b8d2137a52c60712b82bac882b233b2c1c8091ed351895b24d6518a29",
+      "specs_sha256": "9e1caac39737bb32f533d0e69e637b35fadc7cf1a643ac38edb2011fe6b7ad7c",
+      "required_apps_sha256": "670941b20e2d022bde4a0dacb4530890776ab16eba4f498adb1f86bbb72d3c33",
+      "sft_task_json_sha256": "54ac3537bf4c5114741cbde2d59cb166d691c3933a57c8a7fe0c1ff7c1415750"
+    },
+    {
+      "task_id": "3c13f5a_1",
+      "scenario": "3c13f5a",
+      "required_apps": [
+        "file_system",
+        "phone",
+        "venmo"
+      ],
+      "step_count": 13,
+      "assistant_completion_count": 13,
+      "api_call_count": 37,
+      "target_chars": 17956,
+      "max_prompt_chars": 39227,
+      "train_membership": true,
+      "sft67_membership": true,
+      "source_row_sha256": "26395a82263536d830ae0cd49c021cfd5608fd1a4b53f35b776e3d6b15418402",
+      "specs_sha256": "5f1ff56b5ee7983f790ed37bca12be3dbf8fe0595facade63ac307f795b6e343",
+      "required_apps_sha256": "da0d33b08bb1741e442e6b7f8217dd51ff7fe0bcf5ec3b270329492276cc0f82",
+      "sft_task_json_sha256": "6297b4f39c381f2448828fa1ec32c5bcdb34b7e8c52f0b38d5b2b71d0d6fdd82"
+    },
+    {
+      "task_id": "3c13f5a_2",
+      "scenario": "3c13f5a",
+      "required_apps": [
+        "file_system",
+        "phone",
+        "venmo"
+      ],
+      "step_count": 13,
+      "assistant_completion_count": 13,
+      "api_call_count": 73,
+      "target_chars": 16098,
+      "max_prompt_chars": 35808,
+      "train_membership": true,
+      "sft67_membership": true,
+      "source_row_sha256": "15e83ba17872def85433736ea45f7feed9d2e328158d70193570adc233df6c2c",
+      "specs_sha256": "cd7c47b889839d1ef3302f4cd4f1c3aa6313ae451af3bae73fa6d1078f511c59",
+      "required_apps_sha256": "da0d33b08bb1741e442e6b7f8217dd51ff7fe0bcf5ec3b270329492276cc0f82",
+      "sft_task_json_sha256": "4e2e0f39bab04cf979d59f779531207ef7e9c9c38412e91188c60e0177399bae"
+    },
+    {
+      "task_id": "3c13f5a_3",
+      "scenario": "3c13f5a",
+      "required_apps": [
+        "file_system",
+        "phone",
+        "venmo"
+      ],
+      "step_count": 13,
+      "assistant_completion_count": 13,
+      "api_call_count": 37,
+      "target_chars": 13705,
+      "max_prompt_chars": 28588,
+      "train_membership": true,
+      "sft67_membership": true,
+      "source_row_sha256": "6ba8210372629ecde7f4e2173d6d3a868cc9a6314b49d1f9f191a4d2ee89b940",
+      "specs_sha256": "cf5f4dd9cd62144e1b7187a7eaff65e4e20a71f6b30e9091c6082520aa27e6ef",
+      "required_apps_sha256": "da0d33b08bb1741e442e6b7f8217dd51ff7fe0bcf5ec3b270329492276cc0f82",
+      "sft_task_json_sha256": "057bbcb784a50a452a012873699eb32d39e9b4e02335139caf62834faa502dbc"
+    }
+  ],
+  "membership": {
+    "all_selected_in_train90": true,
+    "all_selected_in_sft67": true,
+    "all_selected_in_intersection67": true
+  },
+  "sources": {
+    "train90": {
+      "path": "/root/autodl-tmp/data/benchmarks/appworld/runtime/data/datasets/train.txt",
+      "sha256": "93d9fe71e7a2e3b7529803d4a20b604f4ebf5ae806f321081140238068189d37",
+      "count": 90
+    },
+    "sft67_task_ids": {
+      "path": "/root/autodl-tmp/workspace-tw/data/2026-09-15_appworld_qwen3-8b_react_sft_67/task_ids.txt",
+      "sha256": "fa1e6e0772e1bc82c68536f2786d0a6895c272694f1b8934867dff4e0e2ccc18",
+      "count": 67
+    },
+    "intersection67": {
+      "definition": "train90 order filtered to SFT67 membership",
+      "sha256": "4c44cf48582da36a36435b7e0a782346a503e7a69fa5a94a652c982445016877",
+      "count": 67
+    },
+    "sft_train_jsonl": {
+      "path": "/root/autodl-tmp/workspace-tw/data/2026-09-15_appworld_qwen3-8b_react_sft_67/train.jsonl",
+      "sha256": "949261ed03ce9eb7388802ff0c333b50678b4c57a44f895aeb5b34d9c3555a14"
+    },
+    "sft_manifest": {
+      "path": "/root/autodl-tmp/workspace-tw/data/2026-09-15_appworld_qwen3-8b_react_sft_67/manifest.json",
+      "sha256": "8014937008cd2bea5db00b6d1af662f2e70b7c985068a34178919253214f7470"
+    },
+    "source_trajectories": {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-14_204850_appworld_train_codex_trajectories/artifacts/trajectories.jsonl",
+      "sha256": "024552b2f6b3a6343912dd8b95108b2d0233f4aeebd25d18685b99f33b1eb4f6"
+    },
+    "appworld_tasks_root": {
+      "path": "/root/autodl-tmp/data/benchmarks/appworld/runtime/data/tasks"
+    },
+    "appworld_version": {
+      "path": "/root/autodl-tmp/data/benchmarks/appworld/runtime/data/version.txt",
+      "sha256": "911fc0c48cb0c70601db5775a9bef1b740dc4cc9f9b46389b9f0563fe7eb94d7",
+      "value": "0.2.0"
+    },
+    "official_prompt": {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/prompts/react_code_agent/instructions.txt",
+      "sha256": "c41f7852217d46586047a38f68e88b827cb9dcbe624e9651f9db8301547a534b"
+    }
+  },
+  "selected_task_list_sha256": "567c09cfacad82b90ed1b680a17541e9f74a42ac43b2938068e2b6980c2f9251"
+}
