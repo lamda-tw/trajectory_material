@@ -1,0 +1,74 @@
+{
+  "created_at_utc": "2026-09-21T02:06:19.915981+00:00",
+  "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+  "dataset_dir": "/root/autodl-tmp/workspace-tw/data/2026-09-21_appworld_codex_rft_qwen3-8b_sft_train90",
+  "train_json": "/root/autodl-tmp/workspace-tw/data/2026-09-21_appworld_codex_rft_qwen3-8b_sft_train90/train.jsonl",
+  "dataset_manifest_sha256": "c93790fd2519319a6e2f2eb59e9932f38e5b4f1447582ed7f6ed50420279eb1c",
+  "dataset_validation_sha256": "75a8586e932f4be4b4edb8a5214eeede0a77e9ab919fe487e29ded97827a26ba",
+  "train_sha256": "1f5ea51ea22ce7ef6b84d3e16bbb25976179064f7c8d0483ab7dcb0118ed3220",
+  "train_tasks": 90,
+  "train_trajectories": 90,
+  "train_decision_samples": 1170,
+  "diagnostic_validation_samples": 90,
+  "diagnostic_validation_sha256": "0630ef0171f2c1d40335f2d0ce4d72537fc6c699b9554eea527e6e75b5a79134",
+  "diagnostic_policy": "Each task's final decision; all 90 rows also occur in training, so loss is pipeline/fit diagnostic only, never a generalization metric.",
+  "source_guards": {
+    "official_evaluator_success_tasks": 90,
+    "unique_codex_threads": 90,
+    "raw_observations_included": false,
+    "ground_truth_in_model_messages": false,
+    "sensitive_value_occurrences_checked": 146,
+    "sensitive_value_leaks": 0
+  },
+  "difficulty": {
+    "1": 36,
+    "2": 36,
+    "3": 18
+  },
+  "max_length": 40960,
+  "native_max_position_embeddings": 40960,
+  "enable_thinking": false,
+  "loss_policy": "assistant_completion_only",
+  "epochs": 5,
+  "per_gpu_batch_size": 1,
+  "world_size": 2,
+  "global_batch_size": 2,
+  "learning_rate": 0.0002,
+  "weight_decay": 0.0,
+  "optimizer": "AdamW",
+  "lora_r": 8,
+  "lora_alpha": 16,
+  "lora_dropout": 0.0,
+  "seed": 20260921,
+  "attention": "sdpa",
+  "dtype": "bfloat16",
+  "probe_samples": [
+    {
+      "id": "22cc237_1::assistant-0013",
+      "tokens": 37015,
+      "completion_tokens": 32
+    },
+    {
+      "id": "22cc237_1::assistant-0012",
+      "tokens": 36668,
+      "completion_tokens": 47
+    }
+  ],
+  "token_lengths": {
+    "min": 3181,
+    "p50": 7249,
+    "p95": 16040,
+    "max": 37015,
+    "mean": 8239.348717948718,
+    "over_16384": 57,
+    "over_32768": 6,
+    "over_40960": 0
+  },
+  "completion_lengths": {
+    "min": 28,
+    "p50": 60,
+    "p95": 189,
+    "max": 418,
+    "mean": 80.81452991452991
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "status": "PASS",
+  "schema_version": "appworld-codex-rft-qwen-sft-v1",
+  "task_count": 90,
+  "decision_sample_count": 1170,
+  "per_task_json_count": 90,
+  "source_verification": {
+    "official_evaluator_success_tasks": 90,
+    "unique_codex_threads": 90,
+    "raw_observations_included": false,
+    "ground_truth_in_model_messages": false,
+    "sensitive_value_occurrences_checked": 146,
+    "sensitive_value_leaks": 0
+  },
+  "difficulty": {
+    "1": 36,
+    "2": 36,
+    "3": 18
+  },
+  "structure": {
+    "unique_sample_ids": 1170,
+    "task_shards_exactly_cover_train": true,
+    "completion_python_block_count": 1,
+    "chat_template_prefix_invariant": true,
+    "loss_policy": "assistant_completion_only",
+    "role_counts": {
+      "user": 22898,
+      "assistant": 20558
+    }
+  },
+  "dynamic_leak_scan_findings": {},
+  "policy_redaction_markers_seen_across_expanded_prefixes": 5897,
+  "tokenizer": {
+    "model_path": "/root/autodl-tmp/models/Qwen3-8B",
+    "enable_thinking": false,
+    "validated_max_length": 40960,
+    "model_native_max_position_embeddings": 40960,
+    "min_full_tokens": 3181,
+    "p50_full_tokens": 7249,
+    "p95_full_tokens": 16040,
+    "max_full_tokens": 37015,
+    "max_prompt_tokens": 36983,
+    "max_completion_tokens": 418,
+    "samples_over_limit": {
+      "4096": 1056,
+      "8192": 438,
+      "16384": 57,
+      "32768": 6,
+      "40960": 0
+    }
+  }
+}

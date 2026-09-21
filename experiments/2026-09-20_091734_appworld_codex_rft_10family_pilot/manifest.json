@@ -1,0 +1,46 @@
+{
+  "schema_version": "appworld-codex-rft-manifest-v1",
+  "created_at": "2026-09-20T09:17:54.496247+00:00",
+  "source_train_file": "/root/autodl-tmp/data/benchmarks/appworld/runtime/data/datasets/train.txt",
+  "train_task_count": 90,
+  "train_txt_sha256": "93d9fe71e7a2e3b7529803d4a20b604f4ebf5ae806f321081140238068189d37",
+  "selected_task_ids": [
+    "82e2fac_2",
+    "6104387_3",
+    "287e338_1",
+    "b7a9ee9_2",
+    "ce359b5_3",
+    "7d7fbf6_1",
+    "60d0b5b_2",
+    "cf6abd2_3",
+    "c901732_1",
+    "aa8502b_2"
+  ],
+  "appworld_version": "0.2.0.dev0",
+  "official_prompt_template": "/root/autodl-tmp/envs/appworld-src-42b5bcf3/experiments/prompts/react_code_agent/instructions.txt",
+  "official_prompt_sha256": "c41f7852217d46586047a38f68e88b827cb9dcbe624e9651f9db8301547a534b",
+  "policy_model": "gpt-5.6-sol",
+  "reasoning_effort": "high",
+  "temperature": null,
+  "thread_mode": "persistent_one_thread_per_attempt",
+  "max_attempts_per_task": 3,
+  "max_interactions_per_attempt": 40,
+  "stop_on_first_success": true,
+  "data_boundary": {
+    "policy_task_loader": "Task.load(load_ground_truth=False)",
+    "policy_visible": [
+      "official_react_prompt",
+      "task_spec",
+      "own_prior_actions",
+      "environment_observations"
+    ],
+    "policy_hidden": [
+      "ground_truth",
+      "solution",
+      "api_calls",
+      "evaluator_assertions",
+      "prior_teacher_trajectories"
+    ],
+    "ground_truth_use": "terminal official evaluator only"
+  }
+}
