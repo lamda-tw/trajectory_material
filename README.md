@@ -170,3 +170,12 @@ Git 只保留轻量报告、聚合元数据和复现配置；`logs/`、`cache/`�
 - 中文报告：[REPORT.md](experiments/2026-09-17_105709_appworld_qwen3-8b_react_oneshot_test_normal/REPORT.md)
 - 逐题结果：[task_status.jsonl](experiments/2026-09-17_105709_appworld_qwen3-8b_react_oneshot_test_normal/task_status.jsonl)
 - 结构化汇总：[summary.json](experiments/2026-09-17_105709_appworld_qwen3-8b_react_oneshot_test_normal/summary.json)
+
+## 2026-09-21：Codex-RFT train90 LoRA 正式评测
+
+- 使用 train90 上的 Codex-RFT 成功轨迹训练 Qwen3-8B LoRA 5 轮，评测时加载同一份最终 adapter；训练记录见 [训练报告](experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/REPORT.md)。
+- 官方 Dev 57 题成功 23/57，TGC `40.4`、SGC `21.1`；详见 [Dev 报告](experiments/2026-09-21_092504_appworld_qwen3-8b_react_lora_codex_rft_train90_dev57/REPORT.md)。
+- 官方 test_normal 168 题成功 51/168，TGC `30.4`、SGC `16.1`；详见 [Test 报告](experiments/2026-09-21_121920_appworld_qwen3-8b_react_lora_codex_rft_train90_test_normal168/REPORT.md)。
+- 两次评测使用 ReAct agent、temperature `0`、seed `100`、每题最多 `50` 步、每轮最多 `3000` 输出 tokens、vLLM context `32000`；不启用 reasoning parser。历史基座评测使用了不同的输出解析协议，其分数差异不能全归因于 LoRA 权重。
+- Test 失败题中有 24 题遇到上下文请求被拒绝：13 题为输入与预留输出之和超过窗口，11 题为输入本身超过窗口。原始轨迹与测试环境数据仅保留在本地，不进入 Git。
+- 下一步仅对这 24 题开展受限诊断复测：保持模型、数据、agent 和生成参数不变，只把推理服务的 `max_model_len` 从 `32000` 改为 `40960`。此复测不替代完整 168 题指标，也不将测试题反馈用于训练.
