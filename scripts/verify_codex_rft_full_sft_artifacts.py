@@ -65,15 +65,26 @@ def main():
     assert not metrics['arguments']['resume_allow_code_change']
     assert sha256(cfg['train_json']) == cfg['train_sha256']
     root = exp / 'artifacts/restart'
-    latest = load(root / 'latest.json')
-    assert latest == {'directory': 'step_002925', 'global_step': 2925}
-    assert sorted(p.name for p in root.iterdir() if p.is_dir()) == ['step_002925']
-    complete = load(root / latest['directory'] / 'COMPLETE.json')
+    cleanup_path = exp / 'metrics/checkpoint_cleanup.json'
+    cleanup = load(cleanup_path) if cleanup_path.exists() else None
+    if cleanup is not None:
+        assert cleanup['status'] == 'COMPLETE' and cleanup['global_step'] == 2925
+        assert not (root / 'latest.json').exists()
+        assert not root.exists() or not list(root.iterdir())
+        complete = load(exp / 'config/final_checkpoint_metadata.json')
+        assert sha256(exp / 'config/final_checkpoint_metadata.json') == cleanup['metadata_sha256']
+        retained_steps, verified_checkpoint_sizes = [], {}
+    else:
+        latest = load(root / 'latest.json')
+        assert latest == {'directory': 'step_002925', 'global_step': 2925}
+        assert sorted(p.name for p in root.iterdir() if p.is_dir()) == ['step_002925']
+        complete = load(root / latest['directory'] / 'COMPLETE.json')
+        assert all((root / latest['directory'] / name).stat().st_size == size for name, size in complete['files'].items())
+        retained_steps, verified_checkpoint_sizes = [2925], complete['files']
     progress = complete['progress']
     assert (progress['global_step'], progress['epoch_index'], progress['consumed_batches']) == (2925, 5, 0)
     assert complete['world_size'] == 2
     assert set(complete['files']) == {'rank_0.pt', 'rank_1.pt'}
-    assert all((root / latest['directory'] / name).stat().st_size == size for name, size in complete['files'].items())
     source_hashes = {}
     for key, filename in [('trainer_sha256', 'full_sft_train_fsdp_scheduled.py'), ('runtime_sha256', 'full_sft_runtime.py')]:
         digest = sha256(workspace / 'scripts' / filename)
@@ -119,8 +130,9 @@ def main():
         'training_source_sha256': source_hashes,
         'runtime_versions': {k: complete['contract'][k] for k in ('torch', 'transformers')},
         'checkpoint_saved_steps': saves,
-        'checkpoint_retained_steps': [2925],
-        'checkpoint_file_sizes_verified': complete['files'],
+        'checkpoint_retained_steps': retained_steps,
+        'checkpoint_file_sizes_verified': verified_checkpoint_sizes,
+        'checkpoint_cleanup_record': 'metrics/checkpoint_cleanup.json' if cleanup is not None else None,
         'generation_format_check': generation['status'],
         'dev_or_test_evaluation_run': False,
     }

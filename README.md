@@ -197,5 +197,12 @@ Git 只保留轻量报告、聚合元数据和复现配置；`logs/`、`cache/`�
 
 - 从原始 Qwen3-8B 开始，对与 train90 LoRA 相同的 90 条轨迹、1170 个决策样本完成 5 轮 / 2925 步训练，全部 8,190,735,360 个参数参与优化。FP32 主参数与 AdamW 状态，BF16 计算和最终权重；最大训练序列 37015 tokens，额外 token 截断为 0。
 - 每轮平均 loss：`0.589548 → 0.274838 → 0.129335 → 0.053033 → 0.016795`。正式启动到模型导出约 3.36 小时，包含保存和第 100 步保存频率切换的恢复过程，不含此前预检。
-- 按用户要求每轮末保存一次，只保留最新完整续训状态与最终 BF16 模型。模型重载/输出格式、399 个权重 tensor 的名称形状、完整参数数量和 SHA-256 核验均通过；尚未运行本次模型的 Dev/test 评测。训练 loss 不代表任务成功率。
+- 训练期间每轮末滚动保存一次；训练完成后按用户要求清理最终完整续训状态，释放约 91.54 GiB，保留约 15.3 GiB 的 BF16 最终模型和全部训练记录。模型重载/输出格式、399 个权重 tensor 的名称形状、完整参数数量和 SHA-256 核验均通过。Dev 57 题结果见下节，尚未运行本模型的 test_normal；训练 loss 不代表任务成功率。
 - [中文报告](experiments/2026-09-23_093106_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5/REPORT.md) · [本次五轮 loss](experiments/2026-09-23_093106_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5/metrics/loss_curve_total_5epochs.png) · [与旧 67 轨迹的 loss 对比](experiments/2026-09-23_093106_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5/metrics/loss_curve_compare_full_sft_67_vs_90.png) · [独立核验记录](experiments/2026-09-23_093106_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5/metrics/final_artifact_validation.json)。PDF、逐步 CSV、复现命令和完整指标均在同一实验目录。
+
+## 2026-09-23：train90 全参数 SFT Dev57 正式评测
+
+- 固定上述第 5 轮最终完整模型，按 train90 LoRA 相同的 Dev 57 题、ReAct 提示词、temperature `0`、seed `100`、每题 `50` 步、单次 `3000` 输出 tokens、context `32000` 和无 reasoning parser 协议完成官方评分。
+- 全参数 SFT 成功 **12/57**，TGC **21.1**、SGC **0.0**；对照 LoRA 为 23/57、40.4、21.1，少成功 11 题。共同成功 7 题、新增成功 5 题、退化 16 题；测试条件通过 163/291。
+- 正式评测约 23.3 分钟，57 个任务记录与官方结果一致，evaluator 错误为 0。1003 次 LM 请求含 9 次上下文拒绝；994 次正常回复均保留 Python 代码。未扩窗重试，未运行 test_normal。
+- [中文报告](experiments/2026-09-23_062600_appworld_qwen3-8b_react_full_sft_codex_rft_train90_dev57/REPORT.md) · [逐题对照 CSV](experiments/2026-09-23_062600_appworld_qwen3-8b_react_full_sft_codex_rft_train90_dev57/task_comparison.csv) · [结构化结果及审计](experiments/2026-09-23_062600_appworld_qwen3-8b_react_full_sft_codex_rft_train90_dev57/summary.json)。模型不复制到评测目录，原始轨迹、数据库、日志和缓存仅保留在本地。

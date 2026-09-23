@@ -1,0 +1,541 @@
+{
+  "experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_062600_appworld_qwen3-8b_react_full_sft_codex_rft_train90_dev57",
+  "task_count": 57,
+  "scenario_count": 19,
+  "target": {
+    "label": "本次 train90 全参数 SFT",
+    "experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_062600_appworld_qwen3-8b_react_full_sft_codex_rft_train90_dev57",
+    "output_root": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_062600_appworld_qwen3-8b_react_full_sft_codex_rft_train90_dev57/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev",
+    "evaluation_path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_062600_appworld_qwen3-8b_react_full_sft_codex_rft_train90_dev57/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev/evaluations/dev.json",
+    "evaluation_sha256": "63a2a58b97b47444645946e106f31f154f8918ce2d9474895eeeea780afecf1f",
+    "aggregate": {
+      "task_goal_completion": 21.1,
+      "scenario_goal_completion": 0.0
+    },
+    "success_count": 12,
+    "success_ids": [
+      "23cf851_1",
+      "37a8675_2",
+      "396c5a2_2",
+      "396c5a2_3",
+      "3ab5b8b_1",
+      "4ec8de5_3",
+      "6171bbc_1",
+      "6c2c621_1",
+      "6c2c621_3",
+      "d4e9306_1",
+      "fac291d_1",
+      "fac291d_3"
+    ],
+    "successful_scenario_count": 0,
+    "successful_scenarios": [],
+    "difficulty": {
+      "1": {
+        "total": 30,
+        "successes": 6,
+        "tgc": 20.0
+      },
+      "2": {
+        "total": 24,
+        "successes": 6,
+        "tgc": 25.0
+      },
+      "3": {
+        "total": 3,
+        "successes": 0,
+        "tgc": 0.0
+      }
+    },
+    "evaluator_tests": {
+      "passed": 163,
+      "failed": 128,
+      "total": 291,
+      "pass_percentage": 56.0
+    }
+  },
+  "lora": {
+    "label": "train90 LoRA",
+    "experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_092504_appworld_qwen3-8b_react_lora_codex_rft_train90_dev57",
+    "output_root": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_092504_appworld_qwen3-8b_react_lora_codex_rft_train90_dev57/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev",
+    "evaluation_path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_092504_appworld_qwen3-8b_react_lora_codex_rft_train90_dev57/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev/evaluations/dev.json",
+    "evaluation_sha256": "32ab67d1bcac6e8b0fc9ed07b005cdefec251e8b56f02204ecdaacaa4b4d2a49",
+    "aggregate": {
+      "task_goal_completion": 40.4,
+      "scenario_goal_completion": 21.1
+    },
+    "success_count": 23,
+    "success_ids": [
+      "23cf851_1",
+      "23cf851_3",
+      "37a8675_1",
+      "396c5a2_1",
+      "396c5a2_2",
+      "396c5a2_3",
+      "4ec8de5_2",
+      "50e1ac9_1",
+      "50e1ac9_3",
+      "57c3486_1",
+      "57c3486_2",
+      "57c3486_3",
+      "6bdbc26_2",
+      "6c2c621_3",
+      "b119b1f_1",
+      "b119b1f_2",
+      "d4e9306_1",
+      "d4e9306_2",
+      "d4e9306_3",
+      "df61dc5_3",
+      "fac291d_1",
+      "fac291d_2",
+      "fac291d_3"
+    ],
+    "successful_scenario_count": 4,
+    "successful_scenarios": [
+      "396c5a2",
+      "57c3486",
+      "d4e9306",
+      "fac291d"
+    ],
+    "difficulty": {
+      "1": {
+        "total": 30,
+        "successes": 14,
+        "tgc": 46.7
+      },
+      "2": {
+        "total": 24,
+        "successes": 9,
+        "tgc": 37.5
+      },
+      "3": {
+        "total": 3,
+        "successes": 0,
+        "tgc": 0.0
+      }
+    },
+    "evaluator_tests": {
+      "passed": 206,
+      "failed": 85,
+      "total": 291,
+      "pass_percentage": 70.8
+    }
+  },
+  "references": [
+    {
+      "label": "原始 Qwen3-8B（历史接口）",
+      "experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-09-10_210441_appworld_qwen3-8b_react_oneshot_full_dev",
+      "output_root": "/root/autodl-tmp/workspace-tw/experiments/2026-09-10_210441_appworld_qwen3-8b_react_oneshot_full_dev/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev",
+      "evaluation_path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-10_210441_appworld_qwen3-8b_react_oneshot_full_dev/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev/evaluations/dev.json",
+      "evaluation_sha256": "f8507888b4cb5cface5a175d55ab1cbfe95da082b0d45c9db6c640969746d2e0",
+      "aggregate": {
+        "task_goal_completion": 8.8,
+        "scenario_goal_completion": 0.0
+      },
+      "success_count": 5,
+      "success_ids": [
+        "23cf851_2",
+        "68ee2c9_3",
+        "6c2c621_1",
+        "6c2c621_2",
+        "fac291d_1"
+      ],
+      "successful_scenario_count": 0,
+      "successful_scenarios": [],
+      "difficulty": {
+        "1": {
+          "total": 30,
+          "successes": 2,
+          "tgc": 6.7
+        },
+        "2": {
+          "total": 24,
+          "successes": 3,
+          "tgc": 12.5
+        },
+        "3": {
+          "total": 3,
+          "successes": 0,
+          "tgc": 0.0
+        }
+      },
+      "evaluator_tests": {
+        "passed": 114,
+        "failed": 177,
+        "total": 291,
+        "pass_percentage": 39.2
+      }
+    },
+    {
+      "label": "旧67轨迹全参数 SFT epoch5",
+      "experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_205155_appworld_qwen3-8b_react_full_sft_epoch5_aligned_full_dev",
+      "output_root": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_205155_appworld_qwen3-8b_react_full_sft_epoch5_aligned_full_dev/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev",
+      "evaluation_path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_205155_appworld_qwen3-8b_react_full_sft_epoch5_aligned_full_dev/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev/evaluations/dev.json",
+      "evaluation_sha256": "ae2c6f08b3beaa37f885f4191513b05ee3a233cefafcf25ae33fc92984d9d3d2",
+      "aggregate": {
+        "task_goal_completion": 0.0,
+        "scenario_goal_completion": 0.0
+      },
+      "success_count": 0,
+      "success_ids": [],
+      "successful_scenario_count": 0,
+      "successful_scenarios": [],
+      "difficulty": {
+        "1": {
+          "total": 30,
+          "successes": 0,
+          "tgc": 0.0
+        },
+        "2": {
+          "total": 24,
+          "successes": 0,
+          "tgc": 0.0
+        },
+        "3": {
+          "total": 3,
+          "successes": 0,
+          "tgc": 0.0
+        }
+      },
+      "evaluator_tests": {
+        "passed": 86,
+        "failed": 205,
+        "total": 291,
+        "pass_percentage": 29.6
+      }
+    }
+  ],
+  "vs_lora": {
+    "comparison_label": "train90 LoRA",
+    "both_success": 7,
+    "comparison_only_success": 16,
+    "target_only_success": 5,
+    "both_failed": 29,
+    "gained_task_ids": [
+      "37a8675_2",
+      "3ab5b8b_1",
+      "4ec8de5_3",
+      "6171bbc_1",
+      "6c2c621_1"
+    ],
+    "regressed_task_ids": [
+      "23cf851_3",
+      "37a8675_1",
+      "396c5a2_1",
+      "4ec8de5_2",
+      "50e1ac9_1",
+      "50e1ac9_3",
+      "57c3486_1",
+      "57c3486_2",
+      "57c3486_3",
+      "6bdbc26_2",
+      "b119b1f_1",
+      "b119b1f_2",
+      "d4e9306_2",
+      "d4e9306_3",
+      "df61dc5_3",
+      "fac291d_2"
+    ],
+    "common_success_task_ids": [
+      "23cf851_1",
+      "396c5a2_2",
+      "396c5a2_3",
+      "6c2c621_3",
+      "d4e9306_1",
+      "fac291d_1",
+      "fac291d_3"
+    ]
+  },
+  "runtime": {
+    "finished_markers": 57,
+    "lm_calls": 1003,
+    "api_calls": 3205,
+    "input_tokens": 9437194,
+    "output_tokens": 75783,
+    "content_non_null": 1003,
+    "reasoning_content_null": 1003,
+    "complete_task_api_calls": 46,
+    "no_code_observations": 0,
+    "complete_task_action_count": 58,
+    "complete_task_task_count": 47,
+    "lm_messages_without_python_code": 9,
+    "total_tokens": 9512977,
+    "content_null": 0,
+    "malformed_lm_log_rows": 0,
+    "malformed_api_log_rows": 0,
+    "malformed_usage_files": 0,
+    "python_error_task_count": 37,
+    "python_error_task_ids": [
+      "0d8a4ee_2",
+      "23cf851_1",
+      "23cf851_2",
+      "23cf851_3",
+      "37a8675_1",
+      "37a8675_2",
+      "37a8675_3",
+      "383cbac_1",
+      "383cbac_3",
+      "396c5a2_3",
+      "3ab5b8b_1",
+      "3ab5b8b_2",
+      "3ab5b8b_3",
+      "4ec8de5_1",
+      "4ec8de5_2",
+      "4ec8de5_3",
+      "4fab96f_1",
+      "4fab96f_2",
+      "4fab96f_3",
+      "530b157_1",
+      "530b157_2",
+      "530b157_3",
+      "57c3486_1",
+      "57c3486_2",
+      "57c3486_3",
+      "6171bbc_3",
+      "68ee2c9_1",
+      "68ee2c9_2",
+      "68ee2c9_3",
+      "6bdbc26_3",
+      "6c2c621_1",
+      "6c2c621_2",
+      "6c2c621_3",
+      "b119b1f_1",
+      "d4e9306_1",
+      "df61dc5_1",
+      "df61dc5_3"
+    ],
+    "syntax_error_task_count": 5,
+    "syntax_error_task_ids": [
+      "383cbac_1",
+      "383cbac_3",
+      "4ec8de5_1",
+      "68ee2c9_2",
+      "6c2c621_2"
+    ],
+    "no_code_task_count": 9,
+    "no_code_task_ids": [
+      "37a8675_3",
+      "383cbac_1",
+      "396c5a2_1",
+      "4fab96f_2",
+      "530b157_2",
+      "57c3486_1",
+      "6171bbc_3",
+      "b119b1f_1",
+      "b119b1f_2"
+    ],
+    "max_step_task_count": 2,
+    "max_step_task_ids": [
+      "37a8675_1",
+      "4ec8de5_1"
+    ],
+    "missing_task_dir_ids": [],
+    "missing_lm_log_ids": [],
+    "missing_api_log_ids": []
+  },
+  "lora_runtime": {
+    "lm_calls": 1014,
+    "api_calls": 5991,
+    "input_tokens": 10443515,
+    "output_tokens": 91658,
+    "content_non_null": 1014,
+    "no_code_observations": 0,
+    "complete_task_actions": 51,
+    "complete_task_tasks": 51,
+    "total_tokens": 10535173,
+    "python_error_task_count": 39,
+    "max_step_task_count": 1,
+    "max_step_task_ids": [
+      "37a8675_3"
+    ]
+  },
+  "lora_duration_seconds": 1867.0,
+  "task_status_audit": {
+    "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_062600_appworld_qwen3-8b_react_full_sft_codex_rft_train90_dev57/task_status.jsonl",
+    "exists": true,
+    "raw_row_count": 57,
+    "malformed_line_numbers": [],
+    "rows_without_task_id": 0,
+    "unique_task_count": 57,
+    "duplicate_task_ids": [],
+    "duplicate_row_counts": {},
+    "missing_task_ids": [],
+    "extra_task_ids": [],
+    "evaluation_error_task_ids": [],
+    "status_success_mismatch_ids": [],
+    "test_count_mismatch_ids": [],
+    "completed_index_duplicate_count": 0,
+    "strictly_one_row_per_task": true,
+    "latest_rows_cover_dataset": true
+  },
+  "run_audit": {
+    "run_log": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_062600_appworld_qwen3-8b_react_full_sft_codex_rft_train90_dev57/logs/run.log",
+    "launcher_log": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_062600_appworld_qwen3-8b_react_full_sft_codex_rft_train90_dev57/logs/launcher.log",
+    "run_attempt_count": 1,
+    "run_finish_count": 1,
+    "recovery_detected": false,
+    "run_started_at": "2026-09-23T14:28:50+08:00",
+    "run_finished_at": "2026-09-23T14:52:06+08:00",
+    "duration_seconds": 1396.0,
+    "embedded_exit_codes": [
+      0
+    ],
+    "final_exit_code": 0,
+    "task_execution_failure_observations": 173,
+    "task_syntax_error_observations": 7,
+    "context_overflow_events": 9,
+    "context_overflow_task_count": 9,
+    "context_overflow_task_ids": [
+      "37a8675_3",
+      "383cbac_1",
+      "396c5a2_1",
+      "4fab96f_2",
+      "530b157_2",
+      "57c3486_1",
+      "6171bbc_3",
+      "b119b1f_1",
+      "b119b1f_2"
+    ],
+    "fatal_pattern_counts": {
+      "cuda_oom": 0,
+      "killed": 0,
+      "engine_failure": 0,
+      "connection_failure": 0,
+      "uncaught_runtime_error": 0
+    },
+    "anomalies": []
+  },
+  "protocol_audit": {
+    "status": "PASS",
+    "first_prompt_identical_tasks": 57,
+    "request_count": 1003,
+    "request_parameter_mismatches": [],
+    "content_empty_string_count": 9,
+    "finish_reasons": {
+      "stop": 994,
+      "None": 9
+    },
+    "error_responses": [
+      {
+        "task_id": "530b157_2",
+        "kind": "input_exceeds_context",
+        "input_tokens": 32900,
+        "placeholder_content_empty": true,
+        "usage_tokens": 0
+      },
+      {
+        "task_id": "b119b1f_1",
+        "kind": "input_exceeds_context",
+        "input_tokens": 62196,
+        "placeholder_content_empty": true,
+        "usage_tokens": 0
+      },
+      {
+        "task_id": "b119b1f_2",
+        "kind": "input_exceeds_context",
+        "input_tokens": 61734,
+        "placeholder_content_empty": true,
+        "usage_tokens": 0
+      },
+      {
+        "task_id": "37a8675_3",
+        "kind": "input_plus_output_exceeds_context",
+        "input_tokens": 30064,
+        "placeholder_content_empty": true,
+        "usage_tokens": 0
+      },
+      {
+        "task_id": "383cbac_1",
+        "kind": "input_exceeds_context",
+        "input_tokens": 197703,
+        "placeholder_content_empty": true,
+        "usage_tokens": 0
+      },
+      {
+        "task_id": "57c3486_1",
+        "kind": "input_plus_output_exceeds_context",
+        "input_tokens": 30488,
+        "placeholder_content_empty": true,
+        "usage_tokens": 0
+      },
+      {
+        "task_id": "6171bbc_3",
+        "kind": "input_exceeds_context",
+        "input_tokens": 65678,
+        "placeholder_content_empty": true,
+        "usage_tokens": 0
+      },
+      {
+        "task_id": "396c5a2_1",
+        "kind": "input_plus_output_exceeds_context",
+        "input_tokens": 29201,
+        "placeholder_content_empty": true,
+        "usage_tokens": 0
+      },
+      {
+        "task_id": "4fab96f_2",
+        "kind": "input_plus_output_exceeds_context",
+        "input_tokens": 29116,
+        "placeholder_content_empty": true,
+        "usage_tokens": 0
+      }
+    ],
+    "successful_responses": 994,
+    "unexplained_empty_model_responses": 0,
+    "successful_responses_without_python": 0,
+    "actual_server_options": "--served-model-name appworld-qwen3-8b-codex-rft-train90-epoch5 --max-num-seqs 3 --max-model-len 32000 --enable-auto-tool-choice --tool-call-parser hermes --port 40747",
+    "preflight": {
+      "status": "PASS",
+      "task_count": 57,
+      "training_task_count": 90,
+      "training_dev_task_overlap": [],
+      "dev_split_sha256": "9fa976589300ea8905708257144d801d1604b06d85fb0181e381df8a3ba85001",
+      "agent_config_identical_to_lora_reference": true,
+      "agent_config_sha256": "6ba24e61c7447a08f8313918f9bbc47bec15f9f46a1c86ed23331cab52c4149a",
+      "react_prompt_sha256": "c41f7852217d46586047a38f68e88b827cb9dcbe624e9651f9db8301547a534b",
+      "versions": {
+        "inference": {
+          "torch": "2.8.0+cu128",
+          "transformers": "4.56.2",
+          "vllm": "0.10.2"
+        },
+        "evaluation": {
+          "appworld": "0.2.0.dev0",
+          "appworld-agents": "0.1.0.dev0"
+        }
+      },
+      "training_json_sha256": "1f5ea51ea22ce7ef6b84d3e16bbb25976179064f7c8d0483ab7dcb0118ed3220",
+      "training_data_identical_to_lora": true,
+      "tokenizer_protocol_matches_lora_base": {
+        "loaded_chat_template_identical": true,
+        "vocabulary_identical": true,
+        "special_tokens_map_identical": true,
+        "first_task_rendered_token_ids_identical": true,
+        "first_task_input_tokens": 3171,
+        "chat_template_sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+        "note": "Export stores the unchanged template in chat_template.jinja; base stores it in tokenizer_config.json."
+      },
+      "generation_config_identical_except_library_version": true,
+      "generation_config": {
+        "bos_token_id": 151643,
+        "do_sample": true,
+        "eos_token_id": [
+          151645,
+          151643
+        ],
+        "pad_token_id": 151643,
+        "temperature": 0.6,
+        "top_k": 20,
+        "top_p": 0.95
+      }
+    },
+    "model_integrity": {
+      "status": "PASS",
+      "verified_at_utc": "2026-09-23T06:39:19.217366+00:00",
+      "model_file_inventory_unchanged": true,
+      "weight_files_verified": 5,
+      "hash_manifest": "config/final_model_weights.sha256",
+      "log": "logs/model_weight_hash_verify.log"
+    }
+  },
+  "model_execution_error_task_ids": []
+}

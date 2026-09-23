@@ -1,0 +1,70 @@
+{
+  "status": "SUCCESS",
+  "created_at_utc": "2026-09-23T06:26:00.109713+00:00",
+  "model": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_093106_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5/artifacts/model",
+  "training_experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_093106_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5",
+  "reference_lora_experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_092504_appworld_qwen3-8b_react_lora_codex_rft_train90_dev57",
+  "workspace_git_commit": "15909bde2c8496a044cbe1903e8e6c690a104850",
+  "workspace_branch": "main",
+  "dataset": "dev",
+  "task_count": 57,
+  "dev_split_sha256": "9fa976589300ea8905708257144d801d1604b06d85fb0181e381df8a3ba85001",
+  "agent": "simplified_react_code_agent",
+  "model_config": "qwen3-8b-with-reasoning",
+  "temperature": 0,
+  "seed": 100,
+  "max_completion_tokens": 3000,
+  "max_steps": 50,
+  "max_model_len": 32000,
+  "reasoning_parser": null,
+  "reasoning_content_null_normalized_to_empty_string": true,
+  "official_evaluator": true,
+  "model_type": "full_parameter_sft",
+  "epoch": 5,
+  "training_steps": 2925,
+  "command": [
+    "bash",
+    "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_062600_appworld_qwen3-8b_react_full_sft_codex_rft_train90_dev57/scripts_snapshot/run_appworld_qwen3_react_full_sft_aligned_dev.sh",
+    "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_062600_appworld_qwen3-8b_react_full_sft_codex_rft_train90_dev57",
+    "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_093106_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5/artifacts/model",
+    "codex-rft-train90-epoch5",
+    "qwen3-8b-with-reasoning",
+    "-",
+    "none"
+  ],
+  "test_normal_run": false,
+  "launched_at_utc": "2026-09-23T06:28:50.446214+00:00",
+  "startup_recovery": {
+    "cause": "ZMQ Unix socket path exceeded 107 bytes",
+    "first_attempt_exit_code": 143,
+    "first_attempt_scored_tasks": 0,
+    "first_attempt_logs": "logs/startup_attempt_01",
+    "fix": "Short per-experiment TMPDIR inside workspace-tw",
+    "temporary_directory": "/root/autodl-tmp/workspace-tw/tmp/aw-4f904a73e477",
+    "recorded_at_utc": "2026-09-23T06:28:50.414399+00:00"
+  },
+  "exit_code": 0,
+  "finished_at_utc": "2026-09-23T06:52:06.645192+00:00",
+  "report_created_at_utc": "2026-09-23T06:54:24.104874+00:00",
+  "official_scores": {
+    "task_goal_completion": 21.1,
+    "scenario_goal_completion": 0.0
+  },
+  "success_count": 12,
+  "protocol_audit_status": "PASS",
+  "initial_prompt_match_count": 57,
+  "target_evaluation_sha256": "63a2a58b97b47444645946e106f31f154f8918ce2d9474895eeeea780afecf1f",
+  "lora_evaluation_sha256": "32ab67d1bcac6e8b0fc9ed07b005cdefec251e8b56f02204ecdaacaa4b4d2a49",
+  "versions": {
+    "inference": {
+      "torch": "2.8.0+cu128",
+      "transformers": "4.56.2",
+      "vllm": "0.10.2"
+    },
+    "evaluation": {
+      "appworld": "0.2.0.dev0",
+      "appworld-agents": "0.1.0.dev0"
+    }
+  },
+  "report_builder_sha256": "593bd317df9ec427f5fe8fecd86c12570e07a0d432b28b56666a2ca10c87eb46"
+}

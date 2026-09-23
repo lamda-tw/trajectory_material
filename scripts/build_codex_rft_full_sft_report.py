@@ -16,8 +16,13 @@ def main():
     args=parser.parse_args()
     exp=args.experiment.resolve()
     cfg=load(exp/'config/training_config.json')
-    restart_pointer=load(exp/'artifacts/restart/latest.json')
-    runtime=load(exp/'artifacts/restart'/restart_pointer['directory']/'COMPLETE.json')['contract']
+    cleanup_path=exp/'metrics/checkpoint_cleanup.json'
+    cleanup=load(cleanup_path) if cleanup_path.exists() else None
+    if cleanup and cleanup['status']=='COMPLETE':
+        runtime=load(exp/'config/final_checkpoint_metadata.json')['contract']
+    else:
+        restart_pointer=load(exp/'artifacts/restart/latest.json')
+        runtime=load(exp/'artifacts/restart'/restart_pointer['directory']/'COMPLETE.json')['contract']
     met=load(exp/'metrics/metrics.json')
     probe=load(exp/'probe/metrics/metrics.json')
     first=load(exp/'probe/metrics/before_restart.json')
@@ -58,6 +63,9 @@ def main():
     cadence_note='- 正式训练第 100 步完成一次临时保存，用于将最初的每 100 步保存策略改为每轮保存；随后严格校验训练代码、数据和超参数，从该步恢复 FP32 参数、AdamW、scheduler、RNG 和采样进度，没有重新初始化或重跑训练。切换记录见 `config/checkpoint_cadence_change.json`，恢复命令见 `command_resume.txt`。' if (exp/'config/checkpoint_cadence_change.json').exists() else ''
     elapsed_note=('恢复沿用保存前的计时值，因此不含第 100 步保存本身、切换间隔和重新加载时间。' if cadence_note else '该计时从进入训练循环开始，不包含此前数据与模型加载。')
     timing_source_note=('起始时间见 `config/execution_timing.json`，结束时间见 `metrics/metrics.json`。' if wall_hours is not None else '缺少首次启动时间记录，仅能提供下列 Trainer 计时。')
+    checkpoint_note='- 最终续训状态为第 2925 步，适用于相同代码、数据哈希、依赖版本、FSDP 包装和双卡拓扑。部署/评测使用 `artifacts/model/`，不是直接加载分片 pickle。'
+    if cleanup and cleanup['status']=='COMPLETE':
+        checkpoint_note=f"- 训练结束后，按用户要求于 {cleanup['finished_at_utc']} 清理第 2925 步完整续训状态，删除文件共 {cleanup['removed_bytes']/1024**3:.2f} GiB。最终 BF16 模型 `artifacts/model/` 已通过 SHA-256 校验并保留，可继续推理、评测或另起微调；无法恢复此次优化器、scheduler 和 RNG 状态。轻量元数据见 `config/final_checkpoint_metadata.json`，清理记录见 `metrics/checkpoint_cleanup.json`。"
     report=f'''# AppWorld Codex-RFT train90：Qwen3-8B 全参数 SFT 五轮实验报告
 
 ## 结论
@@ -139,9 +147,9 @@ probe 的权重和续训状态已在验证成功后清理；正式训练重新�
 - 采样到的最小磁盘可用量约 **{disk_min:.2f} GiB**。资源原始记录：`logs/resource_usage.jsonl`。
 - cgroup memory.events 采样起点：`{event_first.replace(chr(10), '; ')}`；报告生成前末次：`{event_last.replace(chr(10), '; ')}`。
 - 因初始可用磁盘约 197 GiB，本次采用**滚动完整续训状态 + 最终 HF 模型**，未保留 epoch 1–4 的独立 HF 权重。所有 epoch 的逐步 loss 均保留。
-- 按用户要求每轮结束（每 585 步）保存一次 `artifacts/restart/` 下的完整 FP32 参数分片、AdamW、scheduler、各 rank RNG、步数和采样进度。仅保留最新一份完整续训状态；新状态全部写入并落盘后，才移除本实验的旧状态，原子替换期间短暂存在两份。
+- 训练期间按用户要求每轮结束（每 585 步）保存一次 `artifacts/restart/` 下的完整 FP32 参数分片、AdamW、scheduler、各 rank RNG、步数和采样进度。当时仅保留最新一份完整续训状态；新状态全部写入并落盘后，才移除本实验的旧状态，原子替换期间短暂存在两份。
 {cadence_note}
-- 最终续训状态为第 2925 步，适用于相同代码、数据哈希、依赖版本、FSDP 包装和双卡拓扑。部署/评测使用 `artifacts/model/`，不是直接加载分片 pickle。
+{checkpoint_note}
 
 ## 诊断、模型重载与产物核验
 

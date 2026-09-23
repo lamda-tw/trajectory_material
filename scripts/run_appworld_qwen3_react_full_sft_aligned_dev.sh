@@ -12,7 +12,7 @@ vllm_env="/root/autodl-tmp/envs/qwen3-vllm-py312"
 source_data="/root/autodl-tmp/data/benchmarks/appworld/runtime/data"
 source_tests="$workspace/experiments/2026-09-10_173848_appworld_qwen3-8b_react_oneshot_smoke/cache/tests"
 installed_agent_configs="$appworld_env/lib/python3.12/site-packages/appworld_agents/configs"
-launcher="$workspace/scripts/appworld_run_isolated_full_model_config.py"
+launcher="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/appworld_run_isolated_full_model_config.py"
 experiment_root="$1"
 model_path="$2"
 model_label="${3:-full-sft}"
@@ -29,9 +29,13 @@ if [[ "$experiment_root" != "$workspace"/experiments/*_appworld_qwen3-8b_react_f
   echo "Refusing unexpected evaluation root: $experiment_root" >&2
   exit 2
 fi
-training_root="$workspace/experiments/2026-09-15_130022_appworld_qwen3_8b_react_full_sft_67"
-if [[ "$model_path" != "$training_root/artifacts/model" && "$model_path" != "$training_root"/artifacts/checkpoints/epoch_*_model ]]; then
-  echo "Refusing model path outside the expected full-SFT experiment: $model_path" >&2
+model_path="$(realpath -e "$model_path")"
+if [[ "$model_path" != "$workspace"/experiments/*/artifacts/model && "$model_path" != "$workspace"/experiments/*/artifacts/checkpoints/epoch_*_model ]]; then
+  echo "Refusing model path outside workspace experiment artifacts: $model_path" >&2
+  exit 2
+fi
+if [[ "$(realpath -m "$experiment_root")" != "$experiment_root" ]]; then
+  echo "Refusing a non-canonical evaluation root: $experiment_root" >&2
   exit 2
 fi
 if [[ "$model_config_name" != "qwen3-8b-with-reasoning" && "$model_config_name" != "qwen3-8b-without-reasoning" ]]; then
@@ -80,6 +84,17 @@ export OPENAI_API_KEY="none"
 export VLLM_CACHE_ROOT="$experiment_root/cache/vllm"
 export TORCHINDUCTOR_CACHE_DIR="$experiment_root/cache/torchinductor"
 export XDG_CACHE_HOME="$experiment_root/cache/xdg"
+# Unix-domain socket paths must fit within 107 bytes, including a UUID.
+export TMPDIR="$workspace/tmp/aw-$(printf '%s' "$experiment_root" | sha256sum | cut -c1-12)"
+export TMP="$TMPDIR"
+export TEMP="$TMPDIR"
+export TRITON_CACHE_DIR="$experiment_root/cache/triton"
+export CUDA_CACHE_PATH="$experiment_root/cache/cuda"
+export NUMBA_CACHE_DIR="$experiment_root/cache/numba"
+export MPLCONFIGDIR="$experiment_root/cache/matplotlib"
+mkdir -p "$TMPDIR" "$TRITON_CACHE_DIR" "$CUDA_CACHE_PATH" "$NUMBA_CACHE_DIR" "$MPLCONFIGDIR" "$workspace/tmp"
+exec 9>"$workspace/tmp/full_sft_gpu.lock"
+flock -n 9 || { echo 'Another full SFT training or evaluation holds the GPU lock'; exit 2; }
 mkdir -p "$APPWORLD_CACHE" "$HF_HOME" "$VLLM_CACHE_ROOT" "$TORCHINDUCTOR_CACHE_DIR" "$XDG_CACHE_HOME"
 exec > >(tee -a "$run_log") 2>&1
 

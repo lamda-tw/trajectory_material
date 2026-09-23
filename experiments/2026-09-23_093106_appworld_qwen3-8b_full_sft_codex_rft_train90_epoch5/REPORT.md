@@ -84,9 +84,9 @@ probe 的权重和续训状态已在验证成功后清理；正式训练重新�
 - 采样到的最小磁盘可用量约 **4.98 GiB**。资源原始记录：`logs/resource_usage.jsonl`。
 - cgroup memory.events 采样起点：`low 0; high 0; max 3462; oom 0; oom_kill 0`；报告生成前末次：`low 0; high 0; max 3462; oom 0; oom_kill 0`。
 - 因初始可用磁盘约 197 GiB，本次采用**滚动完整续训状态 + 最终 HF 模型**，未保留 epoch 1–4 的独立 HF 权重。所有 epoch 的逐步 loss 均保留。
-- 按用户要求每轮结束（每 585 步）保存一次 `artifacts/restart/` 下的完整 FP32 参数分片、AdamW、scheduler、各 rank RNG、步数和采样进度。仅保留最新一份完整续训状态；新状态全部写入并落盘后，才移除本实验的旧状态，原子替换期间短暂存在两份。
+- 训练期间按用户要求每轮结束（每 585 步）保存一次 `artifacts/restart/` 下的完整 FP32 参数分片、AdamW、scheduler、各 rank RNG、步数和采样进度。当时仅保留最新一份完整续训状态；新状态全部写入并落盘后，才移除本实验的旧状态，原子替换期间短暂存在两份。
 - 正式训练第 100 步完成一次临时保存，用于将最初的每 100 步保存策略改为每轮保存；随后严格校验训练代码、数据和超参数，从该步恢复 FP32 参数、AdamW、scheduler、RNG 和采样进度，没有重新初始化或重跑训练。切换记录见 `config/checkpoint_cadence_change.json`，恢复命令见 `command_resume.txt`。
-- 最终续训状态为第 2925 步，适用于相同代码、数据哈希、依赖版本、FSDP 包装和双卡拓扑。部署/评测使用 `artifacts/model/`，不是直接加载分片 pickle。
+- 训练结束后，按用户要求于 2026-09-23T06:14:20.810710+00:00 清理第 2925 步完整续训状态，删除文件共 91.54 GiB。最终 BF16 模型 `artifacts/model/` 已通过 SHA-256 校验并保留，可继续推理、评测或另起微调；无法恢复此次优化器、scheduler 和 RNG 状态。轻量元数据见 `config/final_checkpoint_metadata.json`，清理记录见 `metrics/checkpoint_cleanup.json`。
 
 ## 诊断、模型重载与产物核验
 
