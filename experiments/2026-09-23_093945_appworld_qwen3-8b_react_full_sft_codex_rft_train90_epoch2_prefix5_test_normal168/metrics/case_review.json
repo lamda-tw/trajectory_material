@@ -1,0 +1,122 @@
+{
+  "status": "COMPLETE",
+  "cases": [
+    {
+      "task_id": "3d9a636_3",
+      "type": "epoch2_regression",
+      "epoch2_passed_tests": 0,
+      "epoch5_passed_tests": 5,
+      "epoch2_requests": 50,
+      "epoch5_requests": 18,
+      "reviewed_epoch2_interactions": [
+        12,
+        14,
+        17,
+        19,
+        49,
+        50
+      ],
+      "evidence_environment_line": 1070,
+      "observation": "17 rejected queries for nonexistent phone.search_contact alternating with API listings; no friendship change."
+    },
+    {
+      "task_id": "325d6ec_2",
+      "type": "shared_failure_wrong_goal",
+      "epoch2_passed_tests": 3,
+      "epoch5_passed_tests": 3,
+      "lora_passed_tests": 5,
+      "epoch2_requests": 16,
+      "epoch5_requests": 16,
+      "reviewed_epoch2_interactions": [
+        9,
+        11,
+        12,
+        14,
+        16
+      ],
+      "evidence_environment_line": 946,
+      "observation": "Original instruction requests an already-downloaded song; epoch2 explicitly selects a non-downloaded song and changes the queue as well as cursor."
+    },
+    {
+      "task_id": "21abae1_1",
+      "type": "epoch2_gain",
+      "epoch2_passed_tests": 2,
+      "epoch5_passed_tests": 1,
+      "lora_passed_tests": 2,
+      "epoch2_requests": 19,
+      "epoch5_requests": 10,
+      "epoch2_submitted_answer": 1029,
+      "epoch5_submitted_answer": 0,
+      "reviewed_epoch2_interactions": [
+        7,
+        8,
+        9,
+        14,
+        17,
+        19
+      ],
+      "evidence_environment_line": 1241,
+      "observation": "Month-start/current-date sent transaction query returns nonempty records; summed answer passes despite unnecessary/failed contact operations."
+    },
+    {
+      "task_id": "8749218_1",
+      "type": "shared_failure_valid_documentation_loop",
+      "epoch2_passed_tests": 1,
+      "epoch5_passed_tests": 1,
+      "lora_passed_tests": 6,
+      "epoch2_requests": 50,
+      "epoch5_requests": 50,
+      "epoch2_api_calls": 52,
+      "epoch2_documentation_calls": 46,
+      "reviewed_epoch2_interactions": [
+        8,
+        10,
+        11,
+        12,
+        49,
+        50
+      ],
+      "evidence_environment_line": 806,
+      "observation": "Forty consecutive actions alternate two valid API-doc queries; no Python execution error and no queue mutation/play request."
+    },
+    {
+      "task_id": "0d01c76_2",
+      "type": "epoch2_gain_note_import",
+      "epoch2_passed_tests": 6,
+      "epoch5_passed_tests": 3,
+      "lora_passed_tests": 6,
+      "epoch2_requests": 15,
+      "epoch5_requests": 36,
+      "reviewed_epoch2_interactions": [
+        8,
+        10,
+        12,
+        13,
+        15
+      ],
+      "evidence_environment_line": 807,
+      "observation": "Reads file dict content and creates/verifies 15 notes; other two scenario variants still fail 1/6, so no scenario-level success."
+    },
+    {
+      "task_id": "3b8fb7a_2",
+      "type": "shared_context_failure",
+      "epoch2_passed_tests": 2,
+      "epoch5_passed_tests": 2,
+      "lora_passed_tests": 2,
+      "epoch2_requests": 8,
+      "epoch5_requests": 7,
+      "epoch2_rejected_input_tokens": 62529,
+      "epoch5_rejected_input_tokens": 40802,
+      "lora_rejected_input_tokens": 33596,
+      "reviewed_epoch2_interactions": [
+        6,
+        7
+      ],
+      "reviewed_epoch2_lm_error": 8,
+      "evidence_environment_line": 1069,
+      "observation": "Broad name searches followed by printing all matches produce 62,529 input tokens; error placeholder is not a normal empty model response."
+    }
+  ],
+  "review_finished_at_utc": "2026-09-23T11:31:25.790946+00:00",
+  "selection_note": "Six illustrative cases include two gains, one regression and three shared failures; examples do not estimate population cause proportions."
+}

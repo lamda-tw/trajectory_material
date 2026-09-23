@@ -1,0 +1,92 @@
+[
+  {
+    "stage": "02_ddp_probe",
+    "started_at_utc": "2026-09-23T09:47:56.439664+00:00",
+    "command": [
+      "/root/autodl-tmp/workspace-tw/.conda-training/bin/torchrun",
+      "--standalone",
+      "--nproc_per_node=2",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_093945_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch2_prefix5/scripts_snapshot/ddp_probe.py"
+    ],
+    "finished_at_utc": "2026-09-23T09:48:01.146147+00:00",
+    "exit_code": 0
+  },
+  {
+    "stage": "04_train_full_sft",
+    "started_at_utc": "2026-09-23T09:48:01.147796+00:00",
+    "command": [
+      "/root/autodl-tmp/workspace-tw/.conda-training/bin/torchrun",
+      "--standalone",
+      "--nproc_per_node=2",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_093945_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch2_prefix5/scripts_snapshot/full_sft_train_fsdp_scheduled.py",
+      "--model",
+      "/root/autodl-tmp/models/Qwen3-8B",
+      "--train-json",
+      "/root/autodl-tmp/workspace-tw/data/2026-09-21_appworld_codex_rft_qwen3-8b_sft_train90/train.jsonl",
+      "--validation-json",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_093945_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch2_prefix5/config/diagnostic_last_step_per_task.jsonl",
+      "--experiment-dir",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_093945_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch2_prefix5",
+      "--max-length",
+      "40960",
+      "--epochs",
+      "2",
+      "--schedule-steps",
+      "2925",
+      "--learning-rate",
+      "1e-5",
+      "--warmup-ratio",
+      "0.03",
+      "--min-lr-ratio",
+      "0.1",
+      "--weight-decay",
+      "0",
+      "--max-grad-norm",
+      "1",
+      "--seed",
+      "20260921",
+      "--checkpoint-every",
+      "0",
+      "--save-every-epoch"
+    ],
+    "finished_at_utc": "2026-09-23T10:58:46.056888+00:00",
+    "exit_code": 0
+  },
+  {
+    "stage": "05_generation_verify",
+    "started_at_utc": "2026-09-23T10:59:10.671806+00:00",
+    "command": [
+      "/root/autodl-tmp/workspace-tw/.conda-training/bin/python",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_093945_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch2_prefix5/scripts_snapshot/verify_appworld_full_sft_model.py",
+      "--model",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_093945_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch2_prefix5/artifacts/model",
+      "--sample-json",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_093945_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch2_prefix5/config/diagnostic_last_step_per_task.jsonl",
+      "--output",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_093945_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch2_prefix5/metrics/generation_smoke.json",
+      "--max-input-length",
+      "40960",
+      "--max-new-tokens",
+      "512"
+    ],
+    "finished_at_utc": "2026-09-23T10:59:18.928716+00:00",
+    "exit_code": 0
+  },
+  {
+    "stage": "01_evaluation_launcher",
+    "started_at_utc": "2026-09-23T10:59:18.931067+00:00",
+    "command": [
+      "bash",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_093945_appworld_qwen3-8b_react_full_sft_codex_rft_train90_epoch2_prefix5_test_normal168/scripts_snapshot/run_appworld_qwen3_react_full_sft_aligned_dev.sh",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_093945_appworld_qwen3-8b_react_full_sft_codex_rft_train90_epoch2_prefix5_test_normal168",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_093945_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch2_prefix5/artifacts/model",
+      "codex-rft-train90-epoch2-prefix5",
+      "qwen3-8b-with-reasoning",
+      "-",
+      "none",
+      "test_normal"
+    ],
+    "finished_at_utc": "2026-09-23T12:23:33.575026+00:00",
+    "exit_code": 0
+  }
+]

@@ -1,0 +1,80 @@
+{
+  "distributions": {
+    "train90_teacher": {
+      "normal_action_count": 1170,
+      "counts": {
+        "docs_without_other_api_call": 560,
+        "other_api_call": 575,
+        "python_without_direct_api_call": 35,
+        "python_parse_error": 0,
+        "no_python": 0
+      },
+      "percentages": {
+        "docs_without_other_api_call": 47.863247863247864,
+        "other_api_call": 49.14529914529915,
+        "python_without_direct_api_call": 2.9914529914529915,
+        "python_parse_error": 0.0,
+        "no_python": 0.0
+      }
+    },
+    "epoch2": {
+      "normal_action_count": 4215,
+      "counts": {
+        "docs_without_other_api_call": 2053,
+        "other_api_call": 1840,
+        "python_without_direct_api_call": 269,
+        "python_parse_error": 53,
+        "no_python": 0
+      },
+      "percentages": {
+        "docs_without_other_api_call": 48.70699881376038,
+        "other_api_call": 43.65361803084223,
+        "python_without_direct_api_call": 6.38196915776987,
+        "python_parse_error": 1.2574139976275207,
+        "no_python": 0.0
+      }
+    },
+    "epoch5": {
+      "normal_action_count": 3638,
+      "counts": {
+        "docs_without_other_api_call": 1706,
+        "other_api_call": 1743,
+        "python_without_direct_api_call": 155,
+        "python_parse_error": 34,
+        "no_python": 0
+      },
+      "percentages": {
+        "docs_without_other_api_call": 46.8938977460143,
+        "other_api_call": 47.91094007696537,
+        "python_without_direct_api_call": 4.260582737768004,
+        "python_parse_error": 0.9345794392523364,
+        "no_python": 0.0
+      }
+    },
+    "lora": {
+      "normal_action_count": 3405,
+      "counts": {
+        "docs_without_other_api_call": 1369,
+        "other_api_call": 1646,
+        "python_without_direct_api_call": 382,
+        "python_parse_error": 8,
+        "no_python": 0
+      },
+      "percentages": {
+        "docs_without_other_api_call": 40.205580029368576,
+        "other_api_call": 48.34067547723935,
+        "python_without_direct_api_call": 11.218795888399413,
+        "python_parse_error": 0.23494860499265785,
+        "no_python": 0.0
+      }
+    }
+  },
+  "unit": "One normal assistant response/code action; training uses each of the 1170 supervised target responses once.",
+  "notes": [
+    "Only static direct calls apis.<app>.<method> are classified. Aliases, dynamic calls and execution outcomes are not inferred.",
+    "Documentation category may include local Python computation; it has at least one direct API-doc call and no direct non-doc API call.",
+    "Other-API calls include reads, authentication, task submission and writes; they are not synonymous with successful state changes.",
+    "Invalid/empty/error responses are distinguished; service error placeholders are excluded from the denominator.",
+    "Different rollout states and lengths make this a descriptive policy comparison, not evidence for a unique training mechanism."
+  ]
+}

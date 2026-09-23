@@ -1,0 +1,15 @@
+--- reference/run_appworld_qwen3_react_full_sft_aligned_dev.sh
++++ epoch2/run_appworld_qwen3_react_full_sft_aligned_dev.sh
+@@ -75,6 +75,12 @@
+   ln -s "$source_data/datasets/$dataset_name.txt" "$experiment_root/data/datasets/$dataset_name.txt"
+ fi
+ 
++# Isolate evaluation from training-only allocator/NCCL settings; restore ambient values.
++export OMP_NUM_THREADS=44
++unset PYTORCH_CUDA_ALLOC_CONF
++unset TORCH_NCCL_ASYNC_ERROR_HANDLING
++unset PYTORCH_ALLOC_CONF
++
+ export APPWORLD_ROOT="$experiment_root"
+ export APPWORLD_CACHE="$experiment_root/cache"
+ export CUDA_VISIBLE_DEVICES="0"
