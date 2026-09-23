@@ -90,6 +90,8 @@ CPU 微型 Qwen3 回归测试覆盖不同 completion 长度、padding、首个�
 
 正式训练前完成 **20 步真实双卡压力预检**：先用短样本初始化 AdamW 状态，覆盖最长 6 条样本、最长 completion、16K/24K 附近长度和长短交替，并交换 rank。第 10 步保存 FP32 参数与 optimizer 后退出进程，重新加载继续至第 20 步，随后完成诊断 forward。两个进程阶段的峰值 allocated 分别合并为 rank0={probe_peaks[0]:.2f} GiB、rank1={probe_peaks[1]:.2f} GiB。
 
+首次真实恢复预检曾因两个 rank 的 elapsed_seconds 微小差异被元数据检查误判失败；随后修复为 rank0 广播共享进度，并加入双 CPU 进程恢复回归测试。保留原日志 `logs/03b_stress_resume_initial_failure.log`。重新验证时只对这次经审查的代码修改显式放宽源码哈希一致要求，数据、训练参数、依赖及分片拓扑校验保持不变；正式训练不使用此豁免。
+
 probe 的权重和续训状态已在验证成功后清理；正式训练重新从原始基座初始化，不继承 probe 更新。确定顺序见 `config/probe_schedule.json`。
 
 ## 五轮 Loss

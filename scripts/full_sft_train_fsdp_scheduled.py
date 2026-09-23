@@ -279,6 +279,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--sequential-sampler", action="store_true")
     parser.add_argument("--checkpoint-every", type=int, default=0)
     parser.add_argument("--resume", type=Path)
+    parser.add_argument("--resume-allow-code-change", action="store_true")
     parser.add_argument("--stop-after-step", type=int, default=0)
     return parser.parse_args()
 
@@ -453,7 +454,8 @@ def main() -> None:
     global_step, start_epoch, consumed_batches = 0, 0, 0
     elapsed_before = 0.0
     if args.resume:
-        restored = load_restart(model, optimizer, lr_scheduler, args.resume, contract)
+        restored = load_restart(model, optimizer, lr_scheduler, args.resume, contract,
+                                allow_code_change=args.resume_allow_code_change)
         global_step = restored["global_step"]
         start_epoch = restored["epoch_index"]
         consumed_batches = restored["consumed_batches"]

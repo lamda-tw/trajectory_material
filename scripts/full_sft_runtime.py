@@ -83,6 +83,10 @@ def save_restart(model, optimizer, scheduler, root, progress, contract, reserve_
     """Save original FSDP parameter shards; requires the same wrap/order/topology."""
     rank, world = dist.get_rank(), dist.get_world_size()
     root = Path(root)
+    # Elapsed wall time differs slightly between ranks; share rank 0's metadata.
+    shared_progress = [progress if rank == 0 else None]
+    dist.broadcast_object_list(shared_progress, src=0)
+    progress = shared_progress[0]
     name = f"step_{progress['global_step']:06d}"
     target, tmp = root / name, root / (name + '.tmp')
     size = sum(p.numel() * p.element_size() for p in model.parameters())
@@ -142,13 +146,20 @@ def save_restart(model, optimizer, scheduler, root, progress, contract, reserve_
     return target
 
 
-def load_restart(model, optimizer, scheduler, directory, contract):
+def load_restart(model, optimizer, scheduler, directory, contract, allow_code_change=False):
     rank, world = dist.get_rank(), dist.get_world_size()
     directory = Path(directory)
     if (directory / 'latest.json').is_file():
         directory = directory / json.loads((directory / 'latest.json').read_text())['directory']
     manifest = json.loads((directory / 'COMPLETE.json').read_text())
-    if manifest['contract'] != contract or manifest['world_size'] != world:
+    saved_contract, expected_contract = dict(manifest['contract']), dict(contract)
+    if allow_code_change:
+        # Explicit opt-in for a reviewed runtime bug fix; never relax data,
+        # hyperparameters, framework versions or topology checks.
+        for key in ('trainer_sha256', 'runtime_sha256'):
+            saved_contract.pop(key, None)
+            expected_contract.pop(key, None)
+    if saved_contract != expected_contract or manifest['world_size'] != world:
         raise ValueError('checkpoint data/config/runtime/topology contract mismatch')
     shard = directory / f'rank_{rank}.pt'
     if shard.stat().st_size != manifest['files'][shard.name]:
@@ -160,14 +171,16 @@ def load_restart(model, optimizer, scheduler, directory, contract):
             payload = torch.load(shard, map_location='cpu', weights_only=False, mmap=True)
             if payload['rank'] != rank or payload['signature'] != parameter_signature(model):
                 raise ValueError('FSDP shard layout changed')
-            if payload['contract'] != contract or payload['progress'] != manifest['progress']:
+            local_progress = {k:v for k,v in payload['progress'].items() if k != 'elapsed_seconds'}
+            shared_progress = {k:v for k,v in manifest['progress'].items() if k != 'elapsed_seconds'}
+            if payload['contract'] != manifest['contract'] or local_progress != shared_progress:
                 raise ValueError('restart shard metadata mismatch')
             with torch.no_grad():
                 for name, parameter in model.named_parameters():
                     parameter.copy_(payload['parameters'][name])
             optimizer.load_state_dict(payload['optimizer'])
             scheduler.load_state_dict(payload['scheduler'])
-            progress = payload['progress']
+            progress = manifest['progress']
             random.setstate(payload['python_rng'])
             torch.set_rng_state(payload['torch_rng'])
             if payload['cuda_rng'] is not None:

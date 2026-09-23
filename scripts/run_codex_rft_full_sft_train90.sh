@@ -40,7 +40,7 @@ cleanup() {
 }
 trap cleanup EXIT
 set_stage() { stage="$1"; printf 'RUNNING stage=%s updated_at=%s\n' "$stage" "$(date --iso-8601=seconds)" > "$experiment/STATUS.txt"; }
-cp "$workspace/scripts/"{full_sft_train_fsdp_scheduled.py,full_sft_runtime.py,prepare_codex_rft_full_sft_experiment.py,test_full_sft_runtime.py,monitor_full_sft_resources.py,run_codex_rft_full_sft_train90.sh,ddp_probe.py} "$experiment/scripts_snapshot/"
+cp "$workspace/scripts/"{full_sft_train_fsdp_scheduled.py,full_sft_runtime.py,prepare_codex_rft_full_sft_experiment.py,test_full_sft_runtime.py,test_full_sft_distributed_resume.py,monitor_full_sft_resources.py,run_codex_rft_full_sft_train90.sh,ddp_probe.py} "$experiment/scripts_snapshot/"
 {
   printf 'workspace_commit=%s\n' "$(git -C "$workspace" rev-parse HEAD)"
   "$python_bin" -c 'import torch,transformers; print("torch="+torch.__version__); print("transformers="+transformers.__version__)'
@@ -54,11 +54,13 @@ set_stage ddp_probe
 "$torchrun_bin" --standalone --nproc_per_node=2 "$workspace/scripts/ddp_probe.py" 2>&1 | tee "$experiment/logs/02_ddp_probe.log"
 common=(--model "$base_model" --max-length 40960 --learning-rate 1e-5 --weight-decay 0 --max-grad-norm 1 --seed 20260921)
 probe=("${common[@]}" --train-json "$experiment/config/probe_stress_40.jsonl" --validation-json "$experiment/config/probe_stress_40.jsonl" --experiment-dir "$experiment/probe" --epochs 1 --warmup-ratio 0 --min-lr-ratio 1 --sequential-sampler --checkpoint-every 10 --skip-model-save)
+if [[ ! -f "$experiment/probe/artifacts/restart/latest.json" ]]; then
 set_stage stress_probe_save
 "$torchrun_bin" --standalone --nproc_per_node=2 "$workspace/scripts/full_sft_train_fsdp_scheduled.py" "${probe[@]}" --stop-after-step 10 2>&1 | tee "$experiment/logs/03a_stress_probe.log"
 cp "$experiment/probe/metrics/metrics.json" "$experiment/probe/metrics/before_restart.json"
+fi
 set_stage stress_probe_resume
-"$torchrun_bin" --standalone --nproc_per_node=2 "$workspace/scripts/full_sft_train_fsdp_scheduled.py" "${probe[@]}" --resume "$experiment/probe/artifacts/restart" 2>&1 | tee "$experiment/logs/03b_stress_resume.log"
+"$torchrun_bin" --standalone --nproc_per_node=2 "$workspace/scripts/full_sft_train_fsdp_scheduled.py" "${probe[@]}" --resume "$experiment/probe/artifacts/restart" --resume-allow-code-change 2>&1 | tee "$experiment/logs/03b_stress_resume.log"
 "$python_bin" - "$experiment" <<'PY'
 import json, shutil, sys
 from pathlib import Path
