@@ -1,0 +1,90 @@
+{
+  "checked_at_utc": "2026-09-23T01:16:24.316009+00:00",
+  "baseline_commit": "ff977cc71f7a8b697d935507bcee6b9a44e34480",
+  "scope": "CPU data/tokenizer/hash audit and read-only hardware/source inspection; no model forward, backward, optimizer update or distributed GPU probe",
+  "training_started": false,
+  "gpu_probe_run": false,
+  "ready_for_training": false,
+  "dataset": {
+    "dataset_dir": "/root/autodl-tmp/workspace-tw/data/2026-09-21_appworld_codex_rft_qwen3-8b_sft_train90",
+    "train_sha256": "1f5ea51ea22ce7ef6b84d3e16bbb25976179064f7c8d0483ab7dcb0118ed3220",
+    "dataset_manifest_sha256": "c93790fd2519319a6e2f2eb59e9932f38e5b4f1447582ed7f6ed50420279eb1c",
+    "dataset_validation_sha256": "75a8586e932f4be4b4edb8a5214eeede0a77e9ab919fe487e29ded97827a26ba",
+    "train_tasks": 90,
+    "train_trajectories": 90,
+    "train_decision_samples": 1170,
+    "diagnostic_validation_samples": 90,
+    "source_guards": {
+      "official_evaluator_success_tasks": 90,
+      "unique_codex_threads": 90,
+      "raw_observations_included": false,
+      "ground_truth_in_model_messages": false,
+      "sensitive_value_occurrences_checked": 146,
+      "sensitive_value_leaks": 0
+    },
+    "difficulty": {
+      "1": 36,
+      "2": 36,
+      "3": 18
+    },
+    "token_lengths": {
+      "min": 3181,
+      "p50": 7249,
+      "p95": 16040,
+      "max": 37015,
+      "mean": 8239.348717948718,
+      "over_16384": 57,
+      "over_32768": 6,
+      "over_40960": 0
+    },
+    "completion_lengths": {
+      "min": 28,
+      "p50": 60,
+      "p95": 189,
+      "max": 418,
+      "mean": 80.81452991452991
+    }
+  },
+  "manifest_files_verified": 97,
+  "model": {
+    "path": "/root/autodl-tmp/models/Qwen3-8B",
+    "safetensors_shards": 5,
+    "parameter_count_from_headers": 8190735360,
+    "parameter_dtypes_from_headers": {
+      "BF16": 8190735360
+    },
+    "config_sha256": "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30",
+    "vocab_size": 151936,
+    "native_max_position_embeddings": 40960
+  },
+  "environment": {
+    "python": "3.12.3",
+    "packages": {
+      "torch": "2.8.0+cu128",
+      "transformers": "4.56.2",
+      "accelerate": "1.10.1",
+      "safetensors": "0.8.0"
+    },
+    "gpu_inventory": "index, name, memory.total [MiB], memory.used [MiB], utilization.gpu [%]\n0, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, 0 MiB, 100 %\n1, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, 0 MiB, 0 %",
+    "gpu_processes": "pid, process_name, used_gpu_memory [MiB]",
+    "disk_free_bytes": 211179921408,
+    "cgroup_memory_max_bytes": 236223201280,
+    "cgroup_memory_current_bytes": 21198577664,
+    "cgroup_memory_events": "low 0\nhigh 0\nmax 3462\noom 0\noom_kill 0"
+  },
+  "memory_estimates_not_measured": {
+    "longest_sample_full_logits_bf16_gib": 10.475350618362427,
+    "longest_sample_full_logits_fp32_gib": 20.950701236724854,
+    "fp32_params_grads_adam_states_per_rank_gib": 61.025733947753906,
+    "bf16_export_one_model_gib": 15.256433486938477,
+    "fp32_export_one_model_gib": 30.512866973876953
+  },
+  "historical_failure_note": "Deleted runs were inspected in the previous task turn. The final run received SIGKILL; the available evidence does not establish host OOM as its cause.",
+  "pending_before_training": [
+    "completion-only logits implementation and equivalence checks",
+    "explicit parameter/optimizer dtype handling",
+    "deterministic stress probe independent of training seed",
+    "resumable checkpoint save/load and disk budget checks",
+    "two-GPU stress and recovery tests after explicit user instruction"
+  ]
+}
