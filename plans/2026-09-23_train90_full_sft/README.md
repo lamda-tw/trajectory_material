@@ -4,7 +4,7 @@
 
 用户要求先保存工作区，再准备训练，收到明确训练指令后才能开始。本轮没有加载 Qwen3 模型、执行 forward/backward/update、启动 torchrun 或 GPU smoke，也没有创建新的实验目录。
 
-准备前的工作区基线：`ff977cc71f7a8b697d935507bcee6b9a44e34480`。方案分支：`codex/prepare-train90-full-sft`。
+准备前的工作区基线：`ff977cc71f7a8b697d935507bcee6b9a44e34480`。方案提交已保留在 `main`，后续直接在 `main` 上用不同 commit 区分版本。
 
 - [配置草案](training_plan.json)：描述拟采用的实验契约，**现有 launcher 尚不读取这个文件，不是已验证的启动配置**。
 - [CPU 核验结果](preflight_cpu.json)：数据哈希、token 长度、模型参数数目与资源快照。
