@@ -2,6 +2,7 @@
 """Build a factual Chinese report for the five-epoch train90 full SFT run."""
 import argparse
 import json
+from datetime import datetime
 from pathlib import Path
 
 
@@ -22,6 +23,8 @@ def main():
     compare=load(exp/'metrics/loss_comparison_summary.json')
     gen_path=exp/'metrics/generation_smoke.json'
     gen=load(gen_path) if gen_path.exists() else {'status':'NOT_AVAILABLE','python_block_count':0}
+    timing=load(exp/'config/execution_timing.json')
+    wall_hours=(datetime.fromisoformat(met['finished_at_utc'])-datetime.fromisoformat(timing['formal_first_launch_time'])).total_seconds()/3600
     tr,model=met['training'],met['model']
     val=met['validation']
     assert met['status']=='SUCCESS' and tr['epochs_completed']==5 and tr['global_steps']==2925
@@ -40,7 +43,7 @@ def main():
     event_last=resources[-1].get('memory.events','')
     old=compare['series'][0]['epoch_mean_loss']
     epoch_rows='\n'.join(f"| {r['epoch']} | {r['steps']} | {r['mean_loss']:.6f} | {r['first_20_mean_loss']:.6f} | {r['last_20_mean_loss']:.6f} | {old[r['epoch']-1]:.6f} |" for r in loss['epoch_summaries'])
-    gpu_rows='\n'.join(f"| {r['rank']} | {r['peak_allocated_gib']:.2f} | {r['peak_reserved_gib']:.2f} |" for r in met['distributed']['ranks'])
+    gpu_rows='\n'.join(f"| {r['rank']} | {max(r['peak_allocated_gib'],max(h['ranks'][r['rank']]['peak_allocated_gib'] for h in history)):.2f} | {r['peak_reserved_gib']:.2f} |" for r in met['distributed']['ranks'])
     probe_peaks=[max(a['peak_allocated_gib'],b['peak_allocated_gib']) for a,b in zip(first['distributed']['ranks'],probe['distributed']['ranks'])]
     first50=sum(r['train_loss'] for r in history[:50])/50
     last50=sum(r['train_loss'] for r in history[-50:])/50
@@ -114,11 +117,12 @@ probe 的权重和续训状态已在验证成功后清理；正式训练重新�
 
 ## 资源、耗时与保存策略
 
-| rank | 正式训练峰值 allocated（GiB） | 峰值 reserved（GiB） |
+| rank | 正式训练峰值 allocated（GiB） | 恢复后进程峰值 reserved（GiB） |
 |---:|---:|---:|
 {gpu_rows}
 
-- 正式训练、续训检查点保存、诊断和最终模型导出耗时：**{tr['elapsed_seconds']/3600:.2f} 小时**；不含此前数据准备、probe 和之后重载生成。
+- 从首次正式启动至最终模型导出的实际墙钟时间：**{wall_hours:.2f} 小时**，包括数据/模型加载、第 100 步保存与恢复切换、各轮保存、诊断和导出；不含此前 probe 与之后重载生成。起始时间见 `config/execution_timing.json`，结束时间见 `metrics/metrics.json`。
+- Trainer 累计计时为 **{tr['elapsed_seconds']/3600:.2f} 小时**；恢复沿用保存前的计时值，因此不含第 100 步保存本身、切换间隔和重新加载时间。
 - 每 5 秒采样的容器 RAM 使用峰值约 **{ram_peak:.2f} GiB**，容器上限 220 GiB；采样可能漏掉更短暂的峰值。
 - 采样到的最小磁盘可用量约 **{disk_min:.2f} GiB**。资源原始记录：`logs/resource_usage.jsonl`。
 - cgroup memory.events 采样起点：`{event_first.replace(chr(10), '; ')}`；报告生成前末次：`{event_last.replace(chr(10), '; ')}`。
