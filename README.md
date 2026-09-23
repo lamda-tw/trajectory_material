@@ -191,4 +191,11 @@ Git 只保留轻量报告、聚合元数据和复现配置；`logs/`、`cache/`�
 
 - 已保存工作区基线，并对照 train90 LoRA 与旧 67 轨迹全量 SFT，完成 [训练方案、配置草案和 CPU 核验](plans/2026-09-23_train90_full_sft/README.md)。
 - 拟使用同一原始 Qwen3-8B、90 条轨迹的 1170 个决策样本、40960 上下文和 5 轮训练，更新全部参数；规划更低学习率、completion 位置 logits 优化与完整断点续训。
-- 当前仅完成方案与数据/环境核查。训练器改造、存储容量安排和双卡预检尚未执行，等待明确训练指令后再推进训练。
+- 以上为训练授权前的准备记录；后续已完成训练器改造、双卡预检与正式五轮训练，实际结果见下节。
+
+## 2026-09-23：train90 全参数 SFT 五轮实验
+
+- 从原始 Qwen3-8B 开始，对与 train90 LoRA 相同的 90 条轨迹、1170 个决策样本完成 5 轮 / 2925 步训练，全部 8,190,735,360 个参数参与优化。FP32 主参数与 AdamW 状态，BF16 计算和最终权重；最大训练序列 37015 tokens，额外 token 截断为 0。
+- 每轮平均 loss：`0.589548 → 0.274838 → 0.129335 → 0.053033 → 0.016795`。正式启动到模型导出约 3.36 小时，包含保存和第 100 步保存频率切换的恢复过程，不含此前预检。
+- 按用户要求每轮末保存一次，只保留最新完整续训状态与最终 BF16 模型。模型重载/输出格式、399 个权重 tensor 的名称形状、完整参数数量和 SHA-256 核验均通过；尚未运行本次模型的 Dev/test 评测。训练 loss 不代表任务成功率。
+- [中文报告](experiments/2026-09-23_093106_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5/REPORT.md) · [本次五轮 loss](experiments/2026-09-23_093106_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5/metrics/loss_curve_total_5epochs.png) · [与旧 67 轨迹的 loss 对比](experiments/2026-09-23_093106_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5/metrics/loss_curve_compare_full_sft_67_vs_90.png) · [独立核验记录](experiments/2026-09-23_093106_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5/metrics/final_artifact_validation.json)。PDF、逐步 CSV、复现命令和完整指标均在同一实验目录。

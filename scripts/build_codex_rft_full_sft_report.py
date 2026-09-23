@@ -16,6 +16,8 @@ def main():
     args=parser.parse_args()
     exp=args.experiment.resolve()
     cfg=load(exp/'config/training_config.json')
+    restart_pointer=load(exp/'artifacts/restart/latest.json')
+    runtime=load(exp/'artifacts/restart'/restart_pointer['directory']/'COMPLETE.json')['contract']
     met=load(exp/'metrics/metrics.json')
     probe=load(exp/'probe/metrics/metrics.json')
     first=load(exp/'probe/metrics/before_restart.json')
@@ -27,6 +29,9 @@ def main():
     timing=load(timing_path) if timing_path.exists() else {}
     wall_hours=((datetime.fromisoformat(met['finished_at_utc'])-datetime.fromisoformat(timing['formal_first_launch_time'])).total_seconds()/3600 if timing.get('formal_first_launch_time') else None)
     wall_time_text=f'{wall_hours:.2f} 小时' if wall_hours is not None else '未记录首次启动时间，不能据 Trainer 计时推断墙钟时间'
+    audit_path=exp/'metrics/final_artifact_validation.json'
+    audit=load(audit_path) if audit_path.exists() else None
+    audit_note=(f"- 独立产物核验：**{audit['status']}**；完整 {audit['final_model_tensor_count']} 个 BF16 tensor 的名称/形状与基座一致，权重 SHA-256、数据/训练源码哈希、五轮连续日志及检查点保留情况均通过。详见 [核验 JSON](metrics/final_artifact_validation.json)。" if audit else '')
     tr,model=met['training'],met['model']
     val=met['validation']
     assert met['status']=='SUCCESS' and tr['epochs_completed']==5 and tr['global_steps']==2925
@@ -77,6 +82,8 @@ def main():
 | 项目 | 实际设置 |
 |---|---|
 | 基座 | `{model['source_base_model']}` |
+| GPU | 2 × {met['distributed']['ranks'][0]['device_name']} |
+| 框架 | PyTorch {runtime['torch']}；Transformers {runtime['transformers']} |
 | 分布式 | 两张 GPU，FSDP FULL_SHARD，按 Qwen3DecoderLayer 包装 |
 | 参数 / 梯度归约 / AdamW 状态 | FP32 |
 | 前后向计算 / 最终 HF 权重 | BF16 |
@@ -142,6 +149,7 @@ probe 的权重和续训状态已在验证成功后清理；正式训练重新�
 - 最终模型从磁盘重新加载并生成 ReAct Python：**{gen.get('status')}**；非空 Python fenced code block 数为 {gen.get('python_block_count')}。此检查仅验证模型可加载和输出格式，不执行 AppWorld 任务。
 - 完整指标：`metrics/metrics.json`；连续 2925 步历史：`metrics/training_history.jsonl`。
 - 最终权重 SHA-256：`metrics/final_model_weights.sha256`；代码、配置及轻量产物清单：`artifacts.sha256`。
+{audit_note}
 - 配置、代码快照及复现命令分别位于 `config/`、`scripts_snapshot/`、`command.txt`；数据和原始基座均未修改。
 
 ## 后续评测

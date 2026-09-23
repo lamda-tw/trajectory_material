@@ -1,0 +1,18 @@
+{
+  "initial_implementation_commit": "b28b1ac",
+  "failure_stage": "stress_probe_resume",
+  "failure": "per-rank elapsed_seconds compared as shared exact state",
+  "confirmed_differences": {
+    "rank0": {},
+    "rank1": {
+      "elapsed_seconds": [
+        524.2187325954437,
+        524.7025864124298
+      ]
+    }
+  },
+  "data_and_hyperparameter_contracts_matched": true,
+  "fix": "broadcast rank0 progress when saving; compare deterministic progress fields when loading; explicit code-hash-only exception for this probe recovery",
+  "regression_tests": "CPU single-rank and two-rank exact next update passed",
+  "formal_training_started_at_fix": false
+}

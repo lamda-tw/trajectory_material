@@ -1,0 +1,39 @@
+{
+  "smoothing": "causal moving average over about 0.1 epoch",
+  "not_a_controlled_generalization_comparison": true,
+  "confounders": [
+    "training tasks and trajectory source",
+    "640 vs 1170 decision samples",
+    "2e-4 constant vs 1e-5 warmup/cosine LR",
+    "32768 vs 40960 context limit",
+    "BF16 vs FP32 master parameters and optimizer state"
+  ],
+  "series": [
+    {
+      "name": "Full SFT: 67 trajectories (old)",
+      "source": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_130022_appworld_qwen3_8b_react_full_sft_67",
+      "steps_per_epoch": 320,
+      "smoothing_window": 32,
+      "epoch_mean_loss": [
+        1.166161174606532,
+        0.6290379266720265,
+        0.3716761443763971,
+        0.2393895993824117,
+        0.1669180854165461
+      ]
+    },
+    {
+      "name": "Full SFT: 90 Codex trajectories (new)",
+      "source": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_093106_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5",
+      "steps_per_epoch": 585,
+      "smoothing_window": 58,
+      "epoch_mean_loss": [
+        0.5895483820356875,
+        0.27483779405936215,
+        0.12933522724251972,
+        0.053033379343005976,
+        0.016795193160973967
+      ]
+    }
+  ]
+}
