@@ -118,7 +118,7 @@ class CompletionOnlyDataset(Dataset):
 @dataclass
 class CompletionCollator:
     pad_token_id: int
-    pad_to_multiple_of: int = 8
+    pad_to_multiple_of: int = 1
 
     def __call__(self, features: list[dict[str, torch.Tensor]]) -> dict[str, torch.Tensor]:
         max_length = max(feature["input_ids"].numel() for feature in features)
@@ -450,6 +450,7 @@ def main() -> None:
         "sequential_sampler": args.sequential_sampler, "torch": torch.__version__,
         "transformers": __import__("transformers").__version__,
         "parameters": total_parameters, "master_dtype": "float32",
+        "pad_to_multiple_of": collator.pad_to_multiple_of,
     }
     global_step, start_epoch, consumed_batches = 0, 0, 0
     elapsed_before = 0.0
@@ -667,6 +668,7 @@ def main() -> None:
                 "per_gpu_batch_size": 1,
                 "global_batch_size": world_size,
                 "gradient_accumulation_steps": 1,
+                "pad_to_multiple_of": collator.pad_to_multiple_of,
                 "learning_rate": args.learning_rate,
                 "lr_schedule": "linear_warmup_then_cosine_decay",
                 "schedule_steps": schedule_steps,

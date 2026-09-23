@@ -47,6 +47,16 @@ class RuntimeTests(unittest.TestCase):
                 self.assertIsNotNone(q.grad, name)
                 torch.testing.assert_close(q.grad, p.grad, rtol=5e-5, atol=2e-6, msg=name)
 
+    def test_omit_right_padding_preserves_loss_and_gradients(self):
+        padded = tiny_model()
+        unpadded = copy.deepcopy(padded)
+        a = completion_loss(padded, batch(4, 3))
+        b = completion_loss(unpadded, batch(4, 0))
+        torch.testing.assert_close(a, b, rtol=2e-6, atol=2e-7)
+        a.backward(); b.backward()
+        for (name, p), (_, q) in zip(padded.named_parameters(), unpadded.named_parameters()):
+            torch.testing.assert_close(p.grad, q.grad, rtol=5e-5, atol=2e-6, msg=name)
+
     def test_reject_invalid_supervision(self):
         b = batch()
         b['labels'].fill_(-100)

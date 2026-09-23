@@ -86,6 +86,8 @@ def main():
 
 旧实现虽然屏蔽了 prompt label，仍对完整长序列构造词表 logits。本次只对预测 completion 的 hidden-state 位置计算 logits，并保持 causal 标签移位正确；全部上下文仍经过 transformer，梯度回传到全部参数。
 
+正式训练每卡 batch=1，不再把序列补齐到 8 的倍数，避免仅为末尾 padding 生成长序列的显式 attention mask，让 SDPA 使用原生 causal/GQA 路径；真实输入和监督 token 不变。CPU 回归测试另外比较了有/无末尾 padding 的 loss 与全部参数梯度。20 步 GPU 压力预检使用此前 padding=8 的较高开销路径，正式训练的实际 padding 设置为 {tr.get('pad_to_multiple_of',8)}。
+
 CPU 微型 Qwen3 回归测试覆盖不同 completion 长度、padding、首个目标 token，并逐参数比较 loss/梯度；另验证了恢复后的下一次更新和 scheduler 与连续执行完全一致。记录见 `logs/00_cpu_tests.log`。
 
 正式训练前完成 **20 步真实双卡压力预检**：先用短样本初始化 AdamW 状态，覆盖最长 6 条样本、最长 completion、16K/24K 附近长度和长短交替，并交换 rank。第 10 步保存 FP32 参数与 optimizer 后退出进程，重新加载继续至第 20 步，随后完成诊断 forward。两个进程阶段的峰值 allocated 分别合并为 rank0={probe_peaks[0]:.2f} GiB、rank1={probe_peaks[1]:.2f} GiB。

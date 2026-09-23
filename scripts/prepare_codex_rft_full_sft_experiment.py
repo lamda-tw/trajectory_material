@@ -211,6 +211,8 @@ def main() -> None:
         "optimizer_state_dtype": "float32",
         "gradient_reduce_dtype": "float32",
         "logits_policy": "causal_completion_positions_only",
+        "pad_to_multiple_of": 1,
+        "padding_policy": "none for per-rank batch size 1, allowing native SDPA causal/GQA dispatch",
         "checkpoint_policy": "latest atomic resumable FP32 shards every 100 steps and epoch end; final BF16 HF model only",
         "intermediate_hf_models_retained": False,
         "storage_policy_reason": "196.7 GiB available: keep up to two restart versions during save, remove old only after commit; preserve final model and all five epochs of loss",
