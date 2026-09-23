@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Any
 
 import torch
+from full_sft_runtime import completion_loss, save_restart, load_restart, sha256_file
 import torch.distributed as dist
 from torch.distributed.fsdp import (
     BackwardPrefetch,
@@ -223,6 +224,8 @@ def save_full_hf_model(
         if temporary.exists():
             shutil.rmtree(temporary)
         temporary.mkdir(parents=True)
+        full_state = {name: tensor.to(torch.bfloat16) if tensor.is_floating_point() else tensor
+                      for name, tensor in full_state.items()}
         old_use_cache = fsdp_model.module.config.use_cache
         fsdp_model.module.config.use_cache = True
         fsdp_model.module.save_pretrained(
@@ -233,6 +236,10 @@ def save_full_hf_model(
         )
         fsdp_model.module.config.use_cache = old_use_cache
         tokenizer.save_pretrained(temporary)
+        exported_config = json.loads((temporary / "config.json").read_text())
+        exported_config["dtype"] = "bfloat16"
+        exported_config["torch_dtype"] = "bfloat16"
+        atomic_json(temporary / "config.json", exported_config)
         if destination.exists():
             raise FileExistsError(f"refusing to replace existing model directory: {destination}")
         temporary.replace(destination)
@@ -257,18 +264,22 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--experiment-dir", type=Path, required=True)
     parser.add_argument("--max-length", type=int, default=40960)
     parser.add_argument("--epochs", type=int, default=5)
-    parser.add_argument("--learning-rate", type=float, default=2e-4)
+    parser.add_argument("--learning-rate", type=float, default=1e-5)
     parser.add_argument("--weight-decay", type=float, default=0.0)
     parser.add_argument("--warmup-ratio", type=float, default=0.03)
     parser.add_argument("--min-lr-ratio", type=float, default=0.1)
     parser.add_argument("--max-grad-norm", type=float, default=1.0)
     parser.add_argument("--activation-cpu-offload", action="store_true")
     parser.add_argument("--activation-offload-threshold", type=int, default=0)
-    parser.add_argument("--seed", type=int, default=20260915)
+    parser.add_argument("--seed", type=int, default=20260921)
     parser.add_argument("--max-steps", type=int, default=0)
     parser.add_argument("--skip-validation", action="store_true")
     parser.add_argument("--skip-model-save", action="store_true")
     parser.add_argument("--save-every-epoch", action="store_true")
+    parser.add_argument("--sequential-sampler", action="store_true")
+    parser.add_argument("--checkpoint-every", type=int, default=0)
+    parser.add_argument("--resume", type=Path)
+    parser.add_argument("--stop-after-step", type=int, default=0)
     return parser.parse_args()
 
 
@@ -314,7 +325,7 @@ def main() -> None:
     base_model = AutoModelForCausalLM.from_pretrained(
         model_path,
         local_files_only=True,
-        dtype=torch.bfloat16,
+        dtype=torch.float32,
         low_cpu_mem_usage=True,
         attn_implementation="sdpa",
     )
@@ -337,7 +348,7 @@ def main() -> None:
     )
     mixed_precision = MixedPrecision(
         param_dtype=torch.bfloat16,
-        reduce_dtype=torch.bfloat16,
+        reduce_dtype=torch.float32,
         buffer_dtype=torch.bfloat16,
         cast_forward_inputs=True,
     )
@@ -354,7 +365,7 @@ def main() -> None:
     )
 
     train_sampler = DistributedSampler(
-        train_dataset, num_replicas=world_size, rank=rank, shuffle=True, seed=args.seed
+        train_dataset, num_replicas=world_size, rank=rank, shuffle=not args.sequential_sampler, seed=args.seed
     )
     validation_sampler = DistributedSampler(
         validation_dataset, num_replicas=world_size, rank=rank, shuffle=False
@@ -366,6 +377,7 @@ def main() -> None:
         collate_fn=collator,
         num_workers=0,
         pin_memory=True,
+        generator=torch.Generator().manual_seed(args.seed + rank),
     )
     validation_loader = DataLoader(
         validation_dataset,
@@ -374,6 +386,7 @@ def main() -> None:
         collate_fn=collator,
         num_workers=0,
         pin_memory=True,
+        generator=torch.Generator().manual_seed(args.seed + rank),
     )
     optimizer = torch.optim.AdamW(
         model.parameters(),
@@ -423,15 +436,49 @@ def main() -> None:
     started = time.time()
     history: list[dict[str, Any]] = []
     history_path = metrics_dir / "training_history.jsonl"
-    history_handle = history_path.open("w", encoding="utf-8") if rank == 0 else None
-    global_step = 0
-    epochs_completed = 0
+    contract = {
+        "train_sha256": sha256_file(args.train_json),
+        "validation_sha256": sha256_file(args.validation_json),
+        "model_config_sha256": sha256_file(model_path / "config.json"),
+        "trainer_sha256": sha256_file(Path(__file__)),
+        "runtime_sha256": sha256_file(Path(__file__).with_name("full_sft_runtime.py")),
+        "seed": args.seed, "epochs": args.epochs, "schedule_steps": schedule_steps,
+        "max_length": args.max_length, "lr": args.learning_rate,
+        "weight_decay": args.weight_decay, "warmup_ratio": args.warmup_ratio,
+        "min_lr_ratio": args.min_lr_ratio, "max_grad_norm": args.max_grad_norm,
+        "sequential_sampler": args.sequential_sampler, "torch": torch.__version__,
+        "transformers": __import__("transformers").__version__,
+        "parameters": total_parameters, "master_dtype": "float32",
+    }
+    global_step, start_epoch, consumed_batches = 0, 0, 0
+    elapsed_before = 0.0
+    if args.resume:
+        restored = load_restart(model, optimizer, lr_scheduler, args.resume, contract)
+        global_step = restored["global_step"]
+        start_epoch = restored["epoch_index"]
+        consumed_batches = restored["consumed_batches"]
+        elapsed_before = restored["elapsed_seconds"]
+        if rank == 0:
+            history = [json.loads(line) for line in history_path.read_text().splitlines()
+                       if line.strip() and json.loads(line)["step"] <= global_step]
+            if [r["step"] for r in history] != list(range(1, global_step + 1)):
+                raise ValueError("restart loss history is incomplete")
+            history_path.write_text("".join(json.dumps(r) + "\n" for r in history))
+            print(json.dumps({"event": "restart_loaded", **restored}), flush=True)
+    elif history_path.exists() and history_path.stat().st_size:
+        raise FileExistsError("existing training history requires --resume")
+    history_handle = history_path.open("a", encoding="utf-8") if rank == 0 else None
+    started = time.time() - elapsed_before
+    epochs_completed = start_epoch
     stop_training = False
+    controlled_stop = False
     model.train()
-    for epoch_index in range(args.epochs):
+    for epoch_index in range(start_epoch, args.epochs):
         epoch = epoch_index + 1
         train_sampler.set_epoch(epoch_index)
-        for batch in train_loader:
+        for batch_index, batch in enumerate(train_loader):
+            if epoch_index == start_epoch and batch_index < consumed_batches:
+                continue
             batch = {key: value.to(device, non_blocking=True) for key, value in batch.items()}
             optimizer.zero_grad(set_to_none=True)
             sequence_length = int(batch["input_ids"].shape[1])
@@ -446,7 +493,7 @@ def main() -> None:
             )
             with activation_context:
                 with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
-                    loss = model(**batch).loss
+                    loss = completion_loss(model, batch)
             if not torch.isfinite(loss):
                 raise FloatingPointError(f"non-finite loss at epoch={epoch}, step={global_step + 1}")
             step_learning_rate = float(optimizer.param_groups[0]["lr"])
@@ -457,10 +504,26 @@ def main() -> None:
                     f"non-finite gradient norm at epoch={epoch}, step={global_step + 1}"
                 )
             optimizer.step()
+            if global_step == 0:
+                if any(p.dtype != torch.float32 for p in model.parameters()):
+                    raise RuntimeError("master parameters are not FP32")
+                if any(state[key].dtype != torch.float32 for state in optimizer.state.values()
+                       for key in ("exp_avg", "exp_avg_sq")):
+                    raise RuntimeError("AdamW state is not FP32")
             lr_scheduler.step()
             global_step += 1
             mean_loss = reduce_mean(loss, world_size)
+            rank_step = {
+                "rank": rank, "sequence_length": sequence_length,
+                "completion_tokens": int((batch["labels"][:, 1:] != -100).sum()),
+                "allocated_gib": torch.cuda.memory_allocated(device) / 1024**3,
+                "reserved_gib": torch.cuda.memory_reserved(device) / 1024**3,
+                "peak_allocated_gib": torch.cuda.max_memory_allocated(device) / 1024**3,
+            }
+            rank_steps = [None] * world_size
+            dist.all_gather_object(rank_steps, rank_step)
             event = {
+                "ranks": rank_steps,
                 "epoch": epoch,
                 "step": global_step,
                 "train_loss": mean_loss,
@@ -476,6 +539,24 @@ def main() -> None:
                 history_handle.write(json.dumps(event, ensure_ascii=False) + "\n")
                 history_handle.flush()
                 print(json.dumps({"event": "train_step", **event}), flush=True)
+            # Clear gradients before copying checkpoint shards to CPU.
+            optimizer.zero_grad(set_to_none=True)
+            if args.checkpoint_every and (
+                global_step % args.checkpoint_every == 0
+                or batch_index + 1 == len(train_loader)
+                or (args.stop_after_step and global_step == args.stop_after_step)
+            ):
+                at_epoch_end = batch_index + 1 == len(train_loader)
+                save_restart(model, optimizer, lr_scheduler, artifacts_dir / "restart", {
+                    "global_step": global_step,
+                    "epoch_index": epoch_index + int(at_epoch_end),
+                    "consumed_batches": 0 if at_epoch_end else batch_index + 1,
+                    "elapsed_seconds": time.time() - started,
+                }, contract)
+            if args.stop_after_step and global_step >= args.stop_after_step:
+                controlled_stop = True
+                stop_training = True
+                break
             if args.max_steps and global_step >= args.max_steps:
                 stop_training = True
                 break
@@ -511,7 +592,7 @@ def main() -> None:
             for batch in validation_loader:
                 batch = {key: value.to(device, non_blocking=True) for key, value in batch.items()}
                 with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
-                    loss = model(**batch).loss
+                    loss = completion_loss(model, batch)
                 target_count = (batch["labels"][:, 1:] != -100).sum().double()
                 local_loss_sum += loss.double() * target_count
                 local_token_count += target_count
@@ -540,7 +621,7 @@ def main() -> None:
     dist.all_gather_object(gpu_ranks, local_gpu)
 
     if rank == 0:
-        status = "PROBE_SUCCESS" if args.max_steps else "SUCCESS"
+        status = "STOPPED_FOR_RESUME" if controlled_stop else ("PROBE_SUCCESS" if args.max_steps else "SUCCESS")
         epoch_summaries = [epoch_summary(history, epoch) for epoch in range(1, args.epochs + 1)]
         epoch_summaries = [row for row in epoch_summaries if int(row["steps"]) > 0]
         metrics = {
@@ -561,6 +642,10 @@ def main() -> None:
                 "source_base_model": str(model_path),
                 "method": "full_parameter_sft",
                 "dtype": "bfloat16",
+                "master_parameter_dtype": "float32",
+                "optimizer_state_dtype": "float32",
+                "gradient_reduce_dtype": "float32",
+                "logits_policy": "causal_completion_positions_only",
                 "attention": "sdpa",
                 "trainable_parameters": trainable_parameters,
                 "total_parameters": total_parameters,
@@ -592,6 +677,9 @@ def main() -> None:
                 "activation_cpu_offload": args.activation_cpu_offload,
                 "activation_offload_threshold": args.activation_offload_threshold,
                 "optimizer": "fused AdamW",
+                "checkpoint_every": args.checkpoint_every,
+                "restart_policy": "latest_complete_same_topology_shards",
+                "resume_from": str(args.resume) if args.resume else None,
                 "loss_policy": "assistant_completion_only",
                 "enable_thinking": False,
                 "gradient_checkpointing": True,

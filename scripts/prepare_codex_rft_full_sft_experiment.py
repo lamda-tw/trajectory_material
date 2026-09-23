@@ -60,7 +60,7 @@ def main() -> None:
     parser.add_argument("--min-lr-ratio", type=float, default=0.1)
     parser.add_argument("--max-grad-norm", type=float, default=1.0)
     parser.add_argument("--activation-offload-threshold", type=int, default=24576)
-    parser.add_argument("--seed", type=int, default=20260922)
+    parser.add_argument("--seed", type=int, default=20260921)
     args = parser.parse_args()
 
     dataset_dir = args.dataset_dir.resolve()
@@ -131,18 +131,32 @@ def main() -> None:
         for _, group in sorted(task_rows.items())
     ]
     probe_rows = [item[2] for item in rendered[:2]]
-    # Dataset indices 0/1 are the longest rows and 2/3 are short rows. With the
-    # fixed seed and a four-row DistributedSampler, permutation [2,3,0,1]
-    # initializes AdamW state on short rows before exercising both longest rows.
-    optimizer_state_probe_rows = [
-        rendered[0][2], rendered[1][2], rendered[-1][2], rendered[-2][2]
-    ]
+    # Explicit sequential order: warm optimizer state, then long/short stress,
+    # swapping the two ranks so both process every extreme length.
+    pairs = [(rendered[-1], rendered[-2])]
+    for index in (0, 2, 4):
+        pairs += [(rendered[index], rendered[index + 1]),
+                  (rendered[index + 1], rendered[index])]
+    longest_completion = max(rendered, key=lambda item: item[1])
+    around_16k = min(rendered, key=lambda item: abs(item[0] - 16384))
+    around_24k = min(rendered, key=lambda item: abs(item[0] - 24576))
+    pairs += [(longest_completion, rendered[0]), (rendered[0], longest_completion),
+              (around_16k, around_24k), (around_24k, around_16k),
+              (rendered[0], rendered[-1]), (rendered[-1], rendered[0])]
+    pairs = (pairs + pairs[1:])[:20]
+    stress_rows = [item[2] for pair in pairs for item in pair]
     diagnostic_path = output_dir / "diagnostic_last_step_per_task.jsonl"
     probe_path = output_dir / "probe_two_longest.jsonl"
-    optimizer_probe_path = output_dir / "probe_optimizer_state_then_longest.jsonl"
+    stress_path = output_dir / "probe_stress_40.jsonl"
     write_jsonl(diagnostic_path, diagnostic_rows)
     write_jsonl(probe_path, probe_rows)
-    write_jsonl(optimizer_probe_path, optimizer_state_probe_rows)
+    write_jsonl(stress_path, stress_rows)
+    (output_dir / "probe_schedule.json").write_text(json.dumps([
+        {"step": step + 1, "ranks": [
+            {"rank": rank, "id": item[2]["id"], "tokens": item[0], "completion_tokens": item[1]}
+            for rank, item in enumerate(pair)]}
+        for step, pair in enumerate(pairs)
+    ], ensure_ascii=False, indent=2) + "\n")
 
     token_lengths = sorted(item[0] for item in rendered)
     completion_lengths = sorted(item[1] for item in rendered)
@@ -187,13 +201,21 @@ def main() -> None:
         "optimizer": "fused AdamW",
         "gradient_checkpointing": True,
         "gradient_checkpointing_impl": "reentrant",
-        "activation_cpu_offload": True,
+        "activation_cpu_offload": False,
         "activation_offload_threshold": args.activation_offload_threshold,
         "fsdp_backward_prefetch": "BACKWARD_POST",
         "seed": args.seed,
         "attention": "sdpa",
         "dtype": "bfloat16",
-        "probe_policy": "step1 initializes AdamW state on two shortest rows; step2 exercises the two longest rows",
+        "master_parameter_dtype": "float32",
+        "optimizer_state_dtype": "float32",
+        "gradient_reduce_dtype": "float32",
+        "logits_policy": "causal_completion_positions_only",
+        "checkpoint_policy": "latest atomic resumable FP32 shards every 100 steps and epoch end; final BF16 HF model only",
+        "intermediate_hf_models_retained": False,
+        "storage_policy_reason": "196.7 GiB available: keep up to two restart versions during save, remove old only after commit; preserve final model and all five epochs of loss",
+        "minimum_initial_free_disk_gib": 192,
+        "probe_policy": "20 deterministic two-rank updates, optimizer warmup, six longest rows, longest completion, length boundaries, rank swaps, restart after step 10",
         "probe_samples": [
             {"id": row["id"], "tokens": total, "completion_tokens": completion}
             for total, completion, row in rendered[:2]
