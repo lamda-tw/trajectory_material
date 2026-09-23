@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 workspace="/root/autodl-tmp/workspace-tw"
-[[ $# -eq 1 ]] || { echo "Usage: $0 EXPERIMENT_DIR" >&2; exit 2; }
+[[ $# -ge 1 && $# -le 2 ]] || { echo "Usage: $0 EXPERIMENT_DIR [--resume]" >&2; exit 2; }
+resume=false
+if [[ $# -eq 2 ]]; then [[ "$2" == --resume ]] || exit 2; resume=true; fi
 experiment="$(realpath -e "$1")"
 [[ "$experiment" == "$workspace"/experiments/*_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5 ]] || exit 2
 [[ -f "$experiment/config/training_config.json" ]] || exit 2
-[[ ! -f "$experiment/metrics/training_history.jsonl" ]] || { echo 'Use an explicit restart, not a fresh launcher, for an existing run.' >&2; exit 2; }
+if [[ "$resume" == true ]]; then
+  [[ -f "$experiment/artifacts/restart/latest.json" ]] || { echo 'No completed restart state found.' >&2; exit 2; }
+else
+  [[ ! -f "$experiment/metrics/training_history.jsonl" ]] || { echo 'Use --resume for an existing run.' >&2; exit 2; }
+fi
 python_bin="$workspace/.conda-training/bin/python"
 torchrun_bin="$workspace/.conda-training/bin/torchrun"
 base_model="/root/autodl-tmp/models/Qwen3-8B"
@@ -41,18 +47,21 @@ cleanup() {
 trap cleanup EXIT
 set_stage() { stage="$1"; printf 'RUNNING stage=%s updated_at=%s\n' "$stage" "$(date --iso-8601=seconds)" > "$experiment/STATUS.txt"; }
 cp "$workspace/scripts/"{full_sft_train_fsdp_scheduled.py,full_sft_runtime.py,prepare_codex_rft_full_sft_experiment.py,test_full_sft_runtime.py,test_full_sft_distributed_resume.py,monitor_full_sft_resources.py,run_codex_rft_full_sft_train90.sh,ddp_probe.py} "$experiment/scripts_snapshot/"
+environment_file="$experiment/environment.txt"
+if [[ "$resume" == true ]]; then environment_file="$experiment/environment_resume.txt"; fi
 {
   printf 'workspace_commit=%s\n' "$(git -C "$workspace" rev-parse HEAD)"
   "$python_bin" -c 'import torch,transformers; print("torch="+torch.__version__); print("transformers="+transformers.__version__)'
   nvidia-smi --query-gpu=index,name,driver_version,memory.total --format=csv
   df -h "$workspace"
-} > "$experiment/environment.txt"
+} > "$environment_file"
 git -C "$workspace" diff > "$experiment/scripts_snapshot/workspace.patch"
 "$python_bin" "$workspace/scripts/monitor_full_sft_resources.py" --experiment "$experiment" &
 monitor_pid=$!
+common=(--model "$base_model" --max-length 40960 --learning-rate 1e-5 --weight-decay 0 --max-grad-norm 1 --seed 20260921)
+if [[ "$resume" == false ]]; then
 set_stage ddp_probe
 "$torchrun_bin" --standalone --nproc_per_node=2 "$workspace/scripts/ddp_probe.py" 2>&1 | tee "$experiment/logs/02_ddp_probe.log"
-common=(--model "$base_model" --max-length 40960 --learning-rate 1e-5 --weight-decay 0 --max-grad-norm 1 --seed 20260921)
 probe=("${common[@]}" --train-json "$experiment/config/probe_stress_40.jsonl" --validation-json "$experiment/config/probe_stress_40.jsonl" --experiment-dir "$experiment/probe" --epochs 1 --warmup-ratio 0 --min-lr-ratio 1 --sequential-sampler --checkpoint-every 10 --skip-model-save)
 if [[ ! -f "$experiment/probe/artifacts/restart/latest.json" ]]; then
 set_stage stress_probe_save
@@ -75,11 +84,19 @@ shutil.rmtree(exp/'probe/artifacts/restart')
 assert shutil.disk_usage(exp).free>192*1024**3
 print('PASS: 20-update dual-GPU stress, validation and real checkpoint reload; probe state removed.')
 PY
+fi
 set_stage training
-train=("${common[@]}" --train-json "$dataset/train.jsonl" --validation-json "$experiment/config/diagnostic_last_step_per_task.jsonl" --experiment-dir "$experiment" --epochs 5 --warmup-ratio 0.03 --min-lr-ratio 0.1 --checkpoint-every 100)
-printf '%q ' "$torchrun_bin" --standalone --nproc_per_node=2 "$workspace/scripts/full_sft_train_fsdp_scheduled.py" "${train[@]}" > "$experiment/command.txt"
-printf '\n' >> "$experiment/command.txt"
-"$torchrun_bin" --standalone --nproc_per_node=2 "$workspace/scripts/full_sft_train_fsdp_scheduled.py" "${train[@]}" 2>&1 | tee "$experiment/logs/04_train_full_sft.log"
+train=("${common[@]}" --train-json "$dataset/train.jsonl" --validation-json "$experiment/config/diagnostic_last_step_per_task.jsonl" --experiment-dir "$experiment" --epochs 5 --warmup-ratio 0.03 --min-lr-ratio 0.1 --checkpoint-every 585)
+command_file="$experiment/command.txt"
+training_log="$experiment/logs/04_train_full_sft.log"
+if [[ "$resume" == true ]]; then
+  train+=(--resume "$experiment/artifacts/restart")
+  command_file="$experiment/command_resume.txt"
+  training_log="$experiment/logs/04b_train_full_sft_resume.log"
+fi
+printf '%q ' "$torchrun_bin" --standalone --nproc_per_node=2 "$workspace/scripts/full_sft_train_fsdp_scheduled.py" "${train[@]}" > "$command_file"
+printf '\n' >> "$command_file"
+"$torchrun_bin" --standalone --nproc_per_node=2 "$workspace/scripts/full_sft_train_fsdp_scheduled.py" "${train[@]}" 2>&1 | tee -a "$training_log"
 "$python_bin" - "$experiment" <<'PY'
 import json,sys
 from pathlib import Path
@@ -102,5 +119,6 @@ if [[ $verify_status -eq 0 ]]; then final_status=SUCCESS; else final_status=SUCC
 printf '%s epochs=5 steps=2925 generation_verify_exit_code=%s finished_at=%s\n' "$final_status" "$verify_status" "$(date --iso-8601=seconds)" > "$experiment/STATUS.txt"
 find "$experiment/config" "$experiment/metrics" "$experiment/scripts_snapshot" -type f -print0 | sort -z | xargs -0 sha256sum > "$experiment/artifacts.sha256"
 sha256sum "$experiment/REPORT.md" "$experiment/EVAL_READY.md" "$experiment/STATUS.txt" "$experiment/command.txt" >> "$experiment/artifacts.sha256"
+if [[ -f "$experiment/command_resume.txt" ]]; then sha256sum "$experiment/command_resume.txt" >> "$experiment/artifacts.sha256"; fi
 sha256sum -c "$experiment/artifacts.sha256" > "$experiment/logs/08_hash_verify.log"
 echo "Full SFT completed: $experiment"

@@ -49,7 +49,7 @@ def main():
 
 ## 结论
 
-本次训练已完成 **5 个连续 epoch、2925 个双卡同步 optimizer steps**。训练状态为 **{met['status']}**，包括模型重载检查的综合状态为 **{result}**。
+本次训练已完成 **累计 5 个 epoch、2925 个双卡同步 optimizer steps**。训练状态为 **{met['status']}**，包括模型重载检查的综合状态为 **{result}**。
 
 从原始 Qwen3-8B 初始化，更新 **{model['trainable_parameters']:,}/{model['total_parameters']:,} 个参数（100%）**，未加载或合并 LoRA。最终完整模型位于 `artifacts/model/`，可供 Transformers 或 vLLM 后续加载。
 
@@ -123,7 +123,8 @@ probe 的权重和续训状态已在验证成功后清理；正式训练重新�
 - 采样到的最小磁盘可用量约 **{disk_min:.2f} GiB**。资源原始记录：`logs/resource_usage.jsonl`。
 - cgroup memory.events 采样起点：`{event_first.replace(chr(10), '; ')}`；报告生成前末次：`{event_last.replace(chr(10), '; ')}`。
 - 因初始可用磁盘约 197 GiB，本次采用**滚动完整续训状态 + 最终 HF 模型**，未保留 epoch 1–4 的独立 HF 权重。所有 epoch 的逐步 loss 均保留。
-- 每 100 步和每轮末保存 `artifacts/restart/` 下的完整 FP32 参数分片、AdamW、scheduler、各 rank RNG、步数和采样进度。新状态全部写入并落盘后，才移除本实验的旧状态；保存期间最多两份。
+- 按用户要求每轮结束（每 585 步）保存一次 `artifacts/restart/` 下的完整 FP32 参数分片、AdamW、scheduler、各 rank RNG、步数和采样进度。仅保留最新一份完整续训状态；新状态全部写入并落盘后，才移除本实验的旧状态，原子替换期间短暂存在两份。
+- 正式训练第 100 步完成一次临时保存，用于将最初的每 100 步保存策略改为每轮保存；随后严格校验训练代码、数据和超参数，从该步恢复 FP32 参数、AdamW、scheduler、RNG 和采样进度，没有重新初始化或重跑训练。切换记录见 `config/checkpoint_cadence_change.json`，恢复命令见 `command_resume.txt`。
 - 最终续训状态为第 2925 步，适用于相同代码、数据哈希、依赖版本、FSDP 包装和双卡拓扑。部署/评测使用 `artifacts/model/`，不是直接加载分片 pickle。
 
 ## 诊断、模型重载与产物核验
