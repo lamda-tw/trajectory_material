@@ -1,0 +1,2846 @@
+{
+  "experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_070617_appworld_qwen3-8b_react_full_sft_codex_rft_train90_test_normal168",
+  "task_count": 168,
+  "scenario_count": 56,
+  "target": {
+    "label": "本次 train90 全参数 SFT",
+    "experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_070617_appworld_qwen3-8b_react_full_sft_codex_rft_train90_test_normal168",
+    "output_root": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_070617_appworld_qwen3-8b_react_full_sft_codex_rft_train90_test_normal168/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/test_normal",
+    "evaluation_path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_070617_appworld_qwen3-8b_react_full_sft_codex_rft_train90_test_normal168/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/test_normal/evaluations/test_normal.json",
+    "evaluation_sha256": "e7fb6fb1346a25967a820dd31b1119ed008db53e39e2f14586a444b845849874",
+    "aggregate": {
+      "task_goal_completion": 16.7,
+      "scenario_goal_completion": 5.4
+    },
+    "success_count": 28,
+    "success_ids": [
+      "024c982_3",
+      "09b0ee6_1",
+      "09b0ee6_2",
+      "1150ed6_2",
+      "1150ed6_3",
+      "13547f5_1",
+      "13547f5_2",
+      "13547f5_3",
+      "270f1ff_1",
+      "31dc501_1",
+      "31dc501_3",
+      "325d6ec_3",
+      "3d9a636_3",
+      "522e5e5_3",
+      "5a83b05_1",
+      "5a83b05_2",
+      "5a83b05_3",
+      "90adc3f_1",
+      "a30375d_3",
+      "afc4005_3",
+      "cef9191_1",
+      "dac78d9_3",
+      "f3f60f0_1",
+      "f3f60f0_2",
+      "f3f60f0_3",
+      "ff58e36_2",
+      "ff58e36_3",
+      "ffe6d5e_3"
+    ],
+    "successful_scenario_count": 3,
+    "successful_scenarios": [
+      "13547f5",
+      "5a83b05",
+      "f3f60f0"
+    ],
+    "difficulty": {
+      "1": {
+        "total": 57,
+        "successes": 20,
+        "tgc": 35.1
+      },
+      "2": {
+        "total": 48,
+        "successes": 7,
+        "tgc": 14.6
+      },
+      "3": {
+        "total": 63,
+        "successes": 1,
+        "tgc": 1.6
+      }
+    },
+    "evaluator_tests": {
+      "passed": 498,
+      "failed": 579,
+      "total": 1077,
+      "pass_percentage": 46.2
+    }
+  },
+  "lora": {
+    "label": "train90 LoRA",
+    "experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_121920_appworld_qwen3-8b_react_lora_codex_rft_train90_test_normal168",
+    "output_root": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_121920_appworld_qwen3-8b_react_lora_codex_rft_train90_test_normal168/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/test_normal",
+    "evaluation_path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_121920_appworld_qwen3-8b_react_lora_codex_rft_train90_test_normal168/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/test_normal/evaluations/test_normal.json",
+    "evaluation_sha256": "bf457d48e7632d1f4cf408f7364d79150043089f7a21ce2ab81b42d1e2911dc3",
+    "aggregate": {
+      "task_goal_completion": 30.4,
+      "scenario_goal_completion": 16.1
+    },
+    "success_count": 51,
+    "success_ids": [
+      "024c982_2",
+      "024c982_3",
+      "09b0ee6_2",
+      "0a9d82a_1",
+      "0a9d82a_2",
+      "0a9d82a_3",
+      "0d01c76_1",
+      "0d01c76_2",
+      "0d01c76_3",
+      "0de03ea_3",
+      "1150ed6_2",
+      "13547f5_2",
+      "13547f5_3",
+      "166f4ff_1",
+      "166f4ff_2",
+      "166f4ff_3",
+      "21abae1_1",
+      "31dc501_1",
+      "31dc501_2",
+      "31dc501_3",
+      "325d6ec_2",
+      "325d6ec_3",
+      "425a494_1",
+      "552869a_2",
+      "59fae45_1",
+      "59fae45_2",
+      "5a83b05_1",
+      "5a83b05_2",
+      "5a83b05_3",
+      "7847649_1",
+      "7847649_2",
+      "8749218_1",
+      "8749218_3",
+      "9ef798c_1",
+      "afc4005_1",
+      "afc4005_2",
+      "afc4005_3",
+      "b9c5c9a_1",
+      "b9c5c9a_3",
+      "c77c005_1",
+      "c77c005_3",
+      "cef9191_1",
+      "cef9191_2",
+      "cef9191_3",
+      "d6ac34d_2",
+      "f3f60f0_1",
+      "f3f60f0_2",
+      "f3f60f0_3",
+      "ff58e36_1",
+      "ff58e36_2",
+      "ff58e36_3"
+    ],
+    "successful_scenario_count": 9,
+    "successful_scenarios": [
+      "0a9d82a",
+      "0d01c76",
+      "166f4ff",
+      "31dc501",
+      "5a83b05",
+      "afc4005",
+      "cef9191",
+      "f3f60f0",
+      "ff58e36"
+    ],
+    "difficulty": {
+      "1": {
+        "total": 57,
+        "successes": 31,
+        "tgc": 54.4
+      },
+      "2": {
+        "total": 48,
+        "successes": 14,
+        "tgc": 29.2
+      },
+      "3": {
+        "total": 63,
+        "successes": 6,
+        "tgc": 9.5
+      }
+    },
+    "evaluator_tests": {
+      "passed": 598,
+      "failed": 479,
+      "total": 1077,
+      "pass_percentage": 55.5
+    }
+  },
+  "baseline": {
+    "label": "原始 Qwen3-8B（历史接口）",
+    "experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-09-17_105709_appworld_qwen3-8b_react_oneshot_test_normal",
+    "output_root": "/root/autodl-tmp/workspace-tw/experiments/2026-09-17_105709_appworld_qwen3-8b_react_oneshot_test_normal/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/test_normal",
+    "evaluation_path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-17_105709_appworld_qwen3-8b_react_oneshot_test_normal/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/test_normal/evaluations/test_normal.json",
+    "evaluation_sha256": "24dac69d7b485764c10e59c454e19704fc6811586da1364b093a83d7284426a6",
+    "aggregate": {
+      "task_goal_completion": 7.1,
+      "scenario_goal_completion": 0.0
+    },
+    "success_count": 12,
+    "success_ids": [
+      "09b0ee6_3",
+      "13547f5_1",
+      "13547f5_2",
+      "166f4ff_1",
+      "21abae1_2",
+      "29a7b7e_1",
+      "522e5e5_2",
+      "5a83b05_3",
+      "7847649_1",
+      "7847649_3",
+      "dac78d9_3",
+      "f3f60f0_3"
+    ],
+    "successful_scenario_count": 0,
+    "successful_scenarios": [],
+    "difficulty": {
+      "1": {
+        "total": 57,
+        "successes": 11,
+        "tgc": 19.3
+      },
+      "2": {
+        "total": 48,
+        "successes": 1,
+        "tgc": 2.1
+      },
+      "3": {
+        "total": 63,
+        "successes": 0,
+        "tgc": 0.0
+      }
+    },
+    "evaluator_tests": {
+      "passed": 386,
+      "failed": 691,
+      "total": 1077,
+      "pass_percentage": 35.8
+    }
+  },
+  "paired": {
+    "scenario_outcomes": [
+      {
+        "scenario_id": "024c982",
+        "task_ids": [
+          "024c982_1",
+          "024c982_2",
+          "024c982_3"
+        ],
+        "full_sft_success_count": 1,
+        "lora_success_count": 2,
+        "delta": -1
+      },
+      {
+        "scenario_id": "042a9fc",
+        "task_ids": [
+          "042a9fc_1",
+          "042a9fc_2",
+          "042a9fc_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "09b0ee6",
+        "task_ids": [
+          "09b0ee6_1",
+          "09b0ee6_2",
+          "09b0ee6_3"
+        ],
+        "full_sft_success_count": 2,
+        "lora_success_count": 1,
+        "delta": 1
+      },
+      {
+        "scenario_id": "0a9d82a",
+        "task_ids": [
+          "0a9d82a_1",
+          "0a9d82a_2",
+          "0a9d82a_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 3,
+        "delta": -3
+      },
+      {
+        "scenario_id": "0d01c76",
+        "task_ids": [
+          "0d01c76_1",
+          "0d01c76_2",
+          "0d01c76_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 3,
+        "delta": -3
+      },
+      {
+        "scenario_id": "0de03ea",
+        "task_ids": [
+          "0de03ea_1",
+          "0de03ea_2",
+          "0de03ea_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 1,
+        "delta": -1
+      },
+      {
+        "scenario_id": "1150ed6",
+        "task_ids": [
+          "1150ed6_1",
+          "1150ed6_2",
+          "1150ed6_3"
+        ],
+        "full_sft_success_count": 2,
+        "lora_success_count": 1,
+        "delta": 1
+      },
+      {
+        "scenario_id": "13547f5",
+        "task_ids": [
+          "13547f5_1",
+          "13547f5_2",
+          "13547f5_3"
+        ],
+        "full_sft_success_count": 3,
+        "lora_success_count": 2,
+        "delta": 1
+      },
+      {
+        "scenario_id": "166f4ff",
+        "task_ids": [
+          "166f4ff_1",
+          "166f4ff_2",
+          "166f4ff_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 3,
+        "delta": -3
+      },
+      {
+        "scenario_id": "21abae1",
+        "task_ids": [
+          "21abae1_1",
+          "21abae1_2",
+          "21abae1_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 1,
+        "delta": -1
+      },
+      {
+        "scenario_id": "270f1ff",
+        "task_ids": [
+          "270f1ff_1",
+          "270f1ff_2",
+          "270f1ff_3"
+        ],
+        "full_sft_success_count": 1,
+        "lora_success_count": 0,
+        "delta": 1
+      },
+      {
+        "scenario_id": "29a7b7e",
+        "task_ids": [
+          "29a7b7e_1",
+          "29a7b7e_2",
+          "29a7b7e_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "2c544f9",
+        "task_ids": [
+          "2c544f9_1",
+          "2c544f9_2",
+          "2c544f9_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "2d9f728",
+        "task_ids": [
+          "2d9f728_1",
+          "2d9f728_2",
+          "2d9f728_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "31dc501",
+        "task_ids": [
+          "31dc501_1",
+          "31dc501_2",
+          "31dc501_3"
+        ],
+        "full_sft_success_count": 2,
+        "lora_success_count": 3,
+        "delta": -1
+      },
+      {
+        "scenario_id": "325d6ec",
+        "task_ids": [
+          "325d6ec_1",
+          "325d6ec_2",
+          "325d6ec_3"
+        ],
+        "full_sft_success_count": 1,
+        "lora_success_count": 2,
+        "delta": -1
+      },
+      {
+        "scenario_id": "32616b5",
+        "task_ids": [
+          "32616b5_1",
+          "32616b5_2",
+          "32616b5_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "3aa1a22",
+        "task_ids": [
+          "3aa1a22_1",
+          "3aa1a22_2",
+          "3aa1a22_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "3b8fb7a",
+        "task_ids": [
+          "3b8fb7a_1",
+          "3b8fb7a_2",
+          "3b8fb7a_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "3d9a636",
+        "task_ids": [
+          "3d9a636_1",
+          "3d9a636_2",
+          "3d9a636_3"
+        ],
+        "full_sft_success_count": 1,
+        "lora_success_count": 0,
+        "delta": 1
+      },
+      {
+        "scenario_id": "425a494",
+        "task_ids": [
+          "425a494_1",
+          "425a494_2",
+          "425a494_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 1,
+        "delta": -1
+      },
+      {
+        "scenario_id": "522e5e5",
+        "task_ids": [
+          "522e5e5_1",
+          "522e5e5_2",
+          "522e5e5_3"
+        ],
+        "full_sft_success_count": 1,
+        "lora_success_count": 0,
+        "delta": 1
+      },
+      {
+        "scenario_id": "552869a",
+        "task_ids": [
+          "552869a_1",
+          "552869a_2",
+          "552869a_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 1,
+        "delta": -1
+      },
+      {
+        "scenario_id": "59fae45",
+        "task_ids": [
+          "59fae45_1",
+          "59fae45_2",
+          "59fae45_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 2,
+        "delta": -2
+      },
+      {
+        "scenario_id": "5a83b05",
+        "task_ids": [
+          "5a83b05_1",
+          "5a83b05_2",
+          "5a83b05_3"
+        ],
+        "full_sft_success_count": 3,
+        "lora_success_count": 3,
+        "delta": 0
+      },
+      {
+        "scenario_id": "634f342",
+        "task_ids": [
+          "634f342_1",
+          "634f342_2",
+          "634f342_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "652485c",
+        "task_ids": [
+          "652485c_1",
+          "652485c_2",
+          "652485c_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "6b6ca61",
+        "task_ids": [
+          "6b6ca61_1",
+          "6b6ca61_2",
+          "6b6ca61_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "6f4b9a5",
+        "task_ids": [
+          "6f4b9a5_1",
+          "6f4b9a5_2",
+          "6f4b9a5_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "7847649",
+        "task_ids": [
+          "7847649_1",
+          "7847649_2",
+          "7847649_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 2,
+        "delta": -2
+      },
+      {
+        "scenario_id": "83a7951",
+        "task_ids": [
+          "83a7951_1",
+          "83a7951_2",
+          "83a7951_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "8749218",
+        "task_ids": [
+          "8749218_1",
+          "8749218_2",
+          "8749218_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 2,
+        "delta": -2
+      },
+      {
+        "scenario_id": "8ce6779",
+        "task_ids": [
+          "8ce6779_1",
+          "8ce6779_2",
+          "8ce6779_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "9016950",
+        "task_ids": [
+          "9016950_1",
+          "9016950_2",
+          "9016950_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "90adc3f",
+        "task_ids": [
+          "90adc3f_1",
+          "90adc3f_2",
+          "90adc3f_3"
+        ],
+        "full_sft_success_count": 1,
+        "lora_success_count": 0,
+        "delta": 1
+      },
+      {
+        "scenario_id": "986aa4e",
+        "task_ids": [
+          "986aa4e_1",
+          "986aa4e_2",
+          "986aa4e_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "9dabbc9",
+        "task_ids": [
+          "9dabbc9_1",
+          "9dabbc9_2",
+          "9dabbc9_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "9ef798c",
+        "task_ids": [
+          "9ef798c_1",
+          "9ef798c_2",
+          "9ef798c_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 1,
+        "delta": -1
+      },
+      {
+        "scenario_id": "a30375d",
+        "task_ids": [
+          "a30375d_1",
+          "a30375d_2",
+          "a30375d_3"
+        ],
+        "full_sft_success_count": 1,
+        "lora_success_count": 0,
+        "delta": 1
+      },
+      {
+        "scenario_id": "afc4005",
+        "task_ids": [
+          "afc4005_1",
+          "afc4005_2",
+          "afc4005_3"
+        ],
+        "full_sft_success_count": 1,
+        "lora_success_count": 3,
+        "delta": -2
+      },
+      {
+        "scenario_id": "b6d1104",
+        "task_ids": [
+          "b6d1104_1",
+          "b6d1104_2",
+          "b6d1104_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "b9c5c9a",
+        "task_ids": [
+          "b9c5c9a_1",
+          "b9c5c9a_2",
+          "b9c5c9a_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 2,
+        "delta": -2
+      },
+      {
+        "scenario_id": "bde252e",
+        "task_ids": [
+          "bde252e_1",
+          "bde252e_2",
+          "bde252e_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "c77c005",
+        "task_ids": [
+          "c77c005_1",
+          "c77c005_2",
+          "c77c005_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 2,
+        "delta": -2
+      },
+      {
+        "scenario_id": "ccf4b82",
+        "task_ids": [
+          "ccf4b82_1",
+          "ccf4b82_2",
+          "ccf4b82_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "cef9191",
+        "task_ids": [
+          "cef9191_1",
+          "cef9191_2",
+          "cef9191_3"
+        ],
+        "full_sft_success_count": 1,
+        "lora_success_count": 3,
+        "delta": -2
+      },
+      {
+        "scenario_id": "d18139b",
+        "task_ids": [
+          "d18139b_1",
+          "d18139b_2",
+          "d18139b_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "d194965",
+        "task_ids": [
+          "d194965_1",
+          "d194965_2",
+          "d194965_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "d6ac34d",
+        "task_ids": [
+          "d6ac34d_1",
+          "d6ac34d_2",
+          "d6ac34d_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 1,
+        "delta": -1
+      },
+      {
+        "scenario_id": "dac78d9",
+        "task_ids": [
+          "dac78d9_1",
+          "dac78d9_2",
+          "dac78d9_3"
+        ],
+        "full_sft_success_count": 1,
+        "lora_success_count": 0,
+        "delta": 1
+      },
+      {
+        "scenario_id": "f323bae",
+        "task_ids": [
+          "f323bae_1",
+          "f323bae_2",
+          "f323bae_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "f3f60f0",
+        "task_ids": [
+          "f3f60f0_1",
+          "f3f60f0_2",
+          "f3f60f0_3"
+        ],
+        "full_sft_success_count": 3,
+        "lora_success_count": 3,
+        "delta": 0
+      },
+      {
+        "scenario_id": "f861c32",
+        "task_ids": [
+          "f861c32_1",
+          "f861c32_2",
+          "f861c32_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "fd1f8fa",
+        "task_ids": [
+          "fd1f8fa_1",
+          "fd1f8fa_2",
+          "fd1f8fa_3"
+        ],
+        "full_sft_success_count": 0,
+        "lora_success_count": 0,
+        "delta": 0
+      },
+      {
+        "scenario_id": "ff58e36",
+        "task_ids": [
+          "ff58e36_1",
+          "ff58e36_2",
+          "ff58e36_3"
+        ],
+        "full_sft_success_count": 2,
+        "lora_success_count": 3,
+        "delta": -1
+      },
+      {
+        "scenario_id": "ffe6d5e",
+        "task_ids": [
+          "ffe6d5e_1",
+          "ffe6d5e_2",
+          "ffe6d5e_3"
+        ],
+        "full_sft_success_count": 1,
+        "lora_success_count": 0,
+        "delta": 1
+      }
+    ],
+    "both_success": [
+      "325d6ec_3",
+      "ff58e36_2",
+      "ff58e36_3",
+      "5a83b05_1",
+      "5a83b05_2",
+      "5a83b05_3",
+      "cef9191_1",
+      "afc4005_3",
+      "09b0ee6_2",
+      "024c982_3",
+      "13547f5_2",
+      "13547f5_3",
+      "1150ed6_2",
+      "31dc501_1",
+      "31dc501_3",
+      "f3f60f0_1",
+      "f3f60f0_2",
+      "f3f60f0_3"
+    ],
+    "full_sft_only_success": [
+      "3d9a636_3",
+      "a30375d_3",
+      "09b0ee6_1",
+      "522e5e5_3",
+      "270f1ff_1",
+      "90adc3f_1",
+      "13547f5_1",
+      "1150ed6_3",
+      "dac78d9_3",
+      "ffe6d5e_3"
+    ],
+    "lora_only_success": [
+      "325d6ec_2",
+      "21abae1_1",
+      "8749218_1",
+      "8749218_3",
+      "d6ac34d_2",
+      "0d01c76_1",
+      "0d01c76_2",
+      "0d01c76_3",
+      "ff58e36_1",
+      "cef9191_2",
+      "cef9191_3",
+      "afc4005_1",
+      "afc4005_2",
+      "425a494_1",
+      "7847649_1",
+      "7847649_2",
+      "552869a_2",
+      "0de03ea_3",
+      "024c982_2",
+      "9ef798c_1",
+      "b9c5c9a_1",
+      "b9c5c9a_3",
+      "c77c005_1",
+      "c77c005_3",
+      "31dc501_2",
+      "59fae45_1",
+      "59fae45_2",
+      "0a9d82a_1",
+      "0a9d82a_2",
+      "0a9d82a_3",
+      "166f4ff_1",
+      "166f4ff_2",
+      "166f4ff_3"
+    ],
+    "both_failed": [
+      "3d9a636_1",
+      "3d9a636_2",
+      "fd1f8fa_1",
+      "fd1f8fa_2",
+      "fd1f8fa_3",
+      "325d6ec_1",
+      "29a7b7e_1",
+      "29a7b7e_2",
+      "29a7b7e_3",
+      "21abae1_2",
+      "21abae1_3",
+      "634f342_1",
+      "634f342_2",
+      "634f342_3",
+      "8749218_2",
+      "2d9f728_1",
+      "2d9f728_2",
+      "2d9f728_3",
+      "6f4b9a5_1",
+      "6f4b9a5_2",
+      "6f4b9a5_3",
+      "d6ac34d_1",
+      "d6ac34d_3",
+      "d18139b_1",
+      "d18139b_2",
+      "d18139b_3",
+      "042a9fc_1",
+      "042a9fc_2",
+      "042a9fc_3",
+      "3b8fb7a_1",
+      "3b8fb7a_2",
+      "3b8fb7a_3",
+      "9dabbc9_1",
+      "9dabbc9_2",
+      "9dabbc9_3",
+      "425a494_2",
+      "425a494_3",
+      "a30375d_1",
+      "a30375d_2",
+      "09b0ee6_3",
+      "d194965_1",
+      "d194965_2",
+      "d194965_3",
+      "7847649_3",
+      "552869a_1",
+      "552869a_3",
+      "652485c_1",
+      "652485c_2",
+      "652485c_3",
+      "ccf4b82_1",
+      "ccf4b82_2",
+      "ccf4b82_3",
+      "522e5e5_1",
+      "522e5e5_2",
+      "0de03ea_1",
+      "0de03ea_2",
+      "2c544f9_1",
+      "2c544f9_2",
+      "2c544f9_3",
+      "270f1ff_2",
+      "270f1ff_3",
+      "024c982_1",
+      "9ef798c_2",
+      "9ef798c_3",
+      "b9c5c9a_2",
+      "90adc3f_2",
+      "90adc3f_3",
+      "c77c005_2",
+      "f323bae_1",
+      "f323bae_2",
+      "f323bae_3",
+      "1150ed6_1",
+      "59fae45_3",
+      "b6d1104_1",
+      "b6d1104_2",
+      "b6d1104_3",
+      "f861c32_1",
+      "f861c32_2",
+      "f861c32_3",
+      "9016950_1",
+      "9016950_2",
+      "9016950_3",
+      "dac78d9_1",
+      "dac78d9_2",
+      "ffe6d5e_1",
+      "ffe6d5e_2",
+      "8ce6779_1",
+      "8ce6779_2",
+      "8ce6779_3",
+      "83a7951_1",
+      "83a7951_2",
+      "83a7951_3",
+      "3aa1a22_1",
+      "3aa1a22_2",
+      "3aa1a22_3",
+      "32616b5_1",
+      "32616b5_2",
+      "32616b5_3",
+      "986aa4e_1",
+      "986aa4e_2",
+      "986aa4e_3",
+      "6b6ca61_1",
+      "6b6ca61_2",
+      "6b6ca61_3",
+      "bde252e_1",
+      "bde252e_2",
+      "bde252e_3"
+    ],
+    "regressions_by_terminal": {
+      "出现提交动作但未满足官方条件": [
+        "325d6ec_2",
+        "21abae1_1",
+        "8749218_3",
+        "d6ac34d_2",
+        "0d01c76_1",
+        "0d01c76_2",
+        "0d01c76_3",
+        "ff58e36_1",
+        "cef9191_2",
+        "cef9191_3",
+        "afc4005_1",
+        "afc4005_2",
+        "425a494_1",
+        "7847649_1",
+        "7847649_2",
+        "552869a_2",
+        "0de03ea_3",
+        "024c982_2",
+        "9ef798c_1",
+        "c77c005_1",
+        "c77c005_3",
+        "31dc501_2",
+        "59fae45_1",
+        "59fae45_2",
+        "0a9d82a_2",
+        "0a9d82a_3",
+        "166f4ff_1",
+        "166f4ff_2",
+        "166f4ff_3"
+      ],
+      "达到50步上限": [
+        "8749218_1",
+        "b9c5c9a_3"
+      ],
+      "上下文请求被拒绝": [
+        "b9c5c9a_1",
+        "0a9d82a_1"
+      ]
+    },
+    "both_without_context_error": {
+      "task_ids": [
+        "3d9a636_1",
+        "3d9a636_3",
+        "fd1f8fa_1",
+        "fd1f8fa_2",
+        "fd1f8fa_3",
+        "325d6ec_1",
+        "325d6ec_2",
+        "325d6ec_3",
+        "29a7b7e_1",
+        "29a7b7e_2",
+        "29a7b7e_3",
+        "21abae1_1",
+        "21abae1_2",
+        "21abae1_3",
+        "634f342_1",
+        "634f342_2",
+        "634f342_3",
+        "8749218_1",
+        "8749218_2",
+        "8749218_3",
+        "2d9f728_1",
+        "2d9f728_2",
+        "2d9f728_3",
+        "6f4b9a5_1",
+        "d6ac34d_1",
+        "d6ac34d_2",
+        "d6ac34d_3",
+        "0d01c76_1",
+        "0d01c76_2",
+        "0d01c76_3",
+        "ff58e36_1",
+        "ff58e36_2",
+        "ff58e36_3",
+        "5a83b05_1",
+        "5a83b05_2",
+        "5a83b05_3",
+        "042a9fc_2",
+        "cef9191_1",
+        "cef9191_2",
+        "cef9191_3",
+        "afc4005_1",
+        "afc4005_2",
+        "afc4005_3",
+        "9dabbc9_2",
+        "425a494_1",
+        "425a494_2",
+        "425a494_3",
+        "a30375d_1",
+        "a30375d_2",
+        "a30375d_3",
+        "09b0ee6_1",
+        "09b0ee6_2",
+        "09b0ee6_3",
+        "d194965_1",
+        "d194965_2",
+        "d194965_3",
+        "7847649_1",
+        "7847649_2",
+        "7847649_3",
+        "552869a_2",
+        "552869a_3",
+        "652485c_1",
+        "652485c_2",
+        "652485c_3",
+        "ccf4b82_1",
+        "ccf4b82_2",
+        "522e5e5_1",
+        "522e5e5_2",
+        "522e5e5_3",
+        "0de03ea_1",
+        "0de03ea_2",
+        "0de03ea_3",
+        "2c544f9_1",
+        "2c544f9_2",
+        "2c544f9_3",
+        "270f1ff_1",
+        "270f1ff_2",
+        "024c982_1",
+        "024c982_2",
+        "024c982_3",
+        "9ef798c_1",
+        "9ef798c_2",
+        "9ef798c_3",
+        "b9c5c9a_2",
+        "b9c5c9a_3",
+        "90adc3f_1",
+        "90adc3f_3",
+        "c77c005_1",
+        "c77c005_3",
+        "f323bae_1",
+        "f323bae_2",
+        "f323bae_3",
+        "13547f5_1",
+        "13547f5_2",
+        "13547f5_3",
+        "1150ed6_1",
+        "1150ed6_2",
+        "31dc501_1",
+        "31dc501_2",
+        "31dc501_3",
+        "59fae45_1",
+        "59fae45_2",
+        "59fae45_3",
+        "b6d1104_1",
+        "b6d1104_2",
+        "f861c32_2",
+        "f861c32_3",
+        "0a9d82a_2",
+        "0a9d82a_3",
+        "166f4ff_1",
+        "166f4ff_2",
+        "166f4ff_3",
+        "9016950_1",
+        "dac78d9_1",
+        "dac78d9_3",
+        "f3f60f0_1",
+        "f3f60f0_2",
+        "f3f60f0_3",
+        "ffe6d5e_1",
+        "ffe6d5e_2",
+        "ffe6d5e_3",
+        "8ce6779_1",
+        "83a7951_1",
+        "986aa4e_2",
+        "6b6ca61_1",
+        "bde252e_3"
+      ],
+      "task_count": 126,
+      "full_sft_success": 27,
+      "lora_success": 49
+    },
+    "regressions_with_full_context_error": [
+      "b9c5c9a_1",
+      "0a9d82a_1"
+    ],
+    "regressions_without_full_context_error": [
+      "325d6ec_2",
+      "21abae1_1",
+      "8749218_1",
+      "8749218_3",
+      "d6ac34d_2",
+      "0d01c76_1",
+      "0d01c76_2",
+      "0d01c76_3",
+      "ff58e36_1",
+      "cef9191_2",
+      "cef9191_3",
+      "afc4005_1",
+      "afc4005_2",
+      "425a494_1",
+      "7847649_1",
+      "7847649_2",
+      "552869a_2",
+      "0de03ea_3",
+      "024c982_2",
+      "9ef798c_1",
+      "b9c5c9a_3",
+      "c77c005_1",
+      "c77c005_3",
+      "31dc501_2",
+      "59fae45_1",
+      "59fae45_2",
+      "0a9d82a_2",
+      "0a9d82a_3",
+      "166f4ff_1",
+      "166f4ff_2",
+      "166f4ff_3"
+    ],
+    "shared_success_cost": {
+      "full_sft": {
+        "lm_requests": 228,
+        "api_calls": 519,
+        "input_tokens": 1466975,
+        "output_tokens": 15003,
+        "total_tokens": 1481978
+      },
+      "lora": {
+        "lm_requests": 230,
+        "api_calls": 614,
+        "input_tokens": 1629687,
+        "output_tokens": 15466,
+        "total_tokens": 1645153
+      }
+    },
+    "scenario_bootstrap": {
+      "seed": 20260923,
+      "resamples": 20000,
+      "unit": "56 scenarios, each with 3 tasks",
+      "tgc_delta_percentage_points": -13.69047619047619,
+      "percentile_95_interval": [
+        -23.214285714285715,
+        -4.166666666666668
+      ],
+      "scope": "Descriptive uncertainty over scenario composition; not training-seed uncertainty or a causal estimate."
+    }
+  },
+  "runtime": {
+    "lm_requests": 3667,
+    "content_null": 0,
+    "content_empty": 29,
+    "model_responses": 3638,
+    "unexplained_empty_model_responses": 0,
+    "length_truncated_responses": 1,
+    "no_python_model_responses": 0,
+    "completion_tokens": 285283,
+    "api_calls": 9693,
+    "api_docs_calls": 2132,
+    "completion_endpoint_calls": 122,
+    "input_tokens": 41490992,
+    "output_tokens": 285283,
+    "total_tokens": 41776275,
+    "repeated_identical_code_actions": 934,
+    "max_same_code_occurrences": 21,
+    "complete_task_actions": 129,
+    "no_code_observations": 0,
+    "error_responses": 29,
+    "input_exceeds_context": 12,
+    "input_plus_output_exceeds_context": 17
+  },
+  "lora_runtime": {
+    "lm_requests": 3429,
+    "content_null": 0,
+    "content_empty": 24,
+    "model_responses": 3405,
+    "unexplained_empty_model_responses": 0,
+    "length_truncated_responses": 3,
+    "no_python_model_responses": 0,
+    "completion_tokens": 335660,
+    "api_calls": 12305,
+    "api_docs_calls": 1831,
+    "completion_endpoint_calls": 147,
+    "input_tokens": 38164179,
+    "output_tokens": 335660,
+    "total_tokens": 38499839,
+    "repeated_identical_code_actions": 355,
+    "max_same_code_occurrences": 28,
+    "complete_task_actions": 156,
+    "no_code_observations": 0,
+    "error_responses": 24,
+    "input_plus_output_exceeds_context": 13,
+    "input_exceeds_context": 11
+  },
+  "full_sft_signals": {
+    "all_tasks": {
+      "task_count": 168,
+      "success_count": 28,
+      "signals": {
+        "context_error": 29,
+        "python_error": 109,
+        "max_50_requests": 20,
+        "no_complete_task_action": 48,
+        "repeated_identical_code": 68
+      },
+      "counts": {
+        "lm_requests": 3667,
+        "model_responses": 3638,
+        "completion_tokens": 285283,
+        "api_calls": 9693,
+        "api_docs_calls": 2132,
+        "completion_endpoint_calls": 122,
+        "input_tokens": 41490992,
+        "output_tokens": 285283,
+        "total_tokens": 41776275,
+        "max_same_code_occurrences": 21,
+        "complete_task_actions": 129,
+        "repeated_identical_code_actions": 934,
+        "content_empty": 29,
+        "error_responses": 29,
+        "input_exceeds_context": 12,
+        "input_plus_output_exceeds_context": 17,
+        "length_truncated_responses": 1
+      }
+    },
+    "failed_tasks": {
+      "task_count": 140,
+      "success_count": 0,
+      "signals": {
+        "context_error": 29,
+        "python_error": 99,
+        "max_50_requests": 20,
+        "no_complete_task_action": 48,
+        "repeated_identical_code": 65
+      },
+      "counts": {
+        "lm_requests": 3306,
+        "model_responses": 3277,
+        "completion_tokens": 261160,
+        "api_calls": 8839,
+        "api_docs_calls": 1917,
+        "completion_endpoint_calls": 93,
+        "input_tokens": 39012264,
+        "output_tokens": 261160,
+        "total_tokens": 39273424,
+        "max_same_code_occurrences": 21,
+        "complete_task_actions": 99,
+        "repeated_identical_code_actions": 930,
+        "content_empty": 29,
+        "error_responses": 29,
+        "input_exceeds_context": 12,
+        "input_plus_output_exceeds_context": 17,
+        "length_truncated_responses": 1
+      }
+    },
+    "successful_tasks": {
+      "task_count": 28,
+      "success_count": 28,
+      "signals": {
+        "context_error": 0,
+        "python_error": 10,
+        "max_50_requests": 0,
+        "no_complete_task_action": 0,
+        "repeated_identical_code": 3
+      },
+      "counts": {
+        "lm_requests": 361,
+        "model_responses": 361,
+        "completion_tokens": 24123,
+        "api_calls": 854,
+        "api_docs_calls": 215,
+        "completion_endpoint_calls": 29,
+        "input_tokens": 2478728,
+        "output_tokens": 24123,
+        "total_tokens": 2502851,
+        "max_same_code_occurrences": 3,
+        "complete_task_actions": 30,
+        "repeated_identical_code_actions": 4
+      }
+    },
+    "terminal_groups": {
+      "出现提交动作但未满足官方条件": 92,
+      "达到50步上限": 19,
+      "成功": 28,
+      "上下文请求被拒绝": 29
+    },
+    "answer_failure_kinds": {
+      "not_given_marker": 48,
+      "other_answer_mismatch": 23
+    },
+    "failure_categories": {
+      "Splitwise 或费用状态错误": {
+        "task_count": 11,
+        "task_ids": [
+          "32616b5_1",
+          "32616b5_2",
+          "32616b5_3",
+          "3aa1a22_1",
+          "3aa1a22_3",
+          "6b6ca61_1",
+          "6b6ca61_2",
+          "6b6ca61_3",
+          "b6d1104_1",
+          "b6d1104_2",
+          "b6d1104_3"
+        ]
+      },
+      "Spotify 播放、队列或收藏状态错误": {
+        "task_count": 31,
+        "task_ids": [
+          "042a9fc_1",
+          "042a9fc_2",
+          "042a9fc_3",
+          "0de03ea_1",
+          "0de03ea_2",
+          "0de03ea_3",
+          "1150ed6_1",
+          "325d6ec_1",
+          "325d6ec_2",
+          "59fae45_3",
+          "634f342_1",
+          "634f342_2",
+          "634f342_3",
+          "652485c_1",
+          "652485c_2",
+          "652485c_3",
+          "6f4b9a5_1",
+          "6f4b9a5_2",
+          "6f4b9a5_3",
+          "8749218_1",
+          "8749218_2",
+          "8749218_3",
+          "986aa4e_1",
+          "986aa4e_2",
+          "986aa4e_3",
+          "d194965_1",
+          "d194965_2",
+          "d194965_3",
+          "fd1f8fa_1",
+          "fd1f8fa_2",
+          "fd1f8fa_3"
+        ]
+      },
+      "Venmo 好友、交易或付款状态错误": {
+        "task_count": 35,
+        "task_ids": [
+          "024c982_1",
+          "270f1ff_2",
+          "270f1ff_3",
+          "2c544f9_1",
+          "2c544f9_2",
+          "2c544f9_3",
+          "2d9f728_1",
+          "2d9f728_2",
+          "2d9f728_3",
+          "3b8fb7a_1",
+          "3b8fb7a_2",
+          "3b8fb7a_3",
+          "3d9a636_1",
+          "3d9a636_2",
+          "522e5e5_1",
+          "522e5e5_2",
+          "6b6ca61_1",
+          "6b6ca61_2",
+          "6b6ca61_3",
+          "83a7951_1",
+          "83a7951_2",
+          "83a7951_3",
+          "90adc3f_2",
+          "90adc3f_3",
+          "9dabbc9_1",
+          "9dabbc9_2",
+          "9dabbc9_3",
+          "c77c005_1",
+          "c77c005_2",
+          "c77c005_3",
+          "ccf4b82_1",
+          "ccf4b82_2",
+          "d18139b_1",
+          "d18139b_2",
+          "ff58e36_1"
+        ]
+      },
+      "交易或购物状态错误": {
+        "task_count": 44,
+        "task_ids": [
+          "024c982_1",
+          "024c982_2",
+          "09b0ee6_3",
+          "270f1ff_2",
+          "270f1ff_3",
+          "2c544f9_1",
+          "2c544f9_2",
+          "2c544f9_3",
+          "2d9f728_1",
+          "2d9f728_2",
+          "2d9f728_3",
+          "3aa1a22_1",
+          "3aa1a22_2",
+          "3aa1a22_3",
+          "3b8fb7a_1",
+          "3b8fb7a_2",
+          "3b8fb7a_3",
+          "59fae45_3",
+          "6b6ca61_1",
+          "6b6ca61_2",
+          "6b6ca61_3",
+          "83a7951_1",
+          "83a7951_2",
+          "83a7951_3",
+          "90adc3f_2",
+          "90adc3f_3",
+          "9dabbc9_1",
+          "9dabbc9_2",
+          "9dabbc9_3",
+          "9ef798c_1",
+          "9ef798c_2",
+          "9ef798c_3",
+          "ccf4b82_1",
+          "ccf4b82_2",
+          "ccf4b82_3",
+          "d18139b_1",
+          "d18139b_2",
+          "d18139b_3",
+          "f323bae_1",
+          "f323bae_2",
+          "f323bae_3",
+          "f861c32_1",
+          "f861c32_2",
+          "f861c32_3"
+        ]
+      },
+      "其他业务条件未满足": {
+        "task_count": 31,
+        "task_ids": [
+          "270f1ff_2",
+          "270f1ff_3",
+          "29a7b7e_1",
+          "29a7b7e_2",
+          "29a7b7e_3",
+          "325d6ec_1",
+          "59fae45_3",
+          "634f342_3",
+          "652485c_1",
+          "652485c_2",
+          "652485c_3",
+          "8ce6779_1",
+          "8ce6779_2",
+          "8ce6779_3",
+          "986aa4e_1",
+          "986aa4e_2",
+          "986aa4e_3",
+          "a30375d_1",
+          "a30375d_2",
+          "b9c5c9a_1",
+          "b9c5c9a_2",
+          "b9c5c9a_3",
+          "bde252e_1",
+          "bde252e_2",
+          "bde252e_3",
+          "d194965_1",
+          "d6ac34d_1",
+          "d6ac34d_2",
+          "d6ac34d_3",
+          "ffe6d5e_1",
+          "ffe6d5e_2"
+        ]
+      },
+      "待办或项目状态错误": {
+        "task_count": 6,
+        "task_ids": [
+          "8ce6779_1",
+          "8ce6779_2",
+          "8ce6779_3",
+          "bde252e_1",
+          "bde252e_2",
+          "bde252e_3"
+        ]
+      },
+      "数据库变更不符合要求": {
+        "task_count": 6,
+        "task_ids": [
+          "3aa1a22_1",
+          "3aa1a22_3",
+          "59fae45_1",
+          "59fae45_2",
+          "59fae45_3",
+          "7847649_3"
+        ]
+      },
+      "文件系统路径、目录或内容错误": {
+        "task_count": 20,
+        "task_ids": [
+          "29a7b7e_1",
+          "29a7b7e_2",
+          "6b6ca61_1",
+          "6b6ca61_2",
+          "6b6ca61_3",
+          "83a7951_1",
+          "83a7951_2",
+          "83a7951_3",
+          "9ef798c_1",
+          "9ef798c_2",
+          "9ef798c_3",
+          "b9c5c9a_1",
+          "b9c5c9a_2",
+          "b9c5c9a_3",
+          "ccf4b82_1",
+          "ccf4b82_2",
+          "ccf4b82_3",
+          "f861c32_1",
+          "f861c32_2",
+          "f861c32_3"
+        ]
+      },
+      "最终答案不匹配": {
+        "task_count": 71,
+        "task_ids": [
+          "042a9fc_1",
+          "042a9fc_3",
+          "0a9d82a_1",
+          "0a9d82a_2",
+          "0a9d82a_3",
+          "166f4ff_1",
+          "166f4ff_2",
+          "166f4ff_3",
+          "21abae1_1",
+          "21abae1_2",
+          "21abae1_3",
+          "270f1ff_3",
+          "29a7b7e_1",
+          "2c544f9_2",
+          "2c544f9_3",
+          "32616b5_2",
+          "32616b5_3",
+          "3aa1a22_1",
+          "3b8fb7a_1",
+          "3b8fb7a_2",
+          "3b8fb7a_3",
+          "3d9a636_2",
+          "425a494_1",
+          "425a494_2",
+          "425a494_3",
+          "552869a_1",
+          "552869a_2",
+          "552869a_3",
+          "6b6ca61_2",
+          "6b6ca61_3",
+          "7847649_1",
+          "7847649_2",
+          "7847649_3",
+          "83a7951_1",
+          "83a7951_2",
+          "83a7951_3",
+          "8749218_1",
+          "8ce6779_2",
+          "8ce6779_3",
+          "9016950_2",
+          "9016950_3",
+          "90adc3f_2",
+          "986aa4e_1",
+          "986aa4e_2",
+          "986aa4e_3",
+          "9dabbc9_1",
+          "9dabbc9_3",
+          "9ef798c_2",
+          "afc4005_1",
+          "afc4005_2",
+          "b6d1104_3",
+          "b9c5c9a_1",
+          "b9c5c9a_2",
+          "b9c5c9a_3",
+          "bde252e_1",
+          "bde252e_2",
+          "bde252e_3",
+          "c77c005_2",
+          "ccf4b82_2",
+          "ccf4b82_3",
+          "cef9191_2",
+          "cef9191_3",
+          "d18139b_1",
+          "d18139b_2",
+          "d18139b_3",
+          "dac78d9_1",
+          "dac78d9_2",
+          "f861c32_1",
+          "f861c32_2",
+          "f861c32_3",
+          "fd1f8fa_1"
+        ]
+      },
+      "电话、消息或联系人状态错误": {
+        "task_count": 9,
+        "task_ids": [
+          "270f1ff_2",
+          "270f1ff_3",
+          "31dc501_2",
+          "3aa1a22_1",
+          "3aa1a22_2",
+          "3aa1a22_3",
+          "9016950_1",
+          "9016950_2",
+          "9016950_3"
+        ]
+      },
+      "笔记状态或内容错误": {
+        "task_count": 23,
+        "task_ids": [
+          "024c982_1",
+          "0d01c76_1",
+          "0d01c76_2",
+          "0d01c76_3",
+          "270f1ff_3",
+          "2d9f728_1",
+          "2d9f728_2",
+          "2d9f728_3",
+          "6f4b9a5_1",
+          "6f4b9a5_2",
+          "6f4b9a5_3",
+          "83a7951_1",
+          "83a7951_2",
+          "83a7951_3",
+          "9dabbc9_1",
+          "9dabbc9_3",
+          "b6d1104_1",
+          "b6d1104_2",
+          "b6d1104_3",
+          "d6ac34d_1",
+          "d6ac34d_2",
+          "d6ac34d_3",
+          "f861c32_1"
+        ]
+      },
+      "邮件状态或内容错误": {
+        "task_count": 7,
+        "task_ids": [
+          "270f1ff_3",
+          "9016950_1",
+          "9016950_2",
+          "9016950_3",
+          "9ef798c_1",
+          "9ef798c_2",
+          "9ef798c_3"
+        ]
+      }
+    },
+    "exception_types": {
+      "AttributeError": {
+        "task_count": 11,
+        "task_ids": [
+          "042a9fc_3",
+          "0d01c76_2",
+          "29a7b7e_1",
+          "522e5e5_1",
+          "8ce6779_1",
+          "8ce6779_2",
+          "90adc3f_2",
+          "90adc3f_3",
+          "ccf4b82_1",
+          "ccf4b82_2",
+          "dac78d9_2"
+        ]
+      },
+      "Exception": {
+        "task_count": 86,
+        "task_ids": [
+          "042a9fc_1",
+          "042a9fc_3",
+          "09b0ee6_1",
+          "0a9d82a_1",
+          "0d01c76_1",
+          "0d01c76_2",
+          "0d01c76_3",
+          "13547f5_3",
+          "166f4ff_1",
+          "166f4ff_2",
+          "21abae1_1",
+          "21abae1_2",
+          "270f1ff_1",
+          "270f1ff_2",
+          "29a7b7e_1",
+          "29a7b7e_2",
+          "2c544f9_1",
+          "2c544f9_2",
+          "2c544f9_3",
+          "2d9f728_3",
+          "325d6ec_1",
+          "325d6ec_2",
+          "32616b5_1",
+          "32616b5_2",
+          "32616b5_3",
+          "3aa1a22_1",
+          "3aa1a22_2",
+          "3b8fb7a_1",
+          "3b8fb7a_3",
+          "3d9a636_1",
+          "3d9a636_2",
+          "3d9a636_3",
+          "522e5e5_1",
+          "552869a_1",
+          "552869a_3",
+          "634f342_1",
+          "652485c_1",
+          "652485c_2",
+          "652485c_3",
+          "6b6ca61_1",
+          "6b6ca61_3",
+          "6f4b9a5_3",
+          "83a7951_1",
+          "83a7951_2",
+          "83a7951_3",
+          "8749218_1",
+          "8749218_2",
+          "8ce6779_1",
+          "8ce6779_2",
+          "8ce6779_3",
+          "9016950_1",
+          "9016950_2",
+          "9016950_3",
+          "90adc3f_1",
+          "90adc3f_2",
+          "986aa4e_2",
+          "986aa4e_3",
+          "9dabbc9_1",
+          "9dabbc9_2",
+          "9dabbc9_3",
+          "9ef798c_1",
+          "9ef798c_2",
+          "9ef798c_3",
+          "b6d1104_3",
+          "b9c5c9a_1",
+          "b9c5c9a_2",
+          "bde252e_1",
+          "bde252e_2",
+          "bde252e_3",
+          "c77c005_1",
+          "c77c005_2",
+          "c77c005_3",
+          "ccf4b82_1",
+          "ccf4b82_2",
+          "cef9191_3",
+          "d18139b_3",
+          "d194965_2",
+          "d194965_3",
+          "f861c32_1",
+          "f861c32_2",
+          "f861c32_3",
+          "fd1f8fa_2",
+          "fd1f8fa_3",
+          "ff58e36_1",
+          "ff58e36_2",
+          "ffe6d5e_2"
+        ]
+      },
+      "IndexError": {
+        "task_count": 3,
+        "task_ids": [
+          "32616b5_1",
+          "652485c_2",
+          "9dabbc9_1"
+        ]
+      },
+      "KeyError": {
+        "task_count": 29,
+        "task_ids": [
+          "042a9fc_1",
+          "042a9fc_2",
+          "042a9fc_3",
+          "0a9d82a_1",
+          "0de03ea_2",
+          "29a7b7e_3",
+          "325d6ec_1",
+          "32616b5_3",
+          "3aa1a22_2",
+          "3b8fb7a_1",
+          "3d9a636_2",
+          "522e5e5_1",
+          "634f342_2",
+          "652485c_2",
+          "6b6ca61_3",
+          "83a7951_1",
+          "8ce6779_3",
+          "9016950_3",
+          "986aa4e_2",
+          "b9c5c9a_2",
+          "b9c5c9a_3",
+          "c77c005_1",
+          "ccf4b82_1",
+          "ccf4b82_2",
+          "d18139b_3",
+          "f861c32_1",
+          "fd1f8fa_1",
+          "fd1f8fa_2",
+          "ffe6d5e_2"
+        ]
+      },
+      "NameError": {
+        "task_count": 41,
+        "task_ids": [
+          "042a9fc_1",
+          "0d01c76_2",
+          "13547f5_3",
+          "166f4ff_3",
+          "29a7b7e_3",
+          "2c544f9_3",
+          "2d9f728_3",
+          "325d6ec_3",
+          "32616b5_3",
+          "3aa1a22_2",
+          "3aa1a22_3",
+          "3b8fb7a_1",
+          "3b8fb7a_3",
+          "3d9a636_2",
+          "552869a_1",
+          "634f342_1",
+          "634f342_2",
+          "652485c_1",
+          "652485c_2",
+          "6b6ca61_3",
+          "83a7951_2",
+          "8749218_2",
+          "8ce6779_1",
+          "9016950_2",
+          "90adc3f_3",
+          "986aa4e_1",
+          "986aa4e_3",
+          "9dabbc9_1",
+          "9dabbc9_2",
+          "afc4005_1",
+          "b9c5c9a_2",
+          "b9c5c9a_3",
+          "bde252e_3",
+          "ccf4b82_1",
+          "ccf4b82_2",
+          "d194965_3",
+          "f861c32_2",
+          "fd1f8fa_1",
+          "fd1f8fa_3",
+          "ffe6d5e_2",
+          "ffe6d5e_3"
+        ]
+      },
+      "StopIteration": {
+        "task_count": 5,
+        "task_ids": [
+          "042a9fc_1",
+          "0d01c76_2",
+          "3b8fb7a_1",
+          "8ce6779_1",
+          "b9c5c9a_1"
+        ]
+      },
+      "TypeError": {
+        "task_count": 16,
+        "task_ids": [
+          "0d01c76_3",
+          "166f4ff_1",
+          "325d6ec_1",
+          "325d6ec_3",
+          "32616b5_1",
+          "59fae45_2",
+          "59fae45_3",
+          "634f342_2",
+          "652485c_2",
+          "83a7951_3",
+          "8749218_2",
+          "986aa4e_1",
+          "986aa4e_3",
+          "bde252e_1",
+          "bde252e_2",
+          "f861c32_1"
+        ]
+      },
+      "ValueError": {
+        "task_count": 4,
+        "task_ids": [
+          "0a9d82a_2",
+          "3b8fb7a_1",
+          "6b6ca61_3",
+          "8ce6779_3"
+        ]
+      }
+    }
+  },
+  "lora_signals": {
+    "all_tasks": {
+      "task_count": 168,
+      "success_count": 51,
+      "signals": {
+        "context_error": 24,
+        "python_error": 118,
+        "max_50_requests": 5,
+        "no_complete_task_action": 29,
+        "repeated_identical_code": 67
+      },
+      "counts": {
+        "lm_requests": 3429,
+        "model_responses": 3405,
+        "completion_tokens": 335660,
+        "api_calls": 12305,
+        "api_docs_calls": 1831,
+        "input_tokens": 38164179,
+        "output_tokens": 335660,
+        "total_tokens": 38499839,
+        "repeated_identical_code_actions": 355,
+        "max_same_code_occurrences": 28,
+        "content_empty": 24,
+        "error_responses": 24,
+        "input_plus_output_exceeds_context": 13,
+        "completion_endpoint_calls": 147,
+        "complete_task_actions": 156,
+        "length_truncated_responses": 3,
+        "input_exceeds_context": 11
+      }
+    },
+    "failed_tasks": {
+      "task_count": 117,
+      "success_count": 0,
+      "signals": {
+        "context_error": 24,
+        "python_error": 93,
+        "max_50_requests": 5,
+        "no_complete_task_action": 29,
+        "repeated_identical_code": 58
+      },
+      "counts": {
+        "lm_requests": 2715,
+        "model_responses": 2691,
+        "completion_tokens": 281345,
+        "api_calls": 10486,
+        "api_docs_calls": 1425,
+        "input_tokens": 32712739,
+        "output_tokens": 281345,
+        "total_tokens": 32994084,
+        "repeated_identical_code_actions": 343,
+        "max_same_code_occurrences": 28,
+        "content_empty": 24,
+        "error_responses": 24,
+        "input_plus_output_exceeds_context": 13,
+        "completion_endpoint_calls": 96,
+        "complete_task_actions": 105,
+        "length_truncated_responses": 3,
+        "input_exceeds_context": 11
+      }
+    },
+    "successful_tasks": {
+      "task_count": 51,
+      "success_count": 51,
+      "signals": {
+        "context_error": 0,
+        "python_error": 25,
+        "max_50_requests": 0,
+        "no_complete_task_action": 0,
+        "repeated_identical_code": 9
+      },
+      "counts": {
+        "lm_requests": 714,
+        "model_responses": 714,
+        "completion_tokens": 54315,
+        "api_calls": 1819,
+        "api_docs_calls": 406,
+        "completion_endpoint_calls": 51,
+        "input_tokens": 5451440,
+        "output_tokens": 54315,
+        "total_tokens": 5505755,
+        "repeated_identical_code_actions": 12,
+        "max_same_code_occurrences": 4,
+        "complete_task_actions": 51
+      }
+    },
+    "terminal_groups": {
+      "达到50步上限": 5,
+      "上下文请求被拒绝": 24,
+      "出现提交动作但未满足官方条件": 88,
+      "成功": 51
+    },
+    "answer_failure_kinds": {
+      "not_given_marker": 29,
+      "other_answer_mismatch": 9
+    },
+    "failure_categories": {
+      "Splitwise 或费用状态错误": {
+        "task_count": 12,
+        "task_ids": [
+          "32616b5_1",
+          "32616b5_2",
+          "32616b5_3",
+          "3aa1a22_1",
+          "3aa1a22_2",
+          "3aa1a22_3",
+          "6b6ca61_1",
+          "6b6ca61_2",
+          "6b6ca61_3",
+          "b6d1104_1",
+          "b6d1104_2",
+          "b6d1104_3"
+        ]
+      },
+      "Spotify 播放、队列或收藏状态错误": {
+        "task_count": 27,
+        "task_ids": [
+          "042a9fc_1",
+          "042a9fc_2",
+          "042a9fc_3",
+          "0de03ea_1",
+          "0de03ea_2",
+          "1150ed6_1",
+          "1150ed6_3",
+          "325d6ec_1",
+          "634f342_1",
+          "634f342_2",
+          "634f342_3",
+          "652485c_1",
+          "652485c_2",
+          "652485c_3",
+          "6f4b9a5_1",
+          "6f4b9a5_2",
+          "6f4b9a5_3",
+          "8749218_2",
+          "986aa4e_1",
+          "986aa4e_2",
+          "986aa4e_3",
+          "d194965_1",
+          "d194965_2",
+          "d194965_3",
+          "fd1f8fa_1",
+          "fd1f8fa_2",
+          "fd1f8fa_3"
+        ]
+      },
+      "Venmo 好友、交易或付款状态错误": {
+        "task_count": 33,
+        "task_ids": [
+          "024c982_1",
+          "270f1ff_1",
+          "270f1ff_3",
+          "2c544f9_1",
+          "2c544f9_2",
+          "2c544f9_3",
+          "2d9f728_1",
+          "2d9f728_2",
+          "2d9f728_3",
+          "3b8fb7a_1",
+          "3b8fb7a_2",
+          "3b8fb7a_3",
+          "3d9a636_1",
+          "3d9a636_2",
+          "3d9a636_3",
+          "522e5e5_1",
+          "522e5e5_2",
+          "522e5e5_3",
+          "6b6ca61_1",
+          "6b6ca61_2",
+          "6b6ca61_3",
+          "83a7951_1",
+          "83a7951_2",
+          "90adc3f_3",
+          "9dabbc9_1",
+          "9dabbc9_2",
+          "9dabbc9_3",
+          "c77c005_2",
+          "ccf4b82_1",
+          "ccf4b82_2",
+          "ccf4b82_3",
+          "d18139b_1",
+          "d18139b_3"
+        ]
+      },
+      "交易或购物状态错误": {
+        "task_count": 44,
+        "task_ids": [
+          "024c982_1",
+          "09b0ee6_1",
+          "09b0ee6_3",
+          "270f1ff_1",
+          "270f1ff_2",
+          "270f1ff_3",
+          "2c544f9_1",
+          "2c544f9_2",
+          "2c544f9_3",
+          "2d9f728_1",
+          "2d9f728_2",
+          "2d9f728_3",
+          "3aa1a22_1",
+          "3aa1a22_2",
+          "3aa1a22_3",
+          "3b8fb7a_1",
+          "3b8fb7a_2",
+          "3b8fb7a_3",
+          "6b6ca61_1",
+          "6b6ca61_2",
+          "6b6ca61_3",
+          "83a7951_1",
+          "83a7951_2",
+          "83a7951_3",
+          "90adc3f_1",
+          "90adc3f_2",
+          "90adc3f_3",
+          "9dabbc9_1",
+          "9dabbc9_2",
+          "9dabbc9_3",
+          "9ef798c_2",
+          "9ef798c_3",
+          "ccf4b82_1",
+          "ccf4b82_2",
+          "ccf4b82_3",
+          "d18139b_1",
+          "d18139b_2",
+          "d18139b_3",
+          "f323bae_1",
+          "f323bae_2",
+          "f323bae_3",
+          "f861c32_1",
+          "f861c32_2",
+          "f861c32_3"
+        ]
+      },
+      "其他业务条件未满足": {
+        "task_count": 26,
+        "task_ids": [
+          "13547f5_1",
+          "270f1ff_3",
+          "29a7b7e_1",
+          "29a7b7e_2",
+          "29a7b7e_3",
+          "652485c_1",
+          "652485c_2",
+          "652485c_3",
+          "8ce6779_1",
+          "8ce6779_2",
+          "8ce6779_3",
+          "986aa4e_1",
+          "986aa4e_2",
+          "986aa4e_3",
+          "a30375d_1",
+          "a30375d_2",
+          "a30375d_3",
+          "b9c5c9a_2",
+          "bde252e_1",
+          "bde252e_2",
+          "bde252e_3",
+          "d6ac34d_3",
+          "f323bae_2",
+          "ffe6d5e_1",
+          "ffe6d5e_2",
+          "ffe6d5e_3"
+        ]
+      },
+      "待办或项目状态错误": {
+        "task_count": 6,
+        "task_ids": [
+          "8ce6779_1",
+          "8ce6779_2",
+          "8ce6779_3",
+          "bde252e_1",
+          "bde252e_2",
+          "bde252e_3"
+        ]
+      },
+      "数据库变更不符合要求": {
+        "task_count": 3,
+        "task_ids": [
+          "3aa1a22_2",
+          "3aa1a22_3",
+          "59fae45_3"
+        ]
+      },
+      "文件系统路径、目录或内容错误": {
+        "task_count": 15,
+        "task_ids": [
+          "6b6ca61_1",
+          "6b6ca61_2",
+          "6b6ca61_3",
+          "83a7951_1",
+          "83a7951_2",
+          "83a7951_3",
+          "9ef798c_2",
+          "9ef798c_3",
+          "b9c5c9a_2",
+          "ccf4b82_1",
+          "ccf4b82_2",
+          "ccf4b82_3",
+          "f861c32_1",
+          "f861c32_2",
+          "f861c32_3"
+        ]
+      },
+      "最终答案不匹配": {
+        "task_count": 38,
+        "task_ids": [
+          "042a9fc_3",
+          "1150ed6_3",
+          "21abae1_2",
+          "21abae1_3",
+          "270f1ff_3",
+          "32616b5_1",
+          "32616b5_2",
+          "3aa1a22_2",
+          "3aa1a22_3",
+          "3b8fb7a_2",
+          "3b8fb7a_3",
+          "3d9a636_1",
+          "3d9a636_2",
+          "425a494_2",
+          "425a494_3",
+          "552869a_1",
+          "552869a_3",
+          "6b6ca61_2",
+          "6b6ca61_3",
+          "6f4b9a5_2",
+          "6f4b9a5_3",
+          "7847649_3",
+          "83a7951_2",
+          "8ce6779_2",
+          "8ce6779_3",
+          "90adc3f_3",
+          "986aa4e_1",
+          "986aa4e_3",
+          "9dabbc9_1",
+          "bde252e_1",
+          "bde252e_2",
+          "ccf4b82_2",
+          "ccf4b82_3",
+          "d18139b_2",
+          "d18139b_3",
+          "dac78d9_1",
+          "dac78d9_2",
+          "dac78d9_3"
+        ]
+      },
+      "电话、消息或联系人状态错误": {
+        "task_count": 10,
+        "task_ids": [
+          "13547f5_1",
+          "270f1ff_3",
+          "3aa1a22_1",
+          "3aa1a22_2",
+          "3aa1a22_3",
+          "9016950_1",
+          "9016950_2",
+          "9016950_3",
+          "ffe6d5e_2",
+          "ffe6d5e_3"
+        ]
+      },
+      "笔记状态或内容错误": {
+        "task_count": 17,
+        "task_ids": [
+          "024c982_1",
+          "270f1ff_3",
+          "2d9f728_1",
+          "2d9f728_2",
+          "2d9f728_3",
+          "6f4b9a5_2",
+          "6f4b9a5_3",
+          "83a7951_2",
+          "9dabbc9_1",
+          "9dabbc9_2",
+          "9dabbc9_3",
+          "b6d1104_1",
+          "b6d1104_2",
+          "b6d1104_3",
+          "d6ac34d_1",
+          "d6ac34d_3",
+          "f861c32_1"
+        ]
+      },
+      "邮件状态或内容错误": {
+        "task_count": 4,
+        "task_ids": [
+          "270f1ff_3",
+          "9016950_2",
+          "9ef798c_2",
+          "9ef798c_3"
+        ]
+      }
+    },
+    "exception_types": {
+      "AttributeError": {
+        "task_count": 7,
+        "task_ids": [
+          "0a9d82a_2",
+          "0de03ea_1",
+          "634f342_1",
+          "90adc3f_3",
+          "d6ac34d_2",
+          "f323bae_3",
+          "ffe6d5e_3"
+        ]
+      },
+      "Exception": {
+        "task_count": 82,
+        "task_ids": [
+          "024c982_2",
+          "042a9fc_1",
+          "042a9fc_2",
+          "0de03ea_1",
+          "0de03ea_2",
+          "1150ed6_3",
+          "166f4ff_2",
+          "166f4ff_3",
+          "21abae1_3",
+          "270f1ff_1",
+          "270f1ff_2",
+          "29a7b7e_1",
+          "29a7b7e_3",
+          "2c544f9_1",
+          "2c544f9_2",
+          "2c544f9_3",
+          "2d9f728_2",
+          "325d6ec_3",
+          "32616b5_1",
+          "32616b5_3",
+          "3aa1a22_1",
+          "3b8fb7a_1",
+          "3d9a636_1",
+          "3d9a636_2",
+          "425a494_2",
+          "522e5e5_1",
+          "552869a_1",
+          "59fae45_3",
+          "5a83b05_3",
+          "634f342_1",
+          "634f342_2",
+          "634f342_3",
+          "652485c_3",
+          "6b6ca61_1",
+          "6b6ca61_2",
+          "6f4b9a5_1",
+          "6f4b9a5_2",
+          "6f4b9a5_3",
+          "83a7951_1",
+          "83a7951_2",
+          "83a7951_3",
+          "8749218_1",
+          "8ce6779_1",
+          "8ce6779_3",
+          "9016950_1",
+          "9016950_2",
+          "9016950_3",
+          "90adc3f_1",
+          "90adc3f_3",
+          "986aa4e_2",
+          "986aa4e_3",
+          "9dabbc9_1",
+          "9dabbc9_2",
+          "9ef798c_1",
+          "9ef798c_2",
+          "9ef798c_3",
+          "b6d1104_2",
+          "b6d1104_3",
+          "b9c5c9a_1",
+          "bde252e_1",
+          "bde252e_2",
+          "bde252e_3",
+          "c77c005_1",
+          "c77c005_3",
+          "ccf4b82_1",
+          "ccf4b82_2",
+          "ccf4b82_3",
+          "d18139b_1",
+          "d18139b_2",
+          "d18139b_3",
+          "d194965_1",
+          "d6ac34d_1",
+          "dac78d9_1",
+          "dac78d9_2",
+          "f323bae_2",
+          "f861c32_2",
+          "f861c32_3",
+          "fd1f8fa_1",
+          "fd1f8fa_2",
+          "fd1f8fa_3",
+          "ff58e36_3",
+          "ffe6d5e_2"
+        ]
+      },
+      "FileNotFoundError": {
+        "task_count": 1,
+        "task_ids": [
+          "29a7b7e_1"
+        ]
+      },
+      "IndexError": {
+        "task_count": 6,
+        "task_ids": [
+          "0a9d82a_1",
+          "0a9d82a_3",
+          "0de03ea_1",
+          "6f4b9a5_1",
+          "986aa4e_3",
+          "fd1f8fa_2"
+        ]
+      },
+      "KeyError": {
+        "task_count": 22,
+        "task_ids": [
+          "042a9fc_1",
+          "0a9d82a_1",
+          "0de03ea_1",
+          "0de03ea_3",
+          "2d9f728_3",
+          "3d9a636_3",
+          "425a494_2",
+          "552869a_3",
+          "59fae45_1",
+          "59fae45_2",
+          "634f342_1",
+          "634f342_2",
+          "634f342_3",
+          "652485c_3",
+          "6b6ca61_1",
+          "83a7951_2",
+          "83a7951_3",
+          "8ce6779_3",
+          "986aa4e_2",
+          "d18139b_2",
+          "d18139b_3",
+          "f861c32_2"
+        ]
+      },
+      "NameError": {
+        "task_count": 43,
+        "task_ids": [
+          "09b0ee6_1",
+          "09b0ee6_2",
+          "0de03ea_1",
+          "1150ed6_3",
+          "13547f5_1",
+          "166f4ff_1",
+          "21abae1_1",
+          "21abae1_3",
+          "270f1ff_1",
+          "29a7b7e_3",
+          "2c544f9_2",
+          "325d6ec_3",
+          "32616b5_1",
+          "3aa1a22_1",
+          "3d9a636_1",
+          "425a494_2",
+          "425a494_3",
+          "552869a_3",
+          "634f342_1",
+          "634f342_2",
+          "6b6ca61_1",
+          "6b6ca61_2",
+          "6f4b9a5_1",
+          "6f4b9a5_3",
+          "83a7951_1",
+          "83a7951_2",
+          "83a7951_3",
+          "8ce6779_3",
+          "986aa4e_3",
+          "b6d1104_1",
+          "b9c5c9a_2",
+          "b9c5c9a_3",
+          "c77c005_2",
+          "cef9191_1",
+          "d18139b_3",
+          "d194965_2",
+          "d194965_3",
+          "d6ac34d_1",
+          "dac78d9_2",
+          "f323bae_1",
+          "f323bae_2",
+          "f861c32_2",
+          "fd1f8fa_2"
+        ]
+      },
+      "StopIteration": {
+        "task_count": 10,
+        "task_ids": [
+          "042a9fc_1",
+          "522e5e5_1",
+          "83a7951_2",
+          "83a7951_3",
+          "986aa4e_3",
+          "bde252e_2",
+          "ccf4b82_2",
+          "d18139b_2",
+          "d6ac34d_1",
+          "fd1f8fa_1"
+        ]
+      },
+      "TypeError": {
+        "task_count": 28,
+        "task_ids": [
+          "024c982_2",
+          "09b0ee6_3",
+          "0a9d82a_2",
+          "0d01c76_1",
+          "0d01c76_2",
+          "0de03ea_3",
+          "1150ed6_3",
+          "166f4ff_2",
+          "21abae1_1",
+          "270f1ff_3",
+          "2c544f9_2",
+          "32616b5_1",
+          "32616b5_3",
+          "59fae45_3",
+          "634f342_1",
+          "634f342_2",
+          "652485c_1",
+          "652485c_2",
+          "83a7951_1",
+          "90adc3f_1",
+          "b9c5c9a_3",
+          "bde252e_1",
+          "bde252e_2",
+          "c77c005_2",
+          "d194965_3",
+          "dac78d9_2",
+          "f323bae_2",
+          "f861c32_2"
+        ]
+      },
+      "UnboundLocalError": {
+        "task_count": 3,
+        "task_ids": [
+          "425a494_2",
+          "ccf4b82_1",
+          "d194965_3"
+        ]
+      },
+      "ValueError": {
+        "task_count": 13,
+        "task_ids": [
+          "024c982_2",
+          "042a9fc_3",
+          "0a9d82a_1",
+          "270f1ff_3",
+          "32616b5_2",
+          "3aa1a22_1",
+          "3b8fb7a_2",
+          "634f342_3",
+          "6b6ca61_1",
+          "6b6ca61_2",
+          "b9c5c9a_3",
+          "c77c005_3",
+          "ffe6d5e_3"
+        ]
+      }
+    }
+  },
+  "run_audit": {
+    "run_log": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_070617_appworld_qwen3-8b_react_full_sft_codex_rft_train90_test_normal168/logs/run.log",
+    "launcher_log": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_070617_appworld_qwen3-8b_react_full_sft_codex_rft_train90_test_normal168/logs/launcher.log",
+    "run_attempt_count": 1,
+    "run_finish_count": 1,
+    "recovery_detected": false,
+    "run_started_at": "2026-09-23T15:06:42+08:00",
+    "run_finished_at": "2026-09-23T16:29:48+08:00",
+    "duration_seconds": 4986.0,
+    "embedded_exit_codes": [
+      0
+    ],
+    "final_exit_code": 0,
+    "task_execution_failure_observations": 899,
+    "task_syntax_error_observations": 33,
+    "context_overflow_events": 29,
+    "context_overflow_task_count": 29,
+    "context_overflow_task_ids": [
+      "042a9fc_1",
+      "0a9d82a_1",
+      "270f1ff_3",
+      "32616b5_2",
+      "32616b5_3",
+      "3aa1a22_1",
+      "3b8fb7a_1",
+      "3b8fb7a_2",
+      "3b8fb7a_3",
+      "552869a_1",
+      "6b6ca61_2",
+      "83a7951_2",
+      "83a7951_3",
+      "8ce6779_2",
+      "9016950_2",
+      "9016950_3",
+      "90adc3f_2",
+      "986aa4e_3",
+      "9dabbc9_1",
+      "9dabbc9_3",
+      "b6d1104_3",
+      "b9c5c9a_1",
+      "bde252e_1",
+      "bde252e_2",
+      "c77c005_2",
+      "d18139b_1",
+      "d18139b_2",
+      "d18139b_3",
+      "f861c32_1"
+    ],
+    "fatal_pattern_counts": {
+      "cuda_oom": 0,
+      "killed": 0,
+      "engine_failure": 0,
+      "connection_failure": 0,
+      "uncaught_runtime_error": 0
+    },
+    "anomalies": []
+  },
+  "task_status_audit": {
+    "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_070617_appworld_qwen3-8b_react_full_sft_codex_rft_train90_test_normal168/task_status.jsonl",
+    "exists": true,
+    "raw_row_count": 168,
+    "malformed_line_numbers": [],
+    "rows_without_task_id": 0,
+    "unique_task_count": 168,
+    "duplicate_task_ids": [],
+    "duplicate_row_counts": {},
+    "missing_task_ids": [],
+    "extra_task_ids": [],
+    "evaluation_error_task_ids": [],
+    "status_success_mismatch_ids": [],
+    "test_count_mismatch_ids": [],
+    "completed_index_duplicate_count": 0,
+    "strictly_one_row_per_task": true,
+    "latest_rows_cover_dataset": true
+  },
+  "first_prompt_match_count": 168,
+  "first_prompt_token_count_matches": 168,
+  "fixed_request_parameters_match": true,
+  "training_comparison": {
+    "source_full_metrics": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_093106_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5/metrics/metrics.json",
+    "source_lora_metrics": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/metrics.json",
+    "trainable_parameter_ratio": 375.3174268018018,
+    "epochs": [
+      {
+        "epoch": 1,
+        "steps": 585,
+        "full_sft_mean_loss": 0.5895483820356875,
+        "lora_mean_loss": 0.5423992588224574
+      },
+      {
+        "epoch": 2,
+        "steps": 585,
+        "full_sft_mean_loss": 0.27483779405936215,
+        "lora_mean_loss": 0.3262639831019263
+      },
+      {
+        "epoch": 3,
+        "steps": 585,
+        "full_sft_mean_loss": 0.12933522724251972,
+        "lora_mean_loss": 0.20287448592547677
+      },
+      {
+        "epoch": 4,
+        "steps": 585,
+        "full_sft_mean_loss": 0.053033379343005976,
+        "lora_mean_loss": 0.13463691623292418
+      },
+      {
+        "epoch": 5,
+        "steps": 585,
+        "full_sft_mean_loss": 0.016795193160973967,
+        "lora_mean_loss": 0.09558442009565157
+      }
+    ],
+    "full_sft_diagnostic": {
+      "scope": "diagnostic subset overlapping all-data training",
+      "loss": 0.002034595772795205,
+      "perplexity": 1.0020366669672174,
+      "completion_target_tokens": 3947
+    },
+    "lora_diagnostic": {
+      "loss": 0.048539743566374034,
+      "perplexity": 1.0497370912870423,
+      "completion_target_tokens": 3947
+    },
+    "diagnostic_is_training_overlap": true,
+    "supervised_completion_tokens_per_pass": 94553,
+    "old67_dev": {
+      "2": {
+        "success_count": 0,
+        "aggregate": {
+          "task_goal_completion": 0.0,
+          "scenario_goal_completion": 0.0
+        },
+        "source": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_220731_appworld_qwen3-8b_react_full_sft_epoch2_aligned_full_dev/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev/evaluations/dev.json"
+      },
+      "5": {
+        "success_count": 0,
+        "aggregate": {
+          "task_goal_completion": 0.0,
+          "scenario_goal_completion": 0.0
+        },
+        "source": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_205155_appworld_qwen3-8b_react_full_sft_epoch5_aligned_full_dev/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev/evaluations/dev.json"
+      }
+    },
+    "data_readme": "/root/autodl-tmp/workspace-tw/data/2026-09-21_appworld_codex_rft_qwen3-8b_sft_train90/README.md",
+    "lora_adapter_saved_dtype": "F32 (504 safetensors tensors)",
+    "full_sft_master_and_optimizer_dtype": "FP32",
+    "lora_gradient_clipping": "No explicit clipping in recorded training loop",
+    "full_sft_gradient_clipping": "global norm 1.0",
+    "data_counts": {
+      "tasks": 90,
+      "decision_samples": 1170,
+      "task_families": 30,
+      "per_task_json_files": 90,
+      "source_execution_recovery_tasks": 9,
+      "sensitive_value_occurrences_checked": 146,
+      "sensitive_value_leaks": 0,
+      "policy_redaction_markers": 687,
+      "observation_truncations": 9,
+      "difficulty_1": 36,
+      "difficulty_2": 36,
+      "difficulty_3": 18
+    },
+    "data_conversion": {
+      "sample_unit": "one next-assistant-decision per row",
+      "loss_policy": "assistant completion only",
+      "history_policy": "full public prompt plus all prior model-visible observations",
+      "reasoning_policy": "preserve Codex visible rationale",
+      "action_policy": "preserve exact executed Python in one fenced code block",
+      "observation_policy": "use redacted policy_observation with the same 24000-character head/tail truncation used during Codex sampling; exclude raw observation",
+      "context_window": {
+        "training_max_length": 40960,
+        "history_truncation": "none after per-observation truncation",
+        "model_native_max_position_embeddings": 40960
+      },
+      "student_excluded": [
+        "ground_truth API calls",
+        "solution source",
+        "evaluator assertions",
+        "raw observations",
+        "credential values",
+        "failed attempt afc0fce_2__attempt_01"
+      ],
+      "enable_thinking": false
+    }
+  },
+  "lora_duration_seconds": 6487.0
+}

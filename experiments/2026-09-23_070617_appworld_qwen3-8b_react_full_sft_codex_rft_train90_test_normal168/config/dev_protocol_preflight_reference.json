@@ -1,0 +1,45 @@
+{
+  "status": "PASS",
+  "task_count": 57,
+  "training_task_count": 90,
+  "training_dev_task_overlap": [],
+  "dev_split_sha256": "9fa976589300ea8905708257144d801d1604b06d85fb0181e381df8a3ba85001",
+  "agent_config_identical_to_lora_reference": true,
+  "agent_config_sha256": "6ba24e61c7447a08f8313918f9bbc47bec15f9f46a1c86ed23331cab52c4149a",
+  "react_prompt_sha256": "c41f7852217d46586047a38f68e88b827cb9dcbe624e9651f9db8301547a534b",
+  "versions": {
+    "inference": {
+      "torch": "2.8.0+cu128",
+      "transformers": "4.56.2",
+      "vllm": "0.10.2"
+    },
+    "evaluation": {
+      "appworld": "0.2.0.dev0",
+      "appworld-agents": "0.1.0.dev0"
+    }
+  },
+  "training_json_sha256": "1f5ea51ea22ce7ef6b84d3e16bbb25976179064f7c8d0483ab7dcb0118ed3220",
+  "training_data_identical_to_lora": true,
+  "tokenizer_protocol_matches_lora_base": {
+    "loaded_chat_template_identical": true,
+    "vocabulary_identical": true,
+    "special_tokens_map_identical": true,
+    "first_task_rendered_token_ids_identical": true,
+    "first_task_input_tokens": 3171,
+    "chat_template_sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+    "note": "Export stores the unchanged template in chat_template.jinja; base stores it in tokenizer_config.json."
+  },
+  "generation_config_identical_except_library_version": true,
+  "generation_config": {
+    "bos_token_id": 151643,
+    "do_sample": true,
+    "eos_token_id": [
+      151645,
+      151643
+    ],
+    "pad_token_id": 151643,
+    "temperature": 0.6,
+    "top_k": 20,
+    "top_p": 0.95
+  }
+}

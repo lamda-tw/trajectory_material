@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "render_record_ast_identical": true,
+  "full_sft_trainer": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_093106_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5/scripts_snapshot/full_sft_train_fsdp_scheduled.py",
+  "lora_trainer": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/scripts_snapshot/minimal_sft_train.py",
+  "full_sft_trainer_sha256": "ca82c9ef65facd487422f58abe02983478cc60a22c00eb354c4e850016ebe7f5",
+  "lora_trainer_sha256": "a4e401d08bc1b00364d9f10452b1397ba14d0bd43772bf80197bfb879ba98ec0",
+  "notes": [
+    "Identical chat-template construction, thinking disabled during supervised rendering, prefix check, truncation policy, completion-only labels.",
+    "Both distributed loaders use per-rank batch size 1, world size 2, same DistributedSampler seed; epoch means average per-example token-mean loss.",
+    "Prior executed CPU tests passed for selected-position loss/every-parameter gradient equivalence and omission of right padding; this is supporting implementation evidence, not proof of all training behavior."
+  ],
+  "prior_cpu_test_log": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_093106_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5/logs/00_cpu_tests.log",
+  "prior_cpu_test_log_sha256": "f3928ce57f8c3d45442c74266864d5ddc719fd10745171e9d960c87d9ced279c"
+}

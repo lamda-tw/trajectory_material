@@ -197,12 +197,22 @@ Git 只保留轻量报告、聚合元数据和复现配置；`logs/`、`cache/`�
 
 - 从原始 Qwen3-8B 开始，对与 train90 LoRA 相同的 90 条轨迹、1170 个决策样本完成 5 轮 / 2925 步训练，全部 8,190,735,360 个参数参与优化。FP32 主参数与 AdamW 状态，BF16 计算和最终权重；最大训练序列 37015 tokens，额外 token 截断为 0。
 - 每轮平均 loss：`0.589548 → 0.274838 → 0.129335 → 0.053033 → 0.016795`。正式启动到模型导出约 3.36 小时，包含保存和第 100 步保存频率切换的恢复过程，不含此前预检。
-- 训练期间每轮末滚动保存一次；训练完成后按用户要求清理最终完整续训状态，释放约 91.54 GiB，保留约 15.3 GiB 的 BF16 最终模型和全部训练记录。模型重载/输出格式、399 个权重 tensor 的名称形状、完整参数数量和 SHA-256 核验均通过。Dev 57 题结果见下节，尚未运行本模型的 test_normal；训练 loss 不代表任务成功率。
+- 训练期间每轮末滚动保存一次；训练完成后按用户要求清理最终完整续训状态，释放约 91.54 GiB，保留约 15.3 GiB 的 BF16 最终模型和全部训练记录。模型重载/输出格式、399 个权重 tensor 的名称形状、完整参数数量和 SHA-256 核验均通过。Dev 57 题和 test_normal 168 题结果见后文；训练 loss 不代表任务成功率。
 - [中文报告](experiments/2026-09-23_093106_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5/REPORT.md) · [本次五轮 loss](experiments/2026-09-23_093106_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5/metrics/loss_curve_total_5epochs.png) · [与旧 67 轨迹的 loss 对比](experiments/2026-09-23_093106_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5/metrics/loss_curve_compare_full_sft_67_vs_90.png) · [独立核验记录](experiments/2026-09-23_093106_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5/metrics/final_artifact_validation.json)。PDF、逐步 CSV、复现命令和完整指标均在同一实验目录。
 
 ## 2026-09-23：train90 全参数 SFT Dev57 正式评测
 
 - 固定上述第 5 轮最终完整模型，按 train90 LoRA 相同的 Dev 57 题、ReAct 提示词、temperature `0`、seed `100`、每题 `50` 步、单次 `3000` 输出 tokens、context `32000` 和无 reasoning parser 协议完成官方评分。
 - 全参数 SFT 成功 **12/57**，TGC **21.1**、SGC **0.0**；对照 LoRA 为 23/57、40.4、21.1，少成功 11 题。共同成功 7 题、新增成功 5 题、退化 16 题；测试条件通过 163/291。
-- 正式评测约 23.3 分钟，57 个任务记录与官方结果一致，evaluator 错误为 0。1003 次 LM 请求含 9 次上下文拒绝；994 次正常回复均保留 Python 代码。未扩窗重试，未运行 test_normal。
+- 正式评测约 23.3 分钟，57 个任务记录与官方结果一致，evaluator 错误为 0。1003 次 LM 请求含 9 次上下文拒绝；994 次正常回复均保留 Python 代码。该次 Dev 运行未扩窗重试；后续 test_normal 168 题已独立完成，见下节。
 - [中文报告](experiments/2026-09-23_062600_appworld_qwen3-8b_react_full_sft_codex_rft_train90_dev57/REPORT.md) · [逐题对照 CSV](experiments/2026-09-23_062600_appworld_qwen3-8b_react_full_sft_codex_rft_train90_dev57/task_comparison.csv) · [结构化结果及审计](experiments/2026-09-23_062600_appworld_qwen3-8b_react_full_sft_codex_rft_train90_dev57/summary.json)。模型不复制到评测目录，原始轨迹、数据库、日志和缓存仅保留在本地。
+
+## 2026-09-23：train90 全参数 SFT test_normal168 正式评测
+
+- 固定第5轮最终全参数模型，与 train90 LoRA 原始完整 test_normal168 使用相同 ReAct、temperature `0`、seed `100`、50步、单次3000输出tokens、context32000和无reasoning parser协议；168题首轮messages、输入token数和固定请求字段逐题核对一致。
+- 全参数 SFT 成功 **28/168**，TGC **16.7**、SGC **5.4**（3/56场景）；LoRA为51/168、30.4、16.1，少成功23题。条件通过数为498/1077，对照LoRA598/1077。
+- 共同成功18题、FFT新增成功10题、退化33题。退化题中29题出现提交动作但未满足业务条件，2题耗尽步数，2题上下文中断。全量FFT有29题超窗、19题归为50步终止；不能仅用窗口解释总体差额。
+- 五轮平均训练loss更低，但Dev和Test的任务完成率均低于LoRA；小数据过度适配、更新范围和纠错轨迹不足值得优先验证，现有最终模型不能证明第2轮一定优于第5轮。
+- 正式运行约83.1分钟，退出码0、评分器错误0。3667次LM请求中3638次正常回复均含Python代码，29次为上下文拒绝占位；模型未修改，GPU已释放。逐题/场景CSV、7组案例、1008份原始证据哈希及最终一致性检查均通过。
+- [详细中文报告](experiments/2026-09-23_070617_appworld_qwen3-8b_react_full_sft_codex_rft_train90_test_normal168/REPORT.md) · [逐题对照CSV](experiments/2026-09-23_070617_appworld_qwen3-8b_react_full_sft_codex_rft_train90_test_normal168/task_comparison.csv) · [场景对照CSV](experiments/2026-09-23_070617_appworld_qwen3-8b_react_full_sft_codex_rft_train90_test_normal168/scenario_comparison.csv) · [配对案例](experiments/2026-09-23_070617_appworld_qwen3-8b_react_full_sft_codex_rft_train90_test_normal168/CASE_STUDIES.md)。
+- [性能对比图](experiments/2026-09-23_070617_appworld_qwen3-8b_react_full_sft_codex_rft_train90_test_normal168/metrics/performance_comparison.png) · [五轮loss对比图](experiments/2026-09-23_070617_appworld_qwen3-8b_react_full_sft_codex_rft_train90_test_normal168/metrics/training_loss_comparison.png) · [结构化结果](experiments/2026-09-23_070617_appworld_qwen3-8b_react_full_sft_codex_rft_train90_test_normal168/summary.json) · [最终核验](experiments/2026-09-23_070617_appworld_qwen3-8b_react_full_sft_codex_rft_train90_test_normal168/metrics/final_validation.json)。PNG/PDF均已保存，原始轨迹和数据库仅保留在本地。

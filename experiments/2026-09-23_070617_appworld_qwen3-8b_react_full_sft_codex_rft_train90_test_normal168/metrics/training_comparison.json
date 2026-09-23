@@ -1,0 +1,109 @@
+{
+  "source_full_metrics": "/root/autodl-tmp/workspace-tw/experiments/2026-09-23_093106_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch5/metrics/metrics.json",
+  "source_lora_metrics": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/metrics.json",
+  "trainable_parameter_ratio": 375.3174268018018,
+  "epochs": [
+    {
+      "epoch": 1,
+      "steps": 585,
+      "full_sft_mean_loss": 0.5895483820356875,
+      "lora_mean_loss": 0.5423992588224574
+    },
+    {
+      "epoch": 2,
+      "steps": 585,
+      "full_sft_mean_loss": 0.27483779405936215,
+      "lora_mean_loss": 0.3262639831019263
+    },
+    {
+      "epoch": 3,
+      "steps": 585,
+      "full_sft_mean_loss": 0.12933522724251972,
+      "lora_mean_loss": 0.20287448592547677
+    },
+    {
+      "epoch": 4,
+      "steps": 585,
+      "full_sft_mean_loss": 0.053033379343005976,
+      "lora_mean_loss": 0.13463691623292418
+    },
+    {
+      "epoch": 5,
+      "steps": 585,
+      "full_sft_mean_loss": 0.016795193160973967,
+      "lora_mean_loss": 0.09558442009565157
+    }
+  ],
+  "full_sft_diagnostic": {
+    "scope": "diagnostic subset overlapping all-data training",
+    "loss": 0.002034595772795205,
+    "perplexity": 1.0020366669672174,
+    "completion_target_tokens": 3947
+  },
+  "lora_diagnostic": {
+    "loss": 0.048539743566374034,
+    "perplexity": 1.0497370912870423,
+    "completion_target_tokens": 3947
+  },
+  "diagnostic_is_training_overlap": true,
+  "supervised_completion_tokens_per_pass": 94553,
+  "old67_dev": {
+    "2": {
+      "success_count": 0,
+      "aggregate": {
+        "task_goal_completion": 0.0,
+        "scenario_goal_completion": 0.0
+      },
+      "source": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_220731_appworld_qwen3-8b_react_full_sft_epoch2_aligned_full_dev/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev/evaluations/dev.json"
+    },
+    "5": {
+      "success_count": 0,
+      "aggregate": {
+        "task_goal_completion": 0.0,
+        "scenario_goal_completion": 0.0
+      },
+      "source": "/root/autodl-tmp/workspace-tw/experiments/2026-09-15_205155_appworld_qwen3-8b_react_full_sft_epoch5_aligned_full_dev/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev/evaluations/dev.json"
+    }
+  },
+  "data_readme": "/root/autodl-tmp/workspace-tw/data/2026-09-21_appworld_codex_rft_qwen3-8b_sft_train90/README.md",
+  "lora_adapter_saved_dtype": "F32 (504 safetensors tensors)",
+  "full_sft_master_and_optimizer_dtype": "FP32",
+  "lora_gradient_clipping": "No explicit clipping in recorded training loop",
+  "full_sft_gradient_clipping": "global norm 1.0",
+  "data_counts": {
+    "tasks": 90,
+    "decision_samples": 1170,
+    "task_families": 30,
+    "per_task_json_files": 90,
+    "source_execution_recovery_tasks": 9,
+    "sensitive_value_occurrences_checked": 146,
+    "sensitive_value_leaks": 0,
+    "policy_redaction_markers": 687,
+    "observation_truncations": 9,
+    "difficulty_1": 36,
+    "difficulty_2": 36,
+    "difficulty_3": 18
+  },
+  "data_conversion": {
+    "sample_unit": "one next-assistant-decision per row",
+    "loss_policy": "assistant completion only",
+    "history_policy": "full public prompt plus all prior model-visible observations",
+    "reasoning_policy": "preserve Codex visible rationale",
+    "action_policy": "preserve exact executed Python in one fenced code block",
+    "observation_policy": "use redacted policy_observation with the same 24000-character head/tail truncation used during Codex sampling; exclude raw observation",
+    "context_window": {
+      "training_max_length": 40960,
+      "history_truncation": "none after per-observation truncation",
+      "model_native_max_position_embeddings": 40960
+    },
+    "student_excluded": [
+      "ground_truth API calls",
+      "solution source",
+      "evaluator assertions",
+      "raw observations",
+      "credential values",
+      "failed attempt afc0fce_2__attempt_01"
+    ],
+    "enable_thinking": false
+  }
+}

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-if [[ $# -lt 2 || $# -gt 6 ]]; then
-  echo "Usage: $0 EVALUATION_EXPERIMENT_ROOT FULL_MODEL_PATH [MODEL_LABEL] [MODEL_CONFIG_NAME] [TASK_ID] [REASONING_PARSER]" >&2
+if [[ $# -lt 2 || $# -gt 7 ]]; then
+  echo "Usage: $0 EVALUATION_EXPERIMENT_ROOT FULL_MODEL_PATH [MODEL_LABEL] [MODEL_CONFIG_NAME] [TASK_ID] [REASONING_PARSER] [DATASET_NAME]" >&2
   exit 2
 fi
 
@@ -20,16 +20,21 @@ model_config_name="${4:-qwen3-8b-with-reasoning}"
 task_id="${5:-}"
 [[ "$task_id" != "-" ]] || task_id=""
 reasoning_parser="${6:-none}"
+dataset_name="${7:-dev}"
+if [[ "$dataset_name" != "dev" && "$dataset_name" != "test_normal" ]]; then
+  echo "Unsupported dataset: $dataset_name" >&2
+  exit 2
+fi
 run_log="$experiment_root/logs/run.log"
 status_file="$experiment_root/logs/run_exit_code.txt"
 served_model_name="appworld-qwen3-8b-$model_label"
-model_server_pattern="^${vllm_env}/bin/python ${vllm_env}/bin/vllm serve ${model_path} "
 
 if [[ "$experiment_root" != "$workspace"/experiments/*_appworld_qwen3-8b_react_full_sft_* ]]; then
   echo "Refusing unexpected evaluation root: $experiment_root" >&2
   exit 2
 fi
 model_path="$(realpath -e "$model_path")"
+model_server_pattern="^${vllm_env}/bin/python ${vllm_env}/bin/vllm serve ${model_path} "
 if [[ "$model_path" != "$workspace"/experiments/*/artifacts/model && "$model_path" != "$workspace"/experiments/*/artifacts/checkpoints/epoch_*_model ]]; then
   echo "Refusing model path outside workspace experiment artifacts: $model_path" >&2
   exit 2
@@ -66,8 +71,8 @@ for item in CHANGELOG.md LICENSE api_docs base_dbs tasks version.txt; do
     ln -s "$source_data/$item" "$experiment_root/data/$item"
   fi
 done
-if [[ ! -e "$experiment_root/data/datasets/dev.txt" ]]; then
-  ln -s "$source_data/datasets/dev.txt" "$experiment_root/data/datasets/dev.txt"
+if [[ ! -e "$experiment_root/data/datasets/$dataset_name.txt" ]]; then
+  ln -s "$source_data/datasets/$dataset_name.txt" "$experiment_root/data/datasets/$dataset_name.txt"
 fi
 
 export APPWORLD_ROOT="$experiment_root"
@@ -102,6 +107,7 @@ cleanup_model_server() {
   pkill -TERM -f "$model_server_pattern" 2>/dev/null || true
 }
 trap cleanup_model_server EXIT
+printf 'dataset_name=%s\n' "$dataset_name"
 printf 'run_started_at=%s\n' "$(date --iso-8601=seconds)"
 printf 'experiment_root=%s\nmodel_path=%s\nmodel_label=%s\nmodel_config_name=%s\nreasoning_parser=%s\ntask_id=%s\n' \
   "$experiment_root" "$model_path" "$model_label" "$model_config_name" "$reasoning_parser" "$task_id"
@@ -115,6 +121,7 @@ launcher_args=(
   --served-model-name "$served_model_name"
   --model-config-name "$model_config_name"
   --reasoning-parser "$reasoning_parser"
+  --dataset-name "$dataset_name"
   --per-task-status-path "$experiment_root/task_status.jsonl"
 )
 if [[ -n "$task_id" ]]; then
