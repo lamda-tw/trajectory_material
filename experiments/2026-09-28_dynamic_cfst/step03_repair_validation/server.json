@@ -1,0 +1,28 @@
+{
+  "pid": 687875,
+  "port": 8103,
+  "command": [
+    "/root/autodl-tmp/envs/qwen3-vllm-py312/bin/vllm",
+    "serve",
+    "/root/autodl-tmp/models/Qwen3-8B",
+    "--served-model-name",
+    "Qwen/Qwen3-8B",
+    "--enable-lora",
+    "--lora-modules",
+    "appworld-codex-rft-train90-epoch5=/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter",
+    "--max-lora-rank",
+    "8",
+    "--max-num-seqs",
+    "3",
+    "--max-model-len",
+    "32000",
+    "--enable-auto-tool-choice",
+    "--tool-call-parser",
+    "hermes",
+    "--port",
+    "8103"
+  ],
+  "started_at_utc": "2026-09-28T09:47:25.182806+00:00",
+  "stopped_at_utc": "2026-09-28T09:49:46.523290+00:00",
+  "exit_code": 0
+}

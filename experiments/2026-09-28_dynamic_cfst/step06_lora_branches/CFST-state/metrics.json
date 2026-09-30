@@ -1,0 +1,820 @@
+{
+  "schema_version": "dynamic-cfst-step06-branch-metrics-v1",
+  "status": "SUCCESS",
+  "branch": "CFST-state",
+  "started_at_utc": "2026-09-29T01:39:40.950151+00:00",
+  "finished_at_utc": "2026-09-29T01:42:13.809999+00:00",
+  "hostname": "autodl-container-65d14488ce-cd05d5ef",
+  "source": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter",
+    "adapter_model_sha256": "c8fdfd4f3bb198381b6f2e56d019589a3ed904241b0147b565ec540449a29938",
+    "optimizer_state_reused": false,
+    "model_weights_reused": true
+  },
+  "data": {
+    "unique_train_json": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step05_training_packages/CFST-state/train.jsonl",
+    "unique_train_sha256": "6b77845aff83a1d4103de30a92f723142c508ec183b1537ce5ed1bba434c0c00",
+    "unique_samples": 12,
+    "schedule_json": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step06_lora_branches/CFST-state/train_schedule.jsonl",
+    "schedule_sha256": "ba7bf7e1f0330d066887111f73c010532a70b760754542c637185237994a4fa4",
+    "scheduled_examples": 54,
+    "scheduled_supervised_tokens": 8138
+  },
+  "training": {
+    "optimizer": "AdamW",
+    "learning_rate": 0.0002,
+    "weight_decay": 0.0,
+    "scheduler": "none_constant",
+    "warmup_steps": 0,
+    "seed": 20260928,
+    "world_size": 2,
+    "global_batch_size": 2,
+    "optimizer_steps": 27,
+    "loss_reduction": "global supervised-token mean across two DDP ranks",
+    "loss_first": 1.0631749690029424,
+    "loss_last": 0.0944043955194854,
+    "loss_mean": 0.3866105167175235,
+    "duration_seconds": 152.85991764068604,
+    "history": [
+      {
+        "step": 1,
+        "loss": 1.0631749690029424,
+        "supervised_tokens": 397,
+        "cumulative_supervised_tokens": 397,
+        "samples": [
+          {
+            "id": "cfst-step05::76f2c72_1::repair-09::schedule-0031",
+            "source_training_id": "cfst-step05::76f2c72_1::repair-09",
+            "task_id": "76f2c72_1",
+            "schedule_index": 31,
+            "tokens": 6815,
+            "prompt_tokens": 6572,
+            "completion_tokens": 243
+          },
+          {
+            "id": "cfst-step05::b0a8eae_1::repair-05::schedule-0026",
+            "source_training_id": "cfst-step05::b0a8eae_1::repair-05",
+            "task_id": "b0a8eae_1",
+            "schedule_index": 26,
+            "tokens": 9096,
+            "prompt_tokens": 8942,
+            "completion_tokens": 154
+          }
+        ],
+        "elapsed_seconds": 4.562499523162842
+      },
+      {
+        "step": 2,
+        "loss": 1.0802128927707673,
+        "supervised_tokens": 250,
+        "cumulative_supervised_tokens": 647,
+        "samples": [
+          {
+            "id": "cfst-step05::b0a8eae_3::repair-06::schedule-0044",
+            "source_training_id": "cfst-step05::b0a8eae_3::repair-06",
+            "task_id": "b0a8eae_3",
+            "schedule_index": 44,
+            "tokens": 9365,
+            "prompt_tokens": 9269,
+            "completion_tokens": 96
+          },
+          {
+            "id": "cfst-step05::b0a8eae_1::repair-05::schedule-0038",
+            "source_training_id": "cfst-step05::b0a8eae_1::repair-05",
+            "task_id": "b0a8eae_1",
+            "schedule_index": 38,
+            "tokens": 9096,
+            "prompt_tokens": 8942,
+            "completion_tokens": 154
+          }
+        ],
+        "elapsed_seconds": 10.577235460281372
+      },
+      {
+        "step": 3,
+        "loss": 0.4879615604877472,
+        "supervised_tokens": 206,
+        "cumulative_supervised_tokens": 853,
+        "samples": [
+          {
+            "id": "cfst-step05::2a163ab_3::repair-09::schedule-0025",
+            "source_training_id": "cfst-step05::2a163ab_3::repair-09",
+            "task_id": "2a163ab_3",
+            "schedule_index": 25,
+            "tokens": 9580,
+            "prompt_tokens": 9477,
+            "completion_tokens": 103
+          },
+          {
+            "id": "cfst-step05::2a163ab_3::repair-09::schedule-0049",
+            "source_training_id": "cfst-step05::2a163ab_3::repair-09",
+            "task_id": "2a163ab_3",
+            "schedule_index": 49,
+            "tokens": 9580,
+            "prompt_tokens": 9477,
+            "completion_tokens": 103
+          }
+        ],
+        "elapsed_seconds": 16.803260564804077
+      },
+      {
+        "step": 4,
+        "loss": 0.8394030928611755,
+        "supervised_tokens": 192,
+        "cumulative_supervised_tokens": 1045,
+        "samples": [
+          {
+            "id": "cfst-step05::b0a8eae_3::repair-06::schedule-0008",
+            "source_training_id": "cfst-step05::b0a8eae_3::repair-06",
+            "task_id": "b0a8eae_3",
+            "schedule_index": 8,
+            "tokens": 9365,
+            "prompt_tokens": 9269,
+            "completion_tokens": 96
+          },
+          {
+            "id": "cfst-step05::b0a8eae_3::repair-06::schedule-0032",
+            "source_training_id": "cfst-step05::b0a8eae_3::repair-06",
+            "task_id": "b0a8eae_3",
+            "schedule_index": 32,
+            "tokens": 9365,
+            "prompt_tokens": 9269,
+            "completion_tokens": 96
+          }
+        ],
+        "elapsed_seconds": 22.820382118225098
+      },
+      {
+        "step": 5,
+        "loss": 0.9221313328113196,
+        "supervised_tokens": 265,
+        "cumulative_supervised_tokens": 1310,
+        "samples": [
+          {
+            "id": "cfst-step05::7d7fbf6_1::repair-09::schedule-0015",
+            "source_training_id": "cfst-step05::7d7fbf6_1::repair-09",
+            "task_id": "7d7fbf6_1",
+            "schedule_index": 15,
+            "tokens": 5786,
+            "prompt_tokens": 5582,
+            "completion_tokens": 204
+          },
+          {
+            "id": "cfst-step05::d0b1f43_1::repair-13::schedule-0009",
+            "source_training_id": "cfst-step05::d0b1f43_1::repair-13",
+            "task_id": "d0b1f43_1",
+            "schedule_index": 9,
+            "tokens": 8981,
+            "prompt_tokens": 8920,
+            "completion_tokens": 61
+          }
+        ],
+        "elapsed_seconds": 28.462607383728027
+      },
+      {
+        "step": 6,
+        "loss": 0.7148306075106846,
+        "supervised_tokens": 267,
+        "cumulative_supervised_tokens": 1577,
+        "samples": [
+          {
+            "id": "cfst-step05::7d7fbf6_1::repair-09::schedule-0051",
+            "source_training_id": "cfst-step05::7d7fbf6_1::repair-09",
+            "task_id": "7d7fbf6_1",
+            "schedule_index": 51,
+            "tokens": 5786,
+            "prompt_tokens": 5582,
+            "completion_tokens": 204
+          },
+          {
+            "id": "cfst-step05::ccb4494_2::repair-06::schedule-0004",
+            "source_training_id": "cfst-step05::ccb4494_2::repair-06",
+            "task_id": "ccb4494_2",
+            "schedule_index": 4,
+            "tokens": 6247,
+            "prompt_tokens": 6184,
+            "completion_tokens": 63
+          }
+        ],
+        "elapsed_seconds": 31.59949254989624
+      },
+      {
+        "step": 7,
+        "loss": 0.27868264628297434,
+        "supervised_tokens": 397,
+        "cumulative_supervised_tokens": 1974,
+        "samples": [
+          {
+            "id": "cfst-step05::2a163ab_1::repair-09::schedule-0012",
+            "source_training_id": "cfst-step05::2a163ab_1::repair-09",
+            "task_id": "2a163ab_1",
+            "schedule_index": 12,
+            "tokens": 9276,
+            "prompt_tokens": 8982,
+            "completion_tokens": 294
+          },
+          {
+            "id": "cfst-step05::2a163ab_3::repair-09::schedule-0001",
+            "source_training_id": "cfst-step05::2a163ab_3::repair-09",
+            "task_id": "2a163ab_3",
+            "schedule_index": 1,
+            "tokens": 9580,
+            "prompt_tokens": 9477,
+            "completion_tokens": 103
+          }
+        ],
+        "elapsed_seconds": 37.790366411209106
+      },
+      {
+        "step": 8,
+        "loss": 0.4618141683084624,
+        "supervised_tokens": 308,
+        "cumulative_supervised_tokens": 2282,
+        "samples": [
+          {
+            "id": "cfst-step05::d0b1f43_1::repair-13::schedule-0033",
+            "source_training_id": "cfst-step05::d0b1f43_1::repair-13",
+            "task_id": "d0b1f43_1",
+            "schedule_index": 33,
+            "tokens": 8981,
+            "prompt_tokens": 8920,
+            "completion_tokens": 61
+          },
+          {
+            "id": "cfst-step05::2a163ab_2::repair-17::schedule-0005",
+            "source_training_id": "cfst-step05::2a163ab_2::repair-17",
+            "task_id": "2a163ab_2",
+            "schedule_index": 5,
+            "tokens": 10804,
+            "prompt_tokens": 10557,
+            "completion_tokens": 247
+          }
+        ],
+        "elapsed_seconds": 45.30611968040466
+      },
+      {
+        "step": 9,
+        "loss": 0.5719259959459305,
+        "supervised_tokens": 300,
+        "cumulative_supervised_tokens": 2582,
+        "samples": [
+          {
+            "id": "cfst-step05::ccb4494_2::repair-06::schedule-0040",
+            "source_training_id": "cfst-step05::ccb4494_2::repair-06",
+            "task_id": "ccb4494_2",
+            "schedule_index": 40,
+            "tokens": 6247,
+            "prompt_tokens": 6184,
+            "completion_tokens": 63
+          },
+          {
+            "id": "cfst-step05::302c169_2::repair-11::schedule-0046",
+            "source_training_id": "cfst-step05::302c169_2::repair-11",
+            "task_id": "302c169_2",
+            "schedule_index": 46,
+            "tokens": 8123,
+            "prompt_tokens": 7886,
+            "completion_tokens": 237
+          }
+        ],
+        "elapsed_seconds": 50.01501703262329
+      },
+      {
+        "step": 10,
+        "loss": 0.25014434727479,
+        "supervised_tokens": 490,
+        "cumulative_supervised_tokens": 3072,
+        "samples": [
+          {
+            "id": "cfst-step05::2a163ab_2::repair-17::schedule-0053",
+            "source_training_id": "cfst-step05::2a163ab_2::repair-17",
+            "task_id": "2a163ab_2",
+            "schedule_index": 53,
+            "tokens": 10804,
+            "prompt_tokens": 10557,
+            "completion_tokens": 247
+          },
+          {
+            "id": "cfst-step05::76f2c72_1::repair-09::schedule-0019",
+            "source_training_id": "cfst-step05::76f2c72_1::repair-09",
+            "task_id": "76f2c72_1",
+            "schedule_index": 19,
+            "tokens": 6815,
+            "prompt_tokens": 6572,
+            "completion_tokens": 243
+          }
+        ],
+        "elapsed_seconds": 57.53509831428528
+      },
+      {
+        "step": 11,
+        "loss": 0.28604235071355427,
+        "supervised_tokens": 391,
+        "cumulative_supervised_tokens": 3463,
+        "samples": [
+          {
+            "id": "cfst-step05::302c169_2::repair-11::schedule-0010",
+            "source_training_id": "cfst-step05::302c169_2::repair-11",
+            "task_id": "302c169_2",
+            "schedule_index": 10,
+            "tokens": 8123,
+            "prompt_tokens": 7886,
+            "completion_tokens": 237
+          },
+          {
+            "id": "cfst-step05::b0a8eae_1::repair-05::schedule-0014",
+            "source_training_id": "cfst-step05::b0a8eae_1::repair-05",
+            "task_id": "b0a8eae_1",
+            "schedule_index": 14,
+            "tokens": 9096,
+            "prompt_tokens": 8942,
+            "completion_tokens": 154
+          }
+        ],
+        "elapsed_seconds": 62.25119066238403
+      },
+      {
+        "step": 12,
+        "loss": 0.3973574757575989,
+        "supervised_tokens": 265,
+        "cumulative_supervised_tokens": 3728,
+        "samples": [
+          {
+            "id": "cfst-step05::7d7fbf6_1::repair-09::schedule-0027",
+            "source_training_id": "cfst-step05::7d7fbf6_1::repair-09",
+            "task_id": "7d7fbf6_1",
+            "schedule_index": 27,
+            "tokens": 5786,
+            "prompt_tokens": 5582,
+            "completion_tokens": 204
+          },
+          {
+            "id": "cfst-step05::692c77d_3::repair-12::schedule-0023",
+            "source_training_id": "cfst-step05::692c77d_3::repair-12",
+            "task_id": "692c77d_3",
+            "schedule_index": 23,
+            "tokens": 11256,
+            "prompt_tokens": 11195,
+            "completion_tokens": 61
+          }
+        ],
+        "elapsed_seconds": 65.70246028900146
+      },
+      {
+        "step": 13,
+        "loss": 0.13349300622940063,
+        "supervised_tokens": 408,
+        "cumulative_supervised_tokens": 4136,
+        "samples": [
+          {
+            "id": "cfst-step05::7d7fbf6_1::repair-09::schedule-0003",
+            "source_training_id": "cfst-step05::7d7fbf6_1::repair-09",
+            "task_id": "7d7fbf6_1",
+            "schedule_index": 3,
+            "tokens": 5786,
+            "prompt_tokens": 5582,
+            "completion_tokens": 204
+          },
+          {
+            "id": "cfst-step05::7d7fbf6_1::repair-09::schedule-0039",
+            "source_training_id": "cfst-step05::7d7fbf6_1::repair-09",
+            "task_id": "7d7fbf6_1",
+            "schedule_index": 39,
+            "tokens": 5786,
+            "prompt_tokens": 5582,
+            "completion_tokens": 204
+          }
+        ],
+        "elapsed_seconds": 68.49751615524292
+      },
+      {
+        "step": 14,
+        "loss": 0.4051147879046552,
+        "supervised_tokens": 306,
+        "cumulative_supervised_tokens": 4442,
+        "samples": [
+          {
+            "id": "cfst-step05::76f2c72_1::repair-09::schedule-0007",
+            "source_training_id": "cfst-step05::76f2c72_1::repair-09",
+            "task_id": "76f2c72_1",
+            "schedule_index": 7,
+            "tokens": 6815,
+            "prompt_tokens": 6572,
+            "completion_tokens": 243
+          },
+          {
+            "id": "cfst-step05::d0b1f43_2::repair-08::schedule-0018",
+            "source_training_id": "cfst-step05::d0b1f43_2::repair-08",
+            "task_id": "d0b1f43_2",
+            "schedule_index": 18,
+            "tokens": 6425,
+            "prompt_tokens": 6362,
+            "completion_tokens": 63
+          }
+        ],
+        "elapsed_seconds": 72.12198328971863
+      },
+      {
+        "step": 15,
+        "loss": 0.654950886964798,
+        "supervised_tokens": 126,
+        "cumulative_supervised_tokens": 4568,
+        "samples": [
+          {
+            "id": "cfst-step05::d0b1f43_2::repair-08::schedule-0006",
+            "source_training_id": "cfst-step05::d0b1f43_2::repair-08",
+            "task_id": "d0b1f43_2",
+            "schedule_index": 6,
+            "tokens": 6425,
+            "prompt_tokens": 6362,
+            "completion_tokens": 63
+          },
+          {
+            "id": "cfst-step05::ccb4494_2::repair-06::schedule-0052",
+            "source_training_id": "cfst-step05::ccb4494_2::repair-06",
+            "task_id": "ccb4494_2",
+            "schedule_index": 52,
+            "tokens": 6247,
+            "prompt_tokens": 6184,
+            "completion_tokens": 63
+          }
+        ],
+        "elapsed_seconds": 75.44454860687256
+      },
+      {
+        "step": 16,
+        "loss": 0.1383163510992819,
+        "supervised_tokens": 490,
+        "cumulative_supervised_tokens": 5058,
+        "samples": [
+          {
+            "id": "cfst-step05::76f2c72_1::repair-09::schedule-0043",
+            "source_training_id": "cfst-step05::76f2c72_1::repair-09",
+            "task_id": "76f2c72_1",
+            "schedule_index": 43,
+            "tokens": 6815,
+            "prompt_tokens": 6572,
+            "completion_tokens": 243
+          },
+          {
+            "id": "cfst-step05::2a163ab_2::repair-17::schedule-0017",
+            "source_training_id": "cfst-step05::2a163ab_2::repair-17",
+            "task_id": "2a163ab_2",
+            "schedule_index": 17,
+            "tokens": 10804,
+            "prompt_tokens": 10557,
+            "completion_tokens": 247
+          }
+        ],
+        "elapsed_seconds": 82.9613950252533
+      },
+      {
+        "step": 17,
+        "loss": 0.1601334783960791,
+        "supervised_tokens": 357,
+        "cumulative_supervised_tokens": 5415,
+        "samples": [
+          {
+            "id": "cfst-step05::ccb4494_2::repair-06::schedule-0016",
+            "source_training_id": "cfst-step05::ccb4494_2::repair-06",
+            "task_id": "ccb4494_2",
+            "schedule_index": 16,
+            "tokens": 6247,
+            "prompt_tokens": 6184,
+            "completion_tokens": 63
+          },
+          {
+            "id": "cfst-step05::2a163ab_1::repair-09::schedule-0036",
+            "source_training_id": "cfst-step05::2a163ab_1::repair-09",
+            "task_id": "2a163ab_1",
+            "schedule_index": 36,
+            "tokens": 9276,
+            "prompt_tokens": 8982,
+            "completion_tokens": 294
+          }
+        ],
+        "elapsed_seconds": 88.80411219596863
+      },
+      {
+        "step": 18,
+        "loss": 0.22674453552340118,
+        "supervised_tokens": 355,
+        "cumulative_supervised_tokens": 5770,
+        "samples": [
+          {
+            "id": "cfst-step05::692c77d_3::repair-12::schedule-0011",
+            "source_training_id": "cfst-step05::692c77d_3::repair-12",
+            "task_id": "692c77d_3",
+            "schedule_index": 11,
+            "tokens": 11256,
+            "prompt_tokens": 11195,
+            "completion_tokens": 61
+          },
+          {
+            "id": "cfst-step05::2a163ab_1::repair-09::schedule-0048",
+            "source_training_id": "cfst-step05::2a163ab_1::repair-09",
+            "task_id": "2a163ab_1",
+            "schedule_index": 48,
+            "tokens": 9276,
+            "prompt_tokens": 8982,
+            "completion_tokens": 294
+          }
+        ],
+        "elapsed_seconds": 94.64724469184875
+      },
+      {
+        "step": 19,
+        "loss": 0.15209309554782258,
+        "supervised_tokens": 166,
+        "cumulative_supervised_tokens": 5936,
+        "samples": [
+          {
+            "id": "cfst-step05::d0b1f43_2::repair-08::schedule-0054",
+            "source_training_id": "cfst-step05::d0b1f43_2::repair-08",
+            "task_id": "d0b1f43_2",
+            "schedule_index": 54,
+            "tokens": 6425,
+            "prompt_tokens": 6362,
+            "completion_tokens": 63
+          },
+          {
+            "id": "cfst-step05::2a163ab_3::repair-09::schedule-0037",
+            "source_training_id": "cfst-step05::2a163ab_3::repair-09",
+            "task_id": "2a163ab_3",
+            "schedule_index": 37,
+            "tokens": 9580,
+            "prompt_tokens": 9477,
+            "completion_tokens": 103
+          }
+        ],
+        "elapsed_seconds": 100.8430347442627
+      },
+      {
+        "step": 20,
+        "loss": 0.4994775652885437,
+        "supervised_tokens": 122,
+        "cumulative_supervised_tokens": 6058,
+        "samples": [
+          {
+            "id": "cfst-step05::692c77d_3::repair-12::schedule-0035",
+            "source_training_id": "cfst-step05::692c77d_3::repair-12",
+            "task_id": "692c77d_3",
+            "schedule_index": 35,
+            "tokens": 11256,
+            "prompt_tokens": 11195,
+            "completion_tokens": 61
+          },
+          {
+            "id": "cfst-step05::692c77d_3::repair-12::schedule-0047",
+            "source_training_id": "cfst-step05::692c77d_3::repair-12",
+            "task_id": "692c77d_3",
+            "schedule_index": 47,
+            "tokens": 11256,
+            "prompt_tokens": 11195,
+            "completion_tokens": 61
+          }
+        ],
+        "elapsed_seconds": 104.30307698249817
+      },
+      {
+        "step": 21,
+        "loss": 0.08926080620645585,
+        "supervised_tokens": 401,
+        "cumulative_supervised_tokens": 6459,
+        "samples": [
+          {
+            "id": "cfst-step05::b0a8eae_1::repair-05::schedule-0002",
+            "source_training_id": "cfst-step05::b0a8eae_1::repair-05",
+            "task_id": "b0a8eae_1",
+            "schedule_index": 2,
+            "tokens": 9096,
+            "prompt_tokens": 8942,
+            "completion_tokens": 154
+          },
+          {
+            "id": "cfst-step05::2a163ab_2::repair-17::schedule-0041",
+            "source_training_id": "cfst-step05::2a163ab_2::repair-17",
+            "task_id": "2a163ab_2",
+            "schedule_index": 41,
+            "tokens": 10804,
+            "prompt_tokens": 10557,
+            "completion_tokens": 247
+          }
+        ],
+        "elapsed_seconds": 111.82153391838074
+      },
+      {
+        "step": 22,
+        "loss": 0.12637341935788432,
+        "supervised_tokens": 217,
+        "cumulative_supervised_tokens": 6676,
+        "samples": [
+          {
+            "id": "cfst-step05::b0a8eae_1::repair-05::schedule-0050",
+            "source_training_id": "cfst-step05::b0a8eae_1::repair-05",
+            "task_id": "b0a8eae_1",
+            "schedule_index": 50,
+            "tokens": 9096,
+            "prompt_tokens": 8942,
+            "completion_tokens": 154
+          },
+          {
+            "id": "cfst-step05::d0b1f43_2::repair-08::schedule-0042",
+            "source_training_id": "cfst-step05::d0b1f43_2::repair-08",
+            "task_id": "d0b1f43_2",
+            "schedule_index": 42,
+            "tokens": 6425,
+            "prompt_tokens": 6362,
+            "completion_tokens": 63
+          }
+        ],
+        "elapsed_seconds": 115.2087893486023
+      },
+      {
+        "step": 23,
+        "loss": 0.20715895703723353,
+        "supervised_tokens": 124,
+        "cumulative_supervised_tokens": 6800,
+        "samples": [
+          {
+            "id": "cfst-step05::d0b1f43_2::repair-08::schedule-0030",
+            "source_training_id": "cfst-step05::d0b1f43_2::repair-08",
+            "task_id": "d0b1f43_2",
+            "schedule_index": 30,
+            "tokens": 6425,
+            "prompt_tokens": 6362,
+            "completion_tokens": 63
+          },
+          {
+            "id": "cfst-step05::d0b1f43_1::repair-13::schedule-0021",
+            "source_training_id": "cfst-step05::d0b1f43_1::repair-13",
+            "task_id": "d0b1f43_1",
+            "schedule_index": 21,
+            "tokens": 8981,
+            "prompt_tokens": 8920,
+            "completion_tokens": 61
+          }
+        ],
+        "elapsed_seconds": 120.85812735557556
+      },
+      {
+        "step": 24,
+        "loss": 0.07053967982025469,
+        "supervised_tokens": 531,
+        "cumulative_supervised_tokens": 7331,
+        "samples": [
+          {
+            "id": "cfst-step05::2a163ab_1::repair-09::schedule-0024",
+            "source_training_id": "cfst-step05::2a163ab_1::repair-09",
+            "task_id": "2a163ab_1",
+            "schedule_index": 24,
+            "tokens": 9276,
+            "prompt_tokens": 8982,
+            "completion_tokens": 294
+          },
+          {
+            "id": "cfst-step05::302c169_2::repair-11::schedule-0034",
+            "source_training_id": "cfst-step05::302c169_2::repair-11",
+            "task_id": "302c169_2",
+            "schedule_index": 34,
+            "tokens": 8123,
+            "prompt_tokens": 7886,
+            "completion_tokens": 237
+          }
+        ],
+        "elapsed_seconds": 126.7030885219574
+      },
+      {
+        "step": 25,
+        "loss": 0.07042013155432206,
+        "supervised_tokens": 343,
+        "cumulative_supervised_tokens": 7674,
+        "samples": [
+          {
+            "id": "cfst-step05::b0a8eae_3::repair-06::schedule-0020",
+            "source_training_id": "cfst-step05::b0a8eae_3::repair-06",
+            "task_id": "b0a8eae_3",
+            "schedule_index": 20,
+            "tokens": 9365,
+            "prompt_tokens": 9269,
+            "completion_tokens": 96
+          },
+          {
+            "id": "cfst-step05::2a163ab_2::repair-17::schedule-0029",
+            "source_training_id": "cfst-step05::2a163ab_2::repair-17",
+            "task_id": "2a163ab_2",
+            "schedule_index": 29,
+            "tokens": 10804,
+            "prompt_tokens": 10557,
+            "completion_tokens": 247
+          }
+        ],
+        "elapsed_seconds": 134.22267937660217
+      },
+      {
+        "step": 26,
+        "loss": 0.056321415195570275,
+        "supervised_tokens": 340,
+        "cumulative_supervised_tokens": 8014,
+        "samples": [
+          {
+            "id": "cfst-step05::302c169_2::repair-11::schedule-0022",
+            "source_training_id": "cfst-step05::302c169_2::repair-11",
+            "task_id": "302c169_2",
+            "schedule_index": 22,
+            "tokens": 8123,
+            "prompt_tokens": 7886,
+            "completion_tokens": 237
+          },
+          {
+            "id": "cfst-step05::2a163ab_3::repair-09::schedule-0013",
+            "source_training_id": "cfst-step05::2a163ab_3::repair-09",
+            "task_id": "2a163ab_3",
+            "schedule_index": 13,
+            "tokens": 9580,
+            "prompt_tokens": 9477,
+            "completion_tokens": 103
+          }
+        ],
+        "elapsed_seconds": 140.4180405139923
+      },
+      {
+        "step": 27,
+        "loss": 0.0944043955194854,
+        "supervised_tokens": 124,
+        "cumulative_supervised_tokens": 8138,
+        "samples": [
+          {
+            "id": "cfst-step05::d0b1f43_1::repair-13::schedule-0045",
+            "source_training_id": "cfst-step05::d0b1f43_1::repair-13",
+            "task_id": "d0b1f43_1",
+            "schedule_index": 45,
+            "tokens": 8981,
+            "prompt_tokens": 8920,
+            "completion_tokens": 61
+          },
+          {
+            "id": "cfst-step05::ccb4494_2::repair-06::schedule-0028",
+            "source_training_id": "cfst-step05::ccb4494_2::repair-06",
+            "task_id": "ccb4494_2",
+            "schedule_index": 28,
+            "tokens": 6247,
+            "prompt_tokens": 6184,
+            "completion_tokens": 63
+          }
+        ],
+        "elapsed_seconds": 146.0717010498047
+      }
+    ]
+  },
+  "diagnostic": {
+    "scope": "the unique branch package; overlaps training and is only a numerical fit check",
+    "loss": 0.036427479918723825,
+    "perplexity": 1.0370990907801927,
+    "completion_target_tokens": 1826
+  },
+  "model": {
+    "dtype": "bfloat16",
+    "attention": "sdpa",
+    "max_length": 40960,
+    "trainable_parameters": 21823488,
+    "total_parameters": 8212558848,
+    "trainable_percent": 0.2657331095449582
+  },
+  "distributed": {
+    "backend": "nccl",
+    "world_size": 2,
+    "gpus": [
+      {
+        "rank": 0,
+        "name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "capability": [
+          12,
+          0
+        ],
+        "peak_allocated_gib": 37.98223543167114,
+        "peak_reserved_gib": 89.234375
+      },
+      {
+        "rank": 1,
+        "name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "capability": [
+          12,
+          0
+        ],
+        "peak_allocated_gib": 37.98180150985718,
+        "peak_reserved_gib": 91.525390625
+      }
+    ]
+  },
+  "artifacts": {
+    "adapter_dir": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step06_lora_branches/CFST-state/adapter",
+    "adapter_model_sha256": "846bf990d1c675b3f151f8a81e497f6a20528e9d0d3b25e2e5673206ef8f026d",
+    "adapter_differs_from_source": true
+  },
+  "software": {
+    "torch": "2.8.0+cu128",
+    "cuda_runtime": "12.8"
+  }
+}

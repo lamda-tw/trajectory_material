@@ -1,0 +1,37 @@
+{
+  "id": "chatcmpl-de3902c9e21d4109afd5a9cbc309928f",
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "The first zip archive was created successfully and its source directory was deleted, so I can now apply the same verified operation to the remaining four vacation spots.\n\n```python\nfor vacation_directory in vacation_spot_directories[1:]:\n    vacation_spot = vacation_directory.rstrip('/').split('/')[-1]\n    compression_results[vacation_spot] = apis.file_system.compress_directory(\n        access_token=file_system_access_token,\n        directory_path=vacation_directory,\n        compressed_file_path=f'{vacation_root}{vacation_spot}.zip',\n        delete_directory=True,\n        overwrite=False\n    )\nprint(compression_results)\n```\n\n",
+        "refusal": null,
+        "role": "assistant",
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [],
+        "reasoning_content": null
+      },
+      "stop_reason": null,
+      "token_ids": null
+    }
+  ],
+  "created": 1790593292,
+  "model": "appworld-codex-rft-train90-epoch5",
+  "object": "chat.completion",
+  "service_tier": null,
+  "system_fingerprint": null,
+  "usage": {
+    "completion_tokens": 123,
+    "prompt_tokens": 6649,
+    "total_tokens": 6772,
+    "completion_tokens_details": null,
+    "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "kv_transfer_params": null
+}

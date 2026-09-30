@@ -1,0 +1,25 @@
+{
+  "schema_version": "dynamic-cfst-step04a-costs-v1",
+  "logical_candidates": 20,
+  "clean_prefix_validations": 20,
+  "clean_prefix_actions_executed": 229,
+  "prefix_environment_runs_including_normalization_retry": 31,
+  "prefix_actions_including_normalization_retry": 348,
+  "repair_environment_runs": 21,
+  "total_environment_runs_including_retries": 52,
+  "infrastructure_retries": 1,
+  "teacher_process_invocations": 21,
+  "teacher_actions_completed": 20,
+  "student_continuation_actions": 132,
+  "student_prompt_tokens": 1924301,
+  "student_completion_tokens": 12849,
+  "official_successes_step04a": 13,
+  "official_failures_step04a": 7,
+  "training_runs": 0,
+  "check_split_teacher_answers": 0,
+  "notes": [
+    "One first teacher process for 6104387_2 exited before returning; it is preserved under infrastructure_failures and was retried once.",
+    "The first prefix pass stopped after 11 environments because one saved observation contained an asynchronous throughput log line; business JSON matched. The pass is preserved and all 20 prefixes were then revalidated with only that log line normalized.",
+    "Teacher token accounting is unavailable from the Codex CLI audit response; calls and completed actions are reported instead."
+  ]
+}

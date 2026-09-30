@@ -1,0 +1,37 @@
+{
+  "id": "chatcmpl-e8f5da0350d041cbbf26c7048bcf14cd",
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "RapidFiber is a service, not a person, so I will search every inbox page for that exact subject and paginate until exhausted.\n\n```python\nrapidfiber_threads = []\npage_index = 0\nwhile True:\n    page = apis.gmail.show_inbox_threads(\n        access_token=gmail_access_token,\n        query='RapidFiber',\n        min_created_at='2023-01-01',\n        max_created_at='2023-05-15',\n        page_index=page_index,\n        page_limit=20\n    )\n    if not page:\n        break\n    rapidfiber_threads.extend(page)\n    page_index += 1\nprint(rapidfiber_threads)\n```\n\n",
+        "refusal": null,
+        "role": "assistant",
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [],
+        "reasoning_content": null
+      },
+      "stop_reason": null,
+      "token_ids": null
+    }
+  ],
+  "created": 1790596420,
+  "model": "appworld-codex-rft-train90-epoch5",
+  "object": "chat.completion",
+  "service_tier": null,
+  "system_fingerprint": null,
+  "usage": {
+    "completion_tokens": 150,
+    "prompt_tokens": 12646,
+    "total_tokens": 12796,
+    "completion_tokens_details": null,
+    "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "kv_transfer_params": null
+}

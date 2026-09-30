@@ -1,0 +1,51 @@
+{
+  "schema_version": "dynamic-cfst-step04a-repair-attempt-v1",
+  "candidate_rank": 18,
+  "selection": "review_queue_21",
+  "primary_label_before_execution": "恢复错误",
+  "task_id": "6104387_2",
+  "family_id": "6104387",
+  "replace_action_index_1based": 14,
+  "started_at_utc": "2026-09-28T11:04:23.220142+00:00",
+  "finished_at_utc": "2026-09-28T11:04:31.146134+00:00",
+  "prefix_replay_actions": 13,
+  "prefix_replay_success": true,
+  "replay_error": null,
+  "teacher": {
+    "provider": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "called": false,
+    "response": null,
+    "ground_truth_visible": false,
+    "rejected_action_visible": false,
+    "later_trajectory_visible": false,
+    "official_failure_condition_visible": false
+  },
+  "student": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter",
+    "model_name": "appworld-codex-rft-train90-epoch5",
+    "temperature": 0,
+    "seed": 100,
+    "max_completion_tokens": 3000,
+    "max_model_len": 32000,
+    "max_total_actions": 50,
+    "continuation_actions": 0
+  },
+  "task_completed_signal": false,
+  "generation_error": "teacher_RuntimeError:codex_exit_1: ",
+  "official_evaluation": {
+    "success": false,
+    "num_tests": 10,
+    "num_passes": 0,
+    "num_failures": 10,
+    "pass_percentage": 0.0,
+    "difficulty": 3
+  },
+  "official_successful_repair": false,
+  "interaction_count_from_replacement": 0,
+  "interaction_log": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04a_expanded_repairs/attempts/rank18_6104387_2/interactions.jsonl",
+  "official_report": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04a_expanded_repairs/runtime/appworld_root/experiments/outputs/cfst_step04a_repair_rank18_6104387_2/tasks/6104387_2/evaluation/report.md",
+  "appworld_output_directory": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04a_expanded_repairs/runtime/appworld_root/experiments/outputs/cfst_step04a_repair_rank18_6104387_2/tasks/6104387_2"
+}

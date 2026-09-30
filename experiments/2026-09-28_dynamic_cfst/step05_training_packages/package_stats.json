@@ -1,0 +1,110 @@
+{
+  "schema_version": "dynamic-cfst-step05-stats-v1",
+  "tokenizer_path": "/root/autodl-tmp/models/Qwen3-8B",
+  "enable_thinking": false,
+  "max_length": 40960,
+  "packages": {
+    "CFST-state": {
+      "sample_count": 12,
+      "unique_task_count": 12,
+      "unique_family_count": 8,
+      "family_ids": [
+        "2a163ab",
+        "302c169",
+        "692c77d",
+        "76f2c72",
+        "7d7fbf6",
+        "b0a8eae",
+        "ccb4494",
+        "d0b1f43"
+      ],
+      "capability_counts": {
+        "状态构建": 12
+      },
+      "prompt_tokens_sum": 99928,
+      "supervised_completion_tokens_sum": 1826,
+      "full_tokens_sum_one_pass": 101754,
+      "completion_tokens": {
+        "min": 61,
+        "p50": 154,
+        "max": 294
+      },
+      "full_tokens": {
+        "min": 5786,
+        "max": 11256
+      },
+      "samples_over_40960": 0,
+      "suggested_step06_supervised_token_budget": 8000,
+      "repetition_schedule": "deferred_to_step06; train.jsonl contains unique samples only"
+    },
+    "CFST-Action": {
+      "sample_count": 8,
+      "unique_task_count": 8,
+      "unique_family_count": 6,
+      "family_ids": [
+        "22cc237",
+        "34d9492",
+        "60d0b5b",
+        "6104387",
+        "7d7fbf6",
+        "d0b1f43"
+      ],
+      "capability_counts": {
+        "动作落地": 8
+      },
+      "prompt_tokens_sum": 98182,
+      "supervised_completion_tokens_sum": 1493,
+      "full_tokens_sum_one_pass": 99675,
+      "completion_tokens": {
+        "min": 66,
+        "p50": 180,
+        "max": 347
+      },
+      "full_tokens": {
+        "min": 5969,
+        "max": 22193
+      },
+      "samples_over_40960": 0,
+      "suggested_step06_supervised_token_budget": 8000,
+      "repetition_schedule": "deferred_to_step06; train.jsonl contains unique samples only"
+    },
+    "CFST-Mixed": {
+      "sample_count": 20,
+      "unique_task_count": 20,
+      "unique_family_count": 12,
+      "family_ids": [
+        "22cc237",
+        "2a163ab",
+        "302c169",
+        "34d9492",
+        "60d0b5b",
+        "6104387",
+        "692c77d",
+        "76f2c72",
+        "7d7fbf6",
+        "b0a8eae",
+        "ccb4494",
+        "d0b1f43"
+      ],
+      "capability_counts": {
+        "状态构建": 12,
+        "动作落地": 8
+      },
+      "prompt_tokens_sum": 198110,
+      "supervised_completion_tokens_sum": 3319,
+      "full_tokens_sum_one_pass": 201429,
+      "completion_tokens": {
+        "min": 61,
+        "p50": 177,
+        "max": 347
+      },
+      "full_tokens": {
+        "min": 5786,
+        "max": 22193
+      },
+      "samples_over_40960": 0,
+      "suggested_step06_supervised_token_budget": 8000,
+      "repetition_schedule": "deferred_to_step06; train.jsonl contains unique samples only"
+    }
+  }
+}

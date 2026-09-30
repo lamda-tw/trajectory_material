@@ -1,0 +1,1745 @@
+{
+  "aggregate": {
+    "task_goal_completion": 40.4,
+    "scenario_goal_completion": 21.1
+  },
+  "individual": {
+    "50e1ac9_1": {
+      "success": true,
+      "difficulty": 2,
+      "num_tests": 2,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "Assert no model changes",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": []
+    },
+    "50e1ac9_2": {
+      "success": false,
+      "difficulty": 2,
+      "num_tests": 2,
+      "passes": [
+        {
+          "requirement": "Assert no model changes",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert answers match.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert answers match.\n    \"\"\"\n):\n    ground_truth_song_titles = ground_truth_answer.split(\",\")\n    predicted_song_titles = predicted_answer.split(\",\")\n    test.case(\n```\n----------\nAssertionError:\n['dancing in a field of thorns', 'eternal reverie', 'heartstrings symphony', 'lonesome road', 'painting shadows on the wall', 'paper planes']\n==\n['<<not_given>>']\n\nIn left but not right:\n['dancing in a field of thorns', 'eternal reverie', 'heartstrings symphony', 'lonesome road', 'painting shadows on the wall', 'paper planes']\n\nIn right but not left:\n['<<not_given>>']\n\nOriginal values:\n['Eternal Reverie', 'Heartstrings Symphony', 'Dancing in a Field of Thorns', 'Lonesome Road', 'Painting Shadows on the Wall', 'Paper Planes']\n==\n['<<NOT_GIVEN>>']",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "50e1ac9_3": {
+      "success": true,
+      "difficulty": 2,
+      "num_tests": 2,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "Assert no model changes",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": []
+    },
+    "fac291d_1": {
+      "success": true,
+      "difficulty": 2,
+      "num_tests": 2,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert no model changes.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": []
+    },
+    "fac291d_2": {
+      "success": true,
+      "difficulty": 2,
+      "num_tests": 2,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert no model changes.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": []
+    },
+    "fac291d_3": {
+      "success": true,
+      "difficulty": 2,
+      "num_tests": 2,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert no model changes.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": []
+    },
+    "530b157_1": {
+      "success": false,
+      "difficulty": 3,
+      "num_tests": 10,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, deleted phone.GlobalTextMessage using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added global_text_message's receiver_id is to private_data.friend_phone_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added global_text_message has message, public_data.message_text (ignore case).",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert none of the records from phone.UserTextMessage have been deleted",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert model changes match venmo.Transaction, phone.GlobalTextMessage, phone.UserTextMessage,\nignoring venmo.User and venmo.Notification",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert model changes match venmo.Transaction, phone.GlobalTextMessage, phone.UserTextMessage,\n    ignoring venmo.User and venmo.Notification\n    \"\"\"\n):\n    changed_model_names = models.changed_model_names(\n        ignore=[\"venmo.User\", \"venmo.Notification\"]\n```\n----------\nAssertionError:\n{'phone.GlobalTextMessage', 'phone.UserTextMessage'}\n==\n{'venmo.Transaction', 'phone.GlobalTextMessage', 'phone.UserTextMessage'}\n\nIn right but not left:\n['venmo.Transaction']",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, deleted venmo.Transactions using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    obtain added, updated, deleted venmo.Transactions using models.changed_records\n    assert 1 is added, 0 is updated, and 0 is deleted.\n    \"\"\"\n):\n    added_transactions, updated_transactions, deleted_transactions = models.changed_records(\n        \"venmo.Transaction\"\n```\n----------\nAssertionError:  0 == 1",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added transaction receiver_id is private_data.friend_venmo_user_id.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert the added transaction receiver_id is private_data.friend_venmo_user_id.\n    \"\"\"\n):\n    added_transaction = added_transactions[0]\n    test.case(added_transaction.receiver_id, \"==\", private_data.friend_venmo_user_id)\n```\n----------",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added transaction has description public_data.note.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert the added transaction has description public_data.note.\n    \"\"\"\n):\n    test.case(added_transaction.description, \"==\", public_data.note, ignore_case=True)\n```\n----------",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added transaction has amount private_data.grocery_cost.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert the added transaction has amount private_data.grocery_cost.\n    \"\"\"\n):\n    test.case(added_transaction.amount, \"==\", private_data.grocery_cost)\n```\n----------",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "530b157_2": {
+      "success": false,
+      "difficulty": 3,
+      "num_tests": 10,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match venmo.Transaction, phone.GlobalTextMessage, phone.UserTextMessage,\nignoring venmo.User and venmo.Notification",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added transaction receiver_id is private_data.friend_venmo_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added transaction has description public_data.note.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, deleted phone.GlobalTextMessage using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added global_text_message's receiver_id is to private_data.friend_phone_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added global_text_message has message, public_data.message_text (ignore case).",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert none of the records from phone.UserTextMessage have been deleted",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "obtain added, updated, deleted venmo.Transactions using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    obtain added, updated, deleted venmo.Transactions using models.changed_records\n    assert 1 is added, 0 is updated, and 0 is deleted.\n    \"\"\"\n):\n    added_transactions, updated_transactions, deleted_transactions = models.changed_records(\n        \"venmo.Transaction\"\n```\n----------\nAssertionError:  2 == 1",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added transaction has amount private_data.grocery_cost.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert the added transaction has amount private_data.grocery_cost.\n    \"\"\"\n):\n    test.case(added_transaction.amount, \"==\", private_data.grocery_cost)\n```\n----------\nAssertionError:  10.0 == 98",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "530b157_3": {
+      "success": false,
+      "difficulty": 3,
+      "num_tests": 10,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match venmo.Transaction, phone.GlobalTextMessage, phone.UserTextMessage,\nignoring venmo.User and venmo.Notification",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, deleted venmo.Transactions using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added transaction receiver_id is private_data.friend_venmo_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added transaction has description public_data.note.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, deleted phone.GlobalTextMessage using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added global_text_message's receiver_id is to private_data.friend_phone_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added global_text_message has message, public_data.message_text (ignore case).",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert none of the records from phone.UserTextMessage have been deleted",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert the added transaction has amount private_data.grocery_cost.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert the added transaction has amount private_data.grocery_cost.\n    \"\"\"\n):\n    test.case(added_transaction.amount, \"==\", private_data.grocery_cost)\n```\n----------\nAssertionError:  15.0 == 72",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "4ec8de5_1": {
+      "success": false,
+      "difficulty": 1,
+      "num_tests": 2,
+      "passes": [
+        {
+          "requirement": "assert no model changes.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert answers match.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert answers match.\n    \"\"\"\n):\n    test.answer(predicted_answer, ground_truth_answer)\n```\n----------\nAssertionError:  '0' == '39'",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "4ec8de5_2": {
+      "success": true,
+      "difficulty": 1,
+      "num_tests": 2,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert no model changes.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": []
+    },
+    "4ec8de5_3": {
+      "success": false,
+      "difficulty": 1,
+      "num_tests": 2,
+      "passes": [
+        {
+          "requirement": "assert no model changes.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert answers match.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert answers match.\n    \"\"\"\n):\n    test.answer(predicted_answer, ground_truth_answer)\n```\n----------\nAssertionError:  '12' == '66'",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "b119b1f_1": {
+      "success": true,
+      "difficulty": 2,
+      "num_tests": 6,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match spotify.MusicPlayer.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert spotify.MusicPlayer has 1 updated using models.changed_records",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert this music player record has updated only in the cursor_position\nusing models.changed_field_names",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the currently playing song has ID private_data.song_id in the end state.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert music player's cursor is on the song by private_data.artist_id in the end state.",
+          "label": "no_op_fail"
+        }
+      ],
+      "failures": []
+    },
+    "b119b1f_2": {
+      "success": true,
+      "difficulty": 2,
+      "num_tests": 6,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match spotify.MusicPlayer.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert spotify.MusicPlayer has 1 updated using models.changed_records",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert this music player record has updated only in the cursor_position\nusing models.changed_field_names",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the currently playing song has ID private_data.song_id in the end state.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert music player's cursor is on the song by private_data.artist_id in the end state.",
+          "label": "no_op_fail"
+        }
+      ],
+      "failures": []
+    },
+    "b119b1f_3": {
+      "success": false,
+      "difficulty": 2,
+      "num_tests": 6,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert model changes match spotify.MusicPlayer.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert model changes match spotify.MusicPlayer.\n    \"\"\"\n):\n    changed_model_names = models.changed_model_names()\n    test.case(changed_model_names, \"==\", {\"spotify.MusicPlayer\"})\n```\n----------\nAssertionError:  set() == {'spotify.MusicPlayer'}\n\nIn right but not left:\n['spotify.MusicPlayer']",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert spotify.MusicPlayer has 1 updated using models.changed_records",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert spotify.MusicPlayer has 1 updated using models.changed_records\n    \"\"\"\n):\n    _, updated_music_players, _ = models.changed_records(\"spotify.MusicPlayer\")\n    test.case(len(updated_music_players), \"==\", 1)\n```\n----------\nAssertionError:  0 == 1",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert this music player record has updated only in the cursor_position\nusing models.changed_field_names",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert this music player record has updated only in the cursor_position\n    using models.changed_field_names\n    \"\"\"\n):\n    updated_field_names = models.changed_field_names(\n        \"spotify.MusicPlayer\", updated_music_players[0].id\n```\n----------",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the currently playing song has ID private_data.song_id in the end state.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert the currently playing song has ID private_data.song_id in the end state.\n    \"\"\"\n):\n    music_player = models.end.spotify.User.find_from(main_user).music_player\n    test.case(private_data.song_id, \"==\", music_player.current_song.id)\n```\n----------\nAssertionError:  224 == 317",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert music player's cursor is on the song by private_data.artist_id in the end state.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert music player's cursor is on the song by private_data.artist_id in the end state.\n    \"\"\"\n):\n```\n----------\nAssertionError:  22 in [35]",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "d4e9306_1": {
+      "success": true,
+      "difficulty": 1,
+      "num_tests": 6,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match spotify.UserArtistFollowing.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed spotify.UserArtistFollowing records using models.changed_records,\nand assert 0 have been removed.",
+          "label": "no_op_pass"
+        },
+        {
+          "requirement": "assert private_data.to_be_followed_artist_ids_by_songs artists have been newly followed.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert private_data.to_be_followed_artist_ids_by_albums artists have been newly followed.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert artist_ids from added artists match union of\nprivate_data.to_be_followed_artist_ids_by_songs and private_data.to_be_followed_artist_ids_by_albums.",
+          "label": "no_op_fail"
+        }
+      ],
+      "failures": []
+    },
+    "d4e9306_2": {
+      "success": true,
+      "difficulty": 1,
+      "num_tests": 6,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match spotify.UserArtistFollowing.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed spotify.UserArtistFollowing records using models.changed_records,\nand assert 0 have been removed.",
+          "label": "no_op_pass"
+        },
+        {
+          "requirement": "assert private_data.to_be_followed_artist_ids_by_songs artists have been newly followed.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert private_data.to_be_followed_artist_ids_by_albums artists have been newly followed.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert artist_ids from added artists match union of\nprivate_data.to_be_followed_artist_ids_by_songs and private_data.to_be_followed_artist_ids_by_albums.",
+          "label": "no_op_fail"
+        }
+      ],
+      "failures": []
+    },
+    "d4e9306_3": {
+      "success": true,
+      "difficulty": 1,
+      "num_tests": 6,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match spotify.UserArtistFollowing.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed spotify.UserArtistFollowing records using models.changed_records,\nand assert 0 have been removed.",
+          "label": "no_op_pass"
+        },
+        {
+          "requirement": "assert private_data.to_be_followed_artist_ids_by_songs artists have been newly followed.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert private_data.to_be_followed_artist_ids_by_albums artists have been newly followed.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert artist_ids from added artists match union of\nprivate_data.to_be_followed_artist_ids_by_songs and private_data.to_be_followed_artist_ids_by_albums.",
+          "label": "no_op_fail"
+        }
+      ],
+      "failures": []
+    },
+    "0d8a4ee_1": {
+      "success": false,
+      "difficulty": 2,
+      "num_tests": 5,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match phone.GlobalTextMessage, phone.UserTextMessage",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert 0 phone.UserTextMessage records were removed.",
+          "label": "no_op_pass"
+        },
+        {
+          "requirement": "assert all added global text messages have message public_data.message_text (normalize_text=True).",
+          "label": "no_op_fail"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert receiver_ids of added global text messages match exactly to\nprivate_data.no_account_phone_user_ids (ignore order).",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert receiver_ids of added global text messages match exactly to\n    private_data.no_account_phone_user_ids (ignore order).\n    \"\"\"\n):\n    added_global_text_messages, _, _ = models.changed_records(\"phone.GlobalTextMessage\")\n    added_receiver_ids = list_of(added_global_text_messages, \"receiver_id\")\n```\n----------\nAssertionError:  [11, 16, 17, 36, 58, 66, 73, 79, 80, 81, 83, 95, 97, 106] == [79, 83]\n\nIn left but not right:\n[11, 16, 17, 36, 58, 66, 73, 80, 81, 95, 97, 106]\n\nOriginal values:\n[97, 36, 80, 95, 17, 83, 79, 81, 11, 16, 66, 58, 106, 73] == [79, 83]",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "0d8a4ee_2": {
+      "success": false,
+      "difficulty": 2,
+      "num_tests": 5,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match phone.GlobalTextMessage, phone.UserTextMessage",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert 0 phone.UserTextMessage records were removed.",
+          "label": "no_op_pass"
+        },
+        {
+          "requirement": "assert all added global text messages have message public_data.message_text (normalize_text=True).",
+          "label": "no_op_fail"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert receiver_ids of added global text messages match exactly to\nprivate_data.no_account_phone_user_ids (ignore order).",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert receiver_ids of added global text messages match exactly to\n    private_data.no_account_phone_user_ids (ignore order).\n    \"\"\"\n):\n    added_global_text_messages, _, _ = models.changed_records(\"phone.GlobalTextMessage\")\n    added_receiver_ids = list_of(added_global_text_messages, \"receiver_id\")\n```\n----------\nAssertionError:  [41, 41, 42, 42, 43, 43, 46, 90] == [42, 46]\n\nIn left but not right:\n[41, 41, 43, 43, 90]\n\nOriginal values:\n[43, 43, 90, 42, 42, 46, 41, 41] == [42, 46]",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "0d8a4ee_3": {
+      "success": false,
+      "difficulty": 2,
+      "num_tests": 5,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert 0 phone.UserTextMessage records were removed.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert model changes match phone.GlobalTextMessage, phone.UserTextMessage",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert model changes match phone.GlobalTextMessage, phone.UserTextMessage\n    \"\"\"\n):\n    changed_model_names = models.changed_model_names()\n    test.case(\n        changed_model_names,\n```\n----------\nAssertionError:  set() == {'phone.GlobalTextMessage', 'phone.UserTextMessage'}\n\nIn right but not left:\n['phone.GlobalTextMessage', 'phone.UserTextMessage']",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert receiver_ids of added global text messages match exactly to\nprivate_data.no_account_phone_user_ids (ignore order).",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert receiver_ids of added global text messages match exactly to\n    private_data.no_account_phone_user_ids (ignore order).\n    \"\"\"\n):\n    added_global_text_messages, _, _ = models.changed_records(\"phone.GlobalTextMessage\")\n    added_receiver_ids = list_of(added_global_text_messages, \"receiver_id\")\n```\n----------\nAssertionError:  [] == [62, 68, 78]\n\nIn right but not left:\n[62, 68, 78]",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all added global text messages have message public_data.message_text (normalize_text=True).",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert all added global text messages have message public_data.message_text (normalize_text=True).\n    \"\"\"\n):\n    added_messages = list_of(added_global_text_messages, \"message\")\n```\n----------\nAssertionError: The left modifier is 'all' with allow_left_empty=False, but left operand is empty.",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "37a8675_1": {
+      "success": true,
+      "difficulty": 2,
+      "num_tests": 6,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match venmo.Notification, venmo.Transaction ignoring venmo.User.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed venmo.Transaction records using models.changed_records,\nand assert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added transaction's receiver_id is private_data.person_venmo_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added transaction has amount public_data.payment_amount.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added transaction is private/public as per public_data.privacy.",
+          "label": "no_op_fail"
+        }
+      ],
+      "failures": []
+    },
+    "37a8675_2": {
+      "success": false,
+      "difficulty": 2,
+      "num_tests": 6,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed venmo.Transaction records using models.changed_records,\nand assert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added transaction's receiver_id is private_data.person_venmo_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added transaction has amount public_data.payment_amount.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added transaction is private/public as per public_data.privacy.",
+          "label": "no_op_fail"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert model changes match venmo.Notification, venmo.Transaction ignoring venmo.User.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert model changes match venmo.Notification, venmo.Transaction ignoring venmo.User.\n    \"\"\"\n):\n    changed_model_names = models.changed_model_names(\n        ignore=[\n            \"venmo.User\",\n```\n----------\nAssertionError:\n{'venmo.Transaction', 'file_system.Directory', 'venmo.BankTransfer', 'venmo.Notification', 'file_system.File'}\n==\n{'venmo.Transaction', 'venmo.Notification'}\n\nIn left but not right:\n['file_system.Directory', 'venmo.BankTransfer', 'file_system.File']",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "37a8675_3": {
+      "success": false,
+      "difficulty": 2,
+      "num_tests": 6,
+      "passes": [],
+      "failures": [
+        {
+          "requirement": "assert answers match.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert answers match.\n    \"\"\"\n):\n    test.answer(predicted_answer, ground_truth_answer)\n```\n----------\nAssertionError:  '<<not_given>>' == 'null'",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match venmo.Notification, venmo.Transaction ignoring venmo.User.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert model changes match venmo.Notification, venmo.Transaction ignoring venmo.User.\n    \"\"\"\n):\n    changed_model_names = models.changed_model_names(\n        ignore=[\n            \"venmo.User\",\n```\n----------\nAssertionError:  set() == {'venmo.Transaction', 'venmo.Notification'}\n\nIn right but not left:\n['venmo.Transaction', 'venmo.Notification']",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed venmo.Transaction records using models.changed_records,\nand assert 1 is added, 0 is updated, and 0 is deleted.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    obtain added, updated, removed venmo.Transaction records using models.changed_records,\n    and assert 1 is added, 0 is updated, and 0 is deleted.\n    \"\"\"\n):\n    added_transactions, updated_transactions, removed_transactions = models.changed_records(\n        \"venmo.Transaction\"\n```\n----------\nAssertionError:  0 == 1",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added transaction's receiver_id is private_data.person_venmo_user_id.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert the added transaction's receiver_id is private_data.person_venmo_user_id.\n    \"\"\"\n):\n    added_transaction = added_transactions[0]\n    test.case(added_transaction.receiver_id, \"==\", private_data.person_venmo_user_id)\n```\n----------",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added transaction has amount public_data.payment_amount.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert the added transaction has amount public_data.payment_amount.\n    \"\"\"\n):\n    test.case(added_transaction.amount, \"==\", public_data.payment_amount)\n```\n----------",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added transaction is private/public as per public_data.privacy.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert the added transaction is private/public as per public_data.privacy.\n    \"\"\"\n):\n```\n----------",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "3ab5b8b_1": {
+      "success": false,
+      "difficulty": 1,
+      "num_tests": 6,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match spotify.UserDownloadedSong.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed spotify.UserDownloadedSong records using models.changed_records,\nand assert 0 have been removed.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert added downloaded song_ids match private_data.to_download_song_ids (ignore_order=True)",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert added downloaded song_ids match private_data.to_download_song_ids (ignore_order=True)\n    \"\"\"\n):\n    downloaded_song_ids = list_of(added_downloaded_songs, \"song_id\")\n    test.case(downloaded_song_ids, \"==\", private_data.to_download_song_ids, ignore_order=True)\n```\n----------\nAssertionError:\n[2, 11, 13, 14, 35, 36, 48, 55, 67, 76, 79, 83, 97, 98, 101, 114, 119, 155, 159, 161, 163, 165, 175, 197, 211, 218, 221, 229, 233, 234, 240, 245, 251, 270, 272, 292, 294, 301, 304, 307, 313, 319, 321]\n==\n[2, 11, 14, 27, 48, 94, 119, 131, 147, 173, 182, 190, 192, 197, 229, 233, 235, 251, 289, 303, 324]\n\nIn left but not right:\n[13, 35, 36, 55, 67, 76, 79, 83, 97, 98, 101, 114, 155, 159, 161, 163, 165, 175, 211, 218, 221, 234, 240, 245, 270, 272, 292, 294, 301, 304, 307, 313, 319, 321]\n\nIn right but not left:\n[27, 94, 131, 147, 173, 182, 190, 192, 235, 289, 303, 324]\n\nOriginal values:\n[101, 234, 155, 14, 98, 79, 197, 221, 294, 240, 13, 292, 245, 163, 76, 35, 175, 270, 161, 321, 319, 301, 229, 11, 272, 97, 218, 165, 2, 159, 251, 48, 313, 55, 307, 211, 304, 119, 36, 114, 233, 67, 83]\n==\n[192, 2, 131, 324, 197, 11, 14, 147, 27, 94, 289, 229, 233, 235, 173, 303, 48, 182, 119, 251, 190]",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all added downloaded song_ids are in private_data.library_song_ids",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert all added downloaded song_ids are in private_data.library_song_ids\n    \"\"\"\n):\n    test.case(downloaded_song_ids, \"all in\", private_data.library_song_ids)\n```\n----------\nAssertionError:\n101\nin\n[2, 131, 11, 14, 147, 277, 27, 289, 290, 163, 292, 165, 294, 44, 173, 303, 175, 48, 307, 54, 182, 313, 61, 190, 319, 192, 324, 197, 76, 77, 211, 94, 99, 229, 233, 106, 235, 236, 234, 119, 121, 251]",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all added downloaded song_ids are in private_data.liked_song_ids",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert all added downloaded song_ids are in private_data.liked_song_ids\n    \"\"\"\n):\n```\n----------\nAssertionError:\n101\nin\n[2, 131, 135, 11, 14, 15, 142, 147, 21, 27, 30, 31, 289, 34, 35, 297, 173, 303, 48, 182, 190, 192, 320, 324, 197, 80, 81, 82, 94, 99, 100, 229, 233, 235, 117, 119, 251]",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "3ab5b8b_2": {
+      "success": false,
+      "difficulty": 1,
+      "num_tests": 6,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match spotify.UserDownloadedSong.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed spotify.UserDownloadedSong records using models.changed_records,\nand assert 0 have been removed.",
+          "label": "no_op_pass"
+        },
+        {
+          "requirement": "assert all added downloaded song_ids are in private_data.liked_song_ids",
+          "label": "no_op_fail"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert added downloaded song_ids match private_data.to_download_song_ids (ignore_order=True)",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert added downloaded song_ids match private_data.to_download_song_ids (ignore_order=True)\n    \"\"\"\n):\n    downloaded_song_ids = list_of(added_downloaded_songs, \"song_id\")\n    test.case(downloaded_song_ids, \"==\", private_data.to_download_song_ids, ignore_order=True)\n```\n----------\nAssertionError:\n[8, 9, 17, 18, 19, 24, 28, 29, 30, 32, 33, 35, 36, 44, 45, 48, 55, 58, 59, 80, 87, 97, 110, 112, 132, 143, 151, 163, 199, 221, 223, 248, 259, 323]\n==\n[9, 28, 87, 110, 151, 199]\n\nIn left but not right:\n[8, 17, 18, 19, 24, 29, 30, 32, 33, 35, 36, 44, 45, 48, 55, 58, 59, 80, 97, 112, 132, 143, 163, 221, 223, 248, 259, 323]\n\nOriginal values:\n[143, 87, 24, 29, 44, 163, 58, 28, 199, 17, 259, 8, 48, 55, 35, 97, 33, 19, 110, 18, 151, 112, 45, 32, 132, 221, 9, 323, 59, 80, 223, 30, 36, 248]\n==\n[199, 9, 110, 87, 151, 28]",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all added downloaded song_ids are in private_data.library_song_ids",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert all added downloaded song_ids are in private_data.library_song_ids\n    \"\"\"\n):\n    test.case(downloaded_song_ids, \"all in\", private_data.library_song_ids)\n```\n----------\nAssertionError:  143 in [4, 294, 103, 199, 9, 265, 301, 110, 15, 207, 208, 87, 151, 28]",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "3ab5b8b_3": {
+      "success": false,
+      "difficulty": 1,
+      "num_tests": 6,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match spotify.UserDownloadedSong.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed spotify.UserDownloadedSong records using models.changed_records,\nand assert 0 have been removed.",
+          "label": "no_op_pass"
+        },
+        {
+          "requirement": "assert all added downloaded song_ids are in private_data.library_song_ids",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all added downloaded song_ids are in private_data.liked_song_ids",
+          "label": "no_op_fail"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert added downloaded song_ids match private_data.to_download_song_ids (ignore_order=True)",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert added downloaded song_ids match private_data.to_download_song_ids (ignore_order=True)\n    \"\"\"\n):\n    downloaded_song_ids = list_of(added_downloaded_songs, \"song_id\")\n    test.case(downloaded_song_ids, \"==\", private_data.to_download_song_ids, ignore_order=True)\n```\n----------\nAssertionError:  [32, 50] == [31, 32, 48, 49, 50, 51, 52, 57]\n\nIn right but not left:\n[31, 48, 49, 51, 52, 57]\n\nOriginal values:\n[50, 32] == [32, 48, 49, 50, 51, 52, 57, 31]",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "df61dc5_1": {
+      "success": false,
+      "difficulty": 1,
+      "num_tests": 7,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match venmo.Transaction, venmo.TransactionLike",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed venmo.Transaction records using models.changed_records,\nand assert 0 transactions were added or removed.",
+          "label": "no_op_pass"
+        },
+        {
+          "requirement": "assert updated transactions have only changed in like_count field using models.changed_field_names.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed venmo.TransactionLike records using models.changed_records,\nand assert 0 transaction likes were removed.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert set of updated transaction ids match exactly to\nprivate_data.to_like_transaction_ids (ignore order).",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert set of updated transaction ids match exactly to\n    private_data.to_like_transaction_ids (ignore order).\n    \"\"\"\n):\n    updated_transaction_ids = unique_list_of(updated_transactions, \"id\")\n    test.case(\n```\n----------\nAssertionError:\n[35, 36, 37, 38, 39, 40, 46, 1172, 1245, 2223, 2251, 2253, 2254, 2255, 2256, 2257, 2274, 2275, 2276, 2277, 2793, 2794, 2795, 2796, 2797, 2799, 2802, 2803, 2804, 2805, 2806, 2808, 2809, 2810, 2811, 2812, 2813, 2814, 2815, 2816, 2817, 2818, 2819, 2820, 2821, 2822, 2823, 2824, 2825, 2826, 2827, 2828, 2829, 2830, 2831, 2832, 2833, 2834, 2835, 2836, 2837, 2838, 2839, 2840, 2841, 2842, 2843, 2844, 2845, 2846, 2847, 2848, 2849, 2850, 2851, 2852, 2853, 2854, 2855, 3368, 3369, 3482, 3483, 3484, 3485, 3486, 3487, 3488, 3809, 3810, 3811, 3812, 3813, 3814, 4430, 4431, 4432, 4433, 4434, 6221, 6222, 6223, 6224, 6225, 6615, 6616, 6618, 6619, 6834, 6835, 6836, 6837, 6838, 6839, 6871, 6872, 7512, 7513, 7514, 7515, 7516, 7517, 7538, 7539, 7542, 7543]\n==\n[1245, 3809, 3813, 6221, 6224]\n\nIn left but not right:\n[35, 36, 37, 38, 39, 40, 46, 1172, 2223, 2251, 2253, 2254, 2255, 2256, 2257, 2274, 2275, 2276, 2277, 2793, 2794, 2795, 2796, 2797, 2799, 2802, 2803, 2804, 2805, 2806, 2808, 2809, 2810, 2811, 2812, 2813, 2814, 2815, 2816, 2817, 2818, 2819, 2820, 2821, 2822, 2823, 2824, 2825, 2826, 2827, 2828, 2829, 2830, 2831, 2832, 2833, 2834, 2835, 2836, 2837, 2838, 2839, 2840, 2841, 2842, 2843, 2844, 2845, 2846, 2847, 2848, 2849, 2850, 2851, 2852, 2853, 2854, 2855, 3368, 3369, 3482, 3483, 3484, 3485, 3486, 3487, 3488, 3810, 3811, 3812, 3814, 4430, 4431, 4432, 4433, 4434, 6222, 6223, 6225, 6615, 6616, 6618, 6619, 6834, 6835, 6836, 6837, 6838, 6839, 6871, 6872, 7512, 7513, 7514, 7515, 7516, 7517, 7538, 7539, 7542, 7543]\n\nOriginal values:\n[35, 36, 37, 38, 39, 40, 46, 1172, 1245, 2223, 2251, 2253, 2254, 2255, 2256, 2257, 2274, 2275, 2276, 2277, 2793, 2794, 2795, 2796, 2797, 2799, 2802, 2803, 2804, 2805, 2806, 2808, 2809, 2810, 2811, 2812, 2813, 2814, 2815, 2816, 2817, 2818, 2819, 2820, 2821, 2822, 2823, 2824, 2825, 2826, 2827, 2828, 2829, 2830, 2831, 2832, 2833, 2834, 2835, 2836, 2837, 2838, 2839, 2840, 2841, 2842, 2843, 2844, 2845, 2846, 2847, 2848, 2849, 2850, 2851, 2852, 2853, 2854, 2855, 3368, 3369, 3482, 3483, 3484, 3485, 3486, 3487, 3488, 3809, 3810, 3811, 3812, 3813, 3814, 4430, 4431, 4432, 4433, 4434, 6221, 6222, 6223, 6224, 6225, 6615, 6616, 6618, 6619, 6834, 6835, 6836, 6837, 6838, 6839, 6871, 6872, 7512, 7513, 7514, 7515, 7516, 7517, 7538, 7539, 7542, 7543]\n==\n[3809, 3813, 6221, 6224, 1245]",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all updated transactions were created after private_data.min_transaction_datetime",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert all updated transactions were created after private_data.min_transaction_datetime\n    \"\"\"\n):\n    transaction_created_ats = list_of(updated_transactions, \"created_at\")\n    test.case(\n        transaction_created_ats,\n```\n----------\nAssertionError:  PendulumDateTime(2022, 12, 27, 5, 41, 23) >= DateTime(2023, 1, 1, 0, 0, 0)",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "df61dc5_2": {
+      "success": false,
+      "difficulty": 1,
+      "num_tests": 7,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match venmo.Transaction, venmo.TransactionLike",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed venmo.Transaction records using models.changed_records,\nand assert 0 transactions were added or removed.",
+          "label": "no_op_pass"
+        },
+        {
+          "requirement": "assert updated transactions have only changed in like_count field using models.changed_field_names.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed venmo.TransactionLike records using models.changed_records,\nand assert 0 transaction likes were removed.",
+          "label": "no_op_pass"
+        },
+        {
+          "requirement": "assert all updated transactions were created after private_data.min_transaction_datetime",
+          "label": "no_op_fail"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert set of updated transaction ids match exactly to\nprivate_data.to_like_transaction_ids (ignore order).",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert set of updated transaction ids match exactly to\n    private_data.to_like_transaction_ids (ignore order).\n    \"\"\"\n):\n    updated_transaction_ids = unique_list_of(updated_transactions, \"id\")\n    test.case(\n```\n----------\nAssertionError:\n[357, 834, 836, 1042, 1067, 1082, 1086, 1087, 1100, 1102, 1104, 1107, 1108, 1112, 1115, 1120, 1122, 1975, 2642, 4444, 4450, 4492, 5858]\n==\n[1067, 1082, 1086, 1087, 1107, 1108, 1115, 1120, 1122, 2642, 4444, 4450, 4492, 5984, 5986, 6343, 8229, 8231, 8232, 8234, 8237, 8239, 8243, 8246]\n\nIn left but not right:\n[357, 834, 836, 1042, 1100, 1102, 1104, 1112, 1975, 5858]\n\nIn right but not left:\n[5984, 5986, 6343, 8229, 8231, 8232, 8234, 8237, 8239, 8243, 8246]\n\nOriginal values:\n[357, 834, 836, 1042, 1067, 1082, 1086, 1087, 1100, 1102, 1104, 1107, 1108, 1112, 1115, 1120, 1122, 1975, 2642, 4444, 4450, 4492, 5858]\n==\n[1107, 1108, 1115, 1120, 1122, 4444, 4450, 5984, 5986, 6343, 8229, 8232, 8243, 1067, 1082, 1086, 1087, 2642, 4492, 8231, 8234, 8237, 8239, 8246]",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "df61dc5_3": {
+      "success": true,
+      "difficulty": 1,
+      "num_tests": 7,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match venmo.Transaction, venmo.TransactionLike",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed venmo.Transaction records using models.changed_records,\nand assert 0 transactions were added or removed.",
+          "label": "no_op_pass"
+        },
+        {
+          "requirement": "assert updated transactions have only changed in like_count field using models.changed_field_names.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed venmo.TransactionLike records using models.changed_records,\nand assert 0 transaction likes were removed.",
+          "label": "no_op_pass"
+        },
+        {
+          "requirement": "assert set of updated transaction ids match exactly to\nprivate_data.to_like_transaction_ids (ignore order).",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all updated transactions were created after private_data.min_transaction_datetime",
+          "label": "no_op_fail"
+        }
+      ],
+      "failures": []
+    },
+    "383cbac_1": {
+      "success": false,
+      "difficulty": 1,
+      "num_tests": 2,
+      "passes": [
+        {
+          "requirement": "assert no model changes.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert answers match.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert answers match.\n    \"\"\"\n):\n    test.answer(predicted_answer, ground_truth_answer)\n```\n----------\nAssertionError:  '38' == '227'",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "383cbac_2": {
+      "success": false,
+      "difficulty": 1,
+      "num_tests": 2,
+      "passes": [
+        {
+          "requirement": "assert no model changes.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert answers match.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert answers match.\n    \"\"\"\n):\n    test.answer(predicted_answer, ground_truth_answer)\n```\n----------\nAssertionError:  '3' == '396'",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "383cbac_3": {
+      "success": false,
+      "difficulty": 1,
+      "num_tests": 2,
+      "passes": [
+        {
+          "requirement": "assert no model changes.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert answers match.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert answers match.\n    \"\"\"\n):\n    test.answer(predicted_answer, ground_truth_answer)\n```\n----------\nAssertionError:  '<<not_given>>' == '275'",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "23cf851_1": {
+      "success": true,
+      "difficulty": 1,
+      "num_tests": 2,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert no model changes.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": []
+    },
+    "23cf851_2": {
+      "success": false,
+      "difficulty": 1,
+      "num_tests": 2,
+      "passes": [
+        {
+          "requirement": "assert no model changes.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert answers match.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert answers match.\n    \"\"\"\n):\n    test.answer(predicted_answer, ground_truth_answer)\n```\n----------\nAssertionError:  '90' == '79'",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "23cf851_3": {
+      "success": true,
+      "difficulty": 1,
+      "num_tests": 2,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert no model changes.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": []
+    },
+    "57c3486_1": {
+      "success": true,
+      "difficulty": 1,
+      "num_tests": 5,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match spotify.Song, spotify.SongLike.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all newly song likes are from artists that main_user follows via models.changed_records",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all songs from artists main_user follows are liked now by using\nprivate_data.followed_artist_song_ids.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert none of the updated or removed song likes are from artists that main_user follows,\nusing private_data.followed_artist_song_ids.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": []
+    },
+    "57c3486_2": {
+      "success": true,
+      "difficulty": 1,
+      "num_tests": 5,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match spotify.Song, spotify.SongLike.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all newly song likes are from artists that main_user follows via models.changed_records",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all songs from artists main_user follows are liked now by using\nprivate_data.followed_artist_song_ids.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert none of the updated or removed song likes are from artists that main_user follows,\nusing private_data.followed_artist_song_ids.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": []
+    },
+    "57c3486_3": {
+      "success": true,
+      "difficulty": 1,
+      "num_tests": 5,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match spotify.Song, spotify.SongLike.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all newly song likes are from artists that main_user follows via models.changed_records",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all songs from artists main_user follows are liked now by using\nprivate_data.followed_artist_song_ids.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert none of the updated or removed song likes are from artists that main_user follows,\nusing private_data.followed_artist_song_ids.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": []
+    },
+    "68ee2c9_1": {
+      "success": false,
+      "difficulty": 1,
+      "num_tests": 5,
+      "passes": [
+        {
+          "requirement": "assert model changes match file_system.File, file_system.Directory.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain all the file paths from start_file_path_to_content's keys that are neither in\nprivate_data.this_year_start_to_end_file_path nor in private_data.before_this_year_start_to_end_file_path.\nThese are the file_paths that should not have been renamed. Assert their paths and contents are identical\nin the start and the end state.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert answers match.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert answers match.\n    \"\"\"\n):\n    test.answer(predicted_answer, ground_truth_answer)\n```\n----------\nAssertionError:  '<<not_given>>' == 'null'",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "prepare start_file_path_to_content and end_file_path_to_content from start and end state of user.files,\nthen assert the files have been renamed (with proper content) as per private_data.before_this_year_start_to_end_file_path.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    prepare start_file_path_to_content and end_file_path_to_content from start and end state of user.files,\n    then assert the files have been renamed (with proper content) as per private_data.before_this_year_start_to_end_file_path.\n    \"\"\"\n):\n    files_user_start = models.start.file_system.User.find_from(main_user)\n    files_user_end = models.end.file_system.User.find_from(main_user)\n```\n----------",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the files have been renamed (with proper content) as per private_data.this_year_start_to_end_file_path.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert the files have been renamed (with proper content) as per private_data.this_year_start_to_end_file_path.\n    \"\"\"\n):\n    start_content = []\n    end_content = []\n    for start_path, end_path in private_data.this_year_start_to_end_file_path.items():\n```\n----------",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "68ee2c9_2": {
+      "success": false,
+      "difficulty": 1,
+      "num_tests": 5,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain all the file paths from start_file_path_to_content's keys that are neither in\nprivate_data.this_year_start_to_end_file_path nor in private_data.before_this_year_start_to_end_file_path.\nThese are the file_paths that should not have been renamed. Assert their paths and contents are identical\nin the start and the end state.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert model changes match file_system.File, file_system.Directory.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert model changes match file_system.File, file_system.Directory.\n    \"\"\"\n):\n    test.case(models.changed_model_names(), \"==\", {\"file_system.File\", \"file_system.Directory\"})\n```\n----------\nAssertionError:  set() == {'file_system.File', 'file_system.Directory'}\n\nIn right but not left:\n['file_system.File', 'file_system.Directory']",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "prepare start_file_path_to_content and end_file_path_to_content from start and end state of user.files,\nthen assert the files have been renamed (with proper content) as per private_data.before_this_year_start_to_end_file_path.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    prepare start_file_path_to_content and end_file_path_to_content from start and end state of user.files,\n    then assert the files have been renamed (with proper content) as per private_data.before_this_year_start_to_end_file_path.\n    \"\"\"\n):\n    files_user_start = models.start.file_system.User.find_from(main_user)\n    files_user_end = models.end.file_system.User.find_from(main_user)\n```\n----------",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the files have been renamed (with proper content) as per private_data.this_year_start_to_end_file_path.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert the files have been renamed (with proper content) as per private_data.this_year_start_to_end_file_path.\n    \"\"\"\n):\n    start_content = []\n    end_content = []\n    for start_path, end_path in private_data.this_year_start_to_end_file_path.items():\n```\n----------",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "68ee2c9_3": {
+      "success": false,
+      "difficulty": 1,
+      "num_tests": 5,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match file_system.File, file_system.Directory.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain all the file paths from start_file_path_to_content's keys that are neither in\nprivate_data.this_year_start_to_end_file_path nor in private_data.before_this_year_start_to_end_file_path.\nThese are the file_paths that should not have been renamed. Assert their paths and contents are identical\nin the start and the end state.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "prepare start_file_path_to_content and end_file_path_to_content from start and end state of user.files,\nthen assert the files have been renamed (with proper content) as per private_data.before_this_year_start_to_end_file_path.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    prepare start_file_path_to_content and end_file_path_to_content from start and end state of user.files,\n    then assert the files have been renamed (with proper content) as per private_data.before_this_year_start_to_end_file_path.\n    \"\"\"\n):\n    files_user_start = models.start.file_system.User.find_from(main_user)\n    files_user_end = models.end.file_system.User.find_from(main_user)\n```\n----------",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the files have been renamed (with proper content) as per private_data.this_year_start_to_end_file_path.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert the files have been renamed (with proper content) as per private_data.this_year_start_to_end_file_path.\n    \"\"\"\n):\n    start_content = []\n    end_content = []\n    for start_path, end_path in private_data.this_year_start_to_end_file_path.items():\n```\n----------",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "6bdbc26_1": {
+      "success": false,
+      "difficulty": 1,
+      "num_tests": 2,
+      "passes": [
+        {
+          "requirement": "assert no model changes.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert answers match.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert answers match.\n    \"\"\"\n):\n    test.answer(predicted_answer, ground_truth_answer)\n```\n----------\nAssertionError:  '692' == '20'",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "6bdbc26_2": {
+      "success": true,
+      "difficulty": 1,
+      "num_tests": 2,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert no model changes.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": []
+    },
+    "6bdbc26_3": {
+      "success": false,
+      "difficulty": 1,
+      "num_tests": 2,
+      "passes": [],
+      "failures": [
+        {
+          "requirement": "assert answers match.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert answers match.\n    \"\"\"\n):\n    test.answer(predicted_answer, ground_truth_answer)\n```\n----------\nAssertionError:  '0' == '28'",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert no model changes.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert no model changes.\n    \"\"\"\n):\n```\n----------\nAssertionError:  True is_falsy True\n\nOriginal values:\n{'spotify.UserArtistFollowing'} is_falsy '<SPECIAL_NOT_PASSED>'",
+          "label": "no_op_pass"
+        }
+      ]
+    },
+    "6171bbc_1": {
+      "success": false,
+      "difficulty": 2,
+      "num_tests": 7,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match spotify.Playlist, spotify.PlaylistSong.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed spotify.Playlist records using models.changed_records,\nand assert 1 has been added, and 0 have been updated or removed.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added playlist is named public_data.playlist_title.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, removed spotify.PlaylistSong records using models.changed_records,\nand assert 0 have been removed.",
+          "label": "no_op_pass"
+        },
+        {
+          "requirement": "assert the playlist_id of all added playlist_songs match added_playlist.id.",
+          "label": "no_op_fail"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert all song_ids of added playlist_songs match private_data.playlist_song_ids (ignore_order)",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert all song_ids of added playlist_songs match private_data.playlist_song_ids (ignore_order)\n    \"\"\"\n):\n    test.case(\n        list_of(added_playlist_songs, \"song_id\"),\n        \"==\",\n```\n----------\nAssertionError:\n[33, 34, 35, 36, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 63, 64, 65, 66, 70, 71, 72, 73, 74, 75, 76, 80, 81, 82]\n==\n[36, 45, 51, 54, 66, 73, 74, 80]\n\nIn left but not right:\n[33, 34, 35, 44, 46, 47, 48, 49, 50, 52, 53, 55, 56, 57, 63, 64, 65, 70, 71, 72, 75, 76, 81, 82]\n\nOriginal values:\n[50, 57, 74, 56, 55, 52, 82, 76, 53, 73, 36, 54, 81, 34, 80, 72, 44, 46, 48, 71, 75, 47, 51, 64, 45, 66, 70, 63, 65, 33, 35, 49]\n==\n[36, 45, 51, 54, 66, 73, 74, 80]",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "6171bbc_2": {
+      "success": false,
+      "difficulty": 2,
+      "num_tests": 7,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed spotify.Playlist records using models.changed_records,\nand assert 1 has been added, and 0 have been updated or removed.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added playlist is named public_data.playlist_title.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, removed spotify.PlaylistSong records using models.changed_records,\nand assert 0 have been removed.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert model changes match spotify.Playlist, spotify.PlaylistSong.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert model changes match spotify.Playlist, spotify.PlaylistSong.\n    \"\"\"\n):\n    test.case(\n        models.changed_model_names(),\n        \"==\",\n```\n----------\nAssertionError:  {'spotify.Playlist'} == {'spotify.Playlist', 'spotify.PlaylistSong'}\n\nIn right but not left:\n['spotify.PlaylistSong']",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all song_ids of added playlist_songs match private_data.playlist_song_ids (ignore_order)",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert all song_ids of added playlist_songs match private_data.playlist_song_ids (ignore_order)\n    \"\"\"\n):\n    test.case(\n        list_of(added_playlist_songs, \"song_id\"),\n        \"==\",\n```\n----------\nAssertionError:  [] == [36, 58, 146, 164, 209]\n\nIn right but not left:\n[36, 58, 146, 164, 209]\n\nOriginal values:\n[] == [164, 58, 209, 146, 36]",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the playlist_id of all added playlist_songs match added_playlist.id.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert the playlist_id of all added playlist_songs match added_playlist.id.\n    \"\"\"\n):\n```\n----------\nAssertionError: The left modifier is 'all' with allow_left_empty=False, but left operand is empty.",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "6171bbc_3": {
+      "success": false,
+      "difficulty": 2,
+      "num_tests": 7,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed spotify.Playlist records using models.changed_records,\nand assert 1 has been added, and 0 have been updated or removed.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the added playlist is named public_data.playlist_title.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, removed spotify.PlaylistSong records using models.changed_records,\nand assert 0 have been removed.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert model changes match spotify.Playlist, spotify.PlaylistSong.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert model changes match spotify.Playlist, spotify.PlaylistSong.\n    \"\"\"\n):\n    test.case(\n        models.changed_model_names(),\n        \"==\",\n```\n----------\nAssertionError:  {'spotify.Playlist'} == {'spotify.Playlist', 'spotify.PlaylistSong'}\n\nIn right but not left:\n['spotify.PlaylistSong']",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all song_ids of added playlist_songs match private_data.playlist_song_ids (ignore_order)",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert all song_ids of added playlist_songs match private_data.playlist_song_ids (ignore_order)\n    \"\"\"\n):\n    test.case(\n        list_of(added_playlist_songs, \"song_id\"),\n        \"==\",\n```\n----------\nAssertionError:  [] == [12, 21, 27, 53, 162, 185, 304]\n\nIn right but not left:\n[12, 21, 27, 53, 162, 185, 304]\n\nOriginal values:\n[] == [27, 21, 304, 162, 185, 12, 53]",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert the playlist_id of all added playlist_songs match added_playlist.id.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert the playlist_id of all added playlist_songs match added_playlist.id.\n    \"\"\"\n):\n```\n----------\nAssertionError: The left modifier is 'all' with allow_left_empty=False, but left operand is empty.",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "6c2c621_1": {
+      "success": false,
+      "difficulty": 2,
+      "num_tests": 8,
+      "passes": [
+        {
+          "requirement": "assert model changes match file_system.File, file_system.Directory.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed file_system.File records using models.changed_records,\nand assert 0 were updated or removed.",
+          "label": "no_op_pass"
+        },
+        {
+          "requirement": "assert all added files have tilde_path starting with public_data.backup_directory_path.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all added files have path ending with \".md\".",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all added file_system.File records' paths match keys of\nprivate_data.file_path_to_content. (ignore_case)",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all added file_system.File records' contents\nmatch values of private_data.file_path_to_content (strip).",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all added file_system.File records' path to content\nmapping match that of private_data.file_path_to_content\n(strip and ignore case).",
+          "label": "no_op_fail"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert answers match.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert answers match.\n    \"\"\"\n):\n    test.answer(predicted_answer, ground_truth_answer)\n```\n----------\nAssertionError:  '<<not_given>>' == 'null'",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "6c2c621_2": {
+      "success": false,
+      "difficulty": 2,
+      "num_tests": 8,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed file_system.File records using models.changed_records,\nand assert 0 were updated or removed.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert model changes match file_system.File, file_system.Directory.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert model changes match file_system.File, file_system.Directory.\n    \"\"\"\n):\n    changed_model_names = models.changed_model_names()\n    test.case(changed_model_names, \"==\", {\"file_system.File\", \"file_system.Directory\"})\n```\n----------\nAssertionError:  {'file_system.Directory'} == {'file_system.File', 'file_system.Directory'}\n\nIn right but not left:\n['file_system.File']",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all added files have tilde_path starting with public_data.backup_directory_path.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert all added files have tilde_path starting with public_data.backup_directory_path.\n    \"\"\"\n):\n    test.case(\n        [file.tilde_path.startswith(public_data.backup_directory_path) for file in added_files],\n        \"all ==\",\n```\n----------\nAssertionError: The left modifier is 'all' with allow_left_empty=False, but left operand is empty.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all added files have path ending with \".md\".",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert all added files have path ending with \".md\".\n    \"\"\"\n):\n    test.case([file.path.strip().endswith(\".md\") for file in added_files], \"all ==\", True)\n```\n----------\nAssertionError: The left modifier is 'all' with allow_left_empty=False, but left operand is empty.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all added file_system.File records' paths match keys of\nprivate_data.file_path_to_content. (ignore_case)",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert all added file_system.File records' paths match keys of\n    private_data.file_path_to_content. (ignore_case)\n    \"\"\"\n):\n    added_file_path_to_content = dict_of(added_files, \"tilde_path\", \"content\")\n    test.case(\n```\n----------\nAssertionError:\nset()\n==\n{'~/backups/notes/habit_tracking_log_for_2023-05-15.md', '~/backups/notes/habit_tracking_log_for_2023-05-05.md', '~/backups/notes/habit_tracking_log_for_2023-05-13.md', '~/backups/notes/habit_tracking_log_for_2023-05-07.md', '~/backups/notes/habit_tracking_log_for_2023-05-09.md', '~/backups/notes/habit_tracking_log_for_2023-05-04.md', '~/backups/notes/inspirational_quotes_collection.md', '~/backups/notes/funny_quotes_collection.md', '~/backups/notes/food_recipes.md', '~/backups/notes/gift_ideas_for_various_occasions.md', '~/backups/notes/grocery_list.md', '~/backups/notes/movie_recommendations.md', '~/backups/notes/habit_tracking_log_for_2023-05-06.md', '~/backups/notes/habit_tracking_log_for_2023-05-16.md', '~/backups/notes/habit_tracking_log_for_2023-05-17.md', '~/backups/notes/habit_tracking_log_for_2023-05-02.md', '~/backups/notes/habit_tracking_log_for_2023-05-12.md', '~/backups/notes/habit_tracking_log_for_2023-05-08.md', '~/backups/notes/habit_tracking_log_for_2023-05-03.md', '~/backups/notes/weekly_workout_plan.md', '~/backups/notes/habit_tracking_log_for_2023-05-11.md', '~/backups/notes/movie_quotes_collection.md', '~/backups/notes/habit_tracking_log_for_2023-05-14.md', '~/backups/notes/book_reading_lists.md', '~/backups/notes/habit_tracking_log_for_2023-05-10.md', '~/backups/notes/my_bucket_list_([x]_=_done,_[_]_=_not_done)).md'}\n\nIn right but not left:\n['~/backups/notes/habit_tracking_log_for_2023-05-15.md', '~/backups/notes/habit_tracking_log_for_2023-05-05.md', '~/backups/notes/habit_tracking_log_for_2023-05-13.md', '~/backups/notes/habit_tracking_log_for_2023-05-07.md', '~/backups/notes/habit_tracking_log_for_2023-05-09.md', '~/backups/notes/habit_tracking_log_for_2023-05-04.md', '~/backups/notes/inspirational_quotes_collection.md', '~/backups/notes/funny_quotes_collection.md', '~/backups/notes/food_recipes.md', '~/backups/notes/gift_ideas_for_various_occasions.md', '~/backups/notes/grocery_list.md', '~/backups/notes/movie_recommendations.md', '~/backups/notes/habit_tracking_log_for_2023-05-06.md', '~/backups/notes/habit_tracking_log_for_2023-05-16.md', '~/backups/notes/habit_tracking_log_for_2023-05-17.md', '~/backups/notes/habit_tracking_log_for_2023-05-02.md', '~/backups/notes/habit_tracking_log_for_2023-05-12.md', '~/backups/notes/habit_tracking_log_for_2023-05-08.md', '~/backups/notes/habit_tracking_log_for_2023-05-03.md', '~/backups/notes/weekly_workout_plan.md', '~/backups/notes/habit_tracking_log_for_2023-05-11.md', '~/backups/notes/movie_quotes_collection.md', '~/backups/notes/habit_tracking_log_for_2023-05-14.md', '~/backups/notes/book_reading_lists.md', '~/backups/notes/habit_tracking_log_for_2023-05-10.md', '~/backups/notes/my_bucket_list_([x]_=_done,_[_]_=_not_done)).md']\n\nOriginal values:\nset()\n==\n{'~/backups/notes/Funny_Quotes_Collection.md', '~/backups/notes/Habit_Tracking_Log_for_2023-05-02.md', '~/backups/notes/My_Bucket_List_([x]_=_done,_[_]_=_not_done)).md', '~/backups/notes/Habit_Tracking_Log_for_2023-05-17.md', '~/backups/notes/Habit_Tracking_Log_for_2023-05-16.md', '~/backups/notes/Book_Reading_Lists.md', '~/backups/notes/Habit_Tracking_Log_for_2023-05-14.md', '~/backups/notes/Habit_Tracking_Log_for_2023-05-03.md', '~/backups/notes/Habit_Tracking_Log_for_2023-05-11.md', '~/backups/notes/Habit_Tracking_Log_for_2023-05-08.md', '~/backups/notes/Weekly_Workout_Plan.md', '~/backups/notes/Habit_Tracking_Log_for_2023-05-12.md', '~/backups/notes/Habit_Tracking_Log_for_2023-05-05.md', '~/backups/notes/Habit_Tracking_Log_for_2023-05-09.md', '~/backups/notes/Habit_Tracking_Log_for_2023-05-10.md', '~/backups/notes/Habit_Tracking_Log_for_2023-05-04.md', '~/backups/notes/Habit_Tracking_Log_for_2023-05-13.md', '~/backups/notes/Food_Recipes.md', '~/backups/notes/Habit_Tracking_Log_for_2023-05-07.md', '~/backups/notes/Grocery_List.md', '~/backups/notes/Movie_Recommendations.md', '~/backups/notes/Habit_Tracking_Log_for_2023-05-15.md', '~/backups/notes/Gift_Ideas_for_Various_Occasions.md', '~/backups/notes/Habit_Tracking_Log_for_2023-05-06.md', '~/backups/notes/Movie_Quotes_Collection.md', '~/backups/notes/Inspirational_Quotes_Collection.md'}",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all added file_system.File records' contents\nmatch values of private_data.file_path_to_content (strip).",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert all added file_system.File records' contents\n    match values of private_data.file_path_to_content (strip).\n    \"\"\"\n):\n    test.case(\n        set(added_file_path_to_content.values()),\n```\n----------\nAssertionError:\nset()\n==\n{'# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: no\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: no\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: no\\nconnected_with_friends: yes', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: no', \"# Book Reading Lists\\n\\nA People's History of the United States\\n - authors: Howard Zinn\\n - genre: History\\n\\nHarry Potter and the Sorcerer's Stone\\n - authors: J.K. Rowling\\n - genre: Young Adult\\n\\nThe Lord of the Rings: The Fellowship of the Ring\\n - authors: J.R.R. Tolkien\\n - genre: Epic Fantasy\\n\\nBecoming\\n - authors: Michelle Obama\\n - genre: Memoir\\n\\n1984\\n - authors: George Orwell\\n - genre: Dystopian\\n\\nThe Power of Now\\n - authors: Eckhart Tolle\\n - genre: Spirituality\\n\\nYou Are a Badass\\n - authors: Jen Sincero\\n - genre: Self-Help\\n\\nThe Hobbit\\n - authors: J.R.R. Tolkien\\n - genre: Fantasy\\n\\nPride and Prejudice\\n - authors: Jane Austen\\n - genre: Romance\\n\\nThe 7 Habits of Highly Effective People\\n - authors: Stephen R. Covey\\n - genre: Self-Help\\n\\nGone Girl\\n - authors: Gillian Flynn\\n - genre: Mystery\\n\\nQuiet: The Power of Introverts in a World That Can't Stop Talking\\n - authors: Susan Cain\\n - genre: Psychology\\n\\nThe Catcher in the Rye\\n - authors: J.D. Salinger\\n - genre: Coming-of-Age\\n\\nLittle Women\\n - authors: Louisa May Alcott\\n - genre: Classic\", '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: no\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: no', '# Food Recipes\\n\\nname: Classic Spaghetti Carbonara\\ningredients:\\n- 200g spaghetti\\n- 100g pancetta or guanciale, diced\\n- 2 large eggs\\n- 50g Pecorino Romano cheese, grated\\n- Salt and black pepper to taste\\n- 2 cloves garlic, minced\\n- Fresh parsley, chopped, for garnish\\ninstructions:\\n- Cook the spaghetti in salted boiling water until al dente. Drain and set aside.\\n- In a skillet, cook the diced pancetta or guanciale until crispy. Remove from heat and set aside.\\n- In a bowl, whisk together the eggs, grated Pecorino Romano cheese, minced garlic, salt, and black pepper.\\n- Combine the cooked spaghetti with the egg mixture and pancetta. Toss until the pasta is coated and creamy.\\n- Garnish with chopped fresh parsley and additional grated cheese. Serve immediately.\\nfavorite: true\\n\\nname: Mediterranean Quinoa Salad\\ningredients:\\n- 1 cup quinoa, cooked and cooled\\n- 1 cup cucumber, diced\\n- 1 cup cherry tomatoes, halved\\n- 1/2 cup red onion, finely chopped\\n- 1/2 cup Kalamata olives, pitted and sliced\\n- 1/2 cup feta cheese, crumbled\\n- 1/4 cup fresh parsley, chopped\\n- 1/4 cup fresh mint, chopped\\n- 3 tablespoons extra virgin olive oil\\n- 2 tablespoons lemon juice\\n- Salt and black pepper to taste\\ninstructions:\\n- In a large bowl, combine cooked quinoa, cucumber, cherry tomatoes, red onion, olives, feta cheese, parsley, and mint.\\n- In a small bowl, whisk together olive oil, lemon juice, salt, and black pepper.\\n- Pour the dressing over the quinoa mixture and toss to combine.\\n- Chill in the refrigerator for about 30 minutes before serving.\\nfavorite: false', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: no\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: no', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: no\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: no\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '# Grocery List\\n\\n - cottage cheese (1.0 container)\\n - olive oil (1.0 bottle)\\n - chicken breasts (2.0 pounds)\\n - yogurt (4.0 cups)\\n - green beans (0.5 pound)\\n - rice (1.0 pound)\\n - orange juice (1.0 carton)\\n - pasta (1.0 box)\\n - almonds (1.0 bag)\\n - bell peppers (3.0 pieces)\\n - carrots (1.0 bag)\\n - peanut butter (1.0 jar)', \"# Funny Quotes Collection\\n\\n - I don't need a hair stylist; my pillow gives me a new hairstyle every morning.\\n   by Unknown\\n - Why don't scientists trust atoms? Because they make up everything!\\n   by Unknown\\n - Why do they call it rush hour when nothing moves?\\n   by Robin Williams\\n - I'm on the whiskey diet. I've lost three days already.\\n   by Tommy Cooper\\n - I used to play hide and seek with my dog until he found a better hiding spot - forever.\\n   by Unknown\\n - I'm not arguing; I'm just explaining why I'm right.\\n   by Unknown\", '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: no\\npracticed_meditation: no\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: no\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', \"# Gift Ideas for Various Occasions\\n\\noccasion: Birthday\\nideas:\\n- Gift card to their favorite online store\\n- Tech gadgets or accessories\\n- Books by their favorite author\\n- Cooking or baking equipment\\n- Subscription to a streaming service\\n- Customized jewelry\\n- Personalized phone case\\n- Wireless earbuds\\n- Fitness tracker\\n- Outdoor adventure gear\\n\\noccasion: Mother's Day\\nideas:\\n- Spa or pampering gift basket from online retailers\\n- Online cooking or baking class\\n- Handmade or personalized jewelry from online artisans\\n- Books or a subscription to an e-book service\\n- Gift card for a favorite online store\\n- Plant or garden accessories from online nurseries\\n- Online art classes\\n- Subscription to online magazines or blogs\\n- Virtual escape room experience\\n- Online wellness retreat\\n\\noccasion: Graduation\\nideas:\\n- Gift cards for online retailers\\n- Laptop or tablet accessories\\n- Online courses or workshops subscription\\n- Professional resume template\\n- Amazon Prime membership\\n- E-book reader\\n- Virtual reality headset\\n- Language learning app subscription\\n- Online fitness class membership\\n- Digital notetaking device\\n\\noccasion: Housewarming\\nideas:\\n- Indoor plants or succulents from an online nursery\\n- Candles or essential oil diffusers\\n- Decorative throw pillows or blankets\\n- Personalized doormat\\n- Wine or cocktail set\\n- Home organization items\\n- Art prints or wall decor from online galleries\\n- Online interior design consultation\\n- Subscription to a meal kit delivery service\\n- Smart home devices\\n\\noccasion: Baby Shower\\nideas:\\n- Gift cards to baby stores\\n- Baby books and educational toys\\n- Nursery decor items\\n- Online parenting course\\n- Stroller or car seat\\n- Online shopping for baby essentials\\n- Baby monitor or breastfeeding accessories\\n- Children's e-books subscription\\n- Virtual baby shower games\\n- Diaper subscription service\\n\\noccasion: Father's Day\\nideas:\\n- Tech gadgets or tools from online electronics stores\\n- Tickets to a virtual sports game or concert\\n- Whiskey or beer tasting kits from online sellers\\n- Outdoor adventure gear from online retailers\\n- Personalized wallet or keychain from online artisans\\n- Online grilling or cooking classes\\n- Virtual golf or fishing experience\\n- E-book of his favorite genre\\n- Digital subscription to a sports news website\\n- Online DIY project kits\\n\\noccasion: Wedding\\nideas:\\n- Kitchen appliances or cookware\\n- Home decor items\\n- Personalized cutting board or wine glasses\\n- Contribution to their honeymoon fund\\n- Artwork or wall hangings\\n- Fine dining experience gift card\\n- Bedding or linens\\n- Outdoor furniture or accessories\\n- Wine or champagne set\\n- Streaming device\\n\\noccasion: Friendship Day\\nideas:\\n- Customized friendship bracelet or necklace from online shops\\n- Virtual spa day experience\\n- Memory scrapbook or photo album created online\\n- Cooking a special meal together through a virtual class\\n- Online concert or movie streaming subscription\\n- Subscription to a fun activity or hobby box\\n- Virtual museum or art gallery tour\\n- Outdoor picnic essentials available online\\n- Digital games or puzzle subscriptions\\n- Online crafting or DIY workshop\\n\\noccasion: Anniversary\\nideas:\\n- Romantic getaway weekend voucher\\n- Customized anniversary photo book\\n- Tickets to a virtual concert or show\\n- Cooking or mixology class for couples (online)\\n- Spa or wellness retreat gift certificate\\n- Personalized star map of their wedding date\\n- Engraved watches\\n- Online escape room experience\\n- Digital photo frame\\n- Subscription to a movie streaming service\\n\\noccasion: Valentine's Day\\nideas:\\n- Gift cards to online gourmet food stores\\n- Romantic e-cards or digital love notes\\n- Jewelry or accessories from online boutiques\\n- Virtual cooking class for couples\\n- Online wine tasting experience\\n- Digital music subscription\\n- Virtual reality date experience\\n- Online personalized gifts\\n- Digital movie rental\\n- E-book of romantic poetry\", \"# Inspirational Quotes Collection\\n\\n - In the middle of every difficulty lies opportunity.\\n   by Albert Einstein\\n - Keep your face always toward the sunshine—and shadows will fall behind you.\\n   by Walt Whitman\\n - The future belongs to those who believe in the beauty of their dreams.\\n   by Eleanor Roosevelt\\n - Your time is limited, don't waste it living someone else's life.\\n   by Steve Jobs\\n - The harder you work for something, the greater you'll feel when you achieve it.\\n   by Unknown\\n - Difficult roads often lead to beautiful destinations.\\n   by Unknown\", '# My Bucket List ([x] = done, [ ] = not done))\\n\\n[ ] Learning to cook a signature dish from scratch\\n[ ] Taking a hot springs bath in Iceland\\n[ ] Visiting the Seven Wonders of the World\\n[ ] Learning a new language fluently\\n[ ] Seeing the Northern Lights\\n[ ] Seeing the Grand Canyon\\n[x] Cruising on the Nile River\\n[ ] Completing a marathon or triathlon', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: no\\nread_atleast_30_mins: yes\\ndrank_adequate_water: no\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: no\\npracticed_good_posture: no\\nconnected_with_friends: yes', \"# Movie Quotes Collection\\n\\n - I'm king of the world!\\n   from Titanic (1997)\\n - Here's Johnny!\\n   from The Shining (1980)\\n - To infinity and beyond!\\n   from Toy Story (1995)\\n - Frankly, my dear, I don't give a damn.\\n   from Gone with the Wind (1939)\", \"# Weekly Workout Plan\\n\\nday: monday\\nexercises:\\n- Warm-up - 5 minutes of jumping jacks\\n- Barbell squats - 4 sets of 8 reps\\n- Bench press - 4 sets of 6 reps\\n- Bent-over rows - 3 sets of 10 reps\\n- Plank - Hold for 1 minute\\n- Cool-down - 10 minutes of flexibility exercises\\nduration_mins: 35\\n\\nday: tuesday\\nexercises:\\n- Warm-up - 10 minutes of brisk walking\\n- Cycling - 45 minutes at a moderate pace\\n- Bodyweight lunges - 3 sets of 12 reps per leg\\n- Side planks - Hold for 30 seconds each side\\n- Cool-down - 5 minutes of gentle stretches\\nduration_mins: 65\\n\\nday: wednesday\\nexercises:\\n- Warm-up - 5 minutes of light jogging\\n- 'Interval training: 10 sets of 1-minute sprint followed by 1.5 minutes of recovery'\\n- Chin-ups - 3 sets of 6 reps\\n- Tricep dips - 3 sets of 10 reps\\n- Cool-down - 5 minutes of deep breathing and stretching\\nduration_mins: 45\\n\\nday: thursday\\nexercises:\\n- Warm-up - 5 minutes of jump rope\\n- Deadlifts - 4 sets of 5 reps\\n- Overhead shoulder press - 3 sets of 8 reps\\n- Russian twists - 3 sets of 20 reps\\n- Cool-down - 10 minutes of yoga poses\\nduration_mins: 30\\n\\nday: friday\\nexercises:\\n- Warm-up - 10 minutes of light cardio\\n- Swimming - 30 minutes of continuous laps\\n- Pull-ups - 3 sets of 5 reps\\n- Leg curls - 3 sets of 12 reps\\n- Cool-down - 5 minutes of gentle stretches\\nduration_mins: 55\\n\\nday: saturday\\nexercises:\\n- Warm-up - 5 minutes of dynamic stretches\\n- Hiking - 2 hours of moderate-paced hiking in nature\\n- Cooldown - 5 minutes of deep stretching and mindful breathing\\nduration_mins: 130\\n\\nday: sunday\\nexercises:\\n- Rest day\\nduration_mins: 0\", '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: no\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: no\\nconnected_with_friends: no', \"# Movie Recommendations\\n\\nThe Dark Knight Rises\\n - director: Christopher Nolan\\n - genre: Action, Crime\\n\\nThe Wolf of Wall Street\\n - director: Martin Scorsese\\n - genre: Biography, Crime, Drama\\n\\nA Beautiful Mind\\n - director: Ron Howard\\n - genre: Biography, Drama\\n\\nEternal Sunshine of the Spotless Mind\\n - director: Michel Gondry\\n - genre: Drama, Romance, Sci-Fi\\n\\nInterstellar\\n - director: Christopher Nolan\\n - genre: Sci-Fi, Drama\\n\\nInception\\n - director: Christopher Nolan\\n - genre: Sci-Fi, Action\\n\\nThe Lord of the Rings: The Return of the King\\n - director: Peter Jackson\\n - genre: Adventure, Fantasy\\n\\nThe Matrix\\n - director: The Wachowskis\\n - genre: Sci-Fi, Action\\n\\nForrest Gump\\n - director: Robert Zemeckis\\n - genre: Drama, Romance\\n\\nAvatar\\n - director: James Cameron\\n - genre: Action, Adventure, Fantasy\\n\\nThe Shawshank Redemption\\n - director: Frank Darabont\\n - genre: Drama\\n\\nHer\\n - director: Spike Jonze\\n - genre: Drama, Romance, Sci-Fi\\n\\nThe Godfather\\n - director: Francis Ford Coppola\\n - genre: Crime, Drama\\n\\nInterstellar\\n - director: Christopher Nolan\\n - genre: Sci-Fi, Drama\\n\\nAmélie\\n - director: Jean-Pierre Jeunet\\n - genre: Comedy, Romance\\n\\nPan's Labyrinth\\n - director: Guillermo del Toro\\n - genre: Drama, Fantasy, War\\n\\nThe Silence of the Lambs\\n - director: Jonathan Demme\\n - genre: Crime, Drama, Thriller\\n\\nFight Club\\n - director: David Fincher\\n - genre: Drama\\n\\nInglourious Basterds\\n - director: Quentin Tarantino\\n - genre: Adventure, Drama, War\\n\\nGood Will Hunting\\n - director: Gus Van Sant\\n - genre: Drama\"}\n\nIn right but not left:\n['# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: no\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: no\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: no\\nconnected_with_friends: yes', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: no', \"# Book Reading Lists\\n\\nA People's History of the United States\\n - authors: Howard Zinn\\n - genre: History\\n\\nHarry Potter and the Sorcerer's Stone\\n - authors: J.K. Rowling\\n - genre: Young Adult\\n\\nThe Lord of the Rings: The Fellowship of the Ring\\n - authors: J.R.R. Tolkien\\n - genre: Epic Fantasy\\n\\nBecoming\\n - authors: Michelle Obama\\n - genre: Memoir\\n\\n1984\\n - authors: George Orwell\\n - genre: Dystopian\\n\\nThe Power of Now\\n - authors: Eckhart Tolle\\n - genre: Spirituality\\n\\nYou Are a Badass\\n - authors: Jen Sincero\\n - genre: Self-Help\\n\\nThe Hobbit\\n - authors: J.R.R. Tolkien\\n - genre: Fantasy\\n\\nPride and Prejudice\\n - authors: Jane Austen\\n - genre: Romance\\n\\nThe 7 Habits of Highly Effective People\\n - authors: Stephen R. Covey\\n - genre: Self-Help\\n\\nGone Girl\\n - authors: Gillian Flynn\\n - genre: Mystery\\n\\nQuiet: The Power of Introverts in a World That Can't Stop Talking\\n - authors: Susan Cain\\n - genre: Psychology\\n\\nThe Catcher in the Rye\\n - authors: J.D. Salinger\\n - genre: Coming-of-Age\\n\\nLittle Women\\n - authors: Louisa May Alcott\\n - genre: Classic\", '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: no\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: no', '# Food Recipes\\n\\nname: Classic Spaghetti Carbonara\\ningredients:\\n- 200g spaghetti\\n- 100g pancetta or guanciale, diced\\n- 2 large eggs\\n- 50g Pecorino Romano cheese, grated\\n- Salt and black pepper to taste\\n- 2 cloves garlic, minced\\n- Fresh parsley, chopped, for garnish\\ninstructions:\\n- Cook the spaghetti in salted boiling water until al dente. Drain and set aside.\\n- In a skillet, cook the diced pancetta or guanciale until crispy. Remove from heat and set aside.\\n- In a bowl, whisk together the eggs, grated Pecorino Romano cheese, minced garlic, salt, and black pepper.\\n- Combine the cooked spaghetti with the egg mixture and pancetta. Toss until the pasta is coated and creamy.\\n- Garnish with chopped fresh parsley and additional grated cheese. Serve immediately.\\nfavorite: true\\n\\nname: Mediterranean Quinoa Salad\\ningredients:\\n- 1 cup quinoa, cooked and cooled\\n- 1 cup cucumber, diced\\n- 1 cup cherry tomatoes, halved\\n- 1/2 cup red onion, finely chopped\\n- 1/2 cup Kalamata olives, pitted and sliced\\n- 1/2 cup feta cheese, crumbled\\n- 1/4 cup fresh parsley, chopped\\n- 1/4 cup fresh mint, chopped\\n- 3 tablespoons extra virgin olive oil\\n- 2 tablespoons lemon juice\\n- Salt and black pepper to taste\\ninstructions:\\n- In a large bowl, combine cooked quinoa, cucumber, cherry tomatoes, red onion, olives, feta cheese, parsley, and mint.\\n- In a small bowl, whisk together olive oil, lemon juice, salt, and black pepper.\\n- Pour the dressing over the quinoa mixture and toss to combine.\\n- Chill in the refrigerator for about 30 minutes before serving.\\nfavorite: false', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: no\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: no', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: no\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: no\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '# Grocery List\\n\\n - cottage cheese (1.0 container)\\n - olive oil (1.0 bottle)\\n - chicken breasts (2.0 pounds)\\n - yogurt (4.0 cups)\\n - green beans (0.5 pound)\\n - rice (1.0 pound)\\n - orange juice (1.0 carton)\\n - pasta (1.0 box)\\n - almonds (1.0 bag)\\n - bell peppers (3.0 pieces)\\n - carrots (1.0 bag)\\n - peanut butter (1.0 jar)', \"# Funny Quotes Collection\\n\\n - I don't need a hair stylist; my pillow gives me a new hairstyle every morning.\\n   by Unknown\\n - Why don't scientists trust atoms? Because they make up everything!\\n   by Unknown\\n - Why do they call it rush hour when nothing moves?\\n   by Robin Williams\\n - I'm on the whiskey diet. I've lost three days already.\\n   by Tommy Cooper\\n - I used to play hide and seek with my dog until he found a better hiding spot - forever.\\n   by Unknown\\n - I'm not arguing; I'm just explaining why I'm right.\\n   by Unknown\", '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: no\\npracticed_meditation: no\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: no\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', \"# Gift Ideas for Various Occasions\\n\\noccasion: Birthday\\nideas:\\n- Gift card to their favorite online store\\n- Tech gadgets or accessories\\n- Books by their favorite author\\n- Cooking or baking equipment\\n- Subscription to a streaming service\\n- Customized jewelry\\n- Personalized phone case\\n- Wireless earbuds\\n- Fitness tracker\\n- Outdoor adventure gear\\n\\noccasion: Mother's Day\\nideas:\\n- Spa or pampering gift basket from online retailers\\n- Online cooking or baking class\\n- Handmade or personalized jewelry from online artisans\\n- Books or a subscription to an e-book service\\n- Gift card for a favorite online store\\n- Plant or garden accessories from online nurseries\\n- Online art classes\\n- Subscription to online magazines or blogs\\n- Virtual escape room experience\\n- Online wellness retreat\\n\\noccasion: Graduation\\nideas:\\n- Gift cards for online retailers\\n- Laptop or tablet accessories\\n- Online courses or workshops subscription\\n- Professional resume template\\n- Amazon Prime membership\\n- E-book reader\\n- Virtual reality headset\\n- Language learning app subscription\\n- Online fitness class membership\\n- Digital notetaking device\\n\\noccasion: Housewarming\\nideas:\\n- Indoor plants or succulents from an online nursery\\n- Candles or essential oil diffusers\\n- Decorative throw pillows or blankets\\n- Personalized doormat\\n- Wine or cocktail set\\n- Home organization items\\n- Art prints or wall decor from online galleries\\n- Online interior design consultation\\n- Subscription to a meal kit delivery service\\n- Smart home devices\\n\\noccasion: Baby Shower\\nideas:\\n- Gift cards to baby stores\\n- Baby books and educational toys\\n- Nursery decor items\\n- Online parenting course\\n- Stroller or car seat\\n- Online shopping for baby essentials\\n- Baby monitor or breastfeeding accessories\\n- Children's e-books subscription\\n- Virtual baby shower games\\n- Diaper subscription service\\n\\noccasion: Father's Day\\nideas:\\n- Tech gadgets or tools from online electronics stores\\n- Tickets to a virtual sports game or concert\\n- Whiskey or beer tasting kits from online sellers\\n- Outdoor adventure gear from online retailers\\n- Personalized wallet or keychain from online artisans\\n- Online grilling or cooking classes\\n- Virtual golf or fishing experience\\n- E-book of his favorite genre\\n- Digital subscription to a sports news website\\n- Online DIY project kits\\n\\noccasion: Wedding\\nideas:\\n- Kitchen appliances or cookware\\n- Home decor items\\n- Personalized cutting board or wine glasses\\n- Contribution to their honeymoon fund\\n- Artwork or wall hangings\\n- Fine dining experience gift card\\n- Bedding or linens\\n- Outdoor furniture or accessories\\n- Wine or champagne set\\n- Streaming device\\n\\noccasion: Friendship Day\\nideas:\\n- Customized friendship bracelet or necklace from online shops\\n- Virtual spa day experience\\n- Memory scrapbook or photo album created online\\n- Cooking a special meal together through a virtual class\\n- Online concert or movie streaming subscription\\n- Subscription to a fun activity or hobby box\\n- Virtual museum or art gallery tour\\n- Outdoor picnic essentials available online\\n- Digital games or puzzle subscriptions\\n- Online crafting or DIY workshop\\n\\noccasion: Anniversary\\nideas:\\n- Romantic getaway weekend voucher\\n- Customized anniversary photo book\\n- Tickets to a virtual concert or show\\n- Cooking or mixology class for couples (online)\\n- Spa or wellness retreat gift certificate\\n- Personalized star map of their wedding date\\n- Engraved watches\\n- Online escape room experience\\n- Digital photo frame\\n- Subscription to a movie streaming service\\n\\noccasion: Valentine's Day\\nideas:\\n- Gift cards to online gourmet food stores\\n- Romantic e-cards or digital love notes\\n- Jewelry or accessories from online boutiques\\n- Virtual cooking class for couples\\n- Online wine tasting experience\\n- Digital music subscription\\n- Virtual reality date experience\\n- Online personalized gifts\\n- Digital movie rental\\n- E-book of romantic poetry\", \"# Inspirational Quotes Collection\\n\\n - In the middle of every difficulty lies opportunity.\\n   by Albert Einstein\\n - Keep your face always toward the sunshine—and shadows will fall behind you.\\n   by Walt Whitman\\n - The future belongs to those who believe in the beauty of their dreams.\\n   by Eleanor Roosevelt\\n - Your time is limited, don't waste it living someone else's life.\\n   by Steve Jobs\\n - The harder you work for something, the greater you'll feel when you achieve it.\\n   by Unknown\\n - Difficult roads often lead to beautiful destinations.\\n   by Unknown\", '# My Bucket List ([x] = done, [ ] = not done))\\n\\n[ ] Learning to cook a signature dish from scratch\\n[ ] Taking a hot springs bath in Iceland\\n[ ] Visiting the Seven Wonders of the World\\n[ ] Learning a new language fluently\\n[ ] Seeing the Northern Lights\\n[ ] Seeing the Grand Canyon\\n[x] Cruising on the Nile River\\n[ ] Completing a marathon or triathlon', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: no\\nread_atleast_30_mins: yes\\ndrank_adequate_water: no\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: no\\npracticed_good_posture: no\\nconnected_with_friends: yes', \"# Movie Quotes Collection\\n\\n - I'm king of the world!\\n   from Titanic (1997)\\n - Here's Johnny!\\n   from The Shining (1980)\\n - To infinity and beyond!\\n   from Toy Story (1995)\\n - Frankly, my dear, I don't give a damn.\\n   from Gone with the Wind (1939)\", \"# Weekly Workout Plan\\n\\nday: monday\\nexercises:\\n- Warm-up - 5 minutes of jumping jacks\\n- Barbell squats - 4 sets of 8 reps\\n- Bench press - 4 sets of 6 reps\\n- Bent-over rows - 3 sets of 10 reps\\n- Plank - Hold for 1 minute\\n- Cool-down - 10 minutes of flexibility exercises\\nduration_mins: 35\\n\\nday: tuesday\\nexercises:\\n- Warm-up - 10 minutes of brisk walking\\n- Cycling - 45 minutes at a moderate pace\\n- Bodyweight lunges - 3 sets of 12 reps per leg\\n- Side planks - Hold for 30 seconds each side\\n- Cool-down - 5 minutes of gentle stretches\\nduration_mins: 65\\n\\nday: wednesday\\nexercises:\\n- Warm-up - 5 minutes of light jogging\\n- 'Interval training: 10 sets of 1-minute sprint followed by 1.5 minutes of recovery'\\n- Chin-ups - 3 sets of 6 reps\\n- Tricep dips - 3 sets of 10 reps\\n- Cool-down - 5 minutes of deep breathing and stretching\\nduration_mins: 45\\n\\nday: thursday\\nexercises:\\n- Warm-up - 5 minutes of jump rope\\n- Deadlifts - 4 sets of 5 reps\\n- Overhead shoulder press - 3 sets of 8 reps\\n- Russian twists - 3 sets of 20 reps\\n- Cool-down - 10 minutes of yoga poses\\nduration_mins: 30\\n\\nday: friday\\nexercises:\\n- Warm-up - 10 minutes of light cardio\\n- Swimming - 30 minutes of continuous laps\\n- Pull-ups - 3 sets of 5 reps\\n- Leg curls - 3 sets of 12 reps\\n- Cool-down - 5 minutes of gentle stretches\\nduration_mins: 55\\n\\nday: saturday\\nexercises:\\n- Warm-up - 5 minutes of dynamic stretches\\n- Hiking - 2 hours of moderate-paced hiking in nature\\n- Cooldown - 5 minutes of deep stretching and mindful breathing\\nduration_mins: 130\\n\\nday: sunday\\nexercises:\\n- Rest day\\nduration_mins: 0\", '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: no\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: no\\nconnected_with_friends: no', \"# Movie Recommendations\\n\\nThe Dark Knight Rises\\n - director: Christopher Nolan\\n - genre: Action, Crime\\n\\nThe Wolf of Wall Street\\n - director: Martin Scorsese\\n - genre: Biography, Crime, Drama\\n\\nA Beautiful Mind\\n - director: Ron Howard\\n - genre: Biography, Drama\\n\\nEternal Sunshine of the Spotless Mind\\n - director: Michel Gondry\\n - genre: Drama, Romance, Sci-Fi\\n\\nInterstellar\\n - director: Christopher Nolan\\n - genre: Sci-Fi, Drama\\n\\nInception\\n - director: Christopher Nolan\\n - genre: Sci-Fi, Action\\n\\nThe Lord of the Rings: The Return of the King\\n - director: Peter Jackson\\n - genre: Adventure, Fantasy\\n\\nThe Matrix\\n - director: The Wachowskis\\n - genre: Sci-Fi, Action\\n\\nForrest Gump\\n - director: Robert Zemeckis\\n - genre: Drama, Romance\\n\\nAvatar\\n - director: James Cameron\\n - genre: Action, Adventure, Fantasy\\n\\nThe Shawshank Redemption\\n - director: Frank Darabont\\n - genre: Drama\\n\\nHer\\n - director: Spike Jonze\\n - genre: Drama, Romance, Sci-Fi\\n\\nThe Godfather\\n - director: Francis Ford Coppola\\n - genre: Crime, Drama\\n\\nInterstellar\\n - director: Christopher Nolan\\n - genre: Sci-Fi, Drama\\n\\nAmélie\\n - director: Jean-Pierre Jeunet\\n - genre: Comedy, Romance\\n\\nPan's Labyrinth\\n - director: Guillermo del Toro\\n - genre: Drama, Fantasy, War\\n\\nThe Silence of the Lambs\\n - director: Jonathan Demme\\n - genre: Crime, Drama, Thriller\\n\\nFight Club\\n - director: David Fincher\\n - genre: Drama\\n\\nInglourious Basterds\\n - director: Quentin Tarantino\\n - genre: Adventure, Drama, War\\n\\nGood Will Hunting\\n - director: Gus Van Sant\\n - genre: Drama\"]\n\nOriginal values:\nset()\n==\n{'# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: no\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: no\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: no\\nconnected_with_friends: yes', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: no', \"# Book Reading Lists\\n\\nA People's History of the United States\\n - authors: Howard Zinn\\n - genre: History\\n\\nHarry Potter and the Sorcerer's Stone\\n - authors: J.K. Rowling\\n - genre: Young Adult\\n\\nThe Lord of the Rings: The Fellowship of the Ring\\n - authors: J.R.R. Tolkien\\n - genre: Epic Fantasy\\n\\nBecoming\\n - authors: Michelle Obama\\n - genre: Memoir\\n\\n1984\\n - authors: George Orwell\\n - genre: Dystopian\\n\\nThe Power of Now\\n - authors: Eckhart Tolle\\n - genre: Spirituality\\n\\nYou Are a Badass\\n - authors: Jen Sincero\\n - genre: Self-Help\\n\\nThe Hobbit\\n - authors: J.R.R. Tolkien\\n - genre: Fantasy\\n\\nPride and Prejudice\\n - authors: Jane Austen\\n - genre: Romance\\n\\nThe 7 Habits of Highly Effective People\\n - authors: Stephen R. Covey\\n - genre: Self-Help\\n\\nGone Girl\\n - authors: Gillian Flynn\\n - genre: Mystery\\n\\nQuiet: The Power of Introverts in a World That Can't Stop Talking\\n - authors: Susan Cain\\n - genre: Psychology\\n\\nThe Catcher in the Rye\\n - authors: J.D. Salinger\\n - genre: Coming-of-Age\\n\\nLittle Women\\n - authors: Louisa May Alcott\\n - genre: Classic\", '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: no\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: no', '# Food Recipes\\n\\nname: Classic Spaghetti Carbonara\\ningredients:\\n- 200g spaghetti\\n- 100g pancetta or guanciale, diced\\n- 2 large eggs\\n- 50g Pecorino Romano cheese, grated\\n- Salt and black pepper to taste\\n- 2 cloves garlic, minced\\n- Fresh parsley, chopped, for garnish\\ninstructions:\\n- Cook the spaghetti in salted boiling water until al dente. Drain and set aside.\\n- In a skillet, cook the diced pancetta or guanciale until crispy. Remove from heat and set aside.\\n- In a bowl, whisk together the eggs, grated Pecorino Romano cheese, minced garlic, salt, and black pepper.\\n- Combine the cooked spaghetti with the egg mixture and pancetta. Toss until the pasta is coated and creamy.\\n- Garnish with chopped fresh parsley and additional grated cheese. Serve immediately.\\nfavorite: true\\n\\nname: Mediterranean Quinoa Salad\\ningredients:\\n- 1 cup quinoa, cooked and cooled\\n- 1 cup cucumber, diced\\n- 1 cup cherry tomatoes, halved\\n- 1/2 cup red onion, finely chopped\\n- 1/2 cup Kalamata olives, pitted and sliced\\n- 1/2 cup feta cheese, crumbled\\n- 1/4 cup fresh parsley, chopped\\n- 1/4 cup fresh mint, chopped\\n- 3 tablespoons extra virgin olive oil\\n- 2 tablespoons lemon juice\\n- Salt and black pepper to taste\\ninstructions:\\n- In a large bowl, combine cooked quinoa, cucumber, cherry tomatoes, red onion, olives, feta cheese, parsley, and mint.\\n- In a small bowl, whisk together olive oil, lemon juice, salt, and black pepper.\\n- Pour the dressing over the quinoa mixture and toss to combine.\\n- Chill in the refrigerator for about 30 minutes before serving.\\nfavorite: false', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: no\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: no', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: no\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: no\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '# Grocery List\\n\\n - cottage cheese (1.0 container)\\n - olive oil (1.0 bottle)\\n - chicken breasts (2.0 pounds)\\n - yogurt (4.0 cups)\\n - green beans (0.5 pound)\\n - rice (1.0 pound)\\n - orange juice (1.0 carton)\\n - pasta (1.0 box)\\n - almonds (1.0 bag)\\n - bell peppers (3.0 pieces)\\n - carrots (1.0 bag)\\n - peanut butter (1.0 jar)', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: no\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: no\\nconnected_with_friends: no', \"# Funny Quotes Collection\\n\\n - I don't need a hair stylist; my pillow gives me a new hairstyle every morning.\\n   by Unknown\\n - Why don't scientists trust atoms? Because they make up everything!\\n   by Unknown\\n - Why do they call it rush hour when nothing moves?\\n   by Robin Williams\\n - I'm on the whiskey diet. I've lost three days already.\\n   by Tommy Cooper\\n - I used to play hide and seek with my dog until he found a better hiding spot - forever.\\n   by Unknown\\n - I'm not arguing; I'm just explaining why I'm right.\\n   by Unknown\", '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: no\\npracticed_meditation: no\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', \"# Gift Ideas for Various Occasions\\n\\noccasion: Birthday\\nideas:\\n- Gift card to their favorite online store\\n- Tech gadgets or accessories\\n- Books by their favorite author\\n- Cooking or baking equipment\\n- Subscription to a streaming service\\n- Customized jewelry\\n- Personalized phone case\\n- Wireless earbuds\\n- Fitness tracker\\n- Outdoor adventure gear\\n\\noccasion: Mother's Day\\nideas:\\n- Spa or pampering gift basket from online retailers\\n- Online cooking or baking class\\n- Handmade or personalized jewelry from online artisans\\n- Books or a subscription to an e-book service\\n- Gift card for a favorite online store\\n- Plant or garden accessories from online nurseries\\n- Online art classes\\n- Subscription to online magazines or blogs\\n- Virtual escape room experience\\n- Online wellness retreat\\n\\noccasion: Graduation\\nideas:\\n- Gift cards for online retailers\\n- Laptop or tablet accessories\\n- Online courses or workshops subscription\\n- Professional resume template\\n- Amazon Prime membership\\n- E-book reader\\n- Virtual reality headset\\n- Language learning app subscription\\n- Online fitness class membership\\n- Digital notetaking device\\n\\noccasion: Housewarming\\nideas:\\n- Indoor plants or succulents from an online nursery\\n- Candles or essential oil diffusers\\n- Decorative throw pillows or blankets\\n- Personalized doormat\\n- Wine or cocktail set\\n- Home organization items\\n- Art prints or wall decor from online galleries\\n- Online interior design consultation\\n- Subscription to a meal kit delivery service\\n- Smart home devices\\n\\noccasion: Baby Shower\\nideas:\\n- Gift cards to baby stores\\n- Baby books and educational toys\\n- Nursery decor items\\n- Online parenting course\\n- Stroller or car seat\\n- Online shopping for baby essentials\\n- Baby monitor or breastfeeding accessories\\n- Children's e-books subscription\\n- Virtual baby shower games\\n- Diaper subscription service\\n\\noccasion: Father's Day\\nideas:\\n- Tech gadgets or tools from online electronics stores\\n- Tickets to a virtual sports game or concert\\n- Whiskey or beer tasting kits from online sellers\\n- Outdoor adventure gear from online retailers\\n- Personalized wallet or keychain from online artisans\\n- Online grilling or cooking classes\\n- Virtual golf or fishing experience\\n- E-book of his favorite genre\\n- Digital subscription to a sports news website\\n- Online DIY project kits\\n\\noccasion: Wedding\\nideas:\\n- Kitchen appliances or cookware\\n- Home decor items\\n- Personalized cutting board or wine glasses\\n- Contribution to their honeymoon fund\\n- Artwork or wall hangings\\n- Fine dining experience gift card\\n- Bedding or linens\\n- Outdoor furniture or accessories\\n- Wine or champagne set\\n- Streaming device\\n\\noccasion: Friendship Day\\nideas:\\n- Customized friendship bracelet or necklace from online shops\\n- Virtual spa day experience\\n- Memory scrapbook or photo album created online\\n- Cooking a special meal together through a virtual class\\n- Online concert or movie streaming subscription\\n- Subscription to a fun activity or hobby box\\n- Virtual museum or art gallery tour\\n- Outdoor picnic essentials available online\\n- Digital games or puzzle subscriptions\\n- Online crafting or DIY workshop\\n\\noccasion: Anniversary\\nideas:\\n- Romantic getaway weekend voucher\\n- Customized anniversary photo book\\n- Tickets to a virtual concert or show\\n- Cooking or mixology class for couples (online)\\n- Spa or wellness retreat gift certificate\\n- Personalized star map of their wedding date\\n- Engraved watches\\n- Online escape room experience\\n- Digital photo frame\\n- Subscription to a movie streaming service\\n\\noccasion: Valentine's Day\\nideas:\\n- Gift cards to online gourmet food stores\\n- Romantic e-cards or digital love notes\\n- Jewelry or accessories from online boutiques\\n- Virtual cooking class for couples\\n- Online wine tasting experience\\n- Digital music subscription\\n- Virtual reality date experience\\n- Online personalized gifts\\n- Digital movie rental\\n- E-book of romantic poetry\", \"# Inspirational Quotes Collection\\n\\n - In the middle of every difficulty lies opportunity.\\n   by Albert Einstein\\n - Keep your face always toward the sunshine—and shadows will fall behind you.\\n   by Walt Whitman\\n - The future belongs to those who believe in the beauty of their dreams.\\n   by Eleanor Roosevelt\\n - Your time is limited, don't waste it living someone else's life.\\n   by Steve Jobs\\n - The harder you work for something, the greater you'll feel when you achieve it.\\n   by Unknown\\n - Difficult roads often lead to beautiful destinations.\\n   by Unknown\", '# My Bucket List ([x] = done, [ ] = not done))\\n\\n[ ] Learning to cook a signature dish from scratch\\n[ ] Taking a hot springs bath in Iceland\\n[ ] Visiting the Seven Wonders of the World\\n[ ] Learning a new language fluently\\n[ ] Seeing the Northern Lights\\n[ ] Seeing the Grand Canyon\\n[x] Cruising on the Nile River\\n[ ] Completing a marathon or triathlon', '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: no\\nread_atleast_30_mins: yes\\ndrank_adequate_water: no\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: no\\npracticed_good_posture: no\\nconnected_with_friends: yes', \"# Movie Quotes Collection\\n\\n - I'm king of the world!\\n   from Titanic (1997)\\n - Here's Johnny!\\n   from The Shining (1980)\\n - To infinity and beyond!\\n   from Toy Story (1995)\\n - Frankly, my dear, I don't give a damn.\\n   from Gone with the Wind (1939)\", \"# Weekly Workout Plan\\n\\nday: monday\\nexercises:\\n- Warm-up - 5 minutes of jumping jacks\\n- Barbell squats - 4 sets of 8 reps\\n- Bench press - 4 sets of 6 reps\\n- Bent-over rows - 3 sets of 10 reps\\n- Plank - Hold for 1 minute\\n- Cool-down - 10 minutes of flexibility exercises\\nduration_mins: 35\\n\\nday: tuesday\\nexercises:\\n- Warm-up - 10 minutes of brisk walking\\n- Cycling - 45 minutes at a moderate pace\\n- Bodyweight lunges - 3 sets of 12 reps per leg\\n- Side planks - Hold for 30 seconds each side\\n- Cool-down - 5 minutes of gentle stretches\\nduration_mins: 65\\n\\nday: wednesday\\nexercises:\\n- Warm-up - 5 minutes of light jogging\\n- 'Interval training: 10 sets of 1-minute sprint followed by 1.5 minutes of recovery'\\n- Chin-ups - 3 sets of 6 reps\\n- Tricep dips - 3 sets of 10 reps\\n- Cool-down - 5 minutes of deep breathing and stretching\\nduration_mins: 45\\n\\nday: thursday\\nexercises:\\n- Warm-up - 5 minutes of jump rope\\n- Deadlifts - 4 sets of 5 reps\\n- Overhead shoulder press - 3 sets of 8 reps\\n- Russian twists - 3 sets of 20 reps\\n- Cool-down - 10 minutes of yoga poses\\nduration_mins: 30\\n\\nday: friday\\nexercises:\\n- Warm-up - 10 minutes of light cardio\\n- Swimming - 30 minutes of continuous laps\\n- Pull-ups - 3 sets of 5 reps\\n- Leg curls - 3 sets of 12 reps\\n- Cool-down - 5 minutes of gentle stretches\\nduration_mins: 55\\n\\nday: saturday\\nexercises:\\n- Warm-up - 5 minutes of dynamic stretches\\n- Hiking - 2 hours of moderate-paced hiking in nature\\n- Cooldown - 5 minutes of deep stretching and mindful breathing\\nduration_mins: 130\\n\\nday: sunday\\nexercises:\\n- Rest day\\nduration_mins: 0\", '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: no\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', \"# Movie Recommendations\\n\\nThe Dark Knight Rises\\n - director: Christopher Nolan\\n - genre: Action, Crime\\n\\nThe Wolf of Wall Street\\n - director: Martin Scorsese\\n - genre: Biography, Crime, Drama\\n\\nA Beautiful Mind\\n - director: Ron Howard\\n - genre: Biography, Drama\\n\\nEternal Sunshine of the Spotless Mind\\n - director: Michel Gondry\\n - genre: Drama, Romance, Sci-Fi\\n\\nInterstellar\\n - director: Christopher Nolan\\n - genre: Sci-Fi, Drama\\n\\nInception\\n - director: Christopher Nolan\\n - genre: Sci-Fi, Action\\n\\nThe Lord of the Rings: The Return of the King\\n - director: Peter Jackson\\n - genre: Adventure, Fantasy\\n\\nThe Matrix\\n - director: The Wachowskis\\n - genre: Sci-Fi, Action\\n\\nForrest Gump\\n - director: Robert Zemeckis\\n - genre: Drama, Romance\\n\\nAvatar\\n - director: James Cameron\\n - genre: Action, Adventure, Fantasy\\n\\nThe Shawshank Redemption\\n - director: Frank Darabont\\n - genre: Drama\\n\\nHer\\n - director: Spike Jonze\\n - genre: Drama, Romance, Sci-Fi\\n\\nThe Godfather\\n - director: Francis Ford Coppola\\n - genre: Crime, Drama\\n\\nInterstellar\\n - director: Christopher Nolan\\n - genre: Sci-Fi, Drama\\n\\nAmélie\\n - director: Jean-Pierre Jeunet\\n - genre: Comedy, Romance\\n\\nPan's Labyrinth\\n - director: Guillermo del Toro\\n - genre: Drama, Fantasy, War\\n\\nThe Silence of the Lambs\\n - director: Jonathan Demme\\n - genre: Crime, Drama, Thriller\\n\\nFight Club\\n - director: David Fincher\\n - genre: Drama\\n\\nInglourious Basterds\\n - director: Quentin Tarantino\\n - genre: Adventure, Drama, War\\n\\nGood Will Hunting\\n - director: Gus Van Sant\\n - genre: Drama\"}",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all added file_system.File records' path to content\nmapping match that of private_data.file_path_to_content\n(strip and ignore case).",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert all added file_system.File records' path to content\n    mapping match that of private_data.file_path_to_content\n    (strip and ignore case).\n    \"\"\"\n):\n    test.case(\n```\n----------\nAssertionError:\n{}\n==\nMunch({'~/backups/notes/book_reading_lists.md': \"# book reading lists\\n\\na people's history of the united states\\n - authors: howard zinn\\n - genre: history\\n\\nharry potter and the sorcerer's stone\\n - authors: j.k. rowling\\n - genre: young adult\\n\\nthe lord of the rings: the fellowship of the ring\\n - authors: j.r.r. tolkien\\n - genre: epic fantasy\\n\\nbecoming\\n - authors: michelle obama\\n - genre: memoir\\n\\n1984\\n - authors: george orwell\\n - genre: dystopian\\n\\nthe power of now\\n - authors: eckhart tolle\\n - genre: spirituality\\n\\nyou are a badass\\n - authors: jen sincero\\n - genre: self-help\\n\\nthe hobbit\\n - authors: j.r.r. tolkien\\n - genre: fantasy\\n\\npride and prejudice\\n - authors: jane austen\\n - genre: romance\\n\\nthe 7 habits of highly effective people\\n - authors: stephen r. covey\\n - genre: self-help\\n\\ngone girl\\n - authors: gillian flynn\\n - genre: mystery\\n\\nquiet: the power of introverts in a world that can't stop talking\\n - authors: susan cain\\n - genre: psychology\\n\\nthe catcher in the rye\\n - authors: j.d. salinger\\n - genre: coming-of-age\\n\\nlittle women\\n - authors: louisa may alcott\\n - genre: classic\", '~/backups/notes/food_recipes.md': '# food recipes\\n\\nname: classic spaghetti carbonara\\ningredients:\\n- 200g spaghetti\\n- 100g pancetta or guanciale, diced\\n- 2 large eggs\\n- 50g pecorino romano cheese, grated\\n- salt and black pepper to taste\\n- 2 cloves garlic, minced\\n- fresh parsley, chopped, for garnish\\ninstructions:\\n- cook the spaghetti in salted boiling water until al dente. drain and set aside.\\n- in a skillet, cook the diced pancetta or guanciale until crispy. remove from heat and set aside.\\n- in a bowl, whisk together the eggs, grated pecorino romano cheese, minced garlic, salt, and black pepper.\\n- combine the cooked spaghetti with the egg mixture and pancetta. toss until the pasta is coated and creamy.\\n- garnish with chopped fresh parsley and additional grated cheese. serve immediately.\\nfavorite: true\\n\\nname: mediterranean quinoa salad\\ningredients:\\n- 1 cup quinoa, cooked and cooled\\n- 1 cup cucumber, diced\\n- 1 cup cherry tomatoes, halved\\n- 1/2 cup red onion, finely chopped\\n- 1/2 cup kalamata olives, pitted and sliced\\n- 1/2 cup feta cheese, crumbled\\n- 1/4 cup fresh parsley, chopped\\n- 1/4 cup fresh mint, chopped\\n- 3 tablespoons extra virgin olive oil\\n- 2 tablespoons lemon juice\\n- salt and black pepper to taste\\ninstructions:\\n- in a large bowl, combine cooked quinoa, cucumber, cherry tomatoes, red onion, olives, feta cheese, parsley, and mint.\\n- in a small bowl, whisk together olive oil, lemon juice, salt, and black pepper.\\n- pour the dressing over the quinoa mixture and toss to combine.\\n- chill in the refrigerator for about 30 minutes before serving.\\nfavorite: false', '~/backups/notes/funny_quotes_collection.md': \"# funny quotes collection\\n\\n - i don't need a hair stylist; my pillow gives me a new hairstyle every morning.\\n   by unknown\\n - why don't scientists trust atoms? because they make up everything!\\n   by unknown\\n - why do they call it rush hour when nothing moves?\\n   by robin williams\\n - i'm on the whiskey diet. i've lost three days already.\\n   by tommy cooper\\n - i used to play hide and seek with my dog until he found a better hiding spot - forever.\\n   by unknown\\n - i'm not arguing; i'm just explaining why i'm right.\\n   by unknown\", '~/backups/notes/gift_ideas_for_various_occasions.md': \"# gift ideas for various occasions\\n\\noccasion: birthday\\nideas:\\n- gift card to their favorite online store\\n- tech gadgets or accessories\\n- books by their favorite author\\n- cooking or baking equipment\\n- subscription to a streaming service\\n- customized jewelry\\n- personalized phone case\\n- wireless earbuds\\n- fitness tracker\\n- outdoor adventure gear\\n\\noccasion: mother's day\\nideas:\\n- spa or pampering gift basket from online retailers\\n- online cooking or baking class\\n- handmade or personalized jewelry from online artisans\\n- books or a subscription to an e-book service\\n- gift card for a favorite online store\\n- plant or garden accessories from online nurseries\\n- online art classes\\n- subscription to online magazines or blogs\\n- virtual escape room experience\\n- online wellness retreat\\n\\noccasion: graduation\\nideas:\\n- gift cards for online retailers\\n- laptop or tablet accessories\\n- online courses or workshops subscription\\n- professional resume template\\n- amazon prime membership\\n- e-book reader\\n- virtual reality headset\\n- language learning app subscription\\n- online fitness class membership\\n- digital notetaking device\\n\\noccasion: housewarming\\nideas:\\n- indoor plants or succulents from an online nursery\\n- candles or essential oil diffusers\\n- decorative throw pillows or blankets\\n- personalized doormat\\n- wine or cocktail set\\n- home organization items\\n- art prints or wall decor from online galleries\\n- online interior design consultation\\n- subscription to a meal kit delivery service\\n- smart home devices\\n\\noccasion: baby shower\\nideas:\\n- gift cards to baby stores\\n- baby books and educational toys\\n- nursery decor items\\n- online parenting course\\n- stroller or car seat\\n- online shopping for baby essentials\\n- baby monitor or breastfeeding accessories\\n- children's e-books subscription\\n- virtual baby shower games\\n- diaper subscription service\\n\\noccasion: father's day\\nideas:\\n- tech gadgets or tools from online electronics stores\\n- tickets to a virtual sports game or concert\\n- whiskey or beer tasting kits from online sellers\\n- outdoor adventure gear from online retailers\\n- personalized wallet or keychain from online artisans\\n- online grilling or cooking classes\\n- virtual golf or fishing experience\\n- e-book of his favorite genre\\n- digital subscription to a sports news website\\n- online diy project kits\\n\\noccasion: wedding\\nideas:\\n- kitchen appliances or cookware\\n- home decor items\\n- personalized cutting board or wine glasses\\n- contribution to their honeymoon fund\\n- artwork or wall hangings\\n- fine dining experience gift card\\n- bedding or linens\\n- outdoor furniture or accessories\\n- wine or champagne set\\n- streaming device\\n\\noccasion: friendship day\\nideas:\\n- customized friendship bracelet or necklace from online shops\\n- virtual spa day experience\\n- memory scrapbook or photo album created online\\n- cooking a special meal together through a virtual class\\n- online concert or movie streaming subscription\\n- subscription to a fun activity or hobby box\\n- virtual museum or art gallery tour\\n- outdoor picnic essentials available online\\n- digital games or puzzle subscriptions\\n- online crafting or diy workshop\\n\\noccasion: anniversary\\nideas:\\n- romantic getaway weekend voucher\\n- customized anniversary photo book\\n- tickets to a virtual concert or show\\n- cooking or mixology class for couples (online)\\n- spa or wellness retreat gift certificate\\n- personalized star map of their wedding date\\n- engraved watches\\n- online escape room experience\\n- digital photo frame\\n- subscription to a movie streaming service\\n\\noccasion: valentine's day\\nideas:\\n- gift cards to online gourmet food stores\\n- romantic e-cards or digital love notes\\n- jewelry or accessories from online boutiques\\n- virtual cooking class for couples\\n- online wine tasting experience\\n- digital music subscription\\n- virtual reality date experience\\n- online personalized gifts\\n- digital movie rental\\n- e-book of romantic poetry\", '~/backups/notes/grocery_list.md': '# grocery list\\n\\n - cottage cheese (1.0 container)\\n - olive oil (1.0 bottle)\\n - chicken breasts (2.0 pounds)\\n - yogurt (4.0 cups)\\n - green beans (0.5 pound)\\n - rice (1.0 pound)\\n - orange juice (1.0 carton)\\n - pasta (1.0 box)\\n - almonds (1.0 bag)\\n - bell peppers (3.0 pieces)\\n - carrots (1.0 bag)\\n - peanut butter (1.0 jar)', '~/backups/notes/habit_tracking_log_for_2023-05-02.md': '# daily habit tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '~/backups/notes/habit_tracking_log_for_2023-05-03.md': '# daily habit tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: no', '~/backups/notes/habit_tracking_log_for_2023-05-04.md': '# daily habit tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '~/backups/notes/habit_tracking_log_for_2023-05-05.md': '# daily habit tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: no\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: no\\nconnected_with_friends: no', '~/backups/notes/habit_tracking_log_for_2023-05-06.md': '# daily habit tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: no\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: no', '~/backups/notes/habit_tracking_log_for_2023-05-07.md': '# daily habit tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: no\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: no', '~/backups/notes/habit_tracking_log_for_2023-05-08.md': '# daily habit tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: no\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: no', '~/backups/notes/habit_tracking_log_for_2023-05-09.md': '# daily habit tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '~/backups/notes/habit_tracking_log_for_2023-05-10.md': '# daily habit tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: no\\nread_atleast_30_mins: yes\\ndrank_adequate_water: no\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: no\\npracticed_good_posture: no\\nconnected_with_friends: yes', '~/backups/notes/habit_tracking_log_for_2023-05-11.md': '# daily habit tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '~/backups/notes/habit_tracking_log_for_2023-05-12.md': '# daily habit tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: no\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '~/backups/notes/habit_tracking_log_for_2023-05-13.md': '# daily habit tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: no\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: no\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '~/backups/notes/habit_tracking_log_for_2023-05-14.md': '# daily habit tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: no\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: no\\nconnected_with_friends: yes', '~/backups/notes/habit_tracking_log_for_2023-05-15.md': '# daily habit tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: no', '~/backups/notes/habit_tracking_log_for_2023-05-16.md': '# daily habit tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: no\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '~/backups/notes/habit_tracking_log_for_2023-05-17.md': '# daily habit tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: no\\npracticed_meditation: no\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '~/backups/notes/inspirational_quotes_collection.md': \"# inspirational quotes collection\\n\\n - in the middle of every difficulty lies opportunity.\\n   by albert einstein\\n - keep your face always toward the sunshine—and shadows will fall behind you.\\n   by walt whitman\\n - the future belongs to those who believe in the beauty of their dreams.\\n   by eleanor roosevelt\\n - your time is limited, don't waste it living someone else's life.\\n   by steve jobs\\n - the harder you work for something, the greater you'll feel when you achieve it.\\n   by unknown\\n - difficult roads often lead to beautiful destinations.\\n   by unknown\", '~/backups/notes/movie_quotes_collection.md': \"# movie quotes collection\\n\\n - i'm king of the world!\\n   from titanic (1997)\\n - here's johnny!\\n   from the shining (1980)\\n - to infinity and beyond!\\n   from toy story (1995)\\n - frankly, my dear, i don't give a damn.\\n   from gone with the wind (1939)\", '~/backups/notes/movie_recommendations.md': \"# movie recommendations\\n\\nthe dark knight rises\\n - director: christopher nolan\\n - genre: action, crime\\n\\nthe wolf of wall street\\n - director: martin scorsese\\n - genre: biography, crime, drama\\n\\na beautiful mind\\n - director: ron howard\\n - genre: biography, drama\\n\\neternal sunshine of the spotless mind\\n - director: michel gondry\\n - genre: drama, romance, sci-fi\\n\\ninterstellar\\n - director: christopher nolan\\n - genre: sci-fi, drama\\n\\ninception\\n - director: christopher nolan\\n - genre: sci-fi, action\\n\\nthe lord of the rings: the return of the king\\n - director: peter jackson\\n - genre: adventure, fantasy\\n\\nthe matrix\\n - director: the wachowskis\\n - genre: sci-fi, action\\n\\nforrest gump\\n - director: robert zemeckis\\n - genre: drama, romance\\n\\navatar\\n - director: james cameron\\n - genre: action, adventure, fantasy\\n\\nthe shawshank redemption\\n - director: frank darabont\\n - genre: drama\\n\\nher\\n - director: spike jonze\\n - genre: drama, romance, sci-fi\\n\\nthe godfather\\n - director: francis ford coppola\\n - genre: crime, drama\\n\\ninterstellar\\n - director: christopher nolan\\n - genre: sci-fi, drama\\n\\namélie\\n - director: jean-pierre jeunet\\n - genre: comedy, romance\\n\\npan's labyrinth\\n - director: guillermo del toro\\n - genre: drama, fantasy, war\\n\\nthe silence of the lambs\\n - director: jonathan demme\\n - genre: crime, drama, thriller\\n\\nfight club\\n - director: david fincher\\n - genre: drama\\n\\ninglourious basterds\\n - director: quentin tarantino\\n - genre: adventure, drama, war\\n\\ngood will hunting\\n - director: gus van sant\\n - genre: drama\", '~/backups/notes/my_bucket_list_([x]_=_done,_[_]_=_not_done)).md': '# my bucket list ([x] = done, [ ] = not done))\\n\\n[ ] learning to cook a signature dish from scratch\\n[ ] taking a hot springs bath in iceland\\n[ ] visiting the seven wonders of the world\\n[ ] learning a new language fluently\\n[ ] seeing the northern lights\\n[ ] seeing the grand canyon\\n[x] cruising on the nile river\\n[ ] completing a marathon or triathlon', '~/backups/notes/weekly_workout_plan.md': \"# weekly workout plan\\n\\nday: monday\\nexercises:\\n- warm-up - 5 minutes of jumping jacks\\n- barbell squats - 4 sets of 8 reps\\n- bench press - 4 sets of 6 reps\\n- bent-over rows - 3 sets of 10 reps\\n- plank - hold for 1 minute\\n- cool-down - 10 minutes of flexibility exercises\\nduration_mins: 35\\n\\nday: tuesday\\nexercises:\\n- warm-up - 10 minutes of brisk walking\\n- cycling - 45 minutes at a moderate pace\\n- bodyweight lunges - 3 sets of 12 reps per leg\\n- side planks - hold for 30 seconds each side\\n- cool-down - 5 minutes of gentle stretches\\nduration_mins: 65\\n\\nday: wednesday\\nexercises:\\n- warm-up - 5 minutes of light jogging\\n- 'interval training: 10 sets of 1-minute sprint followed by 1.5 minutes of recovery'\\n- chin-ups - 3 sets of 6 reps\\n- tricep dips - 3 sets of 10 reps\\n- cool-down - 5 minutes of deep breathing and stretching\\nduration_mins: 45\\n\\nday: thursday\\nexercises:\\n- warm-up - 5 minutes of jump rope\\n- deadlifts - 4 sets of 5 reps\\n- overhead shoulder press - 3 sets of 8 reps\\n- russian twists - 3 sets of 20 reps\\n- cool-down - 10 minutes of yoga poses\\nduration_mins: 30\\n\\nday: friday\\nexercises:\\n- warm-up - 10 minutes of light cardio\\n- swimming - 30 minutes of continuous laps\\n- pull-ups - 3 sets of 5 reps\\n- leg curls - 3 sets of 12 reps\\n- cool-down - 5 minutes of gentle stretches\\nduration_mins: 55\\n\\nday: saturday\\nexercises:\\n- warm-up - 5 minutes of dynamic stretches\\n- hiking - 2 hours of moderate-paced hiking in nature\\n- cooldown - 5 minutes of deep stretching and mindful breathing\\nduration_mins: 130\\n\\nday: sunday\\nexercises:\\n- rest day\\nduration_mins: 0\"})\n\nOriginal values:\n{}\n==\nMunch({'~/backups/notes/Book_Reading_Lists.md': \"# Book Reading Lists\\n\\nA People's History of the United States\\n - authors: Howard Zinn\\n - genre: History\\n\\nHarry Potter and the Sorcerer's Stone\\n - authors: J.K. Rowling\\n - genre: Young Adult\\n\\nThe Lord of the Rings: The Fellowship of the Ring\\n - authors: J.R.R. Tolkien\\n - genre: Epic Fantasy\\n\\nBecoming\\n - authors: Michelle Obama\\n - genre: Memoir\\n\\n1984\\n - authors: George Orwell\\n - genre: Dystopian\\n\\nThe Power of Now\\n - authors: Eckhart Tolle\\n - genre: Spirituality\\n\\nYou Are a Badass\\n - authors: Jen Sincero\\n - genre: Self-Help\\n\\nThe Hobbit\\n - authors: J.R.R. Tolkien\\n - genre: Fantasy\\n\\nPride and Prejudice\\n - authors: Jane Austen\\n - genre: Romance\\n\\nThe 7 Habits of Highly Effective People\\n - authors: Stephen R. Covey\\n - genre: Self-Help\\n\\nGone Girl\\n - authors: Gillian Flynn\\n - genre: Mystery\\n\\nQuiet: The Power of Introverts in a World That Can't Stop Talking\\n - authors: Susan Cain\\n - genre: Psychology\\n\\nThe Catcher in the Rye\\n - authors: J.D. Salinger\\n - genre: Coming-of-Age\\n\\nLittle Women\\n - authors: Louisa May Alcott\\n - genre: Classic\", '~/backups/notes/Food_Recipes.md': '# Food Recipes\\n\\nname: Classic Spaghetti Carbonara\\ningredients:\\n- 200g spaghetti\\n- 100g pancetta or guanciale, diced\\n- 2 large eggs\\n- 50g Pecorino Romano cheese, grated\\n- Salt and black pepper to taste\\n- 2 cloves garlic, minced\\n- Fresh parsley, chopped, for garnish\\ninstructions:\\n- Cook the spaghetti in salted boiling water until al dente. Drain and set aside.\\n- In a skillet, cook the diced pancetta or guanciale until crispy. Remove from heat and set aside.\\n- In a bowl, whisk together the eggs, grated Pecorino Romano cheese, minced garlic, salt, and black pepper.\\n- Combine the cooked spaghetti with the egg mixture and pancetta. Toss until the pasta is coated and creamy.\\n- Garnish with chopped fresh parsley and additional grated cheese. Serve immediately.\\nfavorite: true\\n\\nname: Mediterranean Quinoa Salad\\ningredients:\\n- 1 cup quinoa, cooked and cooled\\n- 1 cup cucumber, diced\\n- 1 cup cherry tomatoes, halved\\n- 1/2 cup red onion, finely chopped\\n- 1/2 cup Kalamata olives, pitted and sliced\\n- 1/2 cup feta cheese, crumbled\\n- 1/4 cup fresh parsley, chopped\\n- 1/4 cup fresh mint, chopped\\n- 3 tablespoons extra virgin olive oil\\n- 2 tablespoons lemon juice\\n- Salt and black pepper to taste\\ninstructions:\\n- In a large bowl, combine cooked quinoa, cucumber, cherry tomatoes, red onion, olives, feta cheese, parsley, and mint.\\n- In a small bowl, whisk together olive oil, lemon juice, salt, and black pepper.\\n- Pour the dressing over the quinoa mixture and toss to combine.\\n- Chill in the refrigerator for about 30 minutes before serving.\\nfavorite: false', '~/backups/notes/Funny_Quotes_Collection.md': \"# Funny Quotes Collection\\n\\n - I don't need a hair stylist; my pillow gives me a new hairstyle every morning.\\n   by Unknown\\n - Why don't scientists trust atoms? Because they make up everything!\\n   by Unknown\\n - Why do they call it rush hour when nothing moves?\\n   by Robin Williams\\n - I'm on the whiskey diet. I've lost three days already.\\n   by Tommy Cooper\\n - I used to play hide and seek with my dog until he found a better hiding spot - forever.\\n   by Unknown\\n - I'm not arguing; I'm just explaining why I'm right.\\n   by Unknown\", '~/backups/notes/Gift_Ideas_for_Various_Occasions.md': \"# Gift Ideas for Various Occasions\\n\\noccasion: Birthday\\nideas:\\n- Gift card to their favorite online store\\n- Tech gadgets or accessories\\n- Books by their favorite author\\n- Cooking or baking equipment\\n- Subscription to a streaming service\\n- Customized jewelry\\n- Personalized phone case\\n- Wireless earbuds\\n- Fitness tracker\\n- Outdoor adventure gear\\n\\noccasion: Mother's Day\\nideas:\\n- Spa or pampering gift basket from online retailers\\n- Online cooking or baking class\\n- Handmade or personalized jewelry from online artisans\\n- Books or a subscription to an e-book service\\n- Gift card for a favorite online store\\n- Plant or garden accessories from online nurseries\\n- Online art classes\\n- Subscription to online magazines or blogs\\n- Virtual escape room experience\\n- Online wellness retreat\\n\\noccasion: Graduation\\nideas:\\n- Gift cards for online retailers\\n- Laptop or tablet accessories\\n- Online courses or workshops subscription\\n- Professional resume template\\n- Amazon Prime membership\\n- E-book reader\\n- Virtual reality headset\\n- Language learning app subscription\\n- Online fitness class membership\\n- Digital notetaking device\\n\\noccasion: Housewarming\\nideas:\\n- Indoor plants or succulents from an online nursery\\n- Candles or essential oil diffusers\\n- Decorative throw pillows or blankets\\n- Personalized doormat\\n- Wine or cocktail set\\n- Home organization items\\n- Art prints or wall decor from online galleries\\n- Online interior design consultation\\n- Subscription to a meal kit delivery service\\n- Smart home devices\\n\\noccasion: Baby Shower\\nideas:\\n- Gift cards to baby stores\\n- Baby books and educational toys\\n- Nursery decor items\\n- Online parenting course\\n- Stroller or car seat\\n- Online shopping for baby essentials\\n- Baby monitor or breastfeeding accessories\\n- Children's e-books subscription\\n- Virtual baby shower games\\n- Diaper subscription service\\n\\noccasion: Father's Day\\nideas:\\n- Tech gadgets or tools from online electronics stores\\n- Tickets to a virtual sports game or concert\\n- Whiskey or beer tasting kits from online sellers\\n- Outdoor adventure gear from online retailers\\n- Personalized wallet or keychain from online artisans\\n- Online grilling or cooking classes\\n- Virtual golf or fishing experience\\n- E-book of his favorite genre\\n- Digital subscription to a sports news website\\n- Online DIY project kits\\n\\noccasion: Wedding\\nideas:\\n- Kitchen appliances or cookware\\n- Home decor items\\n- Personalized cutting board or wine glasses\\n- Contribution to their honeymoon fund\\n- Artwork or wall hangings\\n- Fine dining experience gift card\\n- Bedding or linens\\n- Outdoor furniture or accessories\\n- Wine or champagne set\\n- Streaming device\\n\\noccasion: Friendship Day\\nideas:\\n- Customized friendship bracelet or necklace from online shops\\n- Virtual spa day experience\\n- Memory scrapbook or photo album created online\\n- Cooking a special meal together through a virtual class\\n- Online concert or movie streaming subscription\\n- Subscription to a fun activity or hobby box\\n- Virtual museum or art gallery tour\\n- Outdoor picnic essentials available online\\n- Digital games or puzzle subscriptions\\n- Online crafting or DIY workshop\\n\\noccasion: Anniversary\\nideas:\\n- Romantic getaway weekend voucher\\n- Customized anniversary photo book\\n- Tickets to a virtual concert or show\\n- Cooking or mixology class for couples (online)\\n- Spa or wellness retreat gift certificate\\n- Personalized star map of their wedding date\\n- Engraved watches\\n- Online escape room experience\\n- Digital photo frame\\n- Subscription to a movie streaming service\\n\\noccasion: Valentine's Day\\nideas:\\n- Gift cards to online gourmet food stores\\n- Romantic e-cards or digital love notes\\n- Jewelry or accessories from online boutiques\\n- Virtual cooking class for couples\\n- Online wine tasting experience\\n- Digital music subscription\\n- Virtual reality date experience\\n- Online personalized gifts\\n- Digital movie rental\\n- E-book of romantic poetry\", '~/backups/notes/Grocery_List.md': '# Grocery List\\n\\n - cottage cheese (1.0 container)\\n - olive oil (1.0 bottle)\\n - chicken breasts (2.0 pounds)\\n - yogurt (4.0 cups)\\n - green beans (0.5 pound)\\n - rice (1.0 pound)\\n - orange juice (1.0 carton)\\n - pasta (1.0 box)\\n - almonds (1.0 bag)\\n - bell peppers (3.0 pieces)\\n - carrots (1.0 bag)\\n - peanut butter (1.0 jar)', '~/backups/notes/Habit_Tracking_Log_for_2023-05-02.md': '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '~/backups/notes/Habit_Tracking_Log_for_2023-05-03.md': '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: no', '~/backups/notes/Habit_Tracking_Log_for_2023-05-04.md': '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '~/backups/notes/Habit_Tracking_Log_for_2023-05-05.md': '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: no\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: no\\nconnected_with_friends: no', '~/backups/notes/Habit_Tracking_Log_for_2023-05-06.md': '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: no\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: no', '~/backups/notes/Habit_Tracking_Log_for_2023-05-07.md': '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: no\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: no', '~/backups/notes/Habit_Tracking_Log_for_2023-05-08.md': '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: no\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: no', '~/backups/notes/Habit_Tracking_Log_for_2023-05-09.md': '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '~/backups/notes/Habit_Tracking_Log_for_2023-05-10.md': '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: no\\nread_atleast_30_mins: yes\\ndrank_adequate_water: no\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: no\\npracticed_good_posture: no\\nconnected_with_friends: yes', '~/backups/notes/Habit_Tracking_Log_for_2023-05-11.md': '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '~/backups/notes/Habit_Tracking_Log_for_2023-05-12.md': '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: no\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '~/backups/notes/Habit_Tracking_Log_for_2023-05-13.md': '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: no\\npracticed_meditation: yes\\nread_atleast_30_mins: no\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: no\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '~/backups/notes/Habit_Tracking_Log_for_2023-05-14.md': '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: no\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: no\\nconnected_with_friends: yes', '~/backups/notes/Habit_Tracking_Log_for_2023-05-15.md': '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: yes\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: no', '~/backups/notes/Habit_Tracking_Log_for_2023-05-16.md': '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: no\\npracticed_meditation: yes\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: no\\nwrote_gratitude_journal: yes\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '~/backups/notes/Habit_Tracking_Log_for_2023-05-17.md': '# Daily Habit Tracker (yes/no questions to answer daily)\\n\\nexercised_atleast_30_mins: yes\\nate_homemade_meals: no\\npracticed_meditation: no\\nread_atleast_30_mins: yes\\ndrank_adequate_water: yes\\nslept_over_7_hrs: yes\\nwrote_gratitude_journal: no\\nlimited_screen_time_to_1_hr: yes\\npracticed_good_posture: yes\\nconnected_with_friends: yes', '~/backups/notes/Inspirational_Quotes_Collection.md': \"# Inspirational Quotes Collection\\n\\n - In the middle of every difficulty lies opportunity.\\n   by Albert Einstein\\n - Keep your face always toward the sunshine—and shadows will fall behind you.\\n   by Walt Whitman\\n - The future belongs to those who believe in the beauty of their dreams.\\n   by Eleanor Roosevelt\\n - Your time is limited, don't waste it living someone else's life.\\n   by Steve Jobs\\n - The harder you work for something, the greater you'll feel when you achieve it.\\n   by Unknown\\n - Difficult roads often lead to beautiful destinations.\\n   by Unknown\", '~/backups/notes/Movie_Quotes_Collection.md': \"# Movie Quotes Collection\\n\\n - I'm king of the world!\\n   from Titanic (1997)\\n - Here's Johnny!\\n   from The Shining (1980)\\n - To infinity and beyond!\\n   from Toy Story (1995)\\n - Frankly, my dear, I don't give a damn.\\n   from Gone with the Wind (1939)\", '~/backups/notes/Movie_Recommendations.md': \"# Movie Recommendations\\n\\nThe Dark Knight Rises\\n - director: Christopher Nolan\\n - genre: Action, Crime\\n\\nThe Wolf of Wall Street\\n - director: Martin Scorsese\\n - genre: Biography, Crime, Drama\\n\\nA Beautiful Mind\\n - director: Ron Howard\\n - genre: Biography, Drama\\n\\nEternal Sunshine of the Spotless Mind\\n - director: Michel Gondry\\n - genre: Drama, Romance, Sci-Fi\\n\\nInterstellar\\n - director: Christopher Nolan\\n - genre: Sci-Fi, Drama\\n\\nInception\\n - director: Christopher Nolan\\n - genre: Sci-Fi, Action\\n\\nThe Lord of the Rings: The Return of the King\\n - director: Peter Jackson\\n - genre: Adventure, Fantasy\\n\\nThe Matrix\\n - director: The Wachowskis\\n - genre: Sci-Fi, Action\\n\\nForrest Gump\\n - director: Robert Zemeckis\\n - genre: Drama, Romance\\n\\nAvatar\\n - director: James Cameron\\n - genre: Action, Adventure, Fantasy\\n\\nThe Shawshank Redemption\\n - director: Frank Darabont\\n - genre: Drama\\n\\nHer\\n - director: Spike Jonze\\n - genre: Drama, Romance, Sci-Fi\\n\\nThe Godfather\\n - director: Francis Ford Coppola\\n - genre: Crime, Drama\\n\\nInterstellar\\n - director: Christopher Nolan\\n - genre: Sci-Fi, Drama\\n\\nAmélie\\n - director: Jean-Pierre Jeunet\\n - genre: Comedy, Romance\\n\\nPan's Labyrinth\\n - director: Guillermo del Toro\\n - genre: Drama, Fantasy, War\\n\\nThe Silence of the Lambs\\n - director: Jonathan Demme\\n - genre: Crime, Drama, Thriller\\n\\nFight Club\\n - director: David Fincher\\n - genre: Drama\\n\\nInglourious Basterds\\n - director: Quentin Tarantino\\n - genre: Adventure, Drama, War\\n\\nGood Will Hunting\\n - director: Gus Van Sant\\n - genre: Drama\", '~/backups/notes/My_Bucket_List_([x]_=_done,_[_]_=_not_done)).md': '# My Bucket List ([x] = done, [ ] = not done))\\n\\n[ ] Learning to cook a signature dish from scratch\\n[ ] Taking a hot springs bath in Iceland\\n[ ] Visiting the Seven Wonders of the World\\n[ ] Learning a new language fluently\\n[ ] Seeing the Northern Lights\\n[ ] Seeing the Grand Canyon\\n[x] Cruising on the Nile River\\n[ ] Completing a marathon or triathlon', '~/backups/notes/Weekly_Workout_Plan.md': \"# Weekly Workout Plan\\n\\nday: monday\\nexercises:\\n- Warm-up - 5 minutes of jumping jacks\\n- Barbell squats - 4 sets of 8 reps\\n- Bench press - 4 sets of 6 reps\\n- Bent-over rows - 3 sets of 10 reps\\n- Plank - Hold for 1 minute\\n- Cool-down - 10 minutes of flexibility exercises\\nduration_mins: 35\\n\\nday: tuesday\\nexercises:\\n- Warm-up - 10 minutes of brisk walking\\n- Cycling - 45 minutes at a moderate pace\\n- Bodyweight lunges - 3 sets of 12 reps per leg\\n- Side planks - Hold for 30 seconds each side\\n- Cool-down - 5 minutes of gentle stretches\\nduration_mins: 65\\n\\nday: wednesday\\nexercises:\\n- Warm-up - 5 minutes of light jogging\\n- 'Interval training: 10 sets of 1-minute sprint followed by 1.5 minutes of recovery'\\n- Chin-ups - 3 sets of 6 reps\\n- Tricep dips - 3 sets of 10 reps\\n- Cool-down - 5 minutes of deep breathing and stretching\\nduration_mins: 45\\n\\nday: thursday\\nexercises:\\n- Warm-up - 5 minutes of jump rope\\n- Deadlifts - 4 sets of 5 reps\\n- Overhead shoulder press - 3 sets of 8 reps\\n- Russian twists - 3 sets of 20 reps\\n- Cool-down - 10 minutes of yoga poses\\nduration_mins: 30\\n\\nday: friday\\nexercises:\\n- Warm-up - 10 minutes of light cardio\\n- Swimming - 30 minutes of continuous laps\\n- Pull-ups - 3 sets of 5 reps\\n- Leg curls - 3 sets of 12 reps\\n- Cool-down - 5 minutes of gentle stretches\\nduration_mins: 55\\n\\nday: saturday\\nexercises:\\n- Warm-up - 5 minutes of dynamic stretches\\n- Hiking - 2 hours of moderate-paced hiking in nature\\n- Cooldown - 5 minutes of deep stretching and mindful breathing\\nduration_mins: 130\\n\\nday: sunday\\nexercises:\\n- Rest day\\nduration_mins: 0\"})",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "6c2c621_3": {
+      "success": true,
+      "difficulty": 2,
+      "num_tests": 8,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match file_system.File, file_system.Directory.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, updated, removed file_system.File records using models.changed_records,\nand assert 0 were updated or removed.",
+          "label": "no_op_pass"
+        },
+        {
+          "requirement": "assert all added files have tilde_path starting with public_data.backup_directory_path.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all added files have path ending with \".md\".",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all added file_system.File records' paths match keys of\nprivate_data.file_path_to_content. (ignore_case)",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all added file_system.File records' contents\nmatch values of private_data.file_path_to_content (strip).",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all added file_system.File records' path to content\nmapping match that of private_data.file_path_to_content\n(strip and ignore case).",
+          "label": "no_op_fail"
+        }
+      ],
+      "failures": []
+    },
+    "396c5a2_1": {
+      "success": true,
+      "difficulty": 1,
+      "num_tests": 6,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match spotify.MusicPlayer.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert 1 spotify.MusicPlayer has been updated using models.changed_records.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "get the end-state queue_song_ids and\nassert all private_data.existing_queue_song_ids are in end-state queue_song_ids.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all private_data.to_be_added_queue_song_ids are in the end state queue_song_ids",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert union of private_data.to_be_added_queue_song_ids and private_data.existing_queue_song_ids\nmatch the end-state queue_song_ids.",
+          "label": "no_op_fail"
+        }
+      ],
+      "failures": []
+    },
+    "396c5a2_2": {
+      "success": true,
+      "difficulty": 1,
+      "num_tests": 6,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match spotify.MusicPlayer.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert 1 spotify.MusicPlayer has been updated using models.changed_records.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "get the end-state queue_song_ids and\nassert all private_data.existing_queue_song_ids are in end-state queue_song_ids.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all private_data.to_be_added_queue_song_ids are in the end state queue_song_ids",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert union of private_data.to_be_added_queue_song_ids and private_data.existing_queue_song_ids\nmatch the end-state queue_song_ids.",
+          "label": "no_op_fail"
+        }
+      ],
+      "failures": []
+    },
+    "396c5a2_3": {
+      "success": true,
+      "difficulty": 1,
+      "num_tests": 6,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match spotify.MusicPlayer.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert 1 spotify.MusicPlayer has been updated using models.changed_records.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "get the end-state queue_song_ids and\nassert all private_data.existing_queue_song_ids are in end-state queue_song_ids.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all private_data.to_be_added_queue_song_ids are in the end state queue_song_ids",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert union of private_data.to_be_added_queue_song_ids and private_data.existing_queue_song_ids\nmatch the end-state queue_song_ids.",
+          "label": "no_op_fail"
+        }
+      ],
+      "failures": []
+    },
+    "4fab96f_1": {
+      "success": false,
+      "difficulty": 2,
+      "num_tests": 8,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, removed venmo.Notification records using models.changed_records,\nand assert 0 notifications were removed.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert model changes match venmo.Notification",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert model changes match venmo.Notification\n    \"\"\"\n):\n    test.case(models.changed_model_names(), \"==\", {\"venmo.Notification\"})\n```\n----------\nAssertionError:  set() == {'venmo.Notification'}\n\nIn right but not left:\n['venmo.Notification']",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all receiver ids of added notifications match keys of\nprivate_data.venmo_user_id_to_notification_messages ignoring order.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert all receiver ids of added notifications match keys of\n    private_data.venmo_user_id_to_notification_messages ignoring order.\n    \"\"\"\n):\n    test.case(\n        set_of(added_notifications, \"user_id\"),\n```\n----------\nAssertionError:  set() == {25, 14}\n\nIn right but not left:\n[25, 14]",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert set of added notfications messages match flattened values\nof private_data.venmo_user_id_to_notification_messages.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert set of added notfications messages match flattened values\n    of private_data.venmo_user_id_to_notification_messages.\n    \"\"\"\n):\n    test.case(\n        set_of(added_notifications, \"message\"),\n```\n----------\nAssertionError:\nset()\n==\n{'Lindsey Simpson has sent you a reminder for their payment request of $62.00.', 'Lindsey Simpson has sent you a reminder for their payment request of $21.00.', 'Lindsey Simpson has sent you a reminder for their payment request of $17.00.', 'Lindsey Simpson has sent you a reminder for their payment request of $19.00.', 'Lindsey Simpson has sent you a reminder for their payment request of $29.00.', 'Lindsey Simpson has sent you a reminder for their payment request of $60.00.', 'Lindsey Simpson has sent you a reminder for their payment request of $36.00.'}\n\nIn right but not left:\n['Lindsey Simpson has sent you a reminder for their payment request of $62.00.', 'Lindsey Simpson has sent you a reminder for their payment request of $21.00.', 'Lindsey Simpson has sent you a reminder for their payment request of $17.00.', 'Lindsey Simpson has sent you a reminder for their payment request of $19.00.', 'Lindsey Simpson has sent you a reminder for their payment request of $29.00.', 'Lindsey Simpson has sent you a reminder for their payment request of $60.00.', 'Lindsey Simpson has sent you a reminder for their payment request of $36.00.']",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert user_id to message mapping from notifications match private_data.venmo_user_id_to_notification_messages",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert user_id to message mapping from notifications match private_data.venmo_user_id_to_notification_messages\n    \"\"\"\n):\n    venmo_user_id_to_notification_messages = {\n        id_: set(notification_messages)\n        for id_, notification_messages in private_data.venmo_user_id_to_notification_messages.items()\n```\n----------\nAssertionError:\ndefaultdict(<class 'set'>, {})\n==\n{14: {'Lindsey Simpson has sent you a reminder for their payment request of $62.00.', 'Lindsey Simpson has sent you a reminder for their payment request of $29.00.', 'Lindsey Simpson has sent you a reminder for their payment request of $17.00.'}, 25: {'Lindsey Simpson has sent you a reminder for their payment request of $36.00.', 'Lindsey Simpson has sent you a reminder for their payment request of $19.00.', 'Lindsey Simpson has sent you a reminder for their payment request of $21.00.', 'Lindsey Simpson has sent you a reminder for their payment request of $60.00.'}}",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert set of added notfications payment_request_ids match flattened values\nof private_data.venmo_user_id_to_notification_payment_request_ids.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert set of added notfications payment_request_ids match flattened values\n    of private_data.venmo_user_id_to_notification_payment_request_ids.\n    \"\"\"\n):\n    test.case(\n        set_of(added_notifications, \"data.payment_request_id\"),\n```\n----------\nAssertionError:  set() == {3456, 3457, 3461, 3463, 3464, 3470, 3455}\n\nIn right but not left:\n[3456, 3457, 3461, 3463, 3464, 3470, 3455]",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert user_id to message mapping from notifications match\nprivate_data.venmo_user_id_to_notification_messages",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert user_id to message mapping from notifications match\n    private_data.venmo_user_id_to_notification_messages\n    \"\"\"\n):\n    venmo_user_id_to_notification_payment_request_ids = {\n        id_: set(notification_payment_request_ids)\n```\n----------\nAssertionError:\ndefaultdict(<class 'set'>, {})\n==\n{14: {3456, 3457, 3455}, 25: {3464, 3461, 3470, 3463}}",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "4fab96f_2": {
+      "success": false,
+      "difficulty": 2,
+      "num_tests": 8,
+      "passes": [
+        {
+          "requirement": "obtain added, removed venmo.Notification records using models.changed_records,\nand assert 0 notifications were removed.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert answers match.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert answers match.\n    \"\"\"\n):\n    test.answer(predicted_answer, ground_truth_answer)\n```\n----------\nAssertionError:  '<<not_given>>' == 'null'",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert model changes match venmo.Notification",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert model changes match venmo.Notification\n    \"\"\"\n):\n    test.case(models.changed_model_names(), \"==\", {\"venmo.Notification\"})\n```\n----------\nAssertionError:  set() == {'venmo.Notification'}\n\nIn right but not left:\n['venmo.Notification']",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all receiver ids of added notifications match keys of\nprivate_data.venmo_user_id_to_notification_messages ignoring order.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert all receiver ids of added notifications match keys of\n    private_data.venmo_user_id_to_notification_messages ignoring order.\n    \"\"\"\n):\n    test.case(\n        set_of(added_notifications, \"user_id\"),\n```\n----------\nAssertionError:  set() == {36, 70, 41, 86, 59}\n\nIn right but not left:\n[36, 70, 41, 86, 59]",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert set of added notfications messages match flattened values\nof private_data.venmo_user_id_to_notification_messages.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert set of added notfications messages match flattened values\n    of private_data.venmo_user_id_to_notification_messages.\n    \"\"\"\n):\n    test.case(\n        set_of(added_notifications, \"message\"),\n```\n----------\nAssertionError:\nset()\n==\n{'Kiara Bailey has sent you a reminder for their payment request of $90.00.', 'Kiara Bailey has sent you a reminder for their payment request of $14.00.', 'Kiara Bailey has sent you a reminder for their payment request of $60.00.', 'Kiara Bailey has sent you a reminder for their payment request of $326.00.', 'Kiara Bailey has sent you a reminder for their payment request of $45.00.', 'Kiara Bailey has sent you a reminder for their payment request of $6.00.', 'Kiara Bailey has sent you a reminder for their payment request of $195.00.', 'Kiara Bailey has sent you a reminder for their payment request of $23.00.', 'Kiara Bailey has sent you a reminder for their payment request of $30.00.', 'Kiara Bailey has sent you a reminder for their payment request of $9.00.', 'Kiara Bailey has sent you a reminder for their payment request of $35.00.', 'Kiara Bailey has sent you a reminder for their payment request of $25.00.', 'Kiara Bailey has sent you a reminder for their payment request of $40.00.'}\n\nIn right but not left:\n['Kiara Bailey has sent you a reminder for their payment request of $90.00.', 'Kiara Bailey has sent you a reminder for their payment request of $14.00.', 'Kiara Bailey has sent you a reminder for their payment request of $60.00.', 'Kiara Bailey has sent you a reminder for their payment request of $326.00.', 'Kiara Bailey has sent you a reminder for their payment request of $45.00.', 'Kiara Bailey has sent you a reminder for their payment request of $6.00.', 'Kiara Bailey has sent you a reminder for their payment request of $195.00.', 'Kiara Bailey has sent you a reminder for their payment request of $23.00.', 'Kiara Bailey has sent you a reminder for their payment request of $30.00.', 'Kiara Bailey has sent you a reminder for their payment request of $9.00.', 'Kiara Bailey has sent you a reminder for their payment request of $35.00.', 'Kiara Bailey has sent you a reminder for their payment request of $25.00.', 'Kiara Bailey has sent you a reminder for their payment request of $40.00.']",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert user_id to message mapping from notifications match private_data.venmo_user_id_to_notification_messages",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert user_id to message mapping from notifications match private_data.venmo_user_id_to_notification_messages\n    \"\"\"\n):\n    venmo_user_id_to_notification_messages = {\n        id_: set(notification_messages)\n        for id_, notification_messages in private_data.venmo_user_id_to_notification_messages.items()\n```\n----------\nAssertionError:\ndefaultdict(<class 'set'>, {})\n==\n{59: {'Kiara Bailey has sent you a reminder for their payment request of $14.00.', 'Kiara Bailey has sent you a reminder for their payment request of $45.00.', 'Kiara Bailey has sent you a reminder for their payment request of $6.00.', 'Kiara Bailey has sent you a reminder for their payment request of $195.00.'}, 70: {'Kiara Bailey has sent you a reminder for their payment request of $326.00.'}, 86: {'Kiara Bailey has sent you a reminder for their payment request of $23.00.', 'Kiara Bailey has sent you a reminder for their payment request of $25.00.', 'Kiara Bailey has sent you a reminder for their payment request of $6.00.', 'Kiara Bailey has sent you a reminder for their payment request of $40.00.'}, 41: {'Kiara Bailey has sent you a reminder for their payment request of $30.00.', 'Kiara Bailey has sent you a reminder for their payment request of $25.00.', 'Kiara Bailey has sent you a reminder for their payment request of $60.00.'}, 36: {'Kiara Bailey has sent you a reminder for their payment request of $90.00.', 'Kiara Bailey has sent you a reminder for their payment request of $35.00.', 'Kiara Bailey has sent you a reminder for their payment request of $9.00.'}}",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert set of added notfications payment_request_ids match flattened values\nof private_data.venmo_user_id_to_notification_payment_request_ids.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert set of added notfications payment_request_ids match flattened values\n    of private_data.venmo_user_id_to_notification_payment_request_ids.\n    \"\"\"\n):\n    test.case(\n        set_of(added_notifications, \"data.payment_request_id\"),\n```\n----------\nAssertionError:\nset()\n==\n{4512, 4576, 4515, 4580, 4581, 4518, 4583, 4575, 4559, 4561, 4562, 4531, 4565, 4571, 4509, 4511}\n\nIn right but not left:\n[4512, 4576, 4515, 4580, 4581, 4518, 4583, 4575, 4559, 4561, 4562, 4531, 4565, 4571, 4509, 4511]",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert user_id to message mapping from notifications match\nprivate_data.venmo_user_id_to_notification_messages",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert user_id to message mapping from notifications match\n    private_data.venmo_user_id_to_notification_messages\n    \"\"\"\n):\n    venmo_user_id_to_notification_payment_request_ids = {\n        id_: set(notification_payment_request_ids)\n```\n----------\nAssertionError:\ndefaultdict(<class 'set'>, {})\n==\n{59: {4512, 4515, 4518, 4509, 4511}, 70: {4531}, 86: {4561, 4562, 4565, 4559}, 41: {4576, 4571, 4575}, 36: {4580, 4581, 4583}}",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    "4fab96f_3": {
+      "success": false,
+      "difficulty": 2,
+      "num_tests": 8,
+      "passes": [
+        {
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "obtain added, removed venmo.Notification records using models.changed_records,\nand assert 0 notifications were removed.",
+          "label": "no_op_pass"
+        }
+      ],
+      "failures": [
+        {
+          "requirement": "assert model changes match venmo.Notification",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert model changes match venmo.Notification\n    \"\"\"\n):\n    test.case(models.changed_model_names(), \"==\", {\"venmo.Notification\"})\n```\n----------\nAssertionError:  set() == {'venmo.Notification'}\n\nIn right but not left:\n['venmo.Notification']",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert all receiver ids of added notifications match keys of\nprivate_data.venmo_user_id_to_notification_messages ignoring order.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert all receiver ids of added notifications match keys of\n    private_data.venmo_user_id_to_notification_messages ignoring order.\n    \"\"\"\n):\n    test.case(\n        set_of(added_notifications, \"user_id\"),\n```\n----------\nAssertionError:  set() == {73, 42}\n\nIn right but not left:\n[73, 42]",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert set of added notfications messages match flattened values\nof private_data.venmo_user_id_to_notification_messages.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert set of added notfications messages match flattened values\n    of private_data.venmo_user_id_to_notification_messages.\n    \"\"\"\n):\n    test.case(\n        set_of(added_notifications, \"message\"),\n```\n----------\nAssertionError:\nset()\n==\n{'Jennifer Powell has sent you a reminder for their payment request of $53.00.', 'Jennifer Powell has sent you a reminder for their payment request of $11.00.', 'Jennifer Powell has sent you a reminder for their payment request of $21.00.', 'Jennifer Powell has sent you a reminder for their payment request of $42.00.', 'Jennifer Powell has sent you a reminder for their payment request of $34.00.', 'Jennifer Powell has sent you a reminder for their payment request of $10.00.'}\n\nIn right but not left:\n['Jennifer Powell has sent you a reminder for their payment request of $53.00.', 'Jennifer Powell has sent you a reminder for their payment request of $11.00.', 'Jennifer Powell has sent you a reminder for their payment request of $21.00.', 'Jennifer Powell has sent you a reminder for their payment request of $42.00.', 'Jennifer Powell has sent you a reminder for their payment request of $34.00.', 'Jennifer Powell has sent you a reminder for their payment request of $10.00.']",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert user_id to message mapping from notifications match private_data.venmo_user_id_to_notification_messages",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert user_id to message mapping from notifications match private_data.venmo_user_id_to_notification_messages\n    \"\"\"\n):\n    venmo_user_id_to_notification_messages = {\n        id_: set(notification_messages)\n        for id_, notification_messages in private_data.venmo_user_id_to_notification_messages.items()\n```\n----------\nAssertionError:\ndefaultdict(<class 'set'>, {})\n==\n{73: {'Jennifer Powell has sent you a reminder for their payment request of $11.00.', 'Jennifer Powell has sent you a reminder for their payment request of $21.00.', 'Jennifer Powell has sent you a reminder for their payment request of $34.00.', 'Jennifer Powell has sent you a reminder for their payment request of $10.00.'}, 42: {'Jennifer Powell has sent you a reminder for their payment request of $42.00.', 'Jennifer Powell has sent you a reminder for their payment request of $53.00.'}}",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert set of added notfications payment_request_ids match flattened values\nof private_data.venmo_user_id_to_notification_payment_request_ids.",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert set of added notfications payment_request_ids match flattened values\n    of private_data.venmo_user_id_to_notification_payment_request_ids.\n    \"\"\"\n):\n    test.case(\n        set_of(added_notifications, \"data.payment_request_id\"),\n```\n----------\nAssertionError:  set() == {1608, 1612, 1613, 1615, 1624, 1627}\n\nIn right but not left:\n[1608, 1612, 1613, 1615, 1624, 1627]",
+          "label": "no_op_fail"
+        },
+        {
+          "requirement": "assert user_id to message mapping from notifications match\nprivate_data.venmo_user_id_to_notification_messages",
+          "trace": "```python\nwith test(\n    \"\"\"\n    assert user_id to message mapping from notifications match\n    private_data.venmo_user_id_to_notification_messages\n    \"\"\"\n):\n    venmo_user_id_to_notification_payment_request_ids = {\n        id_: set(notification_payment_request_ids)\n```\n----------\nAssertionError:\ndefaultdict(<class 'set'>, {})\n==\n{73: {1608, 1612, 1613, 1615}, 42: {1624, 1627}}",
+          "label": "no_op_fail"
+        }
+      ]
+    }
+  }
+}

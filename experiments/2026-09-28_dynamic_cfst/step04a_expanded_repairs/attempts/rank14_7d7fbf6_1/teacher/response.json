@@ -1,0 +1,8 @@
+{
+  "reasoning": "Compress each immediate vacation-spot subdirectory into the requested vacations directory and use the API’s atomic delete-after-compression option. Exclude the vacations container itself and any deeper nested directories.",
+  "code": "vacations_root = '/home/nicholas/photographs/vacations'\nvacation_directories = [\n    path.rstrip('/')\n    for path in photograph_subdirectories\n    if path.rstrip('/') != vacations_root\n    and path.rstrip('/').rsplit('/', 1)[0] == vacations_root\n]\ncompression_results = []\nfor vacation_directory in vacation_directories:\n    vacation_spot = vacation_directory.rsplit('/', 1)[-1]\n    compressed_file_path = f'{vacations_root}/{vacation_spot}.zip'\n    result = apis.file_system.compress_directory(\n        access_token=file_system_access_token,\n        directory_path=vacation_directory,\n        compressed_file_path=compressed_file_path,\n        delete_directory=True,\n        overwrite=True\n    )\n    compression_results.append(result)\nprint(compression_results)",
+  "codex_elapsed_seconds": 0.0,
+  "codex_event_item_types": [
+    "agent_message"
+  ]
+}

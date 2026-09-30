@@ -1,0 +1,58 @@
+{
+  "schema_version": "dynamic-cfst-step04b-repair-attempt-v1",
+  "candidate_rank": 1,
+  "selection": "step02_context_queue_1",
+  "primary_label_before_execution": "恢复错误",
+  "task_id": "76f2c72_2",
+  "family_id": "76f2c72",
+  "replace_action_index_1based": 11,
+  "started_at_utc": "2026-09-28T11:52:49.798736+00:00",
+  "finished_at_utc": "2026-09-28T11:53:43.393878+00:00",
+  "prefix_replay_actions": 10,
+  "prefix_replay_success": true,
+  "replay_error": null,
+  "teacher": {
+    "provider": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "called": true,
+    "response": {
+      "reasoning": "The empty result came from a regex that omitted the `-MM` portion of each filename. Correct the pattern, deduplicate PDF/text copies by month while preferring text, and read the selected bills—including a PDF when no text copy exists.",
+      "code": "from datetime import datetime\nimport re\n\ntoday = datetime.now()\nmonth_pattern = re.compile(\n    rf'^/home/chelsea/bills/internet/({today.year}-\\d{{2}})\\.(txt|pdf)$'\n)\n\ninternet_file_by_month = {}\nfor path in bill_files:\n    match = month_pattern.match(path)\n    if not match:\n        continue\n    month = match.group(1)\n    bill_month = datetime.strptime(month, '%Y-%m')\n    if bill_month.month <= today.month:\n        existing = internet_file_by_month.get(month)\n        if existing is None or (path.endswith('.txt') and not existing.endswith('.txt')):\n            internet_file_by_month[month] = path\n\ninternet_files_this_year = [internet_file_by_month[month] for month in sorted(internet_file_by_month)]\ninternet_bill_records_this_year = [\n    apis.file_system.show_file(access_token=file_system_access_token, file_path=path)\n    for path in internet_files_this_year\n]\nfor record in internet_bill_records_this_year:\n    print(record['path'])\n    print(record['content'])",
+      "codex_elapsed_seconds": 0.0,
+      "codex_event_item_types": [
+        "agent_message"
+      ]
+    },
+    "ground_truth_visible": false,
+    "rejected_action_visible": false,
+    "later_trajectory_visible": false,
+    "official_failure_condition_visible": false
+  },
+  "student": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter",
+    "model_name": "appworld-codex-rft-train90-epoch5",
+    "temperature": 0,
+    "seed": 100,
+    "max_completion_tokens": 3000,
+    "max_model_len": 32000,
+    "max_total_actions": 50,
+    "continuation_actions": 6
+  },
+  "task_completed_signal": false,
+  "generation_error": "BadRequestError:Error code: 400 - {'error': {'message': \"This model's maximum context length is 32000 tokens. However, your request has 47685 input tokens. Please reduce the length of the input messages. None\", 'type': 'BadRequestError', 'param': None, 'code': 400}}",
+  "official_evaluation": {
+    "success": false,
+    "num_tests": 2,
+    "num_passes": 1,
+    "num_failures": 1,
+    "pass_percentage": 50.0,
+    "difficulty": 2
+  },
+  "official_successful_repair": false,
+  "interaction_count_from_replacement": 7,
+  "interaction_log": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04b_context_repairs/attempts/rank1_76f2c72_2/interactions.jsonl",
+  "official_report": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04b_context_repairs/runtime/appworld_root/experiments/outputs/cfst_step04b_repair_rank1_76f2c72_2/tasks/76f2c72_2/evaluation/report.md",
+  "appworld_output_directory": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04b_context_repairs/runtime/appworld_root/experiments/outputs/cfst_step04b_repair_rank1_76f2c72_2/tasks/76f2c72_2"
+}

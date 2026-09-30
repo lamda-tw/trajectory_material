@@ -1,0 +1,57 @@
+{
+  "schema_version": "dynamic-cfst-step03-repair-attempt-v1",
+  "candidate_rank": 2,
+  "selection": "primary",
+  "task_id": "302c169_2",
+  "family_id": "302c169",
+  "replace_action_index_1based": 11,
+  "started_at_utc": "2026-09-28T09:49:05.384353+00:00",
+  "finished_at_utc": "2026-09-28T09:49:28.024051+00:00",
+  "prefix_replay_actions": 10,
+  "prefix_replay_success": true,
+  "replay_error": null,
+  "teacher": {
+    "provider": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "called": true,
+    "response": {
+      "reasoning": "Update the uniquely labeled Wake Up alarm from 07:30 to 06:50, and disable only the other alarms that are currently enabled. Preserve the API responses for subsequent verification.",
+      "code": "from datetime import datetime, timedelta\n\nwake_alarm = next(alarm for alarm in alarms if alarm['label'].strip().lower() == 'wake up')\nnew_wake_time = (datetime.strptime(wake_alarm['time'], '%H:%M') - timedelta(minutes=40)).strftime('%H:%M')\n\nupdate_results = {}\nupdate_results[wake_alarm['alarm_id']] = apis.phone.update_alarm(\n    alarm_id=wake_alarm['alarm_id'],\n    access_token=phone_access_token,\n    time=new_wake_time\n)\n\nfor alarm in alarms:\n    if alarm['alarm_id'] != wake_alarm['alarm_id'] and alarm['enabled']:\n        update_results[alarm['alarm_id']] = apis.phone.update_alarm(\n            alarm_id=alarm['alarm_id'],\n            access_token=phone_access_token,\n            enabled=False\n        )\n\nprint({'new_wake_time': new_wake_time, 'update_results': update_results})",
+      "codex_elapsed_seconds": 0.0,
+      "codex_event_item_types": [
+        "agent_message"
+      ]
+    },
+    "ground_truth_visible": false,
+    "rejected_action_visible": false,
+    "later_trajectory_visible": false,
+    "official_failure_condition_visible": false
+  },
+  "student": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter",
+    "model_name": "appworld-codex-rft-train90-epoch5",
+    "temperature": 0,
+    "seed": 100,
+    "max_completion_tokens": 3000,
+    "max_model_len": 32000,
+    "max_total_actions": 50,
+    "continuation_actions": 3
+  },
+  "task_completed_signal": true,
+  "generation_error": null,
+  "official_evaluation": {
+    "success": true,
+    "num_tests": 8,
+    "num_passes": 8,
+    "num_failures": 0,
+    "pass_percentage": 100.0,
+    "difficulty": 1
+  },
+  "official_successful_repair": true,
+  "interaction_count_from_replacement": 4,
+  "interaction_log": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step03_repair_validation/attempts/rank2_302c169_2/interactions.jsonl",
+  "official_report": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step03_repair_validation/runtime/appworld_root/experiments/outputs/cfst_step03_repair_rank2_302c169_2/tasks/302c169_2/evaluation/report.md",
+  "appworld_output_directory": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step03_repair_validation/runtime/appworld_root/experiments/outputs/cfst_step03_repair_rank2_302c169_2/tasks/302c169_2"
+}

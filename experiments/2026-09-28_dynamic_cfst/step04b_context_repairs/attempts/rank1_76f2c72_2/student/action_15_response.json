@@ -1,0 +1,37 @@
+{
+  "id": "chatcmpl-c6dc862eb7ff4c8795d00b5df9590560",
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "The stored credentials are already loaded, so I can authenticate to Gmail with Chelsea's email.\n\n```python\ngmail_password = next(item['password'] for item in account_passwords if item['account_name'] == 'gmail')\ngmail_login = apis.gmail.login(username='chelsea-burch@gmail.com', password=gmail_password)\ngmail_access_token = gmail_login['access_token']\nprint(gmail_login['token_type'])\n```\n\n",
+        "refusal": null,
+        "role": "assistant",
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [],
+        "reasoning_content": null
+      },
+      "stop_reason": null,
+      "token_ids": null
+    }
+  ],
+  "created": 1790596417,
+  "model": "appworld-codex-rft-train90-epoch5",
+  "object": "chat.completion",
+  "service_tier": null,
+  "system_fingerprint": null,
+  "usage": {
+    "completion_tokens": 86,
+    "prompt_tokens": 11250,
+    "total_tokens": 11336,
+    "completion_tokens_details": null,
+    "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "kv_transfer_params": null
+}

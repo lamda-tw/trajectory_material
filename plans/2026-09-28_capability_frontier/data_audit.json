@@ -1,0 +1,81 @@
+{
+  "status": "read_only_data_audit_no_model_scoring",
+  "date": "2026-09-28",
+  "source_train_jsonl": "/root/autodl-tmp/workspace-tw/data/2026-09-21_appworld_codex_rft_qwen3-8b_sft_train90/train.jsonl",
+  "train_sha256": "1f5ea51ea22ce7ef6b84d3e16bbb25976179064f7c8d0483ab7dcb0118ed3220",
+  "token_counts_source": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/metrics.json:data.train.samples",
+  "tasks": 90,
+  "families": 30,
+  "decision_samples": 1170,
+  "steps_per_task_min": 7,
+  "steps_per_task_max": 28,
+  "completion_tokens_per_full_pass": 94553,
+  "action_categories": {
+    "docs_only_direct_calls": {
+      "steps": 560,
+      "completion_tokens": 30415
+    },
+    "other_direct_api_calls": {
+      "steps": 575,
+      "completion_tokens": 58573
+    },
+    "no_direct_api_call": {
+      "steps": 35,
+      "completion_tokens": 5565
+    }
+  },
+  "execution_failed_positive_targets": [
+    {
+      "task_id": "6104387_1",
+      "step_index": 9,
+      "sample_id": "6104387_1::assistant-0009"
+    },
+    {
+      "task_id": "6104387_2",
+      "step_index": 8,
+      "sample_id": "6104387_2::assistant-0008"
+    },
+    {
+      "task_id": "6104387_3",
+      "step_index": 6,
+      "sample_id": "6104387_3::assistant-0006"
+    },
+    {
+      "task_id": "76f2c72_1",
+      "step_index": 16,
+      "sample_id": "76f2c72_1::assistant-0016"
+    },
+    {
+      "task_id": "ce359b5_2",
+      "step_index": 7,
+      "sample_id": "ce359b5_2::assistant-0007"
+    },
+    {
+      "task_id": "ce359b5_3",
+      "step_index": 16,
+      "sample_id": "ce359b5_3::assistant-0016"
+    },
+    {
+      "task_id": "3c13f5a_2",
+      "step_index": 5,
+      "sample_id": "3c13f5a_2::assistant-0005"
+    },
+    {
+      "task_id": "3c13f5a_3",
+      "step_index": 5,
+      "sample_id": "3c13f5a_3::assistant-0005"
+    },
+    {
+      "task_id": "aa8502b_1",
+      "step_index": 5,
+      "sample_id": "aa8502b_1::assistant-0005"
+    }
+  ],
+  "caveats": [
+    "Static categories count direct apis.* calls only, not semantic capability or runtime effect.",
+    "An execution error may happen after valid mutations; do not classify an entire step as semantically useless.",
+    "Capability labels, learner deficit, causal effects and transfer scores have not been measured.",
+    "Existing train90 model checkpoints have seen all 30 families.",
+    "clean_replay_success is null in source SFT metadata; official outcome success does not establish prefix replay determinism."
+  ]
+}

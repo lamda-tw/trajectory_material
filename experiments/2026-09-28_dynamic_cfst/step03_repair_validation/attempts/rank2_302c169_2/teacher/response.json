@@ -1,0 +1,8 @@
+{
+  "reasoning": "Update the uniquely labeled Wake Up alarm from 07:30 to 06:50, and disable only the other alarms that are currently enabled. Preserve the API responses for subsequent verification.",
+  "code": "from datetime import datetime, timedelta\n\nwake_alarm = next(alarm for alarm in alarms if alarm['label'].strip().lower() == 'wake up')\nnew_wake_time = (datetime.strptime(wake_alarm['time'], '%H:%M') - timedelta(minutes=40)).strftime('%H:%M')\n\nupdate_results = {}\nupdate_results[wake_alarm['alarm_id']] = apis.phone.update_alarm(\n    alarm_id=wake_alarm['alarm_id'],\n    access_token=phone_access_token,\n    time=new_wake_time\n)\n\nfor alarm in alarms:\n    if alarm['alarm_id'] != wake_alarm['alarm_id'] and alarm['enabled']:\n        update_results[alarm['alarm_id']] = apis.phone.update_alarm(\n            alarm_id=alarm['alarm_id'],\n            access_token=phone_access_token,\n            enabled=False\n        )\n\nprint({'new_wake_time': new_wake_time, 'update_results': update_results})",
+  "codex_elapsed_seconds": 0.0,
+  "codex_event_item_types": [
+    "agent_message"
+  ]
+}

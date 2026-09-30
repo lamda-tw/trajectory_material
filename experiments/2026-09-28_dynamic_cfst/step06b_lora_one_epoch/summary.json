@@ -1,0 +1,210 @@
+{
+  "schema_version": "dynamic-cfst-step06b-one-epoch-summary-v1",
+  "status": "SUCCESS",
+  "finished_at_utc": "2026-09-29T06:20:03.251097+00:00",
+  "source": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter",
+    "adapter_model_sha256": "c8fdfd4f3bb198381b6f2e56d019589a3ed904241b0147b565ec540449a29938",
+    "model_weights_reused_for_every_branch": true,
+    "optimizer_state_reused": false
+  },
+  "common_training": {
+    "learning_rate": 0.0002,
+    "weight_decay": 0.0,
+    "optimizer": "AdamW",
+    "scheduler": "none_constant",
+    "warmup_steps": 0,
+    "seed": 20260928,
+    "max_length": 40960,
+    "dtype": "bfloat16",
+    "attention": "sdpa",
+    "world_size": 2,
+    "global_batch_size": 2,
+    "loss_policy": "assistant_completion_only, globally weighted by supervised tokens per DDP step"
+  },
+  "training_amount_policy": {
+    "epochs": 1,
+    "each_unique_sample_count": 1,
+    "equal_tokens_required": false,
+    "no_check30_or_dev57": true
+  },
+  "old_result_files_unchanged": 92,
+  "branches": {
+    "CFST-state": {
+      "exposure": {
+        "sample_counts": {
+          "cfst-step05::2a163ab_3::repair-09": 1,
+          "cfst-step05::2a163ab_1::repair-09": 1,
+          "cfst-step05::302c169_2::repair-11": 1,
+          "cfst-step05::b0a8eae_3::repair-06": 1,
+          "cfst-step05::76f2c72_1::repair-09": 1,
+          "cfst-step05::2a163ab_2::repair-17": 1,
+          "cfst-step05::ccb4494_2::repair-06": 1,
+          "cfst-step05::b0a8eae_1::repair-05": 1,
+          "cfst-step05::692c77d_3::repair-12": 1,
+          "cfst-step05::d0b1f43_2::repair-08": 1,
+          "cfst-step05::d0b1f43_1::repair-13": 1,
+          "cfst-step05::7d7fbf6_1::repair-09": 1
+        },
+        "all_samples_exactly_once": true,
+        "actual_examples": 12,
+        "optimizer_updates": 6,
+        "supervised_tokens": 1826,
+        "input_tokens_unpadded": 101754,
+        "input_tokens_padded": 101792,
+        "prompt_tokens": 99928,
+        "rank_partition_verified": true
+      },
+      "adapter_dir": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step06b_lora_one_epoch/CFST-state/adapter",
+      "adapter_model_sha256": "914c7d73b3ad913eda694a2e5a2eff17c6cff790e395688e45c6ca26083a224c",
+      "unique_samples": 12,
+      "scheduled_examples": 12,
+      "supervised_tokens": 1826,
+      "optimizer_steps": 6,
+      "loss_first": 0.5155006340829191,
+      "loss_last": 0.9084878669594819,
+      "loss_mean": 0.9373035306483223,
+      "diagnostic_loss": 0.35626272188024216,
+      "duration_seconds": 39.74389290809631,
+      "peak_reserved_gib_max": 72.658203125,
+      "weight_delta": {
+        "tensor_count": 504,
+        "changed_tensor_count": 504,
+        "parameter_count": 21823488,
+        "l2_delta": 2.7193827805171975,
+        "max_abs_delta": 0.00120711256749928
+      },
+      "reload_forward": {
+        "adapter_name": "state",
+        "input_tokens": 19,
+        "output_logits_shape": [
+          1,
+          151936
+        ],
+        "all_logits_finite": true,
+        "last_token_logits_sha256_float32": "3df349a7cd6a523efb257f2ec7443414fe3cd1c068f9ff79c292a0ef8c18d90c"
+      }
+    },
+    "CFST-Action": {
+      "exposure": {
+        "sample_counts": {
+          "cfst-step05::34d9492_3::repair-12": 1,
+          "cfst-step05::d0b1f43_3::repair-16": 1,
+          "cfst-step05::34d9492_2::repair-13": 1,
+          "cfst-step05::60d0b5b_1::repair-14": 1,
+          "cfst-step05::7d7fbf6_3::repair-10": 1,
+          "cfst-step05::7d7fbf6_2::repair-11": 1,
+          "cfst-step05::22cc237_3::repair-18": 1,
+          "cfst-step05::6104387_3::repair-11": 1
+        },
+        "all_samples_exactly_once": true,
+        "actual_examples": 8,
+        "optimizer_updates": 4,
+        "supervised_tokens": 1493,
+        "input_tokens_unpadded": 99675,
+        "input_tokens_padded": 99712,
+        "prompt_tokens": 98182,
+        "rank_partition_verified": true
+      },
+      "adapter_dir": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step06b_lora_one_epoch/CFST-Action/adapter",
+      "adapter_model_sha256": "c87311f2629834b642db2d668b3981052ff8aed460d68f36268d3cb837ab023f",
+      "unique_samples": 8,
+      "scheduled_examples": 8,
+      "supervised_tokens": 1493,
+      "optimizer_steps": 4,
+      "loss_first": 0.9362414151253785,
+      "loss_last": 0.9038573956002994,
+      "loss_mean": 0.9168955496824155,
+      "diagnostic_loss": 0.42640288771995344,
+      "duration_seconds": 70.27447867393494,
+      "peak_reserved_gib_max": 86.609375,
+      "weight_delta": {
+        "tensor_count": 504,
+        "changed_tensor_count": 504,
+        "parameter_count": 21823488,
+        "l2_delta": 2.24665178441862,
+        "max_abs_delta": 0.000802324153482914
+      },
+      "reload_forward": {
+        "adapter_name": "action",
+        "input_tokens": 19,
+        "output_logits_shape": [
+          1,
+          151936
+        ],
+        "all_logits_finite": true,
+        "last_token_logits_sha256_float32": "10dc06a0555dd8533710657bb60c4a208d35e02198103de5fbaf8c7880541083"
+      }
+    },
+    "CFST-Mixed": {
+      "exposure": {
+        "sample_counts": {
+          "cfst-step05::76f2c72_1::repair-09": 1,
+          "cfst-step05::7d7fbf6_1::repair-09": 1,
+          "cfst-step05::ccb4494_2::repair-06": 1,
+          "cfst-step05::b0a8eae_1::repair-05": 1,
+          "cfst-step05::7d7fbf6_3::repair-10": 1,
+          "cfst-step05::60d0b5b_1::repair-14": 1,
+          "cfst-step05::2a163ab_1::repair-09": 1,
+          "cfst-step05::302c169_2::repair-11": 1,
+          "cfst-step05::6104387_3::repair-11": 1,
+          "cfst-step05::d0b1f43_2::repair-08": 1,
+          "cfst-step05::2a163ab_3::repair-09": 1,
+          "cfst-step05::692c77d_3::repair-12": 1,
+          "cfst-step05::b0a8eae_3::repair-06": 1,
+          "cfst-step05::34d9492_2::repair-13": 1,
+          "cfst-step05::d0b1f43_1::repair-13": 1,
+          "cfst-step05::34d9492_3::repair-12": 1,
+          "cfst-step05::22cc237_3::repair-18": 1,
+          "cfst-step05::d0b1f43_3::repair-16": 1,
+          "cfst-step05::7d7fbf6_2::repair-11": 1,
+          "cfst-step05::2a163ab_2::repair-17": 1
+        },
+        "all_samples_exactly_once": true,
+        "actual_examples": 20,
+        "optimizer_updates": 10,
+        "supervised_tokens": 3319,
+        "input_tokens_unpadded": 201429,
+        "input_tokens_padded": 201504,
+        "prompt_tokens": 198110,
+        "rank_partition_verified": true
+      },
+      "adapter_dir": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step06b_lora_one_epoch/CFST-Mixed/adapter",
+      "adapter_model_sha256": "d2efa1e20475ab74ad33d61f82526511a8d6a8b00ef72b9ddaab6b0d907a2951",
+      "unique_samples": 20,
+      "scheduled_examples": 20,
+      "supervised_tokens": 3319,
+      "optimizer_steps": 10,
+      "loss_first": 1.0322552991393428,
+      "loss_last": 0.5830169518143584,
+      "loss_mean": 0.8138325541030185,
+      "diagnostic_loss": 0.4028101455746878,
+      "duration_seconds": 109.19295334815979,
+      "peak_reserved_gib_max": 87.7578125,
+      "weight_delta": {
+        "tensor_count": 504,
+        "changed_tensor_count": 504,
+        "parameter_count": 21823488,
+        "l2_delta": 3.753549171372575,
+        "max_abs_delta": 0.0020014699548482895
+      },
+      "reload_forward": {
+        "adapter_name": "mixed",
+        "input_tokens": 19,
+        "output_logits_shape": [
+          1,
+          151936
+        ],
+        "all_logits_finite": true,
+        "last_token_logits_sha256_float32": "785fec716e8c97bb96e7d15da9720bad0aa7bf85178ed77371006423312c5fec"
+      }
+    }
+  },
+  "validation": {
+    "checks_passed": 282,
+    "checks_total": 282,
+    "reload_forward_passed": true
+  },
+  "scope_note": "training and overlapping-package diagnostic only; no check30 or Dev57 evaluation was run"
+}

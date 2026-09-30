@@ -1,0 +1,58 @@
+{
+  "schema_version": "dynamic-cfst-step04b-repair-attempt-v1",
+  "candidate_rank": 7,
+  "selection": "step02_context_queue_7",
+  "primary_label_before_execution": "状态错误",
+  "task_id": "c901732_2",
+  "family_id": "c901732",
+  "replace_action_index_1based": 3,
+  "started_at_utc": "2026-09-28T11:56:26.369065+00:00",
+  "finished_at_utc": "2026-09-28T11:56:49.332947+00:00",
+  "prefix_replay_actions": 2,
+  "prefix_replay_success": true,
+  "replay_error": null,
+  "teacher": {
+    "provider": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "called": true,
+    "response": {
+      "reasoning": "The prior credentials and Spotify access token are explicitly invalid for the new task. Before retrieving fresh credentials, the required next step is to inspect the exact specification of the Supervisor credential API, which has not yet been documented in the visible transcript.",
+      "code": "print(apis.api_docs.show_api_doc(app_name='supervisor', api_name='show_account_passwords'))",
+      "codex_elapsed_seconds": 0.0,
+      "codex_event_item_types": [
+        "agent_message"
+      ]
+    },
+    "ground_truth_visible": false,
+    "rejected_action_visible": false,
+    "later_trajectory_visible": false,
+    "official_failure_condition_visible": false
+  },
+  "student": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter",
+    "model_name": "appworld-codex-rft-train90-epoch5",
+    "temperature": 0,
+    "seed": 100,
+    "max_completion_tokens": 3000,
+    "max_model_len": 32000,
+    "max_total_actions": 50,
+    "continuation_actions": 3
+  },
+  "task_completed_signal": false,
+  "generation_error": "BadRequestError:Error code: 400 - {'error': {'message': \"This model's maximum context length is 32000 tokens. However, your request has 62464 input tokens. Please reduce the length of the input messages. None\", 'type': 'BadRequestError', 'param': None, 'code': 400}}",
+  "official_evaluation": {
+    "success": false,
+    "num_tests": 6,
+    "num_passes": 0,
+    "num_failures": 6,
+    "pass_percentage": 0.0,
+    "difficulty": 1
+  },
+  "official_successful_repair": false,
+  "interaction_count_from_replacement": 4,
+  "interaction_log": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04b_context_repairs/attempts/rank7_c901732_2/interactions.jsonl",
+  "official_report": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04b_context_repairs/runtime/appworld_root/experiments/outputs/cfst_step04b_repair_rank7_c901732_2/tasks/c901732_2/evaluation/report.md",
+  "appworld_output_directory": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04b_context_repairs/runtime/appworld_root/experiments/outputs/cfst_step04b_repair_rank7_c901732_2/tasks/c901732_2"
+}

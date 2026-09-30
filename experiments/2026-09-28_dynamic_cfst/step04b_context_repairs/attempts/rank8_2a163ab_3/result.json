@@ -1,0 +1,58 @@
+{
+  "schema_version": "dynamic-cfst-step04b-repair-attempt-v1",
+  "candidate_rank": 8,
+  "selection": "step02_context_queue_8",
+  "primary_label_before_execution": "状态错误",
+  "task_id": "2a163ab_3",
+  "family_id": "2a163ab",
+  "replace_action_index_1based": 9,
+  "started_at_utc": "2026-09-28T11:56:49.333838+00:00",
+  "finished_at_utc": "2026-09-28T11:57:36.787722+00:00",
+  "prefix_replay_actions": 8,
+  "prefix_replay_success": true,
+  "replay_error": null,
+  "teacher": {
+    "provider": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "called": true,
+    "response": {
+      "reasoning": "Authenticate to Venmo using the already-retrieved supervisor credentials so the social feed can be queried in the next step.",
+      "code": "venmo_password = next(item['password'] for item in passwords if item['account_name'] == 'venmo')\nvenmo_login = apis.venmo.login(username='ja-solomon@gmail.com', password=venmo_password)\nvenmo_access_token = venmo_login['access_token']\nprint({'login_successful': bool(venmo_access_token)})",
+      "codex_elapsed_seconds": 0.0,
+      "codex_event_item_types": [
+        "agent_message"
+      ]
+    },
+    "ground_truth_visible": false,
+    "rejected_action_visible": false,
+    "later_trajectory_visible": false,
+    "official_failure_condition_visible": false
+  },
+  "student": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter",
+    "model_name": "appworld-codex-rft-train90-epoch5",
+    "temperature": 0,
+    "seed": 100,
+    "max_completion_tokens": 3000,
+    "max_model_len": 32000,
+    "max_total_actions": 50,
+    "continuation_actions": 9
+  },
+  "task_completed_signal": true,
+  "generation_error": null,
+  "official_evaluation": {
+    "success": true,
+    "num_tests": 6,
+    "num_passes": 6,
+    "num_failures": 0,
+    "pass_percentage": 100.0,
+    "difficulty": 2
+  },
+  "official_successful_repair": true,
+  "interaction_count_from_replacement": 10,
+  "interaction_log": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04b_context_repairs/attempts/rank8_2a163ab_3/interactions.jsonl",
+  "official_report": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04b_context_repairs/runtime/appworld_root/experiments/outputs/cfst_step04b_repair_rank8_2a163ab_3/tasks/2a163ab_3/evaluation/report.md",
+  "appworld_output_directory": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04b_context_repairs/runtime/appworld_root/experiments/outputs/cfst_step04b_repair_rank8_2a163ab_3/tasks/2a163ab_3"
+}

@@ -1,0 +1,86 @@
+{
+  "schema_version": "dynamic-cfst-step05-manifest-v1",
+  "created_date": "2026-09-29",
+  "seed": 20260928,
+  "source_qualified_samples": "experiments/2026-09-28_dynamic_cfst/step04b_context_repairs/qualified_samples.jsonl",
+  "source_qualified_samples_sha256": "8d6e65b2d8fce1524216e6cf198669ac4fc119b1fac4e2f8a53316fe62a7eaec",
+  "source_partition": "source60 only",
+  "excluded_partitions": [
+    "check30",
+    "Dev57"
+  ],
+  "counts": {
+    "frozen_verified_repairs": 20,
+    "state_construction": 12,
+    "action_grounding": 8,
+    "mixed": 20,
+    "serialized_rows_across_three_packages": 40
+  },
+  "order_policy": {
+    "sample_order": "Python random.Random(20260928).shuffle over the frozen 20-row source order; specialist packages filter that global order",
+    "check30_tie_break_branch_order": [
+      "CFST-state",
+      "CFST-Action",
+      "CFST-Mixed"
+    ]
+  },
+  "training_contract": {
+    "format": "prompt + one assistant completion",
+    "loss_policy": "assistant_completion_only",
+    "input": "teacher-visible original history before the replaced action, with credentials redacted",
+    "target": "verified teacher reasoning and one replacement Python action",
+    "excluded": [
+      "rejected action",
+      "later student rollout",
+      "official failure conditions",
+      "evaluator assertions",
+      "ground truth"
+    ],
+    "max_length": 40960,
+    "enable_thinking": false,
+    "suggested_step06_supervised_token_budget_per_branch": 8000
+  },
+  "packages": {
+    "CFST-state": {
+      "path": "CFST-state/train.jsonl",
+      "sample_count": 12,
+      "train_sha256": "6b77845aff83a1d4103de30a92f723142c508ec183b1537ce5ed1bba434c0c00"
+    },
+    "CFST-Action": {
+      "path": "CFST-Action/train.jsonl",
+      "sample_count": 8,
+      "train_sha256": "c5792a2428e0ef6e6c9a4bdfd950abf81c524ef59f1fdc8dcacfc793e21e9efa"
+    },
+    "CFST-Mixed": {
+      "path": "CFST-Mixed/train.jsonl",
+      "sample_count": 20,
+      "train_sha256": "f3495c588fef5e49fe2bd010fe2575009f0aa67f10e1584a7c46ede28e44761b"
+    }
+  },
+  "redaction_markers": {
+    "unique_samples_total": 142,
+    "by_task": {
+      "ccb4494_2": 5,
+      "302c169_2": 6,
+      "60d0b5b_1": 6,
+      "34d9492_2": 6,
+      "22cc237_3": 9,
+      "76f2c72_1": 6,
+      "d0b1f43_1": 10,
+      "b0a8eae_3": 9,
+      "692c77d_3": 7,
+      "7d7fbf6_2": 6,
+      "d0b1f43_3": 7,
+      "6104387_3": 9,
+      "7d7fbf6_3": 6,
+      "7d7fbf6_1": 6,
+      "34d9492_3": 6,
+      "d0b1f43_2": 5,
+      "b0a8eae_1": 9,
+      "2a163ab_1": 9,
+      "2a163ab_2": 7,
+      "2a163ab_3": 8
+    }
+  },
+  "generation_script": "experiments/2026-09-28_dynamic_cfst/step05_training_packages/prepare_step05.py"
+}

@@ -1,0 +1,37 @@
+{
+  "id": "chatcmpl-0b9a75c6ebf44d35bb4333792e35a899",
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "All four archives were created successfully and their source directories are marked for deletion, so I will verify that no vacation-spot subdirectories remain before completing the task.\n\n```python\nremaining_vacation_subdirectories = apis.file_system.show_directory(\n    access_token=file_system_access_token,\n    directory_path='~/photographs/',\n    entry_type='directories',\n    recursive=True\n)\nprint(remaining_vacation_subdirectories)\n```\n\n",
+        "refusal": null,
+        "role": "assistant",
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [],
+        "reasoning_content": null
+      },
+      "stop_reason": null,
+      "token_ids": null
+    }
+  ],
+  "created": 1790593362,
+  "model": "appworld-codex-rft-train90-epoch5",
+  "object": "chat.completion",
+  "service_tier": null,
+  "system_fingerprint": null,
+  "usage": {
+    "completion_tokens": 86,
+    "prompt_tokens": 5915,
+    "total_tokens": 6001,
+    "completion_tokens_details": null,
+    "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "kv_transfer_params": null
+}

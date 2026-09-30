@@ -1,0 +1,25 @@
+{
+  "schema_version": "dynamic-cfst-step04b-costs-v1",
+  "logical_candidates": 8,
+  "clean_prefix_validations": 8,
+  "clean_prefix_actions_executed": 70,
+  "prefix_environment_runs": 8,
+  "repair_environment_runs": 8,
+  "total_environment_runs": 16,
+  "infrastructure_retries": 0,
+  "teacher_process_invocations": 8,
+  "teacher_actions_completed": 8,
+  "student_continuation_actions": 45,
+  "student_prompt_tokens": 583911,
+  "student_completion_tokens": 4485,
+  "official_successes_step04b": 4,
+  "official_failures_step04b": 4,
+  "training_runs": 0,
+  "check_split_teacher_answers": 0,
+  "dev57_teacher_answers": 0,
+  "notes": [
+    "Teacher token accounting is unavailable from the Codex CLI audit response; calls and completed actions are reported instead.",
+    "All eight candidates were run in the Step 2 frozen order regardless of interim success.",
+    "Four model continuations ended in a fixed-window context error; these are method failures, not infrastructure retries."
+  ]
+}

@@ -1,0 +1,199 @@
+{
+  "schema_version": "dynamic-cfst-step06-branch-metrics-v1",
+  "status": "SUCCESS",
+  "branch": "CFST-Action",
+  "started_at_utc": "2026-09-29T06:16:10.670851+00:00",
+  "finished_at_utc": "2026-09-29T06:17:20.945274+00:00",
+  "hostname": "autodl-container-65d14488ce-cd05d5ef",
+  "source": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter",
+    "adapter_model_sha256": "c8fdfd4f3bb198381b6f2e56d019589a3ed904241b0147b565ec540449a29938",
+    "optimizer_state_reused": false,
+    "model_weights_reused": true
+  },
+  "data": {
+    "unique_train_json": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step05_training_packages/CFST-Action/train.jsonl",
+    "unique_train_sha256": "c5792a2428e0ef6e6c9a4bdfd950abf81c524ef59f1fdc8dcacfc793e21e9efa",
+    "unique_samples": 8,
+    "schedule_json": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step06b_lora_one_epoch/CFST-Action/train_schedule.jsonl",
+    "schedule_sha256": "23916c96e5c9dddb4db56dbdae1b12926d8b5cf21a928ee8691efd59ef8b41da",
+    "scheduled_examples": 8,
+    "scheduled_supervised_tokens": 1493
+  },
+  "training": {
+    "optimizer": "AdamW",
+    "learning_rate": 0.0002,
+    "weight_decay": 0.0,
+    "scheduler": "none_constant",
+    "warmup_steps": 0,
+    "seed": 20260928,
+    "world_size": 2,
+    "global_batch_size": 2,
+    "optimizer_steps": 4,
+    "loss_reduction": "global supervised-token mean across two DDP ranks",
+    "loss_first": 0.9362414151253785,
+    "loss_last": 0.9038573956002994,
+    "loss_mean": 0.9168955496824155,
+    "duration_seconds": 70.27447867393494,
+    "history": [
+      {
+        "step": 1,
+        "loss": 0.9362414151253785,
+        "supervised_tokens": 338,
+        "cumulative_supervised_tokens": 338,
+        "samples": [
+          {
+            "id": "cfst-step05::34d9492_3::repair-12::epoch1-0005",
+            "source_training_id": "cfst-step05::34d9492_3::repair-12",
+            "task_id": "34d9492_3",
+            "schedule_index": 5,
+            "tokens": 9874,
+            "prompt_tokens": 9808,
+            "completion_tokens": 66
+          },
+          {
+            "id": "cfst-step05::d0b1f43_3::repair-16::epoch1-0004",
+            "source_training_id": "cfst-step05::d0b1f43_3::repair-16",
+            "task_id": "d0b1f43_3",
+            "schedule_index": 4,
+            "tokens": 22193,
+            "prompt_tokens": 21921,
+            "completion_tokens": 272
+          }
+        ],
+        "elapsed_seconds": 26.521884441375732
+      },
+      {
+        "step": 2,
+        "loss": 0.8399495591237707,
+        "supervised_tokens": 515,
+        "cumulative_supervised_tokens": 853,
+        "samples": [
+          {
+            "id": "cfst-step05::34d9492_2::repair-13::epoch1-0008",
+            "source_training_id": "cfst-step05::34d9492_2::repair-13",
+            "task_id": "34d9492_2",
+            "schedule_index": 8,
+            "tokens": 9408,
+            "prompt_tokens": 9061,
+            "completion_tokens": 347
+          },
+          {
+            "id": "cfst-step05::60d0b5b_1::repair-14::epoch1-0003",
+            "source_training_id": "cfst-step05::60d0b5b_1::repair-14",
+            "task_id": "60d0b5b_1",
+            "schedule_index": 3,
+            "tokens": 16787,
+            "prompt_tokens": 16619,
+            "completion_tokens": 168
+          }
+        ],
+        "elapsed_seconds": 42.339255571365356
+      },
+      {
+        "step": 3,
+        "loss": 0.9875338288802135,
+        "supervised_tokens": 395,
+        "cumulative_supervised_tokens": 1248,
+        "samples": [
+          {
+            "id": "cfst-step05::7d7fbf6_3::repair-10::epoch1-0007",
+            "source_training_id": "cfst-step05::7d7fbf6_3::repair-10",
+            "task_id": "7d7fbf6_3",
+            "schedule_index": 7,
+            "tokens": 6623,
+            "prompt_tokens": 6443,
+            "completion_tokens": 180
+          },
+          {
+            "id": "cfst-step05::7d7fbf6_2::repair-11::epoch1-0006",
+            "source_training_id": "cfst-step05::7d7fbf6_2::repair-11",
+            "task_id": "7d7fbf6_2",
+            "schedule_index": 6,
+            "tokens": 5969,
+            "prompt_tokens": 5754,
+            "completion_tokens": 215
+          }
+        ],
+        "elapsed_seconds": 45.777976989746094
+      },
+      {
+        "step": 4,
+        "loss": 0.9038573956002994,
+        "supervised_tokens": 245,
+        "cumulative_supervised_tokens": 1493,
+        "samples": [
+          {
+            "id": "cfst-step05::22cc237_3::repair-18::epoch1-0002",
+            "source_training_id": "cfst-step05::22cc237_3::repair-18",
+            "task_id": "22cc237_3",
+            "schedule_index": 2,
+            "tokens": 16410,
+            "prompt_tokens": 16342,
+            "completion_tokens": 68
+          },
+          {
+            "id": "cfst-step05::6104387_3::repair-11::epoch1-0001",
+            "source_training_id": "cfst-step05::6104387_3::repair-11",
+            "task_id": "6104387_3",
+            "schedule_index": 1,
+            "tokens": 12411,
+            "prompt_tokens": 12234,
+            "completion_tokens": 177
+          }
+        ],
+        "elapsed_seconds": 60.9459924697876
+      }
+    ]
+  },
+  "diagnostic": {
+    "scope": "the unique branch package; overlaps training and is only a numerical fit check",
+    "loss": 0.42640288771995344,
+    "perplexity": 1.5317377691726293,
+    "completion_target_tokens": 1493
+  },
+  "model": {
+    "dtype": "bfloat16",
+    "attention": "sdpa",
+    "max_length": 40960,
+    "trainable_parameters": 21823488,
+    "total_parameters": 8212558848,
+    "trainable_percent": 0.2657331095449582
+  },
+  "distributed": {
+    "backend": "nccl",
+    "world_size": 2,
+    "gpus": [
+      {
+        "rank": 0,
+        "name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "capability": [
+          12,
+          0
+        ],
+        "peak_allocated_gib": 48.49369812011719,
+        "peak_reserved_gib": 86.609375
+      },
+      {
+        "rank": 1,
+        "name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "capability": [
+          12,
+          0
+        ],
+        "peak_allocated_gib": 60.03213119506836,
+        "peak_reserved_gib": 72.27734375
+      }
+    ]
+  },
+  "artifacts": {
+    "adapter_dir": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step06b_lora_one_epoch/CFST-Action/adapter",
+    "adapter_model_sha256": "c87311f2629834b642db2d668b3981052ff8aed460d68f36268d3cb837ab023f",
+    "adapter_differs_from_source": true
+  },
+  "software": {
+    "torch": "2.8.0+cu128",
+    "cuda_runtime": "12.8"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "chatcmpl-5e9713cea731411ab6a7d563fd0d5ed0",
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "The full note is needed to distinguish the seven-day workout section from other headings, so I will retrieve it again and inspect its paragraphs.\n\n```python\nworkout_note = apis.simple_note.show_note(access_token=simple_note_access_token, note_id=workout_note_meta['note_id'])\nworkout_paragraphs = workout_note.get('content', '').split('\\n\\n')\nprint({'workout_paragraphs': workout_paragraphs})\n```\n\n",
+        "refusal": null,
+        "role": "assistant",
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [],
+        "reasoning_content": null
+      },
+      "stop_reason": null,
+      "token_ids": null
+    }
+  ],
+  "created": 1790596451,
+  "model": "appworld-codex-rft-train90-epoch5",
+  "object": "chat.completion",
+  "service_tier": null,
+  "system_fingerprint": null,
+  "usage": {
+    "completion_tokens": 89,
+    "prompt_tokens": 12133,
+    "total_tokens": 12222,
+    "completion_tokens_details": null,
+    "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "kv_transfer_params": null
+}

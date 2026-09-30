@@ -1,0 +1,37 @@
+{
+  "id": "chatcmpl-3f616a379c68478e921ffe9c0f0af177",
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "All five archives were created successfully and the source directories are gone; I need the final directory listing to verify that no vacation subdirectories remain.\n\n```python\nremaining_pictures_entries = apis.file_system.show_directory(access_token=file_system_access_token, directory_path='~/pictures/', entry_type='all', recursive=True)\nprint(remaining_pictures_entries)\n```\n\n",
+        "refusal": null,
+        "role": "assistant",
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [],
+        "reasoning_content": null
+      },
+      "stop_reason": null,
+      "token_ids": null
+    }
+  ],
+  "created": 1790593295,
+  "model": "appworld-codex-rft-train90-epoch5",
+  "object": "chat.completion",
+  "service_tier": null,
+  "system_fingerprint": null,
+  "usage": {
+    "completion_tokens": 72,
+    "prompt_tokens": 6924,
+    "total_tokens": 6996,
+    "completion_tokens_details": null,
+    "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "kv_transfer_params": null
+}

@@ -1,0 +1,58 @@
+{
+  "schema_version": "dynamic-cfst-step04a-repair-attempt-v1",
+  "candidate_rank": 8,
+  "selection": "review_queue_11",
+  "primary_label_before_execution": "状态错误",
+  "task_id": "692c77d_3",
+  "family_id": "692c77d",
+  "replace_action_index_1based": 12,
+  "started_at_utc": "2026-09-28T10:58:54.561756+00:00",
+  "finished_at_utc": "2026-09-28T10:59:21.407966+00:00",
+  "prefix_replay_actions": 11,
+  "prefix_replay_success": true,
+  "replay_error": null,
+  "teacher": {
+    "provider": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "called": true,
+    "response": {
+      "reasoning": "Most target songs have no existing review, so they require the `review_song` API rather than `update_song_review`. Its exact parameters must be inspected before creating any ratings.",
+      "code": "print(apis.api_docs.show_api_doc(app_name='spotify', api_name='review_song'))",
+      "codex_elapsed_seconds": 0.0,
+      "codex_event_item_types": [
+        "agent_message"
+      ]
+    },
+    "ground_truth_visible": false,
+    "rejected_action_visible": false,
+    "later_trajectory_visible": false,
+    "official_failure_condition_visible": false
+  },
+  "student": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter",
+    "model_name": "appworld-codex-rft-train90-epoch5",
+    "temperature": 0,
+    "seed": 100,
+    "max_completion_tokens": 3000,
+    "max_model_len": 32000,
+    "max_total_actions": 50,
+    "continuation_actions": 3
+  },
+  "task_completed_signal": true,
+  "generation_error": null,
+  "official_evaluation": {
+    "success": true,
+    "num_tests": 7,
+    "num_passes": 7,
+    "num_failures": 0,
+    "pass_percentage": 100.0,
+    "difficulty": 2
+  },
+  "official_successful_repair": true,
+  "interaction_count_from_replacement": 4,
+  "interaction_log": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04a_expanded_repairs/attempts/rank8_692c77d_3/interactions.jsonl",
+  "official_report": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04a_expanded_repairs/runtime/appworld_root/experiments/outputs/cfst_step04a_repair_rank8_692c77d_3/tasks/692c77d_3/evaluation/report.md",
+  "appworld_output_directory": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04a_expanded_repairs/runtime/appworld_root/experiments/outputs/cfst_step04a_repair_rank8_692c77d_3/tasks/692c77d_3"
+}

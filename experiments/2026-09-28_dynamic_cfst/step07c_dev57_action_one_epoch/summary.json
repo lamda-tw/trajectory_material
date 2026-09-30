@@ -1,0 +1,164 @@
+{
+  "status": "completed",
+  "stage": "step07c_dev57_action_one_epoch",
+  "candidate": "CFST-Action-1epoch",
+  "baseline_reused": true,
+  "models": {
+    "baseline": {
+      "task_count": 57,
+      "success_count": 23,
+      "failure_count": 34,
+      "task_goal_completion": 40.4,
+      "task_goal_completion_exact": 40.35087719298246,
+      "successful_family_count": 4,
+      "family_count": 19,
+      "scenario_goal_completion": 21.1,
+      "difficulty": {
+        "2": {
+          "total": 24,
+          "success": 9
+        },
+        "3": {
+          "total": 3,
+          "success": 0
+        },
+        "1": {
+          "total": 30,
+          "success": 14
+        }
+      },
+      "evaluator_tests": {
+        "passed": 206,
+        "failed": 85,
+        "total": 291,
+        "overall_pass_percentage": 70.79037800687286,
+        "macro_task_pass_percentage": 71.79197994987469
+      },
+      "context_error_task_ids": [
+        "50e1ac9_2",
+        "383cbac_3",
+        "68ee2c9_1",
+        "6c2c621_1",
+        "4fab96f_2"
+      ],
+      "model_calls": 1014,
+      "input_tokens": 10443515,
+      "output_tokens": 91658
+    },
+    "CFST-Action": {
+      "task_count": 57,
+      "success_count": 31,
+      "failure_count": 26,
+      "task_goal_completion": 54.4,
+      "task_goal_completion_exact": 54.3859649122807,
+      "successful_family_count": 6,
+      "family_count": 19,
+      "scenario_goal_completion": 31.6,
+      "difficulty": {
+        "2": {
+          "total": 24,
+          "success": 12
+        },
+        "3": {
+          "total": 3,
+          "success": 1
+        },
+        "1": {
+          "total": 30,
+          "success": 18
+        }
+      },
+      "evaluator_tests": {
+        "passed": 215,
+        "failed": 76,
+        "total": 291,
+        "overall_pass_percentage": 73.88316151202748,
+        "macro_task_pass_percentage": 76.08187134502924
+      },
+      "context_error_task_ids": [
+        "b119b1f_2",
+        "df61dc5_1",
+        "df61dc5_3",
+        "383cbac_1",
+        "383cbac_2",
+        "383cbac_3",
+        "68ee2c9_1",
+        "68ee2c9_3",
+        "4fab96f_1"
+      ],
+      "model_calls": 1012,
+      "input_tokens": 10315090,
+      "output_tokens": 95427,
+      "duration_seconds": 1864.454511,
+      "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step06b_lora_one_epoch/CFST-Action/adapter",
+      "adapter_sha256": "c87311f2629834b642db2d668b3981052ff8aed460d68f36268d3cb837ab023f"
+    }
+  },
+  "paired_comparison": {
+    "gained_task_ids": [
+      "50e1ac9_2",
+      "530b157_1",
+      "4ec8de5_1",
+      "b119b1f_3",
+      "3ab5b8b_2",
+      "df61dc5_2",
+      "23cf851_2",
+      "6bdbc26_1",
+      "6bdbc26_3",
+      "6171bbc_2",
+      "6171bbc_3",
+      "6c2c621_1",
+      "6c2c621_2",
+      "4fab96f_2"
+    ],
+    "regressed_task_ids": [
+      "50e1ac9_1",
+      "b119b1f_1",
+      "b119b1f_2",
+      "37a8675_1",
+      "df61dc5_3",
+      "23cf851_1"
+    ],
+    "gained_success_count": 14,
+    "regression_count": 6,
+    "net_gain": 8,
+    "retained_success_count": 17
+  },
+  "acceptance": {
+    "candidate": "CFST-Action-1epoch",
+    "candidate_adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step06b_lora_one_epoch/CFST-Action/adapter",
+    "rule": {
+      "check30_net_gain_positive": true,
+      "check30_net_gain": 2,
+      "dev57_success_count_at_least_baseline": 23,
+      "decision_metric": "official task success count; test pass percentages are reported separately"
+    },
+    "baseline_success_count": 23,
+    "candidate_success_count": 31,
+    "dev57_net_gain": 8,
+    "passed": true,
+    "decision": "passes_predeclared_acceptance_gate",
+    "new_training": false,
+    "source60_refreshed": false,
+    "step08_started": false,
+    "note": "Only the preselected candidate is accepted or rejected; no retuning or branch reselection uses Dev57. This request ends after evaluation and decision reporting."
+  },
+  "evaluator_reporting": {
+    "per_task_details_file": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step07c_dev57_action_one_epoch/EVALUATOR_DETAILS.md",
+    "overall_test_pass_percentage_definition": "100 * sum(passed_tests) / sum(num_tests); every reported evaluator condition has equal weight",
+    "macro_task_test_pass_percentage_definition": "mean over 57 tasks of 100 * passed_tests / num_tests",
+    "official_TGC_definition": "100 * count(official success) / 57; official result rounded to 1 decimal",
+    "official_SGC_definition": "100 * count(families whose 3 tasks all succeed) / 19; official result rounded to 1 decimal",
+    "changed_test_count_task_ids": []
+  },
+  "runtime_handling": {
+    "logging_only_ellipsis_fix": true,
+    "events": [],
+    "prefix_replay": false
+  },
+  "teacher_calls": 0,
+  "new_training": false,
+  "source60_refreshed": false,
+  "prior_protected_files_unchanged": 1622,
+  "completed_at_utc": "2026-09-29T08:19:23.905075+00:00"
+}

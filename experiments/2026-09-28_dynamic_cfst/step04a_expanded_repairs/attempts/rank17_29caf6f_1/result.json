@@ -1,0 +1,58 @@
+{
+  "schema_version": "dynamic-cfst-step04a-repair-attempt-v1",
+  "candidate_rank": 17,
+  "selection": "review_queue_20",
+  "primary_label_before_execution": "参数错误",
+  "task_id": "29caf6f_1",
+  "family_id": "29caf6f",
+  "replace_action_index_1based": 16,
+  "started_at_utc": "2026-09-28T11:03:56.416576+00:00",
+  "finished_at_utc": "2026-09-28T11:04:23.218915+00:00",
+  "prefix_replay_actions": 15,
+  "prefix_replay_success": true,
+  "replay_error": null,
+  "teacher": {
+    "provider": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "called": true,
+    "response": {
+      "reasoning": "Extract only the movie-title lines from the note, join all 14 titles with commas, and send the requested text to the exact Christopher contact.",
+      "code": "movie_recommendations = [\n    line.strip()\n    for line in movie_note['content'].splitlines()\n    if line.strip() and not line.lstrip().startswith(('#', '-'))\n]\nrecommendation_message = ', '.join(movie_recommendations)\nsend_result = apis.phone.send_text_message(\n    access_token=phone_access_token,\n    phone_number='4275730168',\n    message=recommendation_message\n)\nprint(send_result)",
+      "codex_elapsed_seconds": 0.0,
+      "codex_event_item_types": [
+        "agent_message"
+      ]
+    },
+    "ground_truth_visible": false,
+    "rejected_action_visible": false,
+    "later_trajectory_visible": false,
+    "official_failure_condition_visible": false
+  },
+  "student": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter",
+    "model_name": "appworld-codex-rft-train90-epoch5",
+    "temperature": 0,
+    "seed": 100,
+    "max_completion_tokens": 3000,
+    "max_model_len": 32000,
+    "max_total_actions": 50,
+    "continuation_actions": 2
+  },
+  "task_completed_signal": true,
+  "generation_error": null,
+  "official_evaluation": {
+    "success": false,
+    "num_tests": 8,
+    "num_passes": 7,
+    "num_failures": 1,
+    "pass_percentage": 87.5,
+    "difficulty": 2
+  },
+  "official_successful_repair": false,
+  "interaction_count_from_replacement": 3,
+  "interaction_log": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04a_expanded_repairs/attempts/rank17_29caf6f_1/interactions.jsonl",
+  "official_report": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04a_expanded_repairs/runtime/appworld_root/experiments/outputs/cfst_step04a_repair_rank17_29caf6f_1/tasks/29caf6f_1/evaluation/report.md",
+  "appworld_output_directory": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04a_expanded_repairs/runtime/appworld_root/experiments/outputs/cfst_step04a_repair_rank17_29caf6f_1/tasks/29caf6f_1"
+}

@@ -1,0 +1,58 @@
+{
+  "schema_version": "dynamic-cfst-step04b-repair-attempt-v1",
+  "candidate_rank": 6,
+  "selection": "step02_context_queue_6",
+  "primary_label_before_execution": "状态错误",
+  "task_id": "22cc237_1",
+  "family_id": "22cc237",
+  "replace_action_index_1based": 5,
+  "started_at_utc": "2026-09-28T11:55:50.766740+00:00",
+  "finished_at_utc": "2026-09-28T11:56:26.368236+00:00",
+  "prefix_replay_actions": 4,
+  "prefix_replay_success": true,
+  "replay_error": null,
+  "teacher": {
+    "provider": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "called": true,
+    "response": {
+      "reasoning": "Locate every Simple Note candidate for the dinner and establish yesterday’s exact time boundaries before inspecting note contents or Venmo transactions. The search API is documented and must be fully paginated.",
+      "code": "from datetime import datetime, timedelta\n\nnow = datetime.now()\nyesterday = (now - timedelta(days=1)).date()\nyesterday_start = datetime.combine(yesterday, datetime.min.time())\nyesterday_end = datetime.combine(yesterday, datetime.max.time())\n\ndinner_notes = []\npage_index = 0\nwhile True:\n    page = apis.simple_note.search_notes(\n        access_token=simple_note_token,\n        query=\"dinner\",\n        page_index=page_index,\n        page_limit=20\n    )\n    dinner_notes.extend(page)\n    if len(page) < 20:\n        break\n    page_index += 1\n\nprint({\n    \"yesterday_start\": yesterday_start.isoformat(),\n    \"yesterday_end\": yesterday_end.isoformat(),\n    \"dinner_notes\": dinner_notes\n})",
+      "codex_elapsed_seconds": 0.0,
+      "codex_event_item_types": [
+        "agent_message"
+      ]
+    },
+    "ground_truth_visible": false,
+    "rejected_action_visible": false,
+    "later_trajectory_visible": false,
+    "official_failure_condition_visible": false
+  },
+  "student": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter",
+    "model_name": "appworld-codex-rft-train90-epoch5",
+    "temperature": 0,
+    "seed": 100,
+    "max_completion_tokens": 3000,
+    "max_model_len": 32000,
+    "max_total_actions": 50,
+    "continuation_actions": 6
+  },
+  "task_completed_signal": false,
+  "generation_error": "BadRequestError:Error code: 400 - {'error': {'message': \"This model's maximum context length is 32000 tokens. However, your request has 44705 input tokens. Please reduce the length of the input messages. None\", 'type': 'BadRequestError', 'param': None, 'code': 400}}",
+  "official_evaluation": {
+    "success": false,
+    "num_tests": 4,
+    "num_passes": 1,
+    "num_failures": 3,
+    "pass_percentage": 25.0,
+    "difficulty": 3
+  },
+  "official_successful_repair": false,
+  "interaction_count_from_replacement": 7,
+  "interaction_log": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04b_context_repairs/attempts/rank6_22cc237_1/interactions.jsonl",
+  "official_report": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04b_context_repairs/runtime/appworld_root/experiments/outputs/cfst_step04b_repair_rank6_22cc237_1/tasks/22cc237_1/evaluation/report.md",
+  "appworld_output_directory": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04b_context_repairs/runtime/appworld_root/experiments/outputs/cfst_step04b_repair_rank6_22cc237_1/tasks/22cc237_1"
+}

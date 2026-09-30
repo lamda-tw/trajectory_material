@@ -1,0 +1,986 @@
+{
+  "afc0fce_1": {
+    "success": false,
+    "difficulty": 3,
+    "num_tests": 9,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match venmo.Transaction, venmo.TransactionLike, venmo.TransactionComment",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, updated, removed venmo.Transaction records using models.changed_records,\nand assert 0 transactions were added or removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert updated transactions have only changed in like_count field using models.changed_field_names.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, removed venmo.TransactionLike records using models.changed_records,\nand assert 0 transaction likes were removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "obtain added, updated, removed venmo.TransactionComment records using models.changed_records,\nand assert 0 transaction comments were updated or removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert all added transaction comments have comment public_data.comment (normalize_text=True)",
+        "label": "no_op_fail"
+      }
+    ],
+    "failures": [
+      {
+        "requirement": "assert transaction_ids of added transaction likes match exactly to\nprivate_data.after_threshold_contact_transaction_ids (ignore order).",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert transaction_ids of added transaction likes match exactly to\n    private_data.after_threshold_contact_transaction_ids (ignore order).\n    \"\"\"\n):\n    added_transaction_like_ids = list_of(added_transaction_likes, \"transaction_id\")\n    test.case(\n```\n----------\nAssertionError:\n[8246, 8247, 8248, 8251, 8252, 8263, 8264, 8266, 8267, 8297, 8298, 8299, 8300, 8301, 8302, 8303, 8304, 8305, 8345, 8346, 8348, 8349, 8350, 8361, 8363]\n==\n[8246, 8247, 8248, 8251, 8252, 8263, 8264, 8266, 8267]\n\nIn left but not right:\n[8297, 8298, 8299, 8300, 8301, 8302, 8303, 8304, 8305, 8345, 8346, 8348, 8349, 8350, 8361, 8363]\n\nOriginal values:\n[8301, 8299, 8247, 8300, 8263, 8363, 8305, 8302, 8252, 8264, 8348, 8246, 8248, 8297, 8349, 8266, 8346, 8251, 8267, 8304, 8361, 8303, 8350, 8345, 8298]\n==\n[8246, 8247, 8248, 8251, 8252, 8263, 8264, 8266, 8267]",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert set of transaction_ids of added transaction comments match exactly\nto private_data.after_threshold_contact_transaction_ids (ignore order).",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert set of transaction_ids of added transaction comments match exactly\n    to private_data.after_threshold_contact_transaction_ids (ignore order).\n    \"\"\"\n):\n    added_transaction_comment_ids = list_of(added_transaction_comments, \"transaction_id\")\n    test.case(\n```\n----------\nAssertionError:\n[8246, 8247, 8248, 8251, 8252, 8263, 8264, 8266, 8267, 8297, 8298, 8299, 8300, 8301, 8302, 8303, 8304, 8305, 8345, 8346, 8348, 8349, 8350, 8361, 8363]\n==\n[8246, 8247, 8248, 8251, 8252, 8263, 8264, 8266, 8267]\n\nIn left but not right:\n[8297, 8298, 8299, 8300, 8301, 8302, 8303, 8304, 8305, 8345, 8346, 8348, 8349, 8350, 8361, 8363]\n\nOriginal values:\n[8247, 8349, 8297, 8266, 8346, 8301, 8264, 8305, 8248, 8350, 8246, 8251, 8298, 8300, 8252, 8263, 8361, 8303, 8299, 8302, 8267, 8304, 8348, 8345, 8363]\n==\n[8246, 8247, 8248, 8251, 8252, 8263, 8264, 8266, 8267]",
+        "label": "no_op_fail"
+      }
+    ]
+  },
+  "afc0fce_2": {
+    "success": false,
+    "difficulty": 3,
+    "num_tests": 9,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match venmo.Transaction, venmo.TransactionLike, venmo.TransactionComment",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, updated, removed venmo.Transaction records using models.changed_records,\nand assert 0 transactions were added or removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert updated transactions have only changed in like_count field using models.changed_field_names.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, removed venmo.TransactionLike records using models.changed_records,\nand assert 0 transaction likes were removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "obtain added, updated, removed venmo.TransactionComment records using models.changed_records,\nand assert 0 transaction comments were updated or removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert all added transaction comments have comment public_data.comment (normalize_text=True)",
+        "label": "no_op_fail"
+      }
+    ],
+    "failures": [
+      {
+        "requirement": "assert transaction_ids of added transaction likes match exactly to\nprivate_data.after_threshold_contact_transaction_ids (ignore order).",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert transaction_ids of added transaction likes match exactly to\n    private_data.after_threshold_contact_transaction_ids (ignore order).\n    \"\"\"\n):\n    added_transaction_like_ids = list_of(added_transaction_likes, \"transaction_id\")\n    test.case(\n```\n----------\nAssertionError:\n[8274, 8275, 8276, 8280, 8281, 8282, 8283, 8284, 8285, 8286, 8287, 8288, 8295, 8296, 8297, 8298]\n==\n[8280, 8281, 8282, 8283, 8284, 8285, 8286, 8287, 8288, 8295, 8297, 8298]\n\nIn left but not right:\n[8274, 8275, 8276, 8296]\n\nOriginal values:\n[8287, 8283, 8282, 8285, 8276, 8298, 8286, 8296, 8284, 8275, 8295, 8274, 8297, 8280, 8288, 8281]\n==\n[8280, 8281, 8282, 8283, 8284, 8285, 8286, 8287, 8288, 8295, 8297, 8298]",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert set of transaction_ids of added transaction comments match exactly\nto private_data.after_threshold_contact_transaction_ids (ignore order).",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert set of transaction_ids of added transaction comments match exactly\n    to private_data.after_threshold_contact_transaction_ids (ignore order).\n    \"\"\"\n):\n    added_transaction_comment_ids = list_of(added_transaction_comments, \"transaction_id\")\n    test.case(\n```\n----------\nAssertionError:\n[8274, 8275, 8276, 8280, 8281, 8282, 8283, 8284, 8285, 8286, 8287, 8288, 8295, 8296, 8297, 8298]\n==\n[8280, 8281, 8282, 8283, 8284, 8285, 8286, 8287, 8288, 8295, 8297, 8298]\n\nIn left but not right:\n[8274, 8275, 8276, 8296]\n\nOriginal values:\n[8283, 8282, 8284, 8281, 8298, 8287, 8295, 8280, 8286, 8274, 8276, 8285, 8288, 8297, 8296, 8275]\n==\n[8280, 8281, 8282, 8283, 8284, 8285, 8286, 8287, 8288, 8295, 8297, 8298]",
+        "label": "no_op_fail"
+      }
+    ]
+  },
+  "afc0fce_3": {
+    "success": true,
+    "difficulty": 3,
+    "num_tests": 9,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match venmo.Transaction, venmo.TransactionLike, venmo.TransactionComment",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, updated, removed venmo.Transaction records using models.changed_records,\nand assert 0 transactions were added or removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert updated transactions have only changed in like_count field using models.changed_field_names.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, removed venmo.TransactionLike records using models.changed_records,\nand assert 0 transaction likes were removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert transaction_ids of added transaction likes match exactly to\nprivate_data.after_threshold_contact_transaction_ids (ignore order).",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, updated, removed venmo.TransactionComment records using models.changed_records,\nand assert 0 transaction comments were updated or removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert set of transaction_ids of added transaction comments match exactly\nto private_data.after_threshold_contact_transaction_ids (ignore order).",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert all added transaction comments have comment public_data.comment (normalize_text=True)",
+        "label": "no_op_fail"
+      }
+    ],
+    "failures": []
+  },
+  "b7a9ee9_1": {
+    "success": true,
+    "difficulty": 2,
+    "num_tests": 4,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match spotify.UserArtistFollowing.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, removed spotify.UserArtistFollowing records using models.changed_records\nand assert 0 have been removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert artist_ids of the added artist followings match private_data.to_be_followed_artist_ids.",
+        "label": "no_op_fail"
+      }
+    ],
+    "failures": []
+  },
+  "b7a9ee9_2": {
+    "success": true,
+    "difficulty": 2,
+    "num_tests": 4,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match spotify.UserArtistFollowing.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, removed spotify.UserArtistFollowing records using models.changed_records\nand assert 0 have been removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert artist_ids of the added artist followings match private_data.to_be_followed_artist_ids.",
+        "label": "no_op_fail"
+      }
+    ],
+    "failures": []
+  },
+  "b7a9ee9_3": {
+    "success": true,
+    "difficulty": 2,
+    "num_tests": 4,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match spotify.UserArtistFollowing.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, removed spotify.UserArtistFollowing records using models.changed_records\nand assert 0 have been removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert artist_ids of the added artist followings match private_data.to_be_followed_artist_ids.",
+        "label": "no_op_fail"
+      }
+    ],
+    "failures": []
+  },
+  "ce359b5_1": {
+    "success": false,
+    "difficulty": 2,
+    "num_tests": 8,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, updated, removed spotify.UserLibrarySong records using models.changed_records,\nand assert 0 have been added or updated.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "obtain added, updated, removed spotify.PlaylistSong records using models.changed_records,\nand assert 0 have been added or updated.",
+        "label": "no_op_pass"
+      }
+    ],
+    "failures": [
+      {
+        "requirement": "assert model changes match spotify.UserLibrarySong, spotify.PlaylistSong.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert model changes match spotify.UserLibrarySong, spotify.PlaylistSong.\n    \"\"\"\n):\n    test.case(\n        models.changed_model_names(),\n        \"==\",\n```\n----------\nAssertionError:\n{'spotify.UserLibrarySong'}\n==\n{'spotify.UserLibrarySong', 'spotify.PlaylistSong'}\n\nIn right but not left:\n['spotify.PlaylistSong']",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert song_ids of the removed library songs match private_data.to_delete_library_song_link_ids.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert song_ids of the removed library songs match private_data.to_delete_library_song_link_ids.\n    \"\"\"\n):\n    removed_library_song_ids = set_of(removed_library_songs, \"song_id\")\n    test.case(removed_library_song_ids, \"==\", set(private_data.to_delete_library_song_link_ids))\n```\n----------\nAssertionError:\n{4, 294, 103, 199, 9, 265, 301, 110, 15, 207, 208, 87, 151, 28}\n==\n{294, 199, 301, 110, 208}\n\nIn left but not right:\n[4, 103, 9, 265, 15, 207, 87, 151, 28]",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert id of the removed playlist_songs match private_data.to_delete_playlist_song_link_ids.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert id of the removed playlist_songs match private_data.to_delete_playlist_song_link_ids.\n    \"\"\"\n):\n    removed_playlist_song_ids = set_of(removed_playlist_songs, \"id\")\n    test.case(\n        removed_playlist_song_ids,\n```\n----------\nAssertionError:  set() == {1415, 1420, 1424, 1425, 1401, 1435, 1404, 1437, 1436}\n\nIn right but not left:\n[1415, 1420, 1424, 1425, 1401, 1435, 1404, 1437, 1436]",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "if public_data.before_after is \"after\",\nassert all songs in song library are released on or before public_data.year, in the end state.\nif public_data.before_after is \"before\",\nassert all songs in song library are released on or after public_data.year, in the end state.\nif public_data.before_after is \"in or after\",\nassert all songs in song library are released on before public_data.year, in the end state.\nif public_data.before_after is \"in or before\",\nassert all songs in song library are released on after public_data.year, in the end state.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    if public_data.before_after is \"after\",\n    assert all songs in song library are released on or before public_data.year, in the end state.\n    if public_data.before_after is \"before\",\n    assert all songs in song library are released on or after public_data.year, in the end state.\n    if public_data.before_after is \"in or after\",\n    assert all songs in song library are released on before public_data.year, in the end state.\n```\n----------\nAssertionError: The left modifier is 'all' with allow_left_empty=False, but left operand is empty.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "if public_data.before_after is \"after\",\nassert all songs in playlists are released on or before public_data.year, in the end state.\nif public_data.before_after is \"before\",\nassert all songs in playlists are released on or after public_data.year, in the end state.\nif public_data.before_after is \"in or after\",\nassert all songs in playlists are released on before public_data.year, in the end state.\nif public_data.before_after is \"in or before\",\nassert all songs in playlists are released on after public_data.year, in the end state.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    if public_data.before_after is \"after\",\n    assert all songs in playlists are released on or before public_data.year, in the end state.\n    if public_data.before_after is \"before\",\n    assert all songs in playlists are released on or after public_data.year, in the end state.\n    if public_data.before_after is \"in or after\",\n    assert all songs in playlists are released on before public_data.year, in the end state.\n```\n----------\nAssertionError:  2020 >= 2021",
+        "label": "no_op_fail"
+      }
+    ]
+  },
+  "ce359b5_2": {
+    "success": false,
+    "difficulty": 2,
+    "num_tests": 8,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, updated, removed spotify.UserLibrarySong records using models.changed_records,\nand assert 0 have been added or updated.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "obtain added, updated, removed spotify.PlaylistSong records using models.changed_records,\nand assert 0 have been added or updated.",
+        "label": "no_op_pass"
+      }
+    ],
+    "failures": [
+      {
+        "requirement": "assert model changes match spotify.UserLibrarySong, spotify.PlaylistSong.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert model changes match spotify.UserLibrarySong, spotify.PlaylistSong.\n    \"\"\"\n):\n    test.case(\n        models.changed_model_names(),\n        \"==\",\n```\n----------\nAssertionError:  set() == {'spotify.UserLibrarySong', 'spotify.PlaylistSong'}\n\nIn right but not left:\n['spotify.UserLibrarySong', 'spotify.PlaylistSong']",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert song_ids of the removed library songs match private_data.to_delete_library_song_link_ids.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert song_ids of the removed library songs match private_data.to_delete_library_song_link_ids.\n    \"\"\"\n):\n    removed_library_song_ids = set_of(removed_library_songs, \"song_id\")\n    test.case(removed_library_song_ids, \"==\", set(private_data.to_delete_library_song_link_ids))\n```\n----------\nAssertionError:  set() == {236, 28, 81, 53, 182, 124, 157}\n\nIn right but not left:\n[236, 28, 81, 53, 182, 124, 157]",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert id of the removed playlist_songs match private_data.to_delete_playlist_song_link_ids.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert id of the removed playlist_songs match private_data.to_delete_playlist_song_link_ids.\n    \"\"\"\n):\n    removed_playlist_song_ids = set_of(removed_playlist_songs, \"id\")\n    test.case(\n        removed_playlist_song_ids,\n```\n----------\nAssertionError:\nset()\n==\n{2992, 2994, 2996, 2997, 3000, 3002, 3009, 3011, 3013, 3014, 3018, 3022, 3023, 3025, 3026, 3027, 3030, 3031, 3033, 3036, 3038, 3042, 3043, 3044, 3045, 3048, 3051}\n\nIn right but not left:\n[2992, 2994, 2996, 2997, 3000, 3002, 3009, 3011, 3013, 3014, 3018, 3022, 3023, 3025, 3026, 3027, 3030, 3031, 3033, 3036, 3038, 3042, 3043, 3044, 3045, 3048, 3051]",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "if public_data.before_after is \"after\",\nassert all songs in song library are released on or before public_data.year, in the end state.\nif public_data.before_after is \"before\",\nassert all songs in song library are released on or after public_data.year, in the end state.\nif public_data.before_after is \"in or after\",\nassert all songs in song library are released on before public_data.year, in the end state.\nif public_data.before_after is \"in or before\",\nassert all songs in song library are released on after public_data.year, in the end state.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    if public_data.before_after is \"after\",\n    assert all songs in song library are released on or before public_data.year, in the end state.\n    if public_data.before_after is \"before\",\n    assert all songs in song library are released on or after public_data.year, in the end state.\n    if public_data.before_after is \"in or after\",\n    assert all songs in song library are released on before public_data.year, in the end state.\n```\n----------\nAssertionError:  2022 <= 2021",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "if public_data.before_after is \"after\",\nassert all songs in playlists are released on or before public_data.year, in the end state.\nif public_data.before_after is \"before\",\nassert all songs in playlists are released on or after public_data.year, in the end state.\nif public_data.before_after is \"in or after\",\nassert all songs in playlists are released on before public_data.year, in the end state.\nif public_data.before_after is \"in or before\",\nassert all songs in playlists are released on after public_data.year, in the end state.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    if public_data.before_after is \"after\",\n    assert all songs in playlists are released on or before public_data.year, in the end state.\n    if public_data.before_after is \"before\",\n    assert all songs in playlists are released on or after public_data.year, in the end state.\n    if public_data.before_after is \"in or after\",\n    assert all songs in playlists are released on before public_data.year, in the end state.\n```\n----------\nAssertionError:  2022 <= 2021",
+        "label": "no_op_fail"
+      }
+    ]
+  },
+  "ce359b5_3": {
+    "success": true,
+    "difficulty": 2,
+    "num_tests": 8,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match spotify.UserLibrarySong, spotify.PlaylistSong.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, updated, removed spotify.UserLibrarySong records using models.changed_records,\nand assert 0 have been added or updated.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert song_ids of the removed library songs match private_data.to_delete_library_song_link_ids.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, updated, removed spotify.PlaylistSong records using models.changed_records,\nand assert 0 have been added or updated.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert id of the removed playlist_songs match private_data.to_delete_playlist_song_link_ids.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "if public_data.before_after is \"after\",\nassert all songs in song library are released on or before public_data.year, in the end state.\nif public_data.before_after is \"before\",\nassert all songs in song library are released on or after public_data.year, in the end state.\nif public_data.before_after is \"in or after\",\nassert all songs in song library are released on before public_data.year, in the end state.\nif public_data.before_after is \"in or before\",\nassert all songs in song library are released on after public_data.year, in the end state.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "if public_data.before_after is \"after\",\nassert all songs in playlists are released on or before public_data.year, in the end state.\nif public_data.before_after is \"before\",\nassert all songs in playlists are released on or after public_data.year, in the end state.\nif public_data.before_after is \"in or after\",\nassert all songs in playlists are released on before public_data.year, in the end state.\nif public_data.before_after is \"in or before\",\nassert all songs in playlists are released on after public_data.year, in the end state.",
+        "label": "no_op_fail"
+      }
+    ],
+    "failures": []
+  },
+  "229360a_1": {
+    "success": false,
+    "difficulty": 2,
+    "num_tests": 6,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, removed spotify.UserLibrarySong records using models.changed_records,\nand assert 0 have been added.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert all removed song_ids match private_data.to_remove_library_song_ids (ignore_order)",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, removed spotify.UserLibraryAlbum records using models.changed_records,\nand assert 0 have been added.",
+        "label": "no_op_pass"
+      }
+    ],
+    "failures": [
+      {
+        "requirement": "assert model changes match spotify.UserLibrarySong, spotify.UserLibraryAlbum.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert model changes match spotify.UserLibrarySong, spotify.UserLibraryAlbum.\n    \"\"\"\n):\n    test.case(\n        models.changed_model_names(),\n        \"==\",\n```\n----------\nAssertionError:\n{'spotify.UserLibrarySong'}\n==\n{'spotify.UserLibrarySong', 'spotify.UserLibraryAlbum'}\n\nIn right but not left:\n['spotify.UserLibraryAlbum']",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert all removed album_ids match private_data.to_remove_library_album_ids (ignore_order)",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert all removed album_ids match private_data.to_remove_library_album_ids (ignore_order)\n    \"\"\"\n):\n    removed_library_album_ids = list_of(removed_library_albums, \"album_id\")\n    test.case(\n        removed_library_album_ids,\n```\n----------\nAssertionError:  [] == [4, 10, 15, 18]\n\nIn right but not left:\n[4, 10, 15, 18]\n\nOriginal values:\n[] == [10, 18, 4, 15]",
+        "label": "no_op_fail"
+      }
+    ]
+  },
+  "229360a_2": {
+    "success": false,
+    "difficulty": 2,
+    "num_tests": 6,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match spotify.UserLibrarySong, spotify.UserLibraryAlbum.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, removed spotify.UserLibrarySong records using models.changed_records,\nand assert 0 have been added.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "obtain added, removed spotify.UserLibraryAlbum records using models.changed_records,\nand assert 0 have been added.",
+        "label": "no_op_pass"
+      }
+    ],
+    "failures": [
+      {
+        "requirement": "assert all removed song_ids match private_data.to_remove_library_song_ids (ignore_order)",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert all removed song_ids match private_data.to_remove_library_song_ids (ignore_order)\n    \"\"\"\n):\n    removed_library_song_ids = list_of(removed_library_songs, \"song_id\")\n    test.case(\n        removed_library_song_ids,\n```\n----------\nAssertionError:\n[16, 21, 42, 63, 65, 73, 109, 135, 147, 150, 165, 212, 225, 257, 294, 302]\n==\n[16, 21, 42, 63, 65, 73, 135, 147, 150, 165, 225, 257, 302]\n\nIn left but not right:\n[109, 212, 294]\n\nOriginal values:\n[150, 135, 73, 42, 65, 225, 63, 21, 257, 16, 294, 302, 147, 109, 212, 165]\n==\n[65, 257, 135, 73, 16, 147, 21, 150, 225, 165, 42, 302, 63]",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert all removed album_ids match private_data.to_remove_library_album_ids (ignore_order)",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert all removed album_ids match private_data.to_remove_library_album_ids (ignore_order)\n    \"\"\"\n):\n    removed_library_album_ids = list_of(removed_library_albums, \"album_id\")\n    test.case(\n        removed_library_album_ids,\n```\n----------\nAssertionError:  [6, 7, 12, 14] == [2, 3, 6, 7, 12, 14]\n\nIn right but not left:\n[2, 3]\n\nOriginal values:\n[14, 7, 12, 6] == [2, 3, 6, 7, 12, 14]",
+        "label": "no_op_fail"
+      }
+    ]
+  },
+  "229360a_3": {
+    "success": false,
+    "difficulty": 2,
+    "num_tests": 6,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match spotify.UserLibrarySong, spotify.UserLibraryAlbum.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, removed spotify.UserLibrarySong records using models.changed_records,\nand assert 0 have been added.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "obtain added, removed spotify.UserLibraryAlbum records using models.changed_records,\nand assert 0 have been added.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert all removed album_ids match private_data.to_remove_library_album_ids (ignore_order)",
+        "label": "no_op_fail"
+      }
+    ],
+    "failures": [
+      {
+        "requirement": "assert all removed song_ids match private_data.to_remove_library_song_ids (ignore_order)",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert all removed song_ids match private_data.to_remove_library_song_ids (ignore_order)\n    \"\"\"\n):\n    removed_library_song_ids = list_of(removed_library_songs, \"song_id\")\n    test.case(\n        removed_library_song_ids,\n```\n----------\nAssertionError:\n[23, 105, 139, 143, 149, 214, 228, 259, 310, 319]\n==\n[23, 105, 139, 143, 214, 259, 310]\n\nIn left but not right:\n[149, 228, 319]\n\nOriginal values:\n[23, 319, 149, 214, 228, 259, 139, 105, 143, 310]\n==\n[259, 105, 139, 143, 214, 23, 310]",
+        "label": "no_op_fail"
+      }
+    ]
+  },
+  "07b42fd_1": {
+    "success": true,
+    "difficulty": 1,
+    "num_tests": 5,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match spotify.ArtistFollowing.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, _, removed spotify.ArtistFollowing records using models.changed_records,\nand assert 0 have been removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert all artists from added artist follows are of public_data.genre genre.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert all artists from added artist follows have >= public_data.min_followers followers.",
+        "label": "no_op_fail"
+      }
+    ],
+    "failures": []
+  },
+  "07b42fd_2": {
+    "success": true,
+    "difficulty": 1,
+    "num_tests": 5,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match spotify.ArtistFollowing.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, _, removed spotify.ArtistFollowing records using models.changed_records,\nand assert 0 have been removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert all artists from added artist follows are of public_data.genre genre.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert all artists from added artist follows have >= public_data.min_followers followers.",
+        "label": "no_op_fail"
+      }
+    ],
+    "failures": []
+  },
+  "07b42fd_3": {
+    "success": true,
+    "difficulty": 1,
+    "num_tests": 5,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match spotify.ArtistFollowing.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, _, removed spotify.ArtistFollowing records using models.changed_records,\nand assert 0 have been removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert all artists from added artist follows are of public_data.genre genre.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert all artists from added artist follows have >= public_data.min_followers followers.",
+        "label": "no_op_fail"
+      }
+    ],
+    "failures": []
+  },
+  "3c13f5a_1": {
+    "success": true,
+    "difficulty": 3,
+    "num_tests": 6,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match venmo.Notification, venmo.PaymentRequest.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, updated, removed venmo.PaymentRequest records using models.changed_records,\nand assert 0 were updated or removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert all added payment requests's receivers match private_data.roommate_venmo_user_ids.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert all added payment requests's amounts\nmatch private_data.this_month_bill_share (tolerance=0.51)",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert all added payment requests's notes match public_data.note (normalize_text=True).",
+        "label": "no_op_fail"
+      }
+    ],
+    "failures": []
+  },
+  "3c13f5a_2": {
+    "success": false,
+    "difficulty": 3,
+    "num_tests": 6,
+    "passes": [
+      {
+        "requirement": "obtain added, updated, removed venmo.PaymentRequest records using models.changed_records,\nand assert 0 were updated or removed.",
+        "label": "no_op_pass"
+      }
+    ],
+    "failures": [
+      {
+        "requirement": "assert answers match.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert answers match.\n    \"\"\"\n):\n    test.answer(predicted_answer, ground_truth_answer)\n```\n----------\nAssertionError:  '<<not_given>>' == 'null'",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match venmo.Notification, venmo.PaymentRequest.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert model changes match venmo.Notification, venmo.PaymentRequest.\n    \"\"\"\n):\n    changed_model_names = models.changed_model_names()\n    test.case(changed_model_names, \"==\", {\"venmo.Notification\", \"venmo.PaymentRequest\"})\n```\n----------\nAssertionError:  set() == {'venmo.Notification', 'venmo.PaymentRequest'}\n\nIn right but not left:\n['venmo.Notification', 'venmo.PaymentRequest']",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert all added payment requests's receivers match private_data.roommate_venmo_user_ids.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert all added payment requests's receivers match private_data.roommate_venmo_user_ids.\n    \"\"\"\n):\n    added_receiver_ids = set_of(added_payment_requests, \"receiver_id\")\n    test.case(added_receiver_ids, \"==\", set(private_data.roommate_venmo_user_ids))\n```\n----------\nAssertionError:  set() == {25, 3, 14}\n\nIn right but not left:\n[25, 3, 14]",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert all added payment requests's amounts\nmatch private_data.this_month_bill_share (tolerance=0.51)",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert all added payment requests's amounts\n    match private_data.this_month_bill_share (tolerance=0.51)\n    \"\"\"\n):\n    added_amounts = list_of(added_payment_requests, \"amount\")\n    test.case(added_amounts, \"all ==\", private_data.this_month_bill_share, tolerance=0.51)\n```\n----------\nAssertionError: The left modifier is 'all' with allow_left_empty=False, but left operand is empty.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert all added payment requests's notes match public_data.note (normalize_text=True).",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert all added payment requests's notes match public_data.note (normalize_text=True).\n    \"\"\"\n):\n    added_notes = list_of(added_payment_requests, \"description\")\n```\n----------\nAssertionError: The left modifier is 'all' with allow_left_empty=False, but left operand is empty.",
+        "label": "no_op_fail"
+      }
+    ]
+  },
+  "3c13f5a_3": {
+    "success": false,
+    "difficulty": 3,
+    "num_tests": 6,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, updated, removed venmo.PaymentRequest records using models.changed_records,\nand assert 0 were updated or removed.",
+        "label": "no_op_pass"
+      }
+    ],
+    "failures": [
+      {
+        "requirement": "assert model changes match venmo.Notification, venmo.PaymentRequest.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert model changes match venmo.Notification, venmo.PaymentRequest.\n    \"\"\"\n):\n    changed_model_names = models.changed_model_names()\n    test.case(changed_model_names, \"==\", {\"venmo.Notification\", \"venmo.PaymentRequest\"})\n```\n----------\nAssertionError:\n{'venmo.Transaction', 'venmo.User', 'venmo.Notification'}\n==\n{'venmo.Notification', 'venmo.PaymentRequest'}\n\nIn left but not right:\n['venmo.Transaction', 'venmo.User']\n\nIn right but not left:\n['venmo.PaymentRequest']",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert all added payment requests's receivers match private_data.roommate_venmo_user_ids.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert all added payment requests's receivers match private_data.roommate_venmo_user_ids.\n    \"\"\"\n):\n    added_receiver_ids = set_of(added_payment_requests, \"receiver_id\")\n    test.case(added_receiver_ids, \"==\", set(private_data.roommate_venmo_user_ids))\n```\n----------\nAssertionError:  set() == {73, 42, 91}\n\nIn right but not left:\n[73, 42, 91]",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert all added payment requests's amounts\nmatch private_data.this_month_bill_share (tolerance=0.51)",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert all added payment requests's amounts\n    match private_data.this_month_bill_share (tolerance=0.51)\n    \"\"\"\n):\n    added_amounts = list_of(added_payment_requests, \"amount\")\n    test.case(added_amounts, \"all ==\", private_data.this_month_bill_share, tolerance=0.51)\n```\n----------\nAssertionError: The left modifier is 'all' with allow_left_empty=False, but left operand is empty.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert all added payment requests's notes match public_data.note (normalize_text=True).",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert all added payment requests's notes match public_data.note (normalize_text=True).\n    \"\"\"\n):\n    added_notes = list_of(added_payment_requests, \"description\")\n```\n----------\nAssertionError: The left modifier is 'all' with allow_left_empty=False, but left operand is empty.",
+        "label": "no_op_fail"
+      }
+    ]
+  },
+  "cf6abd2_1": {
+    "success": true,
+    "difficulty": 1,
+    "num_tests": 8,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match simple_note.Note.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, updated, removed simple_note.Note records using models.changed_records,\nand assert 0 were added or removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert exactly 1 simple_note.Note was updated.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert the updated note's id matches data.private.note_id.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert the updated note's content first line after stripping matches data.private.note_header_line.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert the updated note's content rest of the lines after stripping\nmatches data.private.note_body_lines (normalize_text=True).",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtained changed_field_names of the updated note and assure none of them are in\n[\"title\", \"tags\", \"pinned\"].",
+        "label": "no_op_fail"
+      }
+    ],
+    "failures": []
+  },
+  "cf6abd2_2": {
+    "success": true,
+    "difficulty": 1,
+    "num_tests": 8,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match simple_note.Note.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, updated, removed simple_note.Note records using models.changed_records,\nand assert 0 were added or removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert exactly 1 simple_note.Note was updated.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert the updated note's id matches data.private.note_id.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert the updated note's content first line after stripping matches data.private.note_header_line.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert the updated note's content rest of the lines after stripping\nmatches data.private.note_body_lines (normalize_text=True).",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtained changed_field_names of the updated note and assure none of them are in\n[\"title\", \"tags\", \"pinned\"].",
+        "label": "no_op_fail"
+      }
+    ],
+    "failures": []
+  },
+  "cf6abd2_3": {
+    "success": true,
+    "difficulty": 1,
+    "num_tests": 8,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match simple_note.Note.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, updated, removed simple_note.Note records using models.changed_records,\nand assert 0 were added or removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert exactly 1 simple_note.Note was updated.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert the updated note's id matches data.private.note_id.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert the updated note's content first line after stripping matches data.private.note_header_line.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert the updated note's content rest of the lines after stripping\nmatches data.private.note_body_lines (normalize_text=True).",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtained changed_field_names of the updated note and assure none of them are in\n[\"title\", \"tags\", \"pinned\"].",
+        "label": "no_op_fail"
+      }
+    ],
+    "failures": []
+  },
+  "e7a10f8_1": {
+    "success": false,
+    "difficulty": 1,
+    "num_tests": 2,
+    "passes": [
+      {
+        "requirement": "assert no model changes.",
+        "label": "no_op_pass"
+      }
+    ],
+    "failures": [
+      {
+        "requirement": "assert answers match.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert answers match.\n    \"\"\"\n):\n    test.answer(predicted_answer, ground_truth_answer)\n```\n----------\nAssertionError:  '<<not_given>>' == '34'",
+        "label": "no_op_fail"
+      }
+    ]
+  },
+  "e7a10f8_2": {
+    "success": true,
+    "difficulty": 1,
+    "num_tests": 2,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert no model changes.",
+        "label": "no_op_pass"
+      }
+    ],
+    "failures": []
+  },
+  "e7a10f8_3": {
+    "success": true,
+    "difficulty": 1,
+    "num_tests": 2,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert no model changes.",
+        "label": "no_op_pass"
+      }
+    ],
+    "failures": []
+  },
+  "6ea6792_1": {
+    "success": true,
+    "difficulty": 1,
+    "num_tests": 6,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match venmo.Notification, venmo.PaymentRequest,\nignoring venmo.User, venmo.Transaction.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, updated, removed venmo.PaymentRequest records using models.changed_records,\nand assert 0 requests were added or removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "assert set of updated payment request ids match exactly\nto private_data.to_accept_payment_request_ids (ignore order).",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "if public_data.accept_reject is \"accept\", assert all these payment request\nare approved in the end state, otherwise,\nassert all these payment request are rejected in the end state.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "if public_data.accept_reject is \"accept\", assert only field that has changed in these\npayment_requests is approved_at using models.changed_field_names. otherwise,\nassert only field that has changed in these payment_requests is denied_at using models.changed_field_names.",
+        "label": "no_op_fail"
+      }
+    ],
+    "failures": []
+  },
+  "6ea6792_2": {
+    "success": false,
+    "difficulty": 1,
+    "num_tests": 6,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, updated, removed venmo.PaymentRequest records using models.changed_records,\nand assert 0 requests were added or removed.",
+        "label": "no_op_pass"
+      }
+    ],
+    "failures": [
+      {
+        "requirement": "assert model changes match venmo.Notification, venmo.PaymentRequest,\nignoring venmo.User, venmo.Transaction.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert model changes match venmo.Notification, venmo.PaymentRequest,\n    ignoring venmo.User, venmo.Transaction.\n    \"\"\"\n):\n    test.case(\n        models.changed_model_names(ignore=[\"venmo.User\", \"venmo.Transaction\"]),\n```\n----------\nAssertionError:  set() == {'venmo.Notification', 'venmo.PaymentRequest'}\n\nIn right but not left:\n['venmo.Notification', 'venmo.PaymentRequest']",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert set of updated payment request ids match exactly\nto private_data.to_accept_payment_request_ids (ignore order).",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert set of updated payment request ids match exactly\n    to private_data.to_accept_payment_request_ids (ignore order).\n    \"\"\"\n):\n    updated_payment_request_ids = list_of(updated_payment_requests, \"id\")\n    test.case(\n```\n----------\nAssertionError:\n[]\n==\n[304, 953, 956, 1843, 1844, 1846, 4152, 4155, 5565, 5566, 5567, 5568, 6034, 6037]\n\nIn right but not left:\n[304, 953, 956, 1843, 1844, 1846, 4152, 4155, 5565, 5566, 5567, 5568, 6034, 6037]",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "if public_data.accept_reject is \"accept\", assert all these payment request\nare approved in the end state, otherwise,\nassert all these payment request are rejected in the end state.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    if public_data.accept_reject is \"accept\", assert all these payment request\n    are approved in the end state, otherwise,\n    assert all these payment request are rejected in the end state.\n    \"\"\"\n):\n    expected_field_name = (\n```\n----------\nAssertionError: The left modifier is 'all' with allow_left_empty=False, but left operand is empty.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "if public_data.accept_reject is \"accept\", assert only field that has changed in these\npayment_requests is approved_at using models.changed_field_names. otherwise,\nassert only field that has changed in these payment_requests is denied_at using models.changed_field_names.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    if public_data.accept_reject is \"accept\", assert only field that has changed in these\n    payment_requests is approved_at using models.changed_field_names. otherwise,\n    assert only field that has changed in these payment_requests is denied_at using models.changed_field_names.\n    \"\"\"\n):\n    all_changed_fields = [\n```\n----------\nAssertionError: The left modifier is 'all' with allow_left_empty=False, but left operand is empty.",
+        "label": "no_op_fail"
+      }
+    ]
+  },
+  "6ea6792_3": {
+    "success": false,
+    "difficulty": 1,
+    "num_tests": 6,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match venmo.Notification, venmo.PaymentRequest,\nignoring venmo.User, venmo.Transaction.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, updated, removed venmo.PaymentRequest records using models.changed_records,\nand assert 0 requests were added or removed.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "if public_data.accept_reject is \"accept\", assert all these payment request\nare approved in the end state, otherwise,\nassert all these payment request are rejected in the end state.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "if public_data.accept_reject is \"accept\", assert only field that has changed in these\npayment_requests is approved_at using models.changed_field_names. otherwise,\nassert only field that has changed in these payment_requests is denied_at using models.changed_field_names.",
+        "label": "no_op_fail"
+      }
+    ],
+    "failures": [
+      {
+        "requirement": "assert set of updated payment request ids match exactly\nto private_data.to_accept_payment_request_ids (ignore order).",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert set of updated payment request ids match exactly\n    to private_data.to_accept_payment_request_ids (ignore order).\n    \"\"\"\n):\n    updated_payment_request_ids = list_of(updated_payment_requests, \"id\")\n    test.case(\n```\n----------\nAssertionError:\n[753, 755, 756, 3461, 3462, 3463, 3464, 3470, 3798, 3803, 3804, 4168, 4169, 4170, 4173, 4174, 4176, 4917, 5467, 5469, 5764, 5767, 5768, 5771, 5772, 5966]\n==\n[3798, 3803, 3804, 4168, 4169, 4170, 4173, 4174, 4176, 4917, 5467, 5469, 5764, 5767, 5768, 5771, 5772, 5966]\n\nIn left but not right:\n[753, 755, 756, 3461, 3462, 3463, 3464, 3470]",
+        "label": "no_op_fail"
+      }
+    ]
+  },
+  "aa8502b_1": {
+    "success": false,
+    "difficulty": 2,
+    "num_tests": 4,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match spotify.UserArtistFollowing.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, removed spotify.UserArtistFollowing records using models.changed_records, then,\nif public_data.action is \"Follow\", assert 0 have been removed,\nif public_data.action is \"Unfollow\", assert 0 have been added.",
+        "label": "no_op_pass"
+      }
+    ],
+    "failures": [
+      {
+        "requirement": "if public_data.action is \"Follow\",\nassert IDs of added artist followings match private_data.to_be_acted_upon_artist_ids (ignore_order),\nif public_data.action is \"Unfollow\",\nassert IDs of removed artist followings match private_data.to_be_acted_upon_artist_ids (ignore_order).",
+        "trace": "```python\nwith test(\n    \"\"\"\n    if public_data.action is \"Follow\",\n    assert IDs of added artist followings match private_data.to_be_acted_upon_artist_ids (ignore_order),\n    if public_data.action is \"Unfollow\",\n    assert IDs of removed artist followings match private_data.to_be_acted_upon_artist_ids (ignore_order).\n    \"\"\"\n):\n```\n----------\nAssertionError:\n[1, 2, 4, 5, 6, 7, 9, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 23, 24, 25, 26, 29, 31, 32, 35, 36]\n==\n[1, 2, 4, 5, 6, 7, 9, 11, 12, 13, 14, 15, 16]\n\nIn left but not right:\n[17, 19, 20, 21, 23, 24, 25, 26, 29, 31, 32, 35, 36]\n\nOriginal values:\n[7, 12, 21, 25, 26, 13, 17, 24, 1, 15, 2, 36, 23, 11, 4, 29, 9, 31, 14, 16, 35, 6, 20, 5, 19, 32]\n==\n[1, 2, 4, 5, 6, 7, 9, 11, 12, 13, 14, 15, 16]",
+        "label": "no_op_fail"
+      }
+    ]
+  },
+  "aa8502b_2": {
+    "success": true,
+    "difficulty": 2,
+    "num_tests": 4,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match spotify.UserArtistFollowing.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, removed spotify.UserArtistFollowing records using models.changed_records, then,\nif public_data.action is \"Follow\", assert 0 have been removed,\nif public_data.action is \"Unfollow\", assert 0 have been added.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "if public_data.action is \"Follow\",\nassert IDs of added artist followings match private_data.to_be_acted_upon_artist_ids (ignore_order),\nif public_data.action is \"Unfollow\",\nassert IDs of removed artist followings match private_data.to_be_acted_upon_artist_ids (ignore_order).",
+        "label": "no_op_fail"
+      }
+    ],
+    "failures": []
+  },
+  "aa8502b_3": {
+    "success": true,
+    "difficulty": 2,
+    "num_tests": 4,
+    "passes": [
+      {
+        "requirement": "assert answers match.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match spotify.UserArtistFollowing.",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "obtain added, removed spotify.UserArtistFollowing records using models.changed_records, then,\nif public_data.action is \"Follow\", assert 0 have been removed,\nif public_data.action is \"Unfollow\", assert 0 have been added.",
+        "label": "no_op_pass"
+      },
+      {
+        "requirement": "if public_data.action is \"Follow\",\nassert IDs of added artist followings match private_data.to_be_acted_upon_artist_ids (ignore_order),\nif public_data.action is \"Unfollow\",\nassert IDs of removed artist followings match private_data.to_be_acted_upon_artist_ids (ignore_order).",
+        "label": "no_op_fail"
+      }
+    ],
+    "failures": []
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "schema_version": "dynamic-cfst-step05-package-manifest-v1",
+  "package": "CFST-state",
+  "seed": 20260928,
+  "order_policy": "filter one globally shuffled 20-sample order",
+  "sample_count": 12,
+  "task_ids_in_order": [
+    "2a163ab_3",
+    "b0a8eae_1",
+    "7d7fbf6_1",
+    "ccb4494_2",
+    "2a163ab_2",
+    "d0b1f43_2",
+    "76f2c72_1",
+    "b0a8eae_3",
+    "d0b1f43_1",
+    "302c169_2",
+    "692c77d_3",
+    "2a163ab_1"
+  ],
+  "train_sha256": "6b77845aff83a1d4103de30a92f723142c508ec183b1537ce5ed1bba434c0c00",
+  "loss_policy": "assistant_completion_only",
+  "unique_samples_only": true,
+  "stats": {
+    "sample_count": 12,
+    "unique_task_count": 12,
+    "unique_family_count": 8,
+    "family_ids": [
+      "2a163ab",
+      "302c169",
+      "692c77d",
+      "76f2c72",
+      "7d7fbf6",
+      "b0a8eae",
+      "ccb4494",
+      "d0b1f43"
+    ],
+    "capability_counts": {
+      "状态构建": 12
+    },
+    "prompt_tokens_sum": 99928,
+    "supervised_completion_tokens_sum": 1826,
+    "full_tokens_sum_one_pass": 101754,
+    "completion_tokens": {
+      "min": 61,
+      "p50": 154,
+      "max": 294
+    },
+    "full_tokens": {
+      "min": 5786,
+      "max": 11256
+    },
+    "samples_over_40960": 0,
+    "suggested_step06_supervised_token_budget": 8000,
+    "repetition_schedule": "deferred_to_step06; train.jsonl contains unique samples only"
+  }
+}

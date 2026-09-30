@@ -1,0 +1,58 @@
+{
+  "schema_version": "dynamic-cfst-step04a-repair-attempt-v1",
+  "candidate_rank": 15,
+  "selection": "review_queue_18",
+  "primary_label_before_execution": "参数错误",
+  "task_id": "29caf6f_3",
+  "family_id": "29caf6f",
+  "replace_action_index_1based": 19,
+  "started_at_utc": "2026-09-28T11:02:46.183570+00:00",
+  "finished_at_utc": "2026-09-28T11:03:26.054995+00:00",
+  "prefix_replay_actions": 18,
+  "prefix_replay_success": true,
+  "replay_error": null,
+  "teacher": {
+    "provider": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "called": true,
+    "response": {
+      "reasoning": "Read the full content of the uniquely identified “Movie Recommendations” note before constructing or sending Leslie’s reply.",
+      "code": "movie_recommendations_summary = next(note for note in movie_note_summaries if note['title'].strip().lower() == 'movie recommendations')\nmovie_recommendations_note = apis.simple_note.show_note(\n    note_id=movie_recommendations_summary['note_id'],\n    access_token=simple_note_access_token\n)\nprint(movie_recommendations_note)\n",
+      "codex_elapsed_seconds": 0.0,
+      "codex_event_item_types": [
+        "agent_message"
+      ]
+    },
+    "ground_truth_visible": false,
+    "rejected_action_visible": false,
+    "later_trajectory_visible": false,
+    "official_failure_condition_visible": false
+  },
+  "student": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter",
+    "model_name": "appworld-codex-rft-train90-epoch5",
+    "temperature": 0,
+    "seed": 100,
+    "max_completion_tokens": 3000,
+    "max_model_len": 32000,
+    "max_total_actions": 50,
+    "continuation_actions": 12
+  },
+  "task_completed_signal": true,
+  "generation_error": null,
+  "official_evaluation": {
+    "success": false,
+    "num_tests": 8,
+    "num_passes": 6,
+    "num_failures": 2,
+    "pass_percentage": 75.0,
+    "difficulty": 2
+  },
+  "official_successful_repair": false,
+  "interaction_count_from_replacement": 13,
+  "interaction_log": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04a_expanded_repairs/attempts/rank15_29caf6f_3/interactions.jsonl",
+  "official_report": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04a_expanded_repairs/runtime/appworld_root/experiments/outputs/cfst_step04a_repair_rank15_29caf6f_3/tasks/29caf6f_3/evaluation/report.md",
+  "appworld_output_directory": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04a_expanded_repairs/runtime/appworld_root/experiments/outputs/cfst_step04a_repair_rank15_29caf6f_3/tasks/29caf6f_3"
+}

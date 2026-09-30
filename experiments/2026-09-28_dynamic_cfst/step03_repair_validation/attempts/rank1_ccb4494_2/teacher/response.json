@@ -1,0 +1,8 @@
+{
+  "reasoning": "Retrieve the full queue state now; its position and is_current fields are needed to identify every song played so far, including the current song, before inspecting and calling the like endpoint.",
+  "code": "song_queue = apis.spotify.show_song_queue(access_token=spotify_access_token)\nprint(song_queue)",
+  "codex_elapsed_seconds": 0.0,
+  "codex_event_item_types": [
+    "agent_message"
+  ]
+}

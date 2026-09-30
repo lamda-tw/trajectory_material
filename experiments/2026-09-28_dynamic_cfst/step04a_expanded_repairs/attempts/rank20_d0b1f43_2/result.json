@@ -1,0 +1,58 @@
+{
+  "schema_version": "dynamic-cfst-step04a-repair-attempt-v1",
+  "candidate_rank": 20,
+  "selection": "review_queue_23",
+  "primary_label_before_execution": "状态错误",
+  "task_id": "d0b1f43_2",
+  "family_id": "d0b1f43",
+  "replace_action_index_1based": 8,
+  "started_at_utc": "2026-09-28T11:05:02.501789+00:00",
+  "finished_at_utc": "2026-09-28T11:05:32.632285+00:00",
+  "prefix_replay_actions": 7,
+  "prefix_replay_success": true,
+  "replay_error": null,
+  "teacher": {
+    "provider": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "called": true,
+    "response": {
+      "reasoning": "The retrieved total includes payments from everyone, but the task asks only for payments from coworkers. The next step is to discover the Phone APIs needed to identify which contacts are coworkers before filtering the received Venmo transactions.",
+      "code": "print(apis.api_docs.show_api_descriptions(app_name='phone'))",
+      "codex_elapsed_seconds": 0.0,
+      "codex_event_item_types": [
+        "agent_message"
+      ]
+    },
+    "ground_truth_visible": false,
+    "rejected_action_visible": false,
+    "later_trajectory_visible": false,
+    "official_failure_condition_visible": false
+  },
+  "student": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter",
+    "model_name": "appworld-codex-rft-train90-epoch5",
+    "temperature": 0,
+    "seed": 100,
+    "max_completion_tokens": 3000,
+    "max_model_len": 32000,
+    "max_total_actions": 50,
+    "continuation_actions": 8
+  },
+  "task_completed_signal": true,
+  "generation_error": null,
+  "official_evaluation": {
+    "success": true,
+    "num_tests": 2,
+    "num_passes": 2,
+    "num_failures": 0,
+    "pass_percentage": 100.0,
+    "difficulty": 2
+  },
+  "official_successful_repair": true,
+  "interaction_count_from_replacement": 9,
+  "interaction_log": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04a_expanded_repairs/attempts/rank20_d0b1f43_2/interactions.jsonl",
+  "official_report": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04a_expanded_repairs/runtime/appworld_root/experiments/outputs/cfst_step04a_repair_rank20_d0b1f43_2/tasks/d0b1f43_2/evaluation/report.md",
+  "appworld_output_directory": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step04a_expanded_repairs/runtime/appworld_root/experiments/outputs/cfst_step04a_repair_rank20_d0b1f43_2/tasks/d0b1f43_2"
+}

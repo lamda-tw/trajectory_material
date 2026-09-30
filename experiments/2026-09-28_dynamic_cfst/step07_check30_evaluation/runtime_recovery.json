@@ -1,0 +1,17 @@
+{
+  "task_id": "afc0fce_3",
+  "branch": "CFST-state",
+  "reason": "AppWorld RequestTracker.save raises when API request data contains Python Ellipsis; environment action error was already generated but logging prevented it reaching student.",
+  "change": "Only on logging serialization ValueError, encode Ellipsis as a typed marker in on-disk API log. No mutation of API input, environment output, agent, scoring, prompt, or budget.",
+  "wrapper_sha256": "aa079097b0d244dd3ec41f85b578d7732927b47b8870a3e546170c494060c779",
+  "original_prefix_responses": 4,
+  "next_new_model_action": 5,
+  "max_total_steps": 50,
+  "teacher_calls": 0,
+  "branches_using_wrapper": [
+    "CFST-state",
+    "CFST-Mixed"
+  ],
+  "original_runner_unchanged": true,
+  "validation_passed": true
+}

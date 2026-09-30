@@ -1,0 +1,38 @@
+{
+  "schema_version": "dynamic-cfst-step06-reload-validation-v1",
+  "status": "PASS",
+  "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+  "prompt": "Reply with the single word OK.",
+  "branches": {
+    "CFST-state": {
+      "adapter_name": "state",
+      "input_tokens": 19,
+      "output_logits_shape": [
+        1,
+        151936
+      ],
+      "all_logits_finite": true,
+      "last_token_logits_sha256_float32": "0997bf9efda5d28c304050b3dcfa682ff89f97373f51afe99201835df60058d2"
+    },
+    "CFST-Action": {
+      "adapter_name": "action",
+      "input_tokens": 19,
+      "output_logits_shape": [
+        1,
+        151936
+      ],
+      "all_logits_finite": true,
+      "last_token_logits_sha256_float32": "66fd67f0e0cf904828e72aa4dc8ed10f2afdaf942eac309196788f400cba63c0"
+    },
+    "CFST-Mixed": {
+      "adapter_name": "mixed",
+      "input_tokens": 19,
+      "output_logits_shape": [
+        1,
+        151936
+      ],
+      "all_logits_finite": true,
+      "last_token_logits_sha256_float32": "cf002dd070ef932aec90486ad3c84cabe2467394f388ffd232dcbeb5c760f005"
+    }
+  }
+}

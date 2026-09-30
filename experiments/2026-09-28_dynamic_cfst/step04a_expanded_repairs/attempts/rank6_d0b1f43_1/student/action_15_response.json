@@ -1,0 +1,37 @@
+{
+  "id": "chatcmpl-e1aec116a8e64c72a31593b18e1e87f5",
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "The earlier transaction results are not retained, so I will retrieve all Venmo sent transactions since January 1, 2023, using the documented endpoint and proper pagination.\n\n```python\nsent_transactions = []\npage_index = 0\nwhile True:\n    page = apis.venmo.show_transactions(access_token=venmo_access_token, min_created_at=start_date, direction='sent', page_index=page_index, page_limit=20)\n    if not page:\n        break\n    sent_transactions.extend(page)\n    page_index += 1\nprint(sent_transactions)\n```\n\n",
+        "refusal": null,
+        "role": "assistant",
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [],
+        "reasoning_content": null
+      },
+      "stop_reason": null,
+      "token_ids": null
+    }
+  ],
+  "created": 1790593068,
+  "model": "appworld-codex-rft-train90-epoch5",
+  "object": "chat.completion",
+  "service_tier": null,
+  "system_fingerprint": null,
+  "usage": {
+    "completion_tokens": 119,
+    "prompt_tokens": 9563,
+    "total_tokens": 9682,
+    "completion_tokens_details": null,
+    "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "kv_transfer_params": null
+}

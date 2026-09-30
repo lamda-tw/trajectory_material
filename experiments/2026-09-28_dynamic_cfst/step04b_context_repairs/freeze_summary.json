@@ -1,0 +1,42 @@
+{
+  "schema_version": "dynamic-cfst-step04b-freeze-v1",
+  "qualified_samples": 20,
+  "step04a_and_earlier_imported": 16,
+  "step04b_new": 4,
+  "label_counts": {
+    "状态错误": 12,
+    "参数错误": 7,
+    "恢复错误": 1
+  },
+  "unique_family_counts": {
+    "状态错误": 8,
+    "参数错误": 5,
+    "恢复错误": 1
+  },
+  "target_per_label": [
+    8,
+    12
+  ],
+  "target_status": {
+    "状态错误": "met",
+    "参数错误": "shortfall",
+    "恢复错误": "shortfall"
+  },
+  "remaining_to_lower_bound": {
+    "状态错误": 0,
+    "参数错误": 1,
+    "恢复错误": 7
+  },
+  "source_non_context_failures_exhausted": true,
+  "source_context_failures_exhausted": true,
+  "all_source_failures_exhausted": true,
+  "fixed_context_queue_attempted": 8,
+  "fixed_context_queue_successes": 4,
+  "new_parameter_successes": 0,
+  "new_recovery_successes": 0,
+  "check_split_teacher_answers": 0,
+  "dev57_teacher_answers": 0,
+  "training_runs": 0,
+  "training_gate_passed": false,
+  "stop_reason_zh": "固定8个上下文失败已耗尽；新增4条均为状态错误，参数仍差1条、恢复仍差7条。按预设门槛停止，不进入训练。"
+}

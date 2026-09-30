@@ -1,0 +1,8 @@
+{
+  "reasoning": "Compress each immediate vacation-spot subdirectory into the requested `.tar` path and use the API's `delete_directory=True` option so each source is deleted only as part of its successful compression. Exclude the `vacations` destination directory itself and preserve the results for verification.",
+  "code": "vacations_root = '/home/jason/photos/vacations/'\nvacation_directories = [\n    path for path in photo_subdirectories\n    if path != vacations_root\n    and path.startswith(vacations_root)\n    and '/' not in path[len(vacations_root):].rstrip('/')\n]\ncompression_results = []\nfor directory_path in vacation_directories:\n    vacation_spot = directory_path.rstrip('/').rsplit('/', 1)[-1]\n    result = apis.file_system.compress_directory(\n        access_token=file_system_access_token,\n        directory_path=directory_path,\n        compressed_file_path=f'~/photos/vacations/{vacation_spot}.tar',\n        delete_directory=True,\n        overwrite=True\n    )\n    compression_results.append(result)\nprint(compression_results)",
+  "codex_elapsed_seconds": 0.0,
+  "codex_event_item_types": [
+    "agent_message"
+  ]
+}

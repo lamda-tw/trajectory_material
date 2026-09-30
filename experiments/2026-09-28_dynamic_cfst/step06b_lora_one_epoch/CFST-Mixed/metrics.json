@@ -1,0 +1,361 @@
+{
+  "schema_version": "dynamic-cfst-step06-branch-metrics-v1",
+  "status": "SUCCESS",
+  "branch": "CFST-Mixed",
+  "started_at_utc": "2026-09-29T06:17:32.475216+00:00",
+  "finished_at_utc": "2026-09-29T06:19:21.668108+00:00",
+  "hostname": "autodl-container-65d14488ce-cd05d5ef",
+  "source": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter",
+    "adapter_model_sha256": "c8fdfd4f3bb198381b6f2e56d019589a3ed904241b0147b565ec540449a29938",
+    "optimizer_state_reused": false,
+    "model_weights_reused": true
+  },
+  "data": {
+    "unique_train_json": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step05_training_packages/CFST-Mixed/train.jsonl",
+    "unique_train_sha256": "f3495c588fef5e49fe2bd010fe2575009f0aa67f10e1584a7c46ede28e44761b",
+    "unique_samples": 20,
+    "schedule_json": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step06b_lora_one_epoch/CFST-Mixed/train_schedule.jsonl",
+    "schedule_sha256": "f365de5ccd7295adc2abb6ae6126c82a0a9440ce58359646fc61de0df0ac08bd",
+    "scheduled_examples": 20,
+    "scheduled_supervised_tokens": 3319
+  },
+  "training": {
+    "optimizer": "AdamW",
+    "learning_rate": 0.0002,
+    "weight_decay": 0.0,
+    "scheduler": "none_constant",
+    "warmup_steps": 0,
+    "seed": 20260928,
+    "world_size": 2,
+    "global_batch_size": 2,
+    "optimizer_steps": 10,
+    "loss_reduction": "global supervised-token mean across two DDP ranks",
+    "loss_first": 1.0322552991393428,
+    "loss_last": 0.5830169518143584,
+    "loss_mean": 0.8138325541030185,
+    "duration_seconds": 109.19295334815979,
+    "history": [
+      {
+        "step": 1,
+        "loss": 1.0322552991393428,
+        "supervised_tokens": 447,
+        "cumulative_supervised_tokens": 447,
+        "samples": [
+          {
+            "id": "cfst-step05::76f2c72_1::repair-09::epoch1-0013",
+            "source_training_id": "cfst-step05::76f2c72_1::repair-09",
+            "task_id": "76f2c72_1",
+            "schedule_index": 13,
+            "tokens": 6815,
+            "prompt_tokens": 6572,
+            "completion_tokens": 243
+          },
+          {
+            "id": "cfst-step05::7d7fbf6_1::repair-09::epoch1-0006",
+            "source_training_id": "cfst-step05::7d7fbf6_1::repair-09",
+            "task_id": "7d7fbf6_1",
+            "schedule_index": 6,
+            "tokens": 5786,
+            "prompt_tokens": 5582,
+            "completion_tokens": 204
+          }
+        ],
+        "elapsed_seconds": 4.366133213043213
+      },
+      {
+        "step": 2,
+        "loss": 1.1928922899307743,
+        "supervised_tokens": 217,
+        "cumulative_supervised_tokens": 664,
+        "samples": [
+          {
+            "id": "cfst-step05::ccb4494_2::repair-06::epoch1-0008",
+            "source_training_id": "cfst-step05::ccb4494_2::repair-06",
+            "task_id": "ccb4494_2",
+            "schedule_index": 8,
+            "tokens": 6247,
+            "prompt_tokens": 6184,
+            "completion_tokens": 63
+          },
+          {
+            "id": "cfst-step05::b0a8eae_1::repair-05::epoch1-0004",
+            "source_training_id": "cfst-step05::b0a8eae_1::repair-05",
+            "task_id": "b0a8eae_1",
+            "schedule_index": 4,
+            "tokens": 9096,
+            "prompt_tokens": 8942,
+            "completion_tokens": 154
+          }
+        ],
+        "elapsed_seconds": 7.612544775009155
+      },
+      {
+        "step": 3,
+        "loss": 0.8395891086808567,
+        "supervised_tokens": 348,
+        "cumulative_supervised_tokens": 1012,
+        "samples": [
+          {
+            "id": "cfst-step05::7d7fbf6_3::repair-10::epoch1-0015",
+            "source_training_id": "cfst-step05::7d7fbf6_3::repair-10",
+            "task_id": "7d7fbf6_3",
+            "schedule_index": 15,
+            "tokens": 6623,
+            "prompt_tokens": 6443,
+            "completion_tokens": 180
+          },
+          {
+            "id": "cfst-step05::60d0b5b_1::repair-14::epoch1-0005",
+            "source_training_id": "cfst-step05::60d0b5b_1::repair-14",
+            "task_id": "60d0b5b_1",
+            "schedule_index": 5,
+            "tokens": 16787,
+            "prompt_tokens": 16619,
+            "completion_tokens": 168
+          }
+        ],
+        "elapsed_seconds": 23.43036389350891
+      },
+      {
+        "step": 4,
+        "loss": 0.49174414953943024,
+        "supervised_tokens": 531,
+        "cumulative_supervised_tokens": 1543,
+        "samples": [
+          {
+            "id": "cfst-step05::2a163ab_1::repair-09::epoch1-0020",
+            "source_training_id": "cfst-step05::2a163ab_1::repair-09",
+            "task_id": "2a163ab_1",
+            "schedule_index": 20,
+            "tokens": 9276,
+            "prompt_tokens": 8982,
+            "completion_tokens": 294
+          },
+          {
+            "id": "cfst-step05::302c169_2::repair-11::epoch1-0018",
+            "source_training_id": "cfst-step05::302c169_2::repair-11",
+            "task_id": "302c169_2",
+            "schedule_index": 18,
+            "tokens": 8123,
+            "prompt_tokens": 7886,
+            "completion_tokens": 237
+          }
+        ],
+        "elapsed_seconds": 29.280319213867188
+      },
+      {
+        "step": 5,
+        "loss": 0.8046642959117889,
+        "supervised_tokens": 240,
+        "cumulative_supervised_tokens": 1783,
+        "samples": [
+          {
+            "id": "cfst-step05::6104387_3::repair-11::epoch1-0002",
+            "source_training_id": "cfst-step05::6104387_3::repair-11",
+            "task_id": "6104387_3",
+            "schedule_index": 2,
+            "tokens": 12411,
+            "prompt_tokens": 12234,
+            "completion_tokens": 177
+          },
+          {
+            "id": "cfst-step05::d0b1f43_2::repair-08::epoch1-0011",
+            "source_training_id": "cfst-step05::d0b1f43_2::repair-08",
+            "task_id": "d0b1f43_2",
+            "schedule_index": 11,
+            "tokens": 6425,
+            "prompt_tokens": 6362,
+            "completion_tokens": 63
+          }
+        ],
+        "elapsed_seconds": 38.70418906211853
+      },
+      {
+        "step": 6,
+        "loss": 0.7505079340643999,
+        "supervised_tokens": 164,
+        "cumulative_supervised_tokens": 1947,
+        "samples": [
+          {
+            "id": "cfst-step05::2a163ab_3::repair-09::epoch1-0001",
+            "source_training_id": "cfst-step05::2a163ab_3::repair-09",
+            "task_id": "2a163ab_3",
+            "schedule_index": 1,
+            "tokens": 9580,
+            "prompt_tokens": 9477,
+            "completion_tokens": 103
+          },
+          {
+            "id": "cfst-step05::692c77d_3::repair-12::epoch1-0019",
+            "source_training_id": "cfst-step05::692c77d_3::repair-12",
+            "task_id": "692c77d_3",
+            "schedule_index": 19,
+            "tokens": 11256,
+            "prompt_tokens": 11195,
+            "completion_tokens": 61
+          }
+        ],
+        "elapsed_seconds": 44.90483903884888
+      },
+      {
+        "step": 7,
+        "loss": 0.7688660843646823,
+        "supervised_tokens": 443,
+        "cumulative_supervised_tokens": 2390,
+        "samples": [
+          {
+            "id": "cfst-step05::b0a8eae_3::repair-06::epoch1-0014",
+            "source_training_id": "cfst-step05::b0a8eae_3::repair-06",
+            "task_id": "b0a8eae_3",
+            "schedule_index": 14,
+            "tokens": 9365,
+            "prompt_tokens": 9269,
+            "completion_tokens": 96
+          },
+          {
+            "id": "cfst-step05::34d9492_2::repair-13::epoch1-0016",
+            "source_training_id": "cfst-step05::34d9492_2::repair-13",
+            "task_id": "34d9492_2",
+            "schedule_index": 16,
+            "tokens": 9408,
+            "prompt_tokens": 9061,
+            "completion_tokens": 347
+          }
+        ],
+        "elapsed_seconds": 50.926673889160156
+      },
+      {
+        "step": 8,
+        "loss": 0.9184150207699753,
+        "supervised_tokens": 127,
+        "cumulative_supervised_tokens": 2517,
+        "samples": [
+          {
+            "id": "cfst-step05::d0b1f43_1::repair-13::epoch1-0017",
+            "source_training_id": "cfst-step05::d0b1f43_1::repair-13",
+            "task_id": "d0b1f43_1",
+            "schedule_index": 17,
+            "tokens": 8981,
+            "prompt_tokens": 8920,
+            "completion_tokens": 61
+          },
+          {
+            "id": "cfst-step05::34d9492_3::repair-12::epoch1-0010",
+            "source_training_id": "cfst-step05::34d9492_3::repair-12",
+            "task_id": "34d9492_3",
+            "schedule_index": 10,
+            "tokens": 9874,
+            "prompt_tokens": 9808,
+            "completion_tokens": 66
+          }
+        ],
+        "elapsed_seconds": 57.43641519546509
+      },
+      {
+        "step": 9,
+        "loss": 0.7563744068145752,
+        "supervised_tokens": 340,
+        "cumulative_supervised_tokens": 2857,
+        "samples": [
+          {
+            "id": "cfst-step05::22cc237_3::repair-18::epoch1-0003",
+            "source_training_id": "cfst-step05::22cc237_3::repair-18",
+            "task_id": "22cc237_3",
+            "schedule_index": 3,
+            "tokens": 16410,
+            "prompt_tokens": 16342,
+            "completion_tokens": 68
+          },
+          {
+            "id": "cfst-step05::d0b1f43_3::repair-16::epoch1-0007",
+            "source_training_id": "cfst-step05::d0b1f43_3::repair-16",
+            "task_id": "d0b1f43_3",
+            "schedule_index": 7,
+            "tokens": 22193,
+            "prompt_tokens": 21921,
+            "completion_tokens": 272
+          }
+        ],
+        "elapsed_seconds": 83.34545040130615
+      },
+      {
+        "step": 10,
+        "loss": 0.5830169518143584,
+        "supervised_tokens": 462,
+        "cumulative_supervised_tokens": 3319,
+        "samples": [
+          {
+            "id": "cfst-step05::7d7fbf6_2::repair-11::epoch1-0012",
+            "source_training_id": "cfst-step05::7d7fbf6_2::repair-11",
+            "task_id": "7d7fbf6_2",
+            "schedule_index": 12,
+            "tokens": 5969,
+            "prompt_tokens": 5754,
+            "completion_tokens": 215
+          },
+          {
+            "id": "cfst-step05::2a163ab_2::repair-17::epoch1-0009",
+            "source_training_id": "cfst-step05::2a163ab_2::repair-17",
+            "task_id": "2a163ab_2",
+            "schedule_index": 9,
+            "tokens": 10804,
+            "prompt_tokens": 10557,
+            "completion_tokens": 247
+          }
+        ],
+        "elapsed_seconds": 90.86768984794617
+      }
+    ]
+  },
+  "diagnostic": {
+    "scope": "the unique branch package; overlaps training and is only a numerical fit check",
+    "loss": 0.4028101455746878,
+    "perplexity": 1.4960228381438372,
+    "completion_target_tokens": 3319
+  },
+  "model": {
+    "dtype": "bfloat16",
+    "attention": "sdpa",
+    "max_length": 40960,
+    "trainable_parameters": 21823488,
+    "total_parameters": 8212558848,
+    "trainable_percent": 0.2657331095449582
+  },
+  "distributed": {
+    "backend": "nccl",
+    "world_size": 2,
+    "gpus": [
+      {
+        "rank": 0,
+        "name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "capability": [
+          12,
+          0
+        ],
+        "peak_allocated_gib": 52.14871025085449,
+        "peak_reserved_gib": 87.7578125
+      },
+      {
+        "rank": 1,
+        "name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "capability": [
+          12,
+          0
+        ],
+        "peak_allocated_gib": 60.20193099975586,
+        "peak_reserved_gib": 86.416015625
+      }
+    ]
+  },
+  "artifacts": {
+    "adapter_dir": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step06b_lora_one_epoch/CFST-Mixed/adapter",
+    "adapter_model_sha256": "d2efa1e20475ab74ad33d61f82526511a8d6a8b00ef72b9ddaab6b0d907a2951",
+    "adapter_differs_from_source": true
+  },
+  "software": {
+    "torch": "2.8.0+cu128",
+    "cuda_runtime": "12.8"
+  }
+}

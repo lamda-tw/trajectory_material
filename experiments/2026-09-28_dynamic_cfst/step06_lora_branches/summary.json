@@ -1,0 +1,134 @@
+{
+  "schema_version": "dynamic-cfst-step06-summary-v1",
+  "status": "SUCCESS",
+  "finished_at_utc": "2026-09-29T01:54:51.856837+00:00",
+  "source": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter",
+    "adapter_model_sha256": "c8fdfd4f3bb198381b6f2e56d019589a3ed904241b0147b565ec540449a29938",
+    "model_weights_reused_for_every_branch": true,
+    "optimizer_state_reused": false
+  },
+  "common_training": {
+    "learning_rate": 0.0002,
+    "weight_decay": 0.0,
+    "optimizer": "AdamW",
+    "scheduler": "none_constant",
+    "warmup_steps": 0,
+    "seed": 20260928,
+    "max_length": 40960,
+    "dtype": "bfloat16",
+    "attention": "sdpa",
+    "world_size": 2,
+    "global_batch_size": 2,
+    "loss_policy": "assistant_completion_only, globally weighted by supervised tokens per DDP step"
+  },
+  "budget": {
+    "target_minimum_supervised_tokens": 8000,
+    "actual_min": 8138,
+    "actual_max": 8160,
+    "range": 22,
+    "relative_range_percent": 0.275
+  },
+  "branches": {
+    "CFST-state": {
+      "adapter_dir": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step06_lora_branches/CFST-state/adapter",
+      "adapter_model_sha256": "846bf990d1c675b3f151f8a81e497f6a20528e9d0d3b25e2e5673206ef8f026d",
+      "unique_samples": 12,
+      "scheduled_examples": 54,
+      "supervised_tokens": 8138,
+      "optimizer_steps": 27,
+      "loss_first": 1.0631749690029424,
+      "loss_last": 0.0944043955194854,
+      "loss_mean": 0.3866105167175235,
+      "diagnostic_loss": 0.036427479918723825,
+      "duration_seconds": 152.85991764068604,
+      "peak_reserved_gib_max": 91.525390625,
+      "weight_delta": {
+        "tensor_count": 504,
+        "changed_tensor_count": 504,
+        "parameter_count": 21823488,
+        "l2_delta": 6.224806926293608,
+        "max_abs_delta": 0.004932893440127373
+      },
+      "reload_forward": {
+        "adapter_name": "state",
+        "input_tokens": 19,
+        "output_logits_shape": [
+          1,
+          151936
+        ],
+        "all_logits_finite": true,
+        "last_token_logits_sha256_float32": "0997bf9efda5d28c304050b3dcfa682ff89f97373f51afe99201835df60058d2"
+      }
+    },
+    "CFST-Action": {
+      "adapter_dir": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step06_lora_branches/CFST-Action/adapter",
+      "adapter_model_sha256": "16cea6a7e5f2895498af3c4d6f0914af849fdbc16e71994aecbf155927e0be4e",
+      "unique_samples": 8,
+      "scheduled_examples": 44,
+      "supervised_tokens": 8150,
+      "optimizer_steps": 22,
+      "loss_first": 1.4323367254057926,
+      "loss_last": 0.060295614533317395,
+      "loss_mean": 0.3811475587489065,
+      "diagnostic_loss": 0.040493572523788726,
+      "duration_seconds": 352.2799973487854,
+      "peak_reserved_gib_max": 84.19140625,
+      "weight_delta": {
+        "tensor_count": 504,
+        "changed_tensor_count": 504,
+        "parameter_count": 21823488,
+        "l2_delta": 5.883421540366148,
+        "max_abs_delta": 0.004428225103765726
+      },
+      "reload_forward": {
+        "adapter_name": "action",
+        "input_tokens": 19,
+        "output_logits_shape": [
+          1,
+          151936
+        ],
+        "all_logits_finite": true,
+        "last_token_logits_sha256_float32": "66fd67f0e0cf904828e72aa4dc8ed10f2afdaf942eac309196788f400cba63c0"
+      }
+    },
+    "CFST-Mixed": {
+      "adapter_dir": "/root/autodl-tmp/workspace-tw/experiments/2026-09-28_dynamic_cfst/step06_lora_branches/CFST-Mixed/adapter",
+      "adapter_model_sha256": "fe5b0676f87b1f3d4575ffd83e25adf1cbaacafd4c13a29d3c682fb8e8777709",
+      "unique_samples": 20,
+      "scheduled_examples": 50,
+      "supervised_tokens": 8160,
+      "optimizer_steps": 25,
+      "loss_first": 1.2285501569119084,
+      "loss_last": 0.24382161965340743,
+      "loss_mean": 0.5534716657941048,
+      "diagnostic_loss": 0.19563752719888344,
+      "duration_seconds": 270.9318926334381,
+      "peak_reserved_gib_max": 92.876953125,
+      "weight_delta": {
+        "tensor_count": 504,
+        "changed_tensor_count": 504,
+        "parameter_count": 21823488,
+        "l2_delta": 5.762253244066251,
+        "max_abs_delta": 0.004713568836450577
+      },
+      "reload_forward": {
+        "adapter_name": "mixed",
+        "input_tokens": 19,
+        "output_logits_shape": [
+          1,
+          151936
+        ],
+        "all_logits_finite": true,
+        "last_token_logits_sha256_float32": "cf002dd070ef932aec90486ad3c84cabe2467394f388ffd232dcbeb5c760f005"
+      }
+    }
+  },
+  "validation": {
+    "checks_passed": 73,
+    "checks_total": 73,
+    "reload_forward_passed": true
+  },
+  "scope_note": "training and overlapping-package diagnostic only; no check30 or Dev57 evaluation was run"
+}

@@ -1,0 +1,37 @@
+{
+  "id": "chatcmpl-0fe8e90c17c54393ad6b62ef9abc2c62",
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "To identify the target playlist, I need to search all private and public playlists for the exact title, so I will paginate through every result.\n\n```python\nplaylist_results = []\npage_index = 0\nwhile True:\n    page = apis.spotify.search_playlists(query='Woodstock Reimagined: Festival Vibes', page_index=page_index, page_limit=20)\n    if not page:\n        break\n    playlist_results.extend(page)\n    page_index += 1\nprint(playlist_results)\n```\n\n",
+        "refusal": null,
+        "role": "assistant",
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [],
+        "reasoning_content": null
+      },
+      "stop_reason": null,
+      "token_ids": null
+    }
+  ],
+  "created": 1790596607,
+  "model": "appworld-codex-rft-train90-epoch5",
+  "object": "chat.completion",
+  "service_tier": null,
+  "system_fingerprint": null,
+  "usage": {
+    "completion_tokens": 105,
+    "prompt_tokens": 8242,
+    "total_tokens": 8347,
+    "completion_tokens_details": null,
+    "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "kv_transfer_params": null
+}
