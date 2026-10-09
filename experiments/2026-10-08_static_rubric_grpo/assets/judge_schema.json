@@ -1,0 +1,66 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "scores"
+  ],
+  "properties": {
+    "scores": {
+      "type": "array",
+      "minItems": 21,
+      "maxItems": 21,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rubric_title",
+          "score",
+          "evidence",
+          "justification"
+        ],
+        "properties": {
+          "rubric_title": {
+            "type": "string",
+            "enum": [
+              "Protects secret values",
+              "Stops after completion",
+              "Fetches complete data",
+              "Completes task properly",
+              "Computes from live data",
+              "Handles time correctly",
+              "Processes items completely",
+              "Targets exact items",
+              "Applies correct selection logic",
+              "Uses complete working set",
+              "Performs required actions",
+              "Verifies action outcome",
+              "Uses exact action content",
+              "Uses correct data source",
+              "Authenticates correctly",
+              "Retrieves needed credentials",
+              "Uses runnable Python",
+              "Checks docs when needed",
+              "Recovers from failures",
+              "Uses valid API calls",
+              "Uses allowed tools only"
+            ]
+          },
+          "score": {
+            "type": "integer",
+            "enum": [
+              -1,
+              0,
+              1
+            ]
+          },
+          "evidence": {
+            "type": "string"
+          },
+          "justification": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

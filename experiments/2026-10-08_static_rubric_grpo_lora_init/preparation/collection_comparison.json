@@ -1,0 +1,50 @@
+{
+  "scope": "train sampling diagnostics, not dev generalization",
+  "raw": {
+    "status": "COMPLETE",
+    "completed_rollouts": 540,
+    "official_successful_rollouts": 39,
+    "official_success_fraction_train_sampling": 0.07222222222222222,
+    "all_fail_groups": 70,
+    "mixed_outcome_groups": 20,
+    "all_success_groups": 0,
+    "success_count_histogram": {
+      "0": 70,
+      "1": 9,
+      "2": 7,
+      "3": 1,
+      "4": 2,
+      "5": 1,
+      "6": 0
+    },
+    "total_steps": 11254,
+    "generated_tokens": 1366894,
+    "mean_distinct_code_sequences_per_group": 6.0,
+    "rubric_nonzero_advantage_groups": null,
+    "rubric_status": "NOT_SCORED_BY_THIS_STAGE"
+  },
+  "lora": {
+    "status": "COMPLETE",
+    "completed_rollouts": 540,
+    "official_successful_rollouts": 186,
+    "official_success_fraction_train_sampling": 0.34444444444444444,
+    "all_fail_groups": 23,
+    "mixed_outcome_groups": 63,
+    "all_success_groups": 4,
+    "success_count_histogram": {
+      "0": 23,
+      "1": 20,
+      "2": 16,
+      "3": 9,
+      "4": 7,
+      "5": 11,
+      "6": 4
+    },
+    "total_steps": 9886,
+    "generated_tokens": 1785724,
+    "mean_distinct_code_sequences_per_group": 5.988888888888889,
+    "rubric_nonzero_advantage_groups": null,
+    "rubric_status": "NOT_SCORED_BY_THIS_STAGE"
+  },
+  "interpretation": "All-fail outcome groups can still vary under rubric rewards; rubric metrics await actual scoring."
+}

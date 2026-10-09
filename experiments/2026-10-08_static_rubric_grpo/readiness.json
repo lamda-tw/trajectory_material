@@ -1,0 +1,133 @@
+{
+  "time_utc": "2026-10-08T11:35:38.998268+00:00",
+  "status": "OFFLINE_READY",
+  "fingerprint": "4281d32de051a1965961c98ad89fba69ba5518961f19a61b788048f14e90c0e5",
+  "checks": [
+    {
+      "name": "paths and raw model files",
+      "status": "PASS",
+      "detail": {
+        "model_shards_present": [
+          "model-00001-of-00005.safetensors",
+          "model-00002-of-00005.safetensors",
+          "model-00003-of-00005.safetensors",
+          "model-00004-of-00005.safetensors",
+          "model-00005-of-00005.safetensors"
+        ],
+        "base_model": "/root/autodl-tmp/models/Qwen3-8B"
+      }
+    },
+    {
+      "name": "frozen rules, prompt, official splits and schema",
+      "status": "PASS",
+      "detail": {
+        "draco_commit": "cfafd0f81f2c49aa36a4b25a2a7b6ac6e119f47b",
+        "rules": 21,
+        "train": 90,
+        "pilot": 8,
+        "dev": 57
+      }
+    },
+    {
+      "name": "isolated AppWorld runtime and copied evaluator cache",
+      "status": "PASS",
+      "detail": {
+        "runtime": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo/runtime/appworld",
+        "test_files": 42,
+        "task_executions": 0
+      }
+    },
+    {
+      "name": "AppWorld imports",
+      "status": "PASS",
+      "detail": {
+        "stdout": "{\"appworld\": \"0.2.0.dev0\", \"AppWorld_signature\": \"(task_id: 'str', experiment_name: 'str | object' = <object object at 0x7f5a6fa45d90>, remote_apis_url: 'str | None | object' = <object object at 0x7f5a6fa45d90>, remote_environment_url: 'str | None | object' = <object object at 0x7f5a6fa45d90>, remote_mcp_url: 'str | None | object' = <object object at 0x7f5a6fa45d90>, remote_docker: 'bool | object' = <object object at 0x7f5a6fa45d90>, max_interactions: 'int | object' = <object object at 0x7f5a6fa45d90>, max_api_calls_per_interaction: 'int | object' = <object object at 0x7f5a6fa45d90>, raise_on_unsafe_syntax: 'bool | object' = <object object at 0x7f5a6fa45d90>, raise_on_unsafe_execution: 'bool | object' = <object object at 0x7f5a6fa45d90>, load_ground_truth: 'bool | object' = <object object at 0x7f5a6fa45d90>, ground_truth_mode: 'GROUND_TRUTH_MODE_LITERAL | object' = <object object at 0x7f5a6fa45d90>, raise_on_failure: 'bool | object' = <object object at 0x7f5a6fa45d90>, random_seed: 'int | None | object' = <object object at 0x7f5a6fa45d90>, timeout_seconds: 'int | None | object' = <object object at 0x7f5a6fa45d90>, show_api_response_schemas: 'bool | object' = <object object at 0x7f5a6fa45d90>, gc_threshold: 'int | None | object' = <object object at 0x7f5a6fa45d90>, include_direct_functions: 'bool | object' = <object object at 0x7f5a6fa45d90>, direct_function_separator: 'str | object' = <object object at 0x7f5a6fa45d90>, raise_on_extra_parameters: 'bool | object' = <object object at 0x7f5a6fa45d90>, import_utils: 'bool | object' = <object object at 0x7f5a6fa45d90>, parse_datetimes: 'bool | object' = <object object at 0x7f5a6fa45d90>, allow_datetime_change: 'bool | object' = <object object at 0x7f5a6fa45d90>, add_login_shortcut: 'bool | object' = <object object at 0x7f5a6fa45d90>, wrap_response: 'bool | object' = <object object at 0x7f5a6fa45d90>, unwrap_response: 'bool | object' = <object object at 0x7f5a6fa45d90>, munchify_response: 'bool | object' = <object object at 0x7f5a6fa45d90>) -> 'None'\", \"Task_load_signature\": \"(task_id: str, storage_type: Literal['memory', 'disk'] = 'memory', load_ground_truth: bool = True, ground_truth_mode: Literal['full', 'partial', 'minimal'] = 'minimal', include_api_response_schemas: bool = True, allow_incompatible: bool = False) -> Self\"}",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "PyTorch / Transformers / PEFT imports",
+      "status": "PASS",
+      "detail": {
+        "stdout": "{\"torch\": \"2.8.0+cu128\", \"transformers\": \"4.56.2\", \"peft\": \"0.17.1\", \"accelerate\": \"1.10.1\", \"safetensors\": \"0.8.0\"}",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "vLLM exact-token API protocol",
+      "status": "PASS",
+      "detail": {
+        "stdout": "INFO 10-08 19:35:32 [__init__.py:216] Automatically detected platform cuda.\n{\"vllm\": \"0.10.2\", \"exact_token_protocol\": true}",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "Codex CLI flags and existing login (no request)",
+      "status": "PASS",
+      "detail": {
+        "version": "codex-cli 0.155.1",
+        "authenticated": true,
+        "shell_tool_disable_supported": true,
+        "model": "gpt-5.6-sol",
+        "model_availability": "not called; live availability remains unverified"
+      }
+    },
+    {
+      "name": "public task prompt rendering, configured train + complete dev",
+      "status": "PASS",
+      "detail": {
+        "stdout": "{\"public_tasks_rendered\": 147, \"message_counts\": [23], \"task_executions\": 0, \"ground_truth_loaded\": false}",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "local Qwen tokenizer only",
+      "status": "PASS",
+      "detail": {
+        "stdout": "{\"tokenizer_class\": \"Qwen2TokenizerFast\", \"public_prompts_checked\": 147, \"min_prompt_tokens\": 3126, \"max_prompt_tokens\": 3206, \"vocab_size\": 151669, \"enable_thinking\": false, \"model_weights_loaded\": false}",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "disk space",
+      "status": "PASS",
+      "detail": {
+        "free_GiB": 156.54,
+        "minimum_GiB": 20
+      }
+    },
+    {
+      "name": "GPU inventory only",
+      "status": "PASS",
+      "detail": "0, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, 19090 MiB\n1, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, 97251 MiB"
+    }
+  ],
+  "failed": [],
+  "gpu_resources_available_now": false,
+  "gpu_inventory": [
+    {
+      "index": "0",
+      "name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+      "total_mib": 97887,
+      "free_mib": 18448
+    },
+    {
+      "index": "1",
+      "name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+      "total_mib": 97887,
+      "free_mib": 97251
+    }
+  ],
+  "not_executed": [
+    "Qwen model load / generation",
+    "Codex model request",
+    "AppWorld task execution / official dev evaluation",
+    "GRPO update"
+  ],
+  "live_checks_after_start": [
+    "GPU memory and first generation",
+    "first structured judge response",
+    "HF/vLLM sampled logprob consistency",
+    "first optimizer update and adapter reload"
+  ]
+}

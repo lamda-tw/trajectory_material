@@ -1,0 +1,126 @@
+{
+  "experiment": "static-rubric-grpo-lora-init-v1",
+  "paths": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "appworld_python": "/root/autodl-tmp/envs/appworld-0.2.0-py312/bin/python",
+    "training_python": "/root/autodl-tmp/workspace-tw/.conda-training/bin/python",
+    "vllm_python": "/root/autodl-tmp/envs/qwen3-vllm-py312/bin/python",
+    "codex": "/root/.nvm/versions/node/v26.8.1/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex",
+    "appworld_data": "/root/autodl-tmp/data/benchmarks/appworld/runtime/data",
+    "appworld_test_cache": "/root/autodl-tmp/workspace-tw/experiments/2026-09-10_173848_appworld_qwen3-8b_react_oneshot_smoke/cache/tests"
+  },
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8129,
+    "gpu": "0",
+    "model_name": "qwen3-8b",
+    "adapter_name": "qwen3-8b-train90-lora-e5",
+    "gpu_memory_utilization": 0.8,
+    "startup_timeout_seconds": 900,
+    "request_timeout_seconds": 600,
+    "max_num_seqs": 6,
+    "minimum_free_gpu_gib": 80
+  },
+  "agent": {
+    "prompt": "assets/agent_prompt.txt",
+    "enable_thinking": false,
+    "max_steps": 50,
+    "max_model_len": 32000,
+    "max_new_tokens": 3000,
+    "context_overflow": "terminate_without_truncation",
+    "parser": "first_python_fence_with_partial_fence_recovery"
+  },
+  "sampling": {
+    "group_size": 6,
+    "temperature": 1.0,
+    "top_p": 1.0,
+    "top_k": -1,
+    "repetition_penalty": 1.0,
+    "seed": 20261008,
+    "pilot_seed": 20261108
+  },
+  "judge": {
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "timeout_seconds": 600,
+    "max_attempts": 2,
+    "rules": "assets/draco/static_rubrics.json",
+    "official_prompt": "assets/draco/score_rubrics.txt",
+    "wrapper": "assets/judge_wrapper.txt",
+    "schema": "assets/judge_schema.json",
+    "reward_scale": 10.0,
+    "filter_no_fail": true
+  },
+  "training": {
+    "gpu": "0",
+    "seed": 20261008,
+    "updates": 10,
+    "groups_per_update": 2,
+    "train_tasks": "assets/splits/train_all.txt",
+    "learning_rate": 5e-05,
+    "weight_decay": 0.0,
+    "clip_epsilon": 0.2,
+    "kl_beta": 0.01,
+    "max_grad_norm": 1.0,
+    "advantage_epsilon": 1e-06,
+    "advantage_std": "sample",
+    "loss_reduction": "mean_of_trajectory_token_means",
+    "ppo_epochs_per_batch": 1,
+    "head_chunk_size": 128,
+    "lora": {
+      "r": 8,
+      "lora_alpha": 16,
+      "lora_dropout": 0.0,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ],
+      "bias": "none",
+      "task_type": "CAUSAL_LM"
+    },
+    "minimum_free_gpu_gib": 80,
+    "status": "proposal_only_no_training_entrypoint"
+  },
+  "evaluation": {
+    "tasks": "assets/splits/dev.txt",
+    "temperature": 0.0,
+    "seed": 100,
+    "checkpoints": [
+      0,
+      10
+    ],
+    "primary_metric": "official_task_goal_completion",
+    "rubric_on_dev": false
+  },
+  "collection": {
+    "tasks": "assets/splits/train_all.txt",
+    "workers": 6,
+    "rollouts_per_task": 6,
+    "initial_sequential_rollouts": 1,
+    "official_terminal_evaluation": true,
+    "report": "RUBRIC_GRPO_EXPERIMENT_REPORT.md"
+  },
+  "initial_policy": {
+    "kind": "peft_lora",
+    "adapter": "preparation/initial_adapter",
+    "source_adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter",
+    "files": {
+      "adapter_config.json": "d6e98f010a344bdca5b4370efe278e1d7005985113844aad13ef96f0a95bf892",
+      "adapter_model.safetensors": "c8fdfd4f3bb198381b6f2e56d019589a3ed904241b0147b565ec540449a29938"
+    },
+    "training_provenance": "90 Codex success trajectories on official train90; 5 epochs; not a teacher-free initialization",
+    "tokenizer": "base_model_only_same_as_raw_collection"
+  },
+  "comparison": {
+    "raw_experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo",
+    "raw_collection": "runs/step01_train90_rollouts",
+    "raw_fingerprint": "4281d32de051a1965961c98ad89fba69ba5518961f19a61b788048f14e90c0e5",
+    "raw_manifest_sha256": "26a3d9a8b93ccda8453a4274a5946198b16f8310d62b9bf26b136ce7fe49b173",
+    "raw_index_sha256": "e791a9d0c156cc7db7187a5b6c0c586b015ec54de1043f937d8faba94886ed2b"
+  }
+}

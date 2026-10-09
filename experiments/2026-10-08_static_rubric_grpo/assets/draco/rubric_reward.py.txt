@@ -1,0 +1,2238 @@
+"""Score AppWorld trajectories against LLM-written rubrics, and turn that into a reward.
+
+An LLM writes a set of rubrics — concrete, checkable statements about what a good
+trajectory does for this task — and then judges the trajectory against them. The reward
+is the mean rubric score, scaled. Where the rubrics come from is what distinguishes the
+two modes APPWORLD_RUBRIC_MODE selects:
+
+  dynamic          Rubrics are generated from the group's own trajectories. Each member
+                   of a GRPO group contributes rubrics grounded in what it actually did,
+                   those are pooled, and one LLM call merges them into a single set the
+                   whole group is then scored against. Scoring the group against one
+                   shared set is what makes the resulting rewards comparable, which is
+                   what GRPO's group-relative normalization needs.
+  discriminative   One fixed rubric set, written ahead of time and shared by every task
+                   and every group, loaded from APPWORLD_RUBRIC_STATIC_FILE. Rubrics
+                   that every member of a group passes are dropped from that group's
+                   average, since a rubric nobody fails contributes only a constant
+                   offset that group-relative normalization removes anyway.
+
+Both are driven from the group barrier in agent_loop, which is where all n members of a
+group are in scope at once. The per-rollout entry points here handle the trajectories
+that never reach it.
+
+Under APPWORLD_REWARD_MODE=rubric_credit a further stage runs, attributing each rubric
+outcome to the trajectory steps responsible for it; see credit_advantage_patch.py.
+
+Environment:
+  APPWORLD_REWARD_MODE          "env" (default), "sparse", "rubric", or "rubric_credit"
+  APPWORLD_RUBRIC_MODE          "dynamic" or "discriminative"
+  APPWORLD_RUBRIC_LLM_BASE_URL  judge endpoint, OpenAI-compatible
+  APPWORLD_RUBRIC_LLM_API_KEY   judge API key
+  APPWORLD_RUBRIC_LLM_MODEL     judge model name
+  APPWORLD_RUBRIC_REWARD_SCALE  reward scale (default 10.0)
+  APPWORLD_RUBRIC_STATIC_FILE   rubric set JSON; required in discriminative mode
+  APPWORLD_RUBRIC_OUTPUT_DIR    per-trajectory artifacts (optional)
+  APPWORLD_RUBRIC_STATS_DIR     per-trajectory rubric stats JSONL (optional)
+"""
+
+from __future__ import annotations
+
+import json
+import logging
+import os
+import threading
+import time
+from contextlib import contextmanager
+from datetime import datetime, timezone
+from functools import lru_cache
+from importlib import resources
+from pathlib import Path
+
+logger = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# Prompt template loading
+# ---------------------------------------------------------------------------
+
+
+def _load_prompt(filename: str) -> str:
+    """Load a prompt template from the prompts package."""
+    return (
+        resources.files("verl_appworld.rubric_prompts").joinpath(filename).read_text()
+    )
+
+
+@lru_cache(maxsize=4)
+def _get_prompt_template(name: str) -> str:
+    """Cached prompt template loader."""
+    return _load_prompt(name)
+
+
+# ---------------------------------------------------------------------------
+# Environment variable helpers
+# ---------------------------------------------------------------------------
+
+
+def get_reward_mode() -> str:
+    reward_mode = os.environ.get("APPWORLD_REWARD_MODE", "env")
+    logger.warning(f"[RUBRICS]: Using reward mode: {reward_mode}")
+    return reward_mode
+
+
+def _get_rubric_mode() -> str:
+    """Which rubrics the judge scores against.
+
+    "dynamic"        rubrics generated from this group's own trajectories, then merged
+                     into one set the whole group is scored against
+    "discriminative" one fixed set, shared by every task and every group
+    """
+    rubric_mode = os.environ.get("APPWORLD_RUBRIC_MODE", "dynamic")
+    logger.warning(f"[RUBRICS]: Using rubric mode: {rubric_mode}")
+    return rubric_mode
+
+
+def _get_reward_scale() -> float:
+    scale = float(os.environ.get("APPWORLD_RUBRIC_REWARD_SCALE", "10.0"))
+    logger.warning(f"[RUBRICS]: Setting rubric scale to: {scale}")
+    return scale
+
+
+def _get_max_tokens() -> int:
+    """Output-token ceiling for every judge/generation LLM call.
+
+    The judge endpoint has a very large (~900k) context window; the only place
+    truncation can silently occur is this OUTPUT cap — if the judge's JSON is
+    clipped it fails to parse and the reward falls through to 0.0. Default raised
+    to 32768 (from the old hard-coded 8192) so long rubric/union/score responses
+    are never clipped; override via APPWORLD_RUBRIC_MAX_TOKENS. Only a ceiling, so
+    raising it cannot change any well-formed response — it only stops clipping.
+    """
+    return int(os.environ.get("APPWORLD_RUBRIC_MAX_TOKENS", "32768"))
+
+
+def _get_llm_client():
+    from openai import OpenAI  # lazy import — not needed on nodes that don't run rubric eval
+    # strip() guards against a trailing newline/whitespace in the secret value
+    # (e.g. created with `echo` instead of `echo -n`), which would otherwise make
+    # the Authorization header an illegal value and kill every judge call.
+    base_url = (os.environ.get("APPWORLD_RUBRIC_LLM_BASE_URL") or "").strip()
+    api_key = (os.environ.get("APPWORLD_RUBRIC_LLM_API_KEY") or "").strip()
+    if not base_url or not api_key:
+        raise RuntimeError(
+            "APPWORLD_RUBRIC_LLM_BASE_URL and APPWORLD_RUBRIC_LLM_API_KEY "
+            "must be set when using rubric-based rewards"
+        )
+    return OpenAI(base_url=base_url, api_key=api_key)
+
+
+def _get_llm_model() -> str:
+    model = (os.environ.get("APPWORLD_RUBRIC_LLM_MODEL") or "").strip()
+    if not model:
+        raise RuntimeError(
+            "APPWORLD_RUBRIC_LLM_MODEL must be set when using rubric-based rewards"
+        )
+    return model
+
+
+# ---------------------------------------------------------------------------
+# Static rubric loader
+# ---------------------------------------------------------------------------
+
+@lru_cache(maxsize=1)
+def _load_static_rubrics() -> list[dict]:
+    """Load the pre-generated static rubric set from disk (cached after first call).
+
+    File path from APPWORLD_RUBRIC_STATIC_FILE env var.
+    Supports both a bare JSON array and the {metadata, rubrics} wrapper
+    produced by generate_static_rubrics.py.
+    """
+    path = os.environ.get("APPWORLD_RUBRIC_STATIC_FILE", "")
+    if not path:
+        raise RuntimeError(
+            "APPWORLD_RUBRIC_STATIC_FILE must be set when "
+            "APPWORLD_RUBRIC_MODE=discriminative"
+        )
+    with open(path) as f:
+        data = json.load(f)
+    rubrics = data.get("rubrics", data) if isinstance(data, dict) else data
+    if not rubrics:
+        raise RuntimeError(f"No rubrics found in {path}")
+    logger.warning("[RUBRICS]: loaded %d static rubrics from %s", len(rubrics), path)
+    titles = " | ".join(r.get("title", "?") for r in rubrics)
+    logger.warning("[RUBRICS]: static rubric titles: %s", titles)
+    return rubrics
+
+
+# ---------------------------------------------------------------------------
+# Per-trajectory rubric stats logger
+# ---------------------------------------------------------------------------
+# Logs a compact one-liner to the training log for every scored trajectory,
+# and optionally appends a per-trajectory JSON entry to a JSONL file for
+# later analysis (group by request_id prefix / timestamp to get per-step rates).
+#
+# APPWORLD_RUBRIC_STATS_DIR — directory for rubric_stats.jsonl (optional)
+# No N-threshold: every trajectory is logged. Stats logging is cheap (no LLM).
+
+_stats_file_lock = threading.Lock()
+
+# ---------------------------------------------------------------------------
+# Additive per-call audit logging. One JSONL stream per signal,
+# every record keyed by request_id + global_step + timestamp, so per-step
+# per-rollout analysis needs no heuristics. ENTIRELY SEPARATE from the existing
+# writers (rubric_stats.jsonl, artifacts, rollout_data) — those are left
+# untouched. Gated on APPWORLD_PERCALL_LOG_DIR: a no-op when unset, so it cannot
+# perturb a run that doesn't set it. Streams:
+#   judge_calls.jsonl   - one per rubric-judge result (Stage 3)
+#   credit_calls.jsonl  - one per credit-assignment call (Stage 4)
+#   shadoweval.jsonl    - one per ground-truth env.evaluate (test-case pass rate)
+#   llm_calls.jsonl     - one per raw LLM call (Stage 1/2/3/credit)
+# Shared by rubric_reward, appworld_tool, and credit_assignment (one writer, not
+# copies). global_step comes from agent_loop._GLOBAL_STEP_CV (lazy import).
+# ---------------------------------------------------------------------------
+_percall_lock = threading.Lock()
+
+
+def _current_global_step() -> int:
+    """Training global_step for the current rollout's asyncio Task (or -1).
+
+    Read from agent_loop._GLOBAL_STEP_CV (a per-Task ContextVar). Imported lazily
+    so this module stays importable standalone (unit tests) without pulling
+    verl/torch via agent_loop. Returns -1 when unavailable — never a wrong value.
+    """
+    try:
+        from verl_appworld.agent_loop import _GLOBAL_STEP_CV
+        return int(_GLOBAL_STEP_CV.get())
+    except Exception:
+        return -1
+
+
+def _current_rollout_uid() -> str:
+    """Unique id for the current rollout's asyncio Task (or "").
+
+    Read from agent_loop._ROLLOUT_UID_CV. Lets every audit row carry a stable join
+    key to its rollout_data row — request_id is reused across rollouts and cannot be
+    used for joins. Returns "" when unavailable; never a wrong value.
+    """
+    try:
+        from verl_appworld.agent_loop import _ROLLOUT_UID_CV
+        return str(_ROLLOUT_UID_CV.get())
+    except Exception:
+        return ""
+
+
+def _current_request_id() -> str:
+    """The current rollout's verl request_id (or "").
+
+    Read from agent_loop._REQUEST_ID_CV. Lets llm_calls.jsonl rows carry the
+    request_id that ties them to the judge/credit records for the same rollout.
+    Returns "" when unavailable; never a wrong value.
+    """
+    try:
+        from verl_appworld.agent_loop import _REQUEST_ID_CV
+        return str(_REQUEST_ID_CV.get())
+    except Exception:
+        return ""
+
+
+@contextmanager
+def _member_join_ctx(rollout_uid: str, request_id: str):
+    """Temporarily set the rollout_uid / request_id ContextVars to a specific
+    member's values, restoring them on exit.
+
+    The group coordinator (discriminative + dynamic paths) scores all N members
+    inside ONE context, so any audit row auto-stamped via _current_rollout_uid()
+    / _current_request_id() — notably the raw LLM-call rows in llm_calls.jsonl,
+    written deep inside _llm_completion_core — would otherwise collapse to the
+    coordinator's single uid. Wrapping each member's scoring call in this ctx makes
+    those rows carry the member's OWN uid/request_id, so llm_calls joins per-rollout
+    like judge_calls/credit_calls (which take the id explicitly). No-op (best effort)
+    if agent_loop / the CVs are unavailable.
+    """
+    try:
+        from verl_appworld.agent_loop import _ROLLOUT_UID_CV, _REQUEST_ID_CV
+    except Exception:
+        yield
+        return
+    tok_u = _ROLLOUT_UID_CV.set(rollout_uid or _ROLLOUT_UID_CV.get())
+    tok_r = _REQUEST_ID_CV.set(request_id or _REQUEST_ID_CV.get())
+    try:
+        yield
+    finally:
+        _ROLLOUT_UID_CV.reset(tok_u)
+        _REQUEST_ID_CV.reset(tok_r)
+
+
+@lru_cache(maxsize=4096)
+def _static_num_tests(task_id: str) -> int:
+    """Ground-truth test count for a task, from its static test_data.json.
+
+    Equals env.evaluate().num_tests (verified across logged tasks) but needs no
+    live env, so a trajectory the env never evaluated can still log its true test
+    denominator. The count is a fixed property of the task. Returns -1 if unreadable.
+    """
+    if not task_id:
+        return -1
+    try:
+        root = os.environ.get("APPWORLD_ROOT", "/workspace/appworld")
+        path = Path(root) / "data" / "tasks" / task_id / "ground_truth" / "test_data.json"
+        with open(path) as f:
+            return len(json.load(f))
+    except Exception:
+        return -1
+
+
+_weed_done = False  # process-local: resume-weed runs at most once per worker
+
+
+def _resume_step() -> int:
+    """Highest checkpointed global_step on disk (the step we resume FROM), or -1
+    if no checkpoint exists (fresh run). Steps > this that already have audit rows
+    are orphans from a pre-crash attempt: that work was never folded into a saved
+    update, and resume re-runs those steps, appending fresh rows. Returns -1 on any
+    error → weeding becomes a no-op (never deletes on uncertainty)."""
+    ckpt = os.environ.get("VERL_CHECKPOINT_PATH", "")
+    if not ckpt:
+        return -1
+    best = -1
+    try:
+        for d in Path(ckpt).glob("global_step_*"):
+            if d.is_dir():
+                try:
+                    best = max(best, int(d.name.rsplit("_", 1)[1]))
+                except (ValueError, IndexError):
+                    continue
+    except Exception:
+        return -1
+    return best
+
+
+def _attempt_token() -> str:
+    """A token identifying THIS launch of the trainer: stable across the N rollout
+    workers of one attempt, different on the next attempt.
+
+    The weed marker is otherwise keyed by resume step, which is -1 for every
+    from-scratch attempt. Two fresh attempts would then compete for one marker name,
+    and the second would read the first's marker as proof the pruning was already
+    done -- leaving the abandoned attempt's rows to be counted as the new run's.
+
+    Ray's session directory is created once per `ray start` and shared by every
+    worker, which is exactly the scope required. `session_latest` is a symlink, so
+    resolve it. Falls back to a scheduler-supplied job id, then to no token — with no
+    token the keying is by resume step alone, which prunes less rather than more."""
+    try:
+        p = Path("/tmp/ray/session_latest").resolve(strict=True)
+        if p.name:
+            return p.name.replace("/", "_")
+    except (OSError, RuntimeError):
+        pass
+    for var in ("JOB_ID", "SLURM_JOB_ID", "PBS_JOBID"):
+        val = (os.environ.get(var) or "").strip()
+        if val:
+            return val
+    return ""
+
+
+def _is_confirmed_fresh_start() -> bool:
+    """True ONLY when we can affirmatively confirm this is a from-scratch run: the
+    checkpoint dir is set and accessible but holds zero global_step_* checkpoints.
+    Returns False on any unset/error/uncertainty (so weeding stays a no-op unless
+    we are SURE). On a confirmed fresh start every pre-existing percall row is stale
+    (left by an aborted prior attempt of this same run_dir) — the resume-step rule
+    can't catch it because there is no checkpoint to compare against."""
+    ckpt = os.environ.get("VERL_CHECKPOINT_PATH", "")
+    if not ckpt:
+        return False
+    try:
+        p = Path(ckpt)
+        if not p.is_dir():
+            # No checkpoint dir yet == nothing has ever been saved here.
+            return True
+        for d in p.glob("global_step_*"):
+            if d.is_dir():
+                try:
+                    int(d.name.rsplit("_", 1)[1])
+                    return False  # a real checkpoint exists → NOT fresh
+                except (ValueError, IndexError):
+                    continue
+        return True  # dir present but no valid global_step_* checkpoint
+    except Exception:
+        return False  # never delete on uncertainty
+
+
+def _canonical_uids_by_step(base: str) -> dict:
+    """Map {global_step: set(rollout_uid)} from rollout_data/{step}.jsonl, the
+    authoritative restart-clean record (verl writes it mode 'w', so it holds exactly
+    the rollouts that fed that step's gradient). rollout_data sits as a sibling of
+    APPWORLD_PERCALL_LOG_DIR, or via VERL_ROLLOUT_DATA_DIR. Returns {} on any error
+    so the caller falls back to the step-number rule and never drops on uncertainty."""
+    rd = os.environ.get("VERL_ROLLOUT_DATA_DIR", "")
+    if not rd:
+        rd = str(Path(base).parent / "rollout_data")
+    out: dict = {}
+    try:
+        for f in Path(rd).glob("*.jsonl"):
+            try:
+                step = int(f.stem)
+            except ValueError:
+                continue
+            uids = set()
+            with open(f) as fh:
+                for line in fh:
+                    if not line.strip():
+                        continue
+                    try:
+                        u = json.loads(line).get("rollout_uid")
+                    except Exception:
+                        continue
+                    if u:
+                        uids.add(u)
+            if uids:
+                out[step] = uids
+    except Exception:
+        return {}
+    return out
+
+
+def _weed_orphan_rows(base: str) -> None:
+    """On resume, delete orphan audit rows from every append-only percall jsonl so
+    each step ends with exactly its real rows. Two orphan classes are removed:
+      (1) global_step > resume_step — rows from a pre-crash attempt of a step that
+          was never checkpointed; resume re-runs those steps and re-appends.
+      (2) global_step <= resume_step but rollout_uid absent from that step's
+          rollout_data set — stale rows left WITHIN an already-checkpointed step
+          (e.g. a crash mid-step that resumed from an earlier checkpoint). The
+          step-number rule alone cannot catch these; rollout_data/{step}.jsonl is
+          the authoritative uid set, so we drop any percall row whose uid is not in
+          it. Only applied to steps present in rollout_data — unknown steps and rows
+          lacking a uid are kept (never drop on uncertainty).
+
+    Runs at most once per worker. Race-free across the N rollout-worker processes
+    via an atomic O_EXCL claim of `.weed_done`: the single winner prunes, then
+    stamps the marker; every other worker (and the winner, subsequently) blocks
+    until the marker is stamped, guaranteeing prune-completes-before-any-append.
+    rollout_data/{step}.jsonl is NOT touched here — verl rewrites it with mode 'w'
+    on re-run, so it self-heals. Never raises."""
+    global _weed_done
+    if _weed_done:
+        return
+    # The marker's name has to be unique per launch, because the election is won by
+    # creating it: a name shared with an earlier launch is already taken, so this
+    # launch finds a stamped marker, concludes the pruning is done, and never prunes.
+    # The resume step supplies that uniqueness, since it advances with each resume.
+    #
+    # A fresh start has no resume step -- it is -1 for every from-scratch attempt --
+    # so a per-attempt token is appended in that case. Resumes do not need one: their
+    # step already differs, and keying them per attempt would re-prune on every
+    # restart of the same step to no effect.
+    n_marker = _resume_step()
+    marker = Path(base) / f".weed_done.{n_marker}"
+    if n_marker < 0:
+        tok = _attempt_token()
+        if tok:
+            marker = Path(base) / f".weed_done.{n_marker}.{tok}"
+    try:
+        Path(base).mkdir(parents=True, exist_ok=True)
+        # An unsuffixed marker is not this launch's and cannot be matched by any
+        # future one, so it is removed rather than left to accumulate.
+        try:
+            (Path(base) / ".weed_done").unlink()
+        except (FileNotFoundError, OSError):
+            pass
+        # Atomic single-winner election: only one process creates the marker.
+        try:
+            fd = os.open(str(marker), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+        except FileExistsError:
+            # Another worker is pruning (or already did) — wait for the stamp,
+            # then proceed. Bounded poll so we never block training forever.
+            for _ in range(3000):  # ~300s; safely > any realistic prune time
+                try:
+                    if marker.stat().st_size > 0:
+                        break
+                except FileNotFoundError:
+                    pass
+                time.sleep(0.1)
+            _weed_done = True
+            return
+        # We are the sole pruner.
+        try:
+            n = _resume_step()
+            canon = _canonical_uids_by_step(base)
+            fresh = _is_confirmed_fresh_start()
+            pruned = {}
+            # Prune on a resume (n >= 0) OR on a CONFIRMED fresh start. A fresh start
+            # means no checkpoint exists yet, so any pre-existing percall row is from
+            # an aborted prior attempt of this same run_dir (e.g. killed at step 0
+            # before the first checkpoint) — drop ALL of them. The resume-step rules
+            # (1)/(2) can't catch this because there is no checkpoint to compare to.
+            if n >= 0 or fresh:
+                for jf in Path(base).glob("*.jsonl"):
+                    kept, dropped = [], 0
+                    with open(jf) as f:
+                        for line in f:
+                            try:
+                                rec = json.loads(line)
+                                gs = rec.get("global_step")
+                                if fresh:
+                                    keep = False  # fresh start: every prior row is stale
+                                elif isinstance(gs, bool):  # bool is an int subclass
+                                    keep = True
+                                elif isinstance(gs, int):
+                                    if gs > n:
+                                        keep = False  # (1) past last checkpoint
+                                    elif gs in canon:
+                                        # (2) within a checkpointed step: keep only
+                                        # rows whose uid is in rollout_data's set.
+                                        uid = rec.get("rollout_uid")
+                                        keep = (not uid) or (uid in canon[gs])
+                                    else:
+                                        keep = True  # step not in rollout_data — keep
+                                else:
+                                    keep = True  # non-int (e.g. -1 / val) — never orphan
+                            except Exception:
+                                keep = True  # unparseable — keep, never silently drop
+                            if keep:
+                                kept.append(line)
+                            else:
+                                dropped += 1
+                    if dropped:
+                        tmp = jf.with_suffix(jf.suffix + ".weed.tmp")
+                        with open(tmp, "w") as f:
+                            f.writelines(kept)
+                        os.replace(tmp, jf)  # atomic file rename (AFM-safe)
+                        pruned[jf.name] = dropped
+            os.write(fd, json.dumps(
+                {"resume_step": n, "fresh_start": fresh, "pruned": pruned}).encode())
+        finally:
+            os.close(fd)
+        logger.warning("[resume-weed] resume_step=%s pruned=%s", n, pruned)
+    except Exception as e:
+        logger.warning("[resume-weed] failed: %s", e)
+    _weed_done = True
+
+
+def _append_jsonl(filename: str, record: dict) -> None:
+    """Append one record to APPWORLD_PERCALL_LOG_DIR/<filename>. No-op when that
+    env var is unset. Auto-stamps global_step + timestamp. Never raises."""
+    base = os.environ.get("APPWORLD_PERCALL_LOG_DIR", "")
+    if not base:
+        return
+    try:
+        if not _weed_done:
+            _weed_orphan_rows(base)  # one-shot, before this process's first append
+        record.setdefault("global_step", _current_global_step())
+        record.setdefault("rollout_uid", _current_rollout_uid())
+        record.setdefault("timestamp", datetime.now(timezone.utc).isoformat())
+        # Keep the top-level percall logs to ONLY the rollouts that are
+        # actually trained on (the train batch, exactly train_batch_size×rollout.n
+        # per step). Validation rollouts reach the worker WITHOUT the trainer's
+        # global_step injection (verl's _validate() bypasses _get_gen_batch, where
+        # the global-step-inject patch rides in), so they carry global_step == -1.
+        # Route those into a val/ subdir so they are still logged, just not mixed
+        # into the training logs. Any genuinely unstamped training row would also
+        # land here, but the 96/step training rows are stamped, so this is clean.
+        sub = "val" if record.get("global_step", -1) == -1 else ""
+        # val rows keep global_step==-1 (the routing signal into
+        # val/ and the resume-weed key). Add a SEPARATE field for the real training
+        # checkpoint step this val batch evaluates. verl saves global_step_N BEFORE
+        # validating at step N, so highest complete ckpt on disk == the val step.
+        # Only stamped on val rows; never touches training rows or global_step.
+        if sub == "val":
+            record.setdefault("val_ckpt_step", _resume_step())
+        path = Path(base) / sub / filename if sub else Path(base) / filename
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with _percall_lock:
+            with open(path, "a") as f:
+                f.write(json.dumps(record, default=str) + "\n")
+    except Exception as e:
+        logger.warning("[percall-log] failed to write %s: %s", filename, e)
+
+
+def _log_rubric_trajectory(
+    request_id: str,
+    scores: list[dict],
+    reward: float,
+    pass_rate: float,
+) -> None:
+    """Log one compact line per trajectory; write per-trajectory entry to JSONL if configured."""
+    n_total    = len(scores)
+    n_na       = sum(1 for s in scores if s.get("score", -1) == 0)
+    n_applicable = n_total - n_na
+    n_pass     = sum(1 for s in scores if s.get("score", -1) == 1)
+    # Top violating rubrics (for quick log scan) — only from applicable set
+    violations = [s.get("rubric_title", "?")[:30] for s in scores if s.get("score", -1) == -1]
+    viol_str = ", ".join(violations[:4]) + ("..." if len(violations) > 4 else "")
+
+    na_suffix = f" na={n_na}" if n_na else ""
+    logger.warning(
+        "[RUBRIC-STATS] req=%s reward=%.2f pass=%d/%d%s fail=[%s]",
+        request_id, reward, n_pass, n_applicable, na_suffix, viol_str or "none",
+    )
+
+    stats_dir = os.environ.get("APPWORLD_RUBRIC_STATS_DIR", "")
+    if not stats_dir:
+        return
+
+    entry = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "global_step": _current_global_step(),
+        "rollout_uid": _current_rollout_uid(),
+        "request_id": request_id,
+        "reward": reward,
+        "pass_rate": pass_rate,
+        "n_rubrics": n_applicable,
+        "n_rubrics_total": n_total,
+        "n_na": n_na,
+        "n_pass": n_pass,
+        "rubric_scores": [
+            {"title": s.get("rubric_title"), "score": s.get("score")}
+            for s in scores
+        ],
+    }
+    try:
+        out_dir = Path(stats_dir)
+        out_dir.mkdir(parents=True, exist_ok=True)
+        stats_file = out_dir / "rubric_stats.jsonl"
+        first_write = not stats_file.exists()
+        with _stats_file_lock:
+            with open(stats_file, "a") as f:
+                f.write(json.dumps(entry) + "\n")
+        if first_write:
+            logger.warning("[RUBRIC-STATS] writing per-trajectory stats to %s", stats_file)
+    except Exception as e:
+        logger.warning("[RUBRIC-STATS] failed to write stats file: %s", e)
+
+
+# ---------------------------------------------------------------------------
+# LLM completion with lru_cache
+# ---------------------------------------------------------------------------
+
+_LLM_MAX_RETRIES = 3
+_LLM_RETRY_DELAY = 3  # seconds
+
+# Token usage tracking for periodic summary logging
+_usage_stats = {
+    "calls": 0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "cached_tokens": 0,
+    "total_latency_s": 0.0,
+    "total_cost_usd": 0.0,
+}
+_usage_stats_lock = threading.Lock()
+
+
+def _llm_completion_core(prompt: str, stage: str = "unknown") -> str:
+    """Single LLM call with retry-on-exception. Shared by the cached and uncached
+    entry points below. Raises if all _LLM_MAX_RETRIES network attempts fail.
+
+    Logs usage (tokens, latency) to llm_calls.jsonl via _append_jsonl.
+
+    Args:
+        prompt: The completion prompt
+        stage: Human-readable label (e.g. "stage1", "stage2", "stage3", "credit")
+    """
+    client = _get_llm_client()
+    model = _get_llm_model()
+    last_exc: Exception | None = None
+    for attempt in range(1, _LLM_MAX_RETRIES + 1):
+        try:
+            t_start = time.time()
+            result = client.completions.create(
+                prompt=prompt,
+                model=model,
+                temperature=0.1,
+                max_tokens=_get_max_tokens(),
+            )
+            latency_s = time.time() - t_start
+
+            # Log usage to llm_calls.jsonl
+            usage_record = {
+                "stage": stage,
+                "request_id": _current_request_id(),
+                "model": model,
+                "latency_s": latency_s,
+                "attempt": attempt,
+            }
+
+            # Extract all available usage fields
+            if hasattr(result, "usage") and result.usage:
+                usage = result.usage
+                # Standard OpenAI usage fields
+                for attr in ["prompt_tokens", "completion_tokens", "total_tokens"]:
+                    val = getattr(usage, attr, None)
+                    if val is not None:
+                        usage_record[attr] = val
+
+                # Extended fields (o1/o3 reasoning models, prompt caching)
+                for attr in [
+                    "reasoning_tokens",  # o1/o3 reasoning tokens
+                    "cached_tokens",     # prompt cache hits
+                    "cache_creation_input_tokens",  # tokens stored for caching
+                    "cache_read_input_tokens",      # tokens retrieved from cache
+                    "prompt_tokens_details",        # nested details object
+                    "completion_tokens_details",    # nested details object
+                ]:
+                    val = getattr(usage, attr, None)
+                    if val is not None:
+                        usage_record[attr] = val
+
+            # Dollar cost from token counts. Per-1M-token prices are env-overridable
+            # (APPWORLD_LLM_PRICE_INPUT/OUTPUT_PER_M); defaults are gpt-5.4 list pricing
+            # ($2.50 input / $15.00 output per 1M tokens). Cached input tokens, when
+            # the judge backend reports them, are billed at the input rate too.
+            pt = usage_record.get("prompt_tokens", 0) or 0
+            ct = usage_record.get("completion_tokens", 0) or 0
+            in_price = float(os.environ.get("APPWORLD_LLM_PRICE_INPUT_PER_M", "2.50"))
+            out_price = float(os.environ.get("APPWORLD_LLM_PRICE_OUTPUT_PER_M", "15.00"))
+            usage_record["cost_usd"] = (pt * in_price + ct * out_price) / 1_000_000
+
+            # Log response metadata (ID, finish_reason, etc.)
+            if hasattr(result, "id"):
+                usage_record["response_id"] = result.id
+            if hasattr(result, "choices") and result.choices:
+                choice = result.choices[0]
+                if hasattr(choice, "finish_reason"):
+                    usage_record["finish_reason"] = choice.finish_reason
+                if hasattr(choice, "text"):
+                    usage_record["response_length_chars"] = len(choice.text)
+
+            _append_jsonl("llm_calls.jsonl", usage_record)
+
+            # Persist the FULL prompt + response text to the
+            # file named by APPWORLD_RUBRIC_LLM_LOG_FILE (default rubric_llm_calls/
+            # calls.jsonl). llm_calls.jsonl keeps only lean metadata; this stream
+            # carries the exact prompt sent and the raw response, keyed by
+            # request_id + rollout_uid + global_step + stage for later inspection.
+            # Fail-safe: never let logging break the reward path.
+            try:
+                _full_log = os.environ.get("APPWORLD_RUBRIC_LLM_LOG_FILE", "")
+                if _full_log:
+                    _resp_text = ""
+                    try:
+                        _resp_text = result.choices[0].text
+                    except Exception:
+                        _resp_text = ""
+                    _full_rec = {
+                        "stage": stage,
+                        "request_id": usage_record.get("request_id", ""),
+                        "rollout_uid": _current_rollout_uid(),
+                        "global_step": _current_global_step(),
+                        "model": usage_record.get("model"),
+                        "prompt": prompt,
+                        "response": _resp_text,
+                        "prompt_tokens": usage_record.get("prompt_tokens"),
+                        "completion_tokens": usage_record.get("completion_tokens"),
+                        "cost_usd": usage_record.get("cost_usd"),
+                        "finish_reason": usage_record.get("finish_reason"),
+                        "response_id": usage_record.get("response_id"),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                    }
+                    import pathlib as _pl
+                    _fp = _pl.Path(_full_log)
+                    # val rows carry global_step==-1 -> route into val/ sibling too
+                    if _full_rec["global_step"] == -1:
+                        _fp = _fp.parent / "val" / _fp.name
+                    _fp.parent.mkdir(parents=True, exist_ok=True)
+                    with _percall_lock:
+                        with open(_fp, "a") as _f:
+                            _f.write(json.dumps(_full_rec, default=str) + "\n")
+            except Exception as _fle:
+                logger.warning("[rubric-llm-fulllog] failed: %s", _fle)
+
+            # Update cumulative stats and log periodic summary
+            with _usage_stats_lock:
+                _usage_stats["calls"] += 1
+                _usage_stats["prompt_tokens"] += usage_record.get("prompt_tokens", 0) or 0
+                _usage_stats["completion_tokens"] += usage_record.get("completion_tokens", 0) or 0
+                _usage_stats["total_tokens"] += usage_record.get("total_tokens", 0) or 0
+                _usage_stats["cached_tokens"] += usage_record.get("cached_tokens", 0) or 0
+                _usage_stats["total_latency_s"] += latency_s
+                _usage_stats["total_cost_usd"] += usage_record.get("cost_usd", 0.0) or 0.0
+
+                # Log summary every 50 calls
+                if _usage_stats["calls"] % 50 == 0:
+                    avg_latency = _usage_stats["total_latency_s"] / _usage_stats["calls"]
+                    logger.warning(
+                        "[LLM-USAGE-SUMMARY] calls=%d total_tokens=%d (prompt=%d completion=%d cached=%d) "
+                        "cost=$%.2f avg_latency=%.2fs total_latency=%.1fs",
+                        _usage_stats["calls"],
+                        _usage_stats["total_tokens"],
+                        _usage_stats["prompt_tokens"],
+                        _usage_stats["completion_tokens"],
+                        _usage_stats["cached_tokens"],
+                        _usage_stats["total_cost_usd"],
+                        avg_latency,
+                        _usage_stats["total_latency_s"],
+                    )
+
+            # NEVER accept a truncated judge response. finish_reason=="length"
+            # means the output hit max_tokens and the JSON is clipped → it would
+            # fail to parse and silently fall through to reward 0.0. Treat it as a
+            # failed attempt so the retry loop re-issues the call (and ultimately
+            # raises if every attempt truncates, surfacing the problem loudly
+            # instead of poisoning the reward). The output cap (_get_max_tokens,
+            # default 32768) is generous; persistent truncation means it must be
+            # raised via APPWORLD_RUBRIC_MAX_TOKENS — not silently absorbed.
+            fr = usage_record.get("finish_reason")
+            if fr == "length":
+                raise RuntimeError(
+                    f"judge response truncated (finish_reason=length) at "
+                    f"max_tokens={_get_max_tokens()}; raise APPWORLD_RUBRIC_MAX_TOKENS"
+                )
+            return result.choices[0].text
+        except Exception as e:
+            last_exc = e
+            logger.warning(
+                "LLM call failed (attempt %d/%d): %s",
+                attempt,
+                _LLM_MAX_RETRIES,
+                e,
+            )
+            if attempt < _LLM_MAX_RETRIES:
+                time.sleep(_LLM_RETRY_DELAY)
+    raise last_exc  # type: ignore[misc]
+
+
+@lru_cache(maxsize=512)
+def _cached_llm_completion(prompt: str, stage: str = "unknown") -> str:
+    """Call the LLM and cache the result keyed by the exact prompt string.
+
+    Retries up to _LLM_MAX_RETRIES times with _LLM_RETRY_DELAY seconds between
+    attempts. Only successful results are cached by lru_cache; if all retries
+    fail the exception propagates (and is not cached).
+
+    Cache behaviour:
+    - Stage 1 prompts are keyed by agent_prompt (includes task description).
+      All 6 rollouts for the same task share the same Stage 1 prompt → cache
+      hits for rollouts 2-6 within one step.
+    - Stage 2 and Stage 3 prompts are trajectory-specific → no cache hits.
+    """
+    return _llm_completion_core(prompt, stage=stage)
+
+
+def _uncached_llm_completion(prompt: str, stage: str = "unknown") -> str:
+    """Uncached LLM call for the zero-results retry. The lru cache would replay the
+    same empty/unparseable text on a re-call, so the scoring retry must bypass it to
+    actually re-sample the judge (temp>0 → a fresh sample usually parses)."""
+    return _llm_completion_core(prompt, stage=stage)
+
+
+def _log_cache_stats() -> None:
+    """Log lru_cache hit/miss stats every 50 calls to diagnose Stage 1 reuse."""
+    try:
+        info = _cached_llm_completion.cache_info()
+        total = info.hits + info.misses
+        if total > 0 and total % 50 == 0:
+            hit_rate = info.hits / total * 100
+            logger.warning(
+                "LLM cache stats: hits=%d misses=%d hit_rate=%.1f%% size=%d/%d",
+                info.hits, info.misses, hit_rate, info.currsize, info.maxsize,
+            )
+    except (TypeError, AttributeError):
+        pass  # _cached_llm_completion is mocked in tests
+
+
+# ---------------------------------------------------------------------------
+# Prompt formatting helpers
+# ---------------------------------------------------------------------------
+
+
+def _format_generate_rubrics_prompt(agent_prompt: str) -> str:
+    template = _get_prompt_template("generate_rubrics.txt")
+    return template.replace("{{ agent_prompt }}", agent_prompt)
+
+
+def _format_generate_trajectory_rubrics_prompt(
+    agent_prompt: str,
+    trajectory: str,
+    existing_rubrics_str: str,
+) -> str:
+    template = _get_prompt_template("generate_rubrics_from_trajectory.txt")
+    return (
+        template.replace("{{ agent_prompt }}", agent_prompt)
+        .replace("{{ agent_trajectory }}", trajectory)
+        .replace("{{ existing_rubrics }}", existing_rubrics_str)
+    )
+
+
+def _format_score_prompt(
+    task_input: str,
+    trajectory: str,
+    rubrics: list[dict],
+) -> str:
+    template = _get_prompt_template("score_rubrics.txt")
+    rubrics_str = "```json\n" + json.dumps(rubrics, indent=4) + "\n```"
+    return (
+        template.replace("{{ task_input }}", task_input)
+        .replace("{{ agent_trajectory }}", trajectory)
+        .replace("{{ rubrics }}", rubrics_str)
+    )
+
+
+def _format_union_rubrics_prompt(
+    task_input: str,
+    candidate_rubrics: list[dict],
+    member_trajectories: list[tuple[str, str]] | None = None,
+) -> str:
+    """Build the prompt that merges a group's candidate rubrics into one set.
+
+    Serializes EVERY candidate rubric in full (labeled with its source index) —
+    no slicing, sampling, or dropping. With the ~900k judge window and the raised
+    output cap, the full ~72-candidate pool fits without truncation.
+
+    If ``member_trajectories`` is provided (and the template carries the
+    ``{{ group_trajectories }}`` placeholder), every rollout in the group is
+    rendered into the prompt so the merge LLM can verify discriminativeness
+    (principle #7) against the actual rollouts rather than guess from wording.
+    """
+    template = _get_prompt_template("union_rubrics.txt")
+    blocks = []
+    for i, r in enumerate(candidate_rubrics):
+        blocks.append(
+            json.dumps(
+                {
+                    "candidate_index": i,
+                    "title": r.get("title", ""),
+                    "description": r.get("description", ""),
+                    "evaluator_instruction": r.get("evaluator_instruction", ""),
+                },
+                indent=2,
+            )
+        )
+    candidates_str = "```json\n[\n" + ",\n".join(blocks) + "\n]\n```"
+    out = (
+        template.replace("{{ task }}", task_input)
+        .replace("{{ candidate_rubrics }}", candidates_str)
+    )
+    if "{{ group_trajectories }}" in out:
+        if member_trajectories:
+            traj_blocks = [
+                f"### Rollout {idx}\n{traj}"
+                for idx, (_rid, traj) in enumerate(member_trajectories)
+            ]
+            out = out.replace("{{ group_trajectories }}", "\n\n".join(traj_blocks))
+        else:
+            out = out.replace(
+                "{{ group_trajectories }}",
+                "(Rollout trajectories not provided in this configuration — "
+                "judge discriminativeness from rubric wording.)",
+            )
+    return out
+
+
+# ---------------------------------------------------------------------------
+# Rubric generation
+# ---------------------------------------------------------------------------
+
+
+def _parse_rubrics_json(text: str) -> list[dict]:
+    """Extract a JSON array from LLM output, tolerating markdown fences.
+
+    Finds the first BALANCED top-level `[...]` via a bracket-depth scan that
+    skips brackets inside JSON string literals. The previous naive
+    find('[')/rfind(']') broke whenever the judge wrote prose containing a
+    stray bracket before the array (e.g. "step [3]") or appended commentary
+    with a bracket after it (e.g. "array[5]") — or quoted trajectory content
+    like `items[0]` in an evidence/justification string — slicing at the wrong
+    bracket and raising JSONDecodeError → empty scores → spurious 0.0 reward.
+    """
+    text = text.strip()
+    # Strip markdown code fences
+    if text.startswith("```"):
+        lines = text.splitlines()
+        lines = [l for l in lines if not l.strip().startswith("```")]
+        text = "\n".join(lines)
+
+    def _balanced_end(s: str, start: int) -> int:
+        """Index of the `]` closing the `[` at `start`, skipping string literals."""
+        depth = 0
+        in_str = esc = False
+        for i in range(start, len(s)):
+            c = s[i]
+            if in_str:
+                if esc:
+                    esc = False
+                elif c == "\\":
+                    esc = True
+                elif c == '"':
+                    in_str = False
+            elif c == '"':
+                in_str = True
+            elif c == "[":
+                depth += 1
+            elif c == "]":
+                depth -= 1
+                if depth == 0:
+                    return i
+        return -1
+
+    # Try each `[` as an array start; return the first balanced slice that parses
+    # to a list of objects. This skips decoy brackets the judge writes in prose
+    # (e.g. "step [3]") or trailing notes (e.g. "array[5]") that the old
+    # find('[')/rfind(']') would slice on, yielding JSONDecodeError → empty scores.
+    pos = text.find("[")
+    while pos != -1:
+        end = _balanced_end(text, pos)
+        if end != -1:
+            try:
+                parsed = json.loads(text[pos : end + 1])
+                if isinstance(parsed, list) and parsed and isinstance(parsed[0], dict):
+                    return parsed
+            except json.JSONDecodeError:
+                pass
+        pos = text.find("[", pos + 1)
+    return json.loads(text)  # nothing matched → raise the original parse error
+
+
+def generate_rubrics(agent_prompt: str) -> list[dict]:
+    """Stage 1: generate rubrics from the agent's system prompt."""
+    prompt = _format_generate_rubrics_prompt(agent_prompt)
+    try:
+        raw = _cached_llm_completion(prompt, stage="stage1")
+        return _parse_rubrics_json(raw)
+    except json.JSONDecodeError as e:
+        logger.warning("Failed to parse stage-1 rubrics JSON: %s", e)
+        return []
+    except Exception as e:
+        logger.warning("Stage-1 rubric generation failed: %s", e)
+        return []
+
+
+def generate_trajectory_rubrics(
+    agent_prompt: str,
+    trajectory: str,
+    existing_rubrics: list[dict],
+) -> list[dict]:
+    """Stage 2: generate additional rubrics grounded in the trajectory."""
+    rubric_lines = []
+    for r in existing_rubrics:
+        rubric_lines.append(
+            f"<rubric>\n"
+            f"\t<title>{r['title']}</title>\n"
+            f"\t<description>{r['description']}</description>\n"
+            f"\t<evaluator_instructions>"
+            f"{r['evaluator_instruction']}"
+            f"</evaluator_instructions>\n"
+            f"</rubric>"
+        )
+    existing_str = "<rubrics>\n" + "\n".join(rubric_lines) + "\n</rubrics>"
+
+    prompt = _format_generate_trajectory_rubrics_prompt(
+        agent_prompt,
+        trajectory,
+        existing_str,
+    )
+    try:
+        raw = _cached_llm_completion(prompt, stage="stage2")
+        return _parse_rubrics_json(raw)
+    except json.JSONDecodeError as e:
+        logger.warning("Failed to parse stage-2 rubrics JSON: %s", e)
+        return []
+    except Exception as e:
+        logger.warning("Stage-2 rubric generation failed: %s", e)
+        return []
+
+
+# ---------------------------------------------------------------------------
+# Rubric scoring
+# ---------------------------------------------------------------------------
+
+
+def _rubrics_for_scoring(rubrics: list[dict]) -> list[dict]:
+    """Keep only fields needed by the scoring prompt."""
+    return [
+        {
+            "title": r["title"],
+            "description": r["description"],
+            "evaluator_instruction": r["evaluator_instruction"],
+        }
+        for r in rubrics
+    ]
+
+
+def _coerce_score(v) -> int:
+    """Normalize an LLM-emitted rubric score to {-1, 0, 1}.
+
+    The judge is asked for an int (+1 pass / -1 violation / 0 n-a), but
+    occasionally returns it as a string ("1") or a stray value. Left un-coerced,
+    `sum(s["score"] for s ...)` downstream raises "unsupported operand +: int and
+    str" and the whole trajectory's reward falls through to 0.0. Coerce once here
+    at the single source of scores; unparseable -> -1 (treated as a violation),
+    never crashes scoring.
+    """
+    if isinstance(v, bool):
+        return 1 if v else -1
+    if isinstance(v, (int, float)):
+        iv = int(v)
+    else:
+        try:
+            iv = int(float(str(v).strip()))
+        except (TypeError, ValueError):
+            return -1
+    return 1 if iv > 0 else (-1 if iv < 0 else 0)
+
+
+def score_trajectory(
+    task_input: str,
+    trajectory: str,
+    rubrics: list[dict],
+) -> list[dict]:
+    """Score a trajectory against rubrics. Returns list of score dicts."""
+    scoring_rubrics = _rubrics_for_scoring(rubrics)
+    prompt = _format_score_prompt(task_input, trajectory, scoring_rubrics)
+
+    def _attempt(completion_fn, stage: str) -> list:
+        try:
+            return _parse_rubrics_json(completion_fn(prompt, stage=stage))
+        except json.JSONDecodeError as e:
+            logger.warning("Failed to parse scoring JSON: %s", e)
+            return []
+        except Exception as e:
+            logger.warning("Trajectory scoring failed: %s", e)
+            return []
+
+    scores = _attempt(_cached_llm_completion, "stage3")
+    if not scores:
+        # The judge returned empty/unparseable JSON. The lru-cached
+        # completion would just replay that same bad text, so retry ONCE through the
+        # uncached path to re-sample the judge (temp>0 → usually parses) before falling
+        # back to a 0.0 reward. Salvages transient single-call parse failures.
+        logger.warning("[zero-results-retry] empty scores; retrying judge once (uncached)")
+        scores = _attempt(_uncached_llm_completion, "stage3_retry")
+    # Normalize the judge's score field to a clean int at the single source, so no
+    # downstream sum/compare can crash on a stringified score.
+    for s in scores:
+        if isinstance(s, dict):
+            s["score"] = _coerce_score(s.get("score"))
+    return scores
+
+
+# ---------------------------------------------------------------------------
+# Message extraction helpers
+# ---------------------------------------------------------------------------
+
+
+def _content_to_text(content) -> str:
+    """Normalize message content (str or list of parts) to plain text."""
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        parts = []
+        for item in content:
+            if isinstance(item, dict) and "text" in item:
+                parts.append(item["text"])
+            elif isinstance(item, str):
+                parts.append(item)
+        return "\n".join(parts)
+    return str(content) if content else ""
+
+
+def _messages_to_trajectory_text(messages: list[dict]) -> str:
+    """Convert the conversation messages list into a flat text trajectory."""
+    parts = []
+    for msg in messages:
+        role = msg.get("role", "unknown").upper()
+        content = _content_to_text(msg.get("content", ""))
+        parts.append(f"[{role}]\n{content}")
+    return "\n\n".join(parts)
+
+
+def _extract_agent_prompt(messages: list[dict]) -> str:
+    """Extract the system prompt + first user message as the agent prompt."""
+    parts = []
+    for msg in messages:
+        role = msg.get("role")
+        if role == "system":
+            parts.append(_content_to_text(msg.get("content", "")))
+        elif role == "user":
+            parts.append(_content_to_text(msg.get("content", "")))
+            break  # Only include up to first user message
+    return "\n\n".join(parts)
+
+
+def _extract_task_input(messages: list[dict]) -> str:
+    """Extract the first user message as the task input."""
+    for msg in messages:
+        if msg.get("role") == "user":
+            return _content_to_text(msg.get("content", ""))
+    return ""
+
+
+# ---------------------------------------------------------------------------
+# Artifact storage
+# ---------------------------------------------------------------------------
+
+
+def _get_output_dir() -> Path | None:
+    """Return the rubric output directory, or None if not configured."""
+    d = os.environ.get("APPWORLD_RUBRIC_OUTPUT_DIR")
+    return Path(d) if d else None
+
+
+def _save_artifacts(
+    request_id: str,
+    rubrics: list[dict],
+    scores: list[dict],
+    reward: float,
+    metrics: dict,
+    prompts: dict[str, str] | None = None,
+) -> None:
+    """Save rubric artifacts to disk. Silently skips if output dir is not set.
+
+    Returns the trajectory's artifact dir (so the caller can co-locate Stage-4
+    credit artifacts there), or None if not saved.
+    """
+    base = _get_output_dir()
+    if base is None:
+        return None
+
+    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%f")
+    out_dir = base / f"{ts}_{request_id}"
+    try:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        (out_dir / "rubrics.json").write_text(json.dumps(rubrics, indent=2))
+        (out_dir / "scores.json").write_text(json.dumps(scores, indent=2))
+        (out_dir / "reward.json").write_text(
+            json.dumps(
+                {
+                    "reward": reward,
+                    "num_rubrics": metrics.get("num_rubrics"),
+                    "rubric_avg": metrics.get("rubric_avg"),
+                    "rubric_total": metrics.get("rubric_total"),
+                    "rubric_pass_rate": metrics.get("rubric_pass_rate"),
+                    "rubric_passes": metrics.get("rubric_passes"),
+                    "stage1_count": metrics.get("stage1_count"),
+                    "stage2_count": metrics.get("stage2_count"),
+                    "stage1_latency_s": metrics.get("stage1_latency_s"),
+                    "stage2_latency_s": metrics.get("stage2_latency_s"),
+                    "stage3_latency_s": metrics.get("stage3_latency_s"),
+                    "total_latency_s": metrics.get("total_latency_s"),
+                },
+                indent=2,
+            )
+        )
+        if prompts:
+            for name, text in prompts.items():
+                (out_dir / f"prompt_{name}.txt").write_text(text)
+        return out_dir
+    except Exception as e:
+        logger.warning("Failed to save rubric artifacts to %s: %s", out_dir, e)
+        return None
+
+
+def _save_credit_artifacts(
+    artifact_dir: str | None,
+    credit_debug: dict,
+    credit_assignments: list[dict],
+    step_qualities: dict,
+    num_steps: int,
+    latency: float,
+) -> None:
+    """Persist the Stage-4 credit assignment next to the scoring artifacts.
+
+    Writes the per-rubric relevant_steps + verdict + explanation, the per-step
+    Q(S_j), the Stage-4 prompt + raw judge response, latency, and the failure
+    reason when empty. Logging-only; never affects the reward.
+    """
+    if not artifact_dir:
+        return
+    try:
+        out = Path(artifact_dir)
+        out.mkdir(parents=True, exist_ok=True)
+        sq = {str(k): v for k, v in (step_qualities or {}).items()}
+        # avg over CITED steps only (exclude -1.0 uncited pass-through sentinels)
+        _cited = [v for v in (step_qualities or {}).values() if v >= 0.0]
+        avg_q = (sum(_cited) / len(_cited)) if _cited else None
+        (out / "credit_assignment.json").write_text(
+            json.dumps(
+                {
+                    "num_steps": num_steps,
+                    "credit_assignments": credit_assignments,
+                    "step_qualities": sq,
+                    "avg_q": avg_q,
+                    "latency_s": latency,
+                    "empty": not bool(step_qualities),
+                    "error": (credit_debug or {}).get("error"),
+                },
+                indent=2,
+            )
+        )
+        if credit_debug:
+            if credit_debug.get("prompt"):
+                (out / "prompt_credit_assignment.txt").write_text(credit_debug["prompt"])
+            if credit_debug.get("raw_response") is not None:
+                (out / "response_credit_assignment.txt").write_text(str(credit_debug["raw_response"]))
+    except Exception as e:
+        logger.warning("Failed to save credit artifacts to %s: %s", artifact_dir, e)
+
+
+# ---------------------------------------------------------------------------
+# Shared Stage-3 scoring core
+# ---------------------------------------------------------------------------
+
+
+def _score_trajectory_against_rubrics(
+    task_input: str,
+    trajectory: str,
+    rubrics: list[dict],
+    request_id: str,
+    scale: float,
+    gen_metrics: dict,
+    t_start: float,
+    rollout_uid: str = "",
+) -> tuple[float, dict, str]:
+    """Score `trajectory` against `rubrics`, compute the scaled reward, and log it.
+
+    `rollout_uid`, when provided, is stamped onto the judge_calls.jsonl row so it
+    carries the MEMBER's own uid rather than the caller-context default (which,
+    in the group-coordinator path, would collapse all members to one uid).
+
+    The single scoring implementation, shared by the per-trajectory path
+    (`compute_rubric_reward`) and both group paths, so scoring, the two guard
+    returns, and the RUBRIC-STATS + judge_calls.jsonl logging live in one place.
+
+    `gen_metrics` carries the caller's generation fields (stageN_count /
+    stageN_latency_s) and is embedded into EVERY returned metrics dict (including
+    the guard returns) so the metrics shape is identical regardless of caller.
+
+    Returns (reward, metrics, score_prompt). `score_prompt` is returned so the
+    caller can persist it via `_save_artifacts` without rebuilding it.
+    """
+    logger.warning("[%s] Stage 3: scoring against %d rubrics", request_id, len(rubrics))
+    score_prompt = _format_score_prompt(task_input, trajectory, _rubrics_for_scoring(rubrics))
+    t3 = time.time()
+    scores = score_trajectory(task_input, trajectory, rubrics)
+    stage3_latency = time.time() - t3
+    total_latency = time.time() - t_start
+
+    def _metrics(extra: dict) -> dict:
+        m = {
+            "rubric_scores": [], "num_rubrics": 0, "rubric_reward": 0.0,
+            "rubric_avg": 0.0, "rubric_pass_rate": 0.0, "rubric_passes": 0,
+            "rubric_fails": 0, "rubric_total": 0,
+            "stage3_latency_s": stage3_latency, "total_latency_s": total_latency,
+        }
+        m.update(gen_metrics)
+        m.update(extra)
+        return m
+
+    num_rubrics = len(scores)
+    if num_rubrics == 0:
+        # The judge returned no parseable scores (e.g. truncated/garbage
+        # trajectory). Return a clean 0.0 so EVERY trajectory is scored rather
+        # than crash-skipped, and record the zero-result judge call.
+        logger.warning("[%s] Scoring returned 0 results", request_id)
+        _append_jsonl(
+            "judge_calls.jsonl",
+            {
+                **({"rollout_uid": rollout_uid} if rollout_uid else {}),
+                "request_id": request_id, "reward": 0.0, "num_rubrics": 0,
+                "rubric_avg": 0.0, "rubric_pass_rate": 0.0, "rubric_scores": [],
+                "n_pass": 0, "n_fail": 0, "zero_results": True,
+                "total_latency_s": total_latency,
+            },
+        )
+        return 0.0, _metrics({}), score_prompt
+    if num_rubrics != len(rubrics):
+        logger.warning(
+            "[%s] Stage 3 score count mismatch: expected %d rubrics, got %d scores",
+            request_id, len(rubrics), num_rubrics,
+        )
+        return 0.0, _metrics({}), score_prompt
+
+    # Exclude score==0 (not applicable) from the denominator so inapplicable
+    # rubrics don't dilute pass rate or drag down the average reward.
+    applicable = [s for s in scores if s.get("score", -1) != 0]
+    na_count   = num_rubrics - len(applicable)
+    passes = sum(1 for s in applicable if s.get("score") == 1)
+    fails  = len(applicable) - passes
+    total  = sum(s.get("score") for s in applicable)
+    denom  = len(applicable) if applicable else 1
+    rubric_avg       = total / denom
+    rubric_pass_rate = passes / denom
+    reward = rubric_avg * scale
+
+    score_parts = []
+    for s in scores:
+        title = s.get("rubric_title", "?")[:35]
+        sc = s.get("score", -1)
+        mark = "✓" if sc == 1 else ("~" if sc == 0 else "✗")
+        score_parts.append(f"{mark}{title}")
+    logger.warning("[%s] rubric_breakdown: %s", request_id, " | ".join(score_parts))
+    na_suffix = f" na={na_count}" if na_count else ""
+    logger.warning(
+        "[%s] Rubric result: reward=%.2f pass=%d/%d%s avg=%.2f latency=%.1fs (s3=%.1fs)",
+        request_id, reward, passes, denom, na_suffix, rubric_avg, total_latency, stage3_latency,
+    )
+
+    _log_rubric_trajectory(request_id, scores, reward, rubric_pass_rate)
+    _append_jsonl(
+        "judge_calls.jsonl",
+        {
+            **({"rollout_uid": rollout_uid} if rollout_uid else {}),
+            "request_id": request_id, "reward": reward, "rubric_avg": rubric_avg,
+            "pass_rate": rubric_pass_rate,
+            "n_rubrics": denom, "n_rubrics_total": num_rubrics, "n_na": na_count,
+            "n_pass": passes, "n_fail": fails, "total_latency_s": total_latency,
+            "rubric_scores": [
+                {"title": s.get("rubric_title"), "score": s.get("score")} for s in scores
+            ],
+        },
+    )
+
+    metrics = _metrics({
+        "rubric_scores": scores, "num_rubrics": num_rubrics, "rubric_total": total,
+        "rubric_reward": reward, "rubric_avg": rubric_avg,
+        "rubric_pass_rate": rubric_pass_rate, "rubric_passes": passes, "rubric_fails": fails,
+        "rubric_na": na_count,
+    })
+    return reward, metrics, score_prompt
+
+
+# ---------------------------------------------------------------------------
+# Top-level reward computation
+# ---------------------------------------------------------------------------
+
+
+def compute_rubric_reward(
+    messages: list[dict],
+    request_id: str = "",
+) -> tuple[float, dict]:
+    """Score one trajectory on its own, against a rubric set built for it alone.
+
+    The group paths (compute_group_union_reward, compute_discriminative_reward) are
+    what the settings normally use, because they score a whole GRPO group against one
+    shared set. This is the single-trajectory path for the rollouts that never reach
+    the group barrier — the agent loop routes anything the tool's `done` branch did
+    not score here, so no trajectory goes unjudged.
+
+    In discriminative mode the rubrics are the fixed set from
+    APPWORLD_RUBRIC_STATIC_FILE. There is no group here to compute the
+    unanimous-pass drop over, so scoring uses the whole set. In dynamic mode the
+    rubrics are generated from this trajectory's own system prompt.
+
+    Returns:
+        (reward, metrics) where reward is the scaled average rubric score
+        and metrics contains per-rubric details.
+
+    Metrics returned:
+        rubric_reward        - final scaled reward
+        rubric_avg           - average score per rubric (-1 to +1)
+        rubric_pass_rate     - fraction of rubrics that passed (0.0 to 1.0)
+        rubric_passes        - count of +1 scores
+        rubric_fails         - count of -1 scores
+        num_rubrics          - total rubrics scored
+        rubric_total         - sum of raw scores
+        rubric_scores        - list of per-rubric score dicts
+        stage1_count         - rubrics generated, or loaded in discriminative mode
+        stage2_count         - 0 here; only the group path generates per-member rubrics
+        stage1_latency_s     - wall time for generation (0.0 in discriminative mode)
+        stage2_latency_s     - 0.0 here, for the same reason as stage2_count
+        stage3_latency_s     - wall time for Stage 3 scoring
+        total_latency_s      - total wall time
+    """
+    t_start = time.time()
+
+    task_input = _extract_task_input(messages)
+    trajectory = _messages_to_trajectory_text(messages)
+    rubric_mode = _get_rubric_mode()
+    scale = _get_reward_scale()
+    logger.warning(
+        "[%s] Rubric pipeline start: mode=%s scale=%.1f msgs=%d",
+        request_id, rubric_mode, scale, len(messages),
+    )
+
+    prompts: dict[str, str] = {}
+    stage1_latency = 0.0
+    stage2_latency = 0.0
+    stage1_count = 0
+    stage2_count = 0
+
+    # ------------------------------------------------------------------
+    # Static-rubric modes: load pre-generated rubrics from disk, skip Stage 1+2.
+    # `discriminative` is a static-rubric baseline whose group-level drop happens
+    # in compute_discriminative_reward; when a single trajectory reaches this
+    # per-rollout path (e.g. the agent_loop catch-all for a trajectory the tool's
+    # `done` branch never scored), it must score against the SAME static set with
+    # NO per-task generation. There is no group here to compute the drop, so it
+    # scores against the full static set (the degenerate group-of-one).
+    # ------------------------------------------------------------------
+    if rubric_mode == "discriminative":
+        rubrics = list(_load_static_rubrics())  # list() so we don't mutate the cached copy
+        stage1_count = len(rubrics)
+        logger.warning("[%s] %s mode: %d static rubrics loaded (0 LLM calls for generation)",
+                       request_id, rubric_mode, stage1_count)
+
+    # ------------------------------------------------------------------
+    # Dynamic modes: Stage 1 (and optionally Stage 2)
+    # ------------------------------------------------------------------
+    else:
+        agent_prompt = _extract_agent_prompt(messages)
+
+        # Stage 1: rubrics from system prompt
+        rubric_gen_prompt = _format_generate_rubrics_prompt(agent_prompt)
+        prompts["generate_rubrics"] = rubric_gen_prompt
+        t1 = time.time()
+        rubrics = generate_rubrics(agent_prompt)
+        stage1_latency = time.time() - t1
+        stage1_count = len(rubrics)
+
+        logger.warning("[%s] Stage 1: %d rubrics in %.1fs",
+                       request_id, stage1_count, stage1_latency)
+        if rubrics:
+            titles_s1 = " | ".join(r.get("title", "?") for r in rubrics)
+            logger.warning("[%s] Stage 1 titles: %s", request_id, titles_s1)
+
+    if not rubrics:
+        logger.warning("[%s] No rubrics available, returning 0 reward", request_id)
+        return 0.0, {
+            "rubric_scores": [], "num_rubrics": 0, "rubric_reward": 0.0,
+            "rubric_avg": 0.0, "rubric_pass_rate": 0.0, "rubric_passes": 0,
+            "rubric_fails": 0, "rubric_total": 0,
+            "stage1_count": stage1_count, "stage2_count": stage2_count,
+            "stage1_latency_s": stage1_latency, "stage2_latency_s": stage2_latency,
+            "stage3_latency_s": 0.0,
+            "total_latency_s": time.time() - t_start,
+        }
+
+    # ------------------------------------------------------------------
+    # Stage 3: score trajectory against the rubric set (shared scoring core)
+    # ------------------------------------------------------------------
+    reward, metrics, score_prompt = _score_trajectory_against_rubrics(
+        task_input, trajectory, rubrics, request_id, scale,
+        gen_metrics={
+            "stage1_count": stage1_count, "stage2_count": stage2_count,
+            "stage1_latency_s": stage1_latency, "stage2_latency_s": stage2_latency,
+        },
+        t_start=t_start,
+    )
+    prompts["score_rubrics"] = score_prompt
+
+    _log_cache_stats()
+
+    saved_dir = _save_artifacts(
+        request_id, rubrics, metrics["rubric_scores"], reward, metrics, prompts
+    )
+    metrics["artifact_dir"] = str(saved_dir) if saved_dir else None
+
+    return reward, metrics
+
+
+# ---------------------------------------------------------------------------
+# Credit assignment reward (Stage 1-3 + Stage 4)
+# ---------------------------------------------------------------------------
+
+
+def compute_rubric_credit_reward(
+    messages: list[dict],
+    request_id: str = "",
+) -> tuple[float, dict]:
+    """Compute rubric reward with per-step credit assignment (Stage 4).
+
+    Runs the full rubric pipeline (Stage 1-3) then adds Stage 4:
+    an LLM judge that maps rubric outcomes to specific trajectory steps.
+
+    Returns:
+        (reward, metrics) where:
+        - reward is the same scalar from Stage 3 (for GRPO group normalization)
+        - metrics additionally contains:
+            credit_step_qualities: dict[int, float] mapping step→Q(S_j) in [0,1]
+            credit_assignment: list[dict] raw credit mappings from LLM
+            credit_num_steps: int total steps in trajectory
+            credit_latency_s: float wall time for Stage 4
+    """
+    # Run existing pipeline (Stages 1-3) to get scalar reward + rubric scores
+    reward, metrics = compute_rubric_reward(messages, request_id)
+    # Stage 4 (credit assignment) — shared with the union credit variant.
+    metrics.update(
+        _run_credit_stage4(
+            messages, metrics.get("rubric_scores", []), request_id,
+            metrics.get("artifact_dir"),
+        )
+    )
+    return reward, metrics
+
+
+def _run_credit_stage4(
+    messages: list[dict],
+    rubric_scores: list[dict],
+    request_id: str,
+    artifact_dir: str | None,
+    rollout_uid: str = "",
+) -> dict:
+    """Stage 4: map rubric outcomes to trajectory steps → per-step quality Q(S_j).
+
+    Shared by the per-rollout `rubric_credit` path (compute_rubric_credit_reward)
+    and the union credit variant (compute_group_union_reward): both have already
+    produced `rubric_scores` for the trajectory, so Stage 4 needs only
+    (messages, rubric_scores). Persists the credit artifacts + writes the
+    credit_calls.jsonl audit row (incl. the no-rubric-scores skip case). Returns a
+    dict of credit fields to merge into the caller's metrics:
+    {credit_step_qualities, credit_assignment, credit_num_steps, credit_latency_s}.
+    """
+    from verl_appworld.credit_assignment import (
+        compute_credit_assignment,
+        compute_step_quality_scores,
+    )
+
+    # If Stage 3 failed or returned no scores, skip credit assignment
+    if not rubric_scores:
+        logger.warning("[%s] No rubric scores available, skipping credit assignment", request_id)
+        _save_credit_artifacts(
+            artifact_dir,
+            {"prompt": "", "raw_response": None, "error": "no_rubric_scores"},
+            [], {}, 0, 0.0,
+        )
+        # record the skipped credit call too (request_id + global_step).
+        _append_jsonl(
+            "credit_calls.jsonl",
+            {**({"rollout_uid": rollout_uid} if rollout_uid else {}),
+             "request_id": request_id, "num_steps": 0, "skipped": "no_rubric_scores"},
+        )
+        return {
+            "credit_step_qualities": {}, "credit_assignment": [],
+            "credit_num_steps": 0, "credit_latency_s": 0.0,
+        }
+
+    # Stage 4: credit assignment
+    t4 = time.time()
+    credit_assignments, num_steps, credit_debug = compute_credit_assignment(
+        messages, rubric_scores, request_id
+    )
+    credit_latency = time.time() - t4
+
+    # Compute Q(S_j) per step
+    if credit_assignments:
+        step_qualities = compute_step_quality_scores(credit_assignments, num_steps)
+    else:
+        step_qualities = {}
+
+    # Log credit summary. Exclude uncited steps (Q == UNCITED_PASSTHROUGH_Q, < 0,
+    # pass-through) from the aggregates so avg_Q/good/bad describe only the steps
+    # credit assignment actually scored.
+    if step_qualities:
+        q_values = [q for q in step_qualities.values() if q >= 0.0]
+        n_uncited = sum(1 for q in step_qualities.values() if q < 0.0)
+        avg_q = (sum(q_values) / len(q_values)) if q_values else None
+        good = sum(1 for q in q_values if q > 0.7)
+        bad = sum(1 for q in q_values if q < 0.3)
+        logger.warning(
+            "[%s] Credit assignment: %d steps (%d uncited→passthrough), "
+            "avg_Q=%s good=%d bad=%d latency=%.1fs",
+            request_id, num_steps, n_uncited,
+            ("%.2f" % avg_q) if avg_q is not None else "n/a",
+            good, bad, credit_latency,
+        )
+    else:
+        logger.warning(
+            "[%s] Credit assignment returned empty, using uniform Q=0.5",
+            request_id,
+        )
+
+    # Persist the full Stage-4 output next to the scoring artifacts so the
+    # credit assignment can be inspected offline (prompt, raw judge response,
+    # per-rubric relevant_steps + verdict + explanation, per-step Q, and the
+    # failure reason when empty). Logging-only; does not affect the reward.
+    _save_credit_artifacts(
+        artifact_dir, credit_debug, credit_assignments,
+        step_qualities, num_steps, credit_latency,
+    )
+
+    # dedicated per-credit-call stream, keyed by request_id + global_step.
+    # Aggregates over CITED steps only (q >= 0); uncited steps carry the -1.0
+    # pass-through sentinel and are reported separately as n_uncited.
+    _qv = [q for q in step_qualities.values() if q >= 0.0]
+    _append_jsonl(
+        "credit_calls.jsonl",
+        {
+            **({"rollout_uid": rollout_uid} if rollout_uid else {}),
+            "request_id": request_id,
+            "num_steps": num_steps,
+            "avg_q": (sum(_qv) / len(_qv)) if _qv else None,
+            "n_good": sum(1 for q in _qv if q > 0.7),
+            "n_bad": sum(1 for q in _qv if q < 0.3),
+            "n_uncited": sum(1 for q in step_qualities.values() if q < 0.0),
+            "latency_s": credit_latency,
+            "step_qualities": step_qualities,
+            "credit_assignments": credit_assignments,
+        },
+    )
+
+    return {
+        "credit_step_qualities": step_qualities,
+        "credit_assignment": credit_assignments,
+        "credit_num_steps": num_steps,
+        "credit_latency_s": credit_latency,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Per-group-union reward (one shared rubric set per GRPO group)
+# ---------------------------------------------------------------------------
+
+
+def union_rubrics(
+    task_input: str,
+    candidate_rubrics: list[dict],
+    request_id: str = "",
+    member_trajectories: list[tuple[str, str]] | None = None,
+) -> list[dict]:
+    """LLM-merge a pool of candidate rubrics into one canonical set.
+
+    Merges semantically-equivalent rubrics across the ~72 candidates (6 members ×
+    ~12) into a single de-duplicated set (~12) so all members of a GRPO group are
+    scored against the SAME rubrics — the prerequisite for apples-to-apples
+    group-relative advantages. Returns [] on failure (caller falls back).
+
+    Logs the full union prompt + raw response (untruncated) to union_llm_calls.jsonl.
+    """
+    prompt = _format_union_rubrics_prompt(
+        task_input, candidate_rubrics, member_trajectories=member_trajectories
+    )
+    raw = ""
+    merged: list[dict] = []
+    t0 = time.time()
+    try:
+        raw = _cached_llm_completion(prompt, stage="union")
+        merged = _parse_rubrics_json(raw)
+    except json.JSONDecodeError as e:
+        logger.warning("[%s] Union rubrics JSON parse failed: %s", request_id, e)
+    except Exception as e:
+        logger.warning("[%s] Union rubrics call failed: %s", request_id, e)
+    latency = time.time() - t0
+
+    logger.warning(
+        "[%s] Union: %d candidates -> %d merged rubrics in %.1fs",
+        request_id, len(candidate_rubrics), len(merged), latency,
+    )
+    _append_jsonl(
+        "union_llm_calls.jsonl",
+        {
+            "request_id": request_id,
+            "n_candidates": len(candidate_rubrics),
+            "n_merged": len(merged),
+            "latency_s": latency,
+            "prompt": prompt,
+            "raw_response": raw,
+            "merged_rubrics": merged,
+        },
+    )
+    return merged
+
+
+def compute_group_union_reward(
+    members: list[tuple[str, list[dict]]],
+    group_key: str = "",
+    member_uids: dict[str, str] | None = None,
+) -> dict[str, tuple[float, dict]]:
+    """Score every member of one GRPO group against a single shared rubric set.
+
+    `members` is [(request_id, messages), ...] for all rollouts that share a GRPO
+    `uid`. Pipeline (per group):
+      1. Stage 1 once — rubrics from the shared agent prompt (lru-cached → 1 call).
+      2. Per member — Stage 2 rubrics grounded in that member's own trajectory;
+         member set = Stage 1 ∪ Stage 2.
+      3. Pool all member sets into ~72 candidates.
+      4. LLM-union → one shared canonical set (~12).
+      5. Score each member against the SHARED set → reward_m.
+
+    Returns {request_id: (reward, metrics)}. Overlogs the full per-stage detail to
+    group_union_calls.jsonl (member rubrics + evidence, full candidate pool, merged
+    set, per-stage latencies) so the whole group is reconstructable offline.
+    """
+    scale = _get_reward_scale()
+    t_group = time.time()
+    if not members:
+        return {}
+
+    # Shared agent prompt / task input from the first member (identical across the
+    # group — same prompt is what makes them a group).
+    agent_prompt = _extract_agent_prompt(members[0][1])
+    task_input = _extract_task_input(members[0][1])
+
+    # Stage 1 (shared, cached across the group).
+    t1 = time.time()
+    stage1 = generate_rubrics(agent_prompt)
+    stage1_latency = time.time() - t1
+    logger.warning(
+        "[union group=%s] Stage 1: %d shared rubrics in %.1fs (%d members)",
+        group_key, len(stage1), stage1_latency, len(members),
+    )
+
+    # Stage 2 per member; pool all member sets into the candidate pool.
+    # Per-member join-ctx so the stage-2 LLM-call rows carry the member's own
+    # uid/request_id rather than the coordinator's.
+    _uids_ctx = member_uids or {}
+    candidates: list[dict] = []
+    member_log: list[dict] = []
+    member_trajectories: list[tuple[str, str]] = []
+    for rid, msgs in members:
+        traj = _messages_to_trajectory_text(msgs)
+        member_trajectories.append((rid, traj))
+        t2 = time.time()
+        with _member_join_ctx(_uids_ctx.get(rid, ""), rid):
+            stage2 = generate_trajectory_rubrics(agent_prompt, traj, stage1)
+        s2_latency = time.time() - t2
+        member_set = stage1 + stage2
+        candidates.extend(member_set)
+        member_log.append({
+            "request_id": rid,
+            "n_stage1": len(stage1),
+            "n_stage2": len(stage2),
+            "stage2_latency_s": s2_latency,
+            "stage1_rubrics": stage1,
+            "stage2_rubrics": stage2,
+        })
+        logger.warning(
+            "[union group=%s] member=%s Stage 2: %d rubrics in %.1fs",
+            group_key, rid, len(stage2), s2_latency,
+        )
+
+    # Union → shared canonical set. When APPWORLD_UNION_INCLUDE_TRAJECTORIES is
+    # set, also hand the merge LLM every rollout in the group so it can verify
+    # discriminativeness (principle #7) against real rollouts, not guess from
+    # wording. Default off → behavior identical to the rubric-text-only union.
+    tu = time.time()
+    _union_trajs = (
+        member_trajectories
+        if os.environ.get("APPWORLD_UNION_INCLUDE_TRAJECTORIES", "").lower()
+        in ("1", "true", "yes")
+        else None
+    )
+    shared = union_rubrics(
+        task_input, candidates, request_id=str(group_key),
+        member_trajectories=_union_trajs,
+    )
+    union_latency = time.time() - tu
+    if not shared:
+        # Union failed: fall back to the shared Stage-1 set (still identical across
+        # all members → group comparison stays apples-to-apples), or the raw pool.
+        shared = stage1 or candidates
+        logger.warning(
+            "[union group=%s] union empty; falling back to %d-rubric set",
+            group_key, len(shared),
+        )
+
+    # Score every member against the SAME shared set (Stage 3, scores index-aligned
+    # to `shared`); defer reward to after the group-level discriminative drop.
+    credit_mode = os.environ.get("APPWORLD_REWARD_MODE", "") == "rubric_credit"
+    member_scores: dict[str, list[dict]] = {}
+    metrics_by_rid: dict[str, dict] = {}
+    for rid, msgs in members:
+        traj = _messages_to_trajectory_text(msgs)
+        # Per-member join-ctx so the stage-3 LLM-call rows carry the member's own
+        # uid/request_id rather than the coordinator's.
+        with _member_join_ctx(_uids_ctx.get(rid, ""), rid):
+            _r, metrics, _p = _score_trajectory_against_rubrics(
+                task_input, traj, shared, rid, scale,
+                gen_metrics={
+                    "stage1_count": len(stage1), "stage2_count": 0,
+                    "stage1_latency_s": stage1_latency, "stage2_latency_s": 0.0,
+                    "union_shared_count": len(shared),
+                },
+                t_start=t_group,
+                rollout_uid=(member_uids or {}).get(rid, ""),
+            )
+        metrics["union_group_key"] = str(group_key)
+        member_scores[rid] = metrics.get("rubric_scores") or []
+        metrics_by_rid[rid] = metrics
+
+    # Drop non-discriminative rubrics, then recompute rewards over the survivors.
+    # Same rule and arithmetic as the discriminative baseline (keep a rubric iff
+    # some member FAILS it; all-PASS/all-NA rubrics only inflate the reward level
+    # and carry no group-relative signal). all-FAIL rubrics are kept.
+    non_discriminative = _non_discriminative_indices(members, member_scores, len(shared))
+    logger.warning(
+        "[union group=%s] dropped %d/%d non-discriminative rubrics from denominator",
+        group_key, len(non_discriminative), len(shared),
+    )
+    results: dict[str, tuple[float, dict]] = {}
+    for rid, msgs in members:
+        scores = member_scores[rid]
+        m = _reward_from_scores(scores, scale, dropped_indices=non_discriminative)
+        metrics = metrics_by_rid[rid]
+        metrics.update(m)
+        metrics["union_dropped_count"] = len(non_discriminative)
+        metrics["union_kept_count"] = len(shared) - len(non_discriminative)
+        metrics["union_reward_full"] = _reward_from_scores(scores, scale)["rubric_reward"]
+        if credit_mode:
+            kept_scores = [s for i, s in enumerate(scores) if i not in non_discriminative]
+            with _member_join_ctx(_uids_ctx.get(rid, ""), rid):
+                metrics.update(_run_credit_stage4(
+                    msgs, kept_scores, rid, metrics.get("artifact_dir"),
+                    rollout_uid=(member_uids or {}).get(rid, "")))
+        results[rid] = (m["rubric_reward"], metrics)
+
+    group_latency = time.time() - t_group
+    _log_cache_stats()
+
+    # One fully-detailed row per group for offline analysis. Keyed by rollout_uid
+    # (stable per-rollout join key) rather than request_id, which is reused across
+    # rollouts and cannot be joined to the other logs.
+    _uids = member_uids or {}
+    _uid = lambda rid: _uids.get(rid, rid)
+    _append_jsonl(
+        "group_union_calls.jsonl",
+        {
+            "group_key": str(group_key),
+            "n_members": len(members),
+            "member_rollout_uids": [_uid(rid) for rid, _ in members],
+            "n_candidates": len(candidates),
+            "n_shared": len(shared),
+            "n_dropped_nondiscriminative": len(non_discriminative),
+            "n_kept": len(shared) - len(non_discriminative),
+            "dropped_rubric_titles": [shared[i].get("title", shared[i].get("rubric_title"))
+                                      for i in sorted(non_discriminative)],
+            "stage1_latency_s": stage1_latency,
+            "union_latency_s": union_latency,
+            "group_latency_s": group_latency,
+            "shared_rubrics": shared,
+            "candidate_pool": candidates,
+            "members": member_log,
+            "rewards": {_uid(rid): r for rid, (r, _m) in results.items()},
+            "rewards_full": {_uid(rid): m.get("union_reward_full")
+                             for rid, (_r, m) in results.items()},
+        },
+    )
+    logger.warning(
+        "[union group=%s] scored %d members vs %d shared rubrics in %.1fs; rewards=%s",
+        group_key, len(members), len(shared), group_latency,
+        {rid: round(r, 2) for rid, (r, _m) in results.items()},
+    )
+    # Return the shared context too so the agent loop can score ANY late-arriving
+    # member against the SAME shared set (guarantees every trajectory is judged,
+    # even stragglers that arrive after this batch was computed).
+    shared_ctx = {"shared_rubrics": shared, "task_input": task_input, "scale": scale,
+                  "group_key": str(group_key),
+                  "non_discriminative": sorted(non_discriminative)}
+    return results, shared_ctx
+
+
+def _non_discriminative_indices(
+    members: list[tuple[str, list[dict]]],
+    member_scores: dict[str, list[dict]],
+    num_rubrics: int,
+) -> set[int]:
+    """Rubric indices that NO member FAILED (no score == -1 anywhere in the group).
+
+    Such a rubric carries no fail signal to separate good from bad rollouts — every
+    member passed it or it was N/A — so callers drop it from the reward denominator.
+    A rubric is KEPT iff at least one member genuinely failed it (score == -1); this
+    preserves all-FAIL rubrics, which are real signal. Scores are index-aligned to the
+    shared/static rubric set. Shared by the discriminative and per-group-union paths."""
+    return {
+        i for i in range(num_rubrics)
+        if not any(
+            i < len(member_scores[rid]) and member_scores[rid][i].get("score") == -1
+            for rid, _ in members
+        )
+    }
+
+
+def _reward_from_scores(
+    scores: list[dict],
+    scale: float,
+    dropped_indices: set[int] | None = None,
+) -> dict:
+    """Compute the rubric reward from a list of per-rubric score dicts.
+
+    `scores` is the judge output: [{"rubric_title": str, "score": int}, ...] where
+    score is 1 (PASS), 0 (NOT_APPLICABLE), or -1 (FAIL). Mirrors the exact reward
+    math in `_score_trajectory_against_rubrics` (NOT_APPLICABLE excluded from the
+    denominator), with one addition: rubric positions in `dropped_indices` are also
+    excluded from the denominator. That is how a rubric every rollout in the group
+    passes is removed: it separates no rollout from another, so leaving it in the
+    denominator would raise every member's reward by the same amount and add no
+    group-relative signal.
+
+    Returns a metrics dict (reward, avg, pass_rate, counts). On an empty denominator
+    (every rubric dropped or N/A) reward is 0.0.
+    """
+    dropped_indices = dropped_indices or set()
+    # Keep applicable rubrics (score != 0) that were NOT dropped as unanimous-pass.
+    applicable = [
+        s for i, s in enumerate(scores)
+        if s.get("score", -1) != 0 and i not in dropped_indices
+    ]
+    passes = sum(1 for s in applicable if s.get("score") == 1)
+    fails = len(applicable) - passes
+    denom = len(applicable)
+    if denom == 0:
+        return {
+            "rubric_scores": scores, "num_rubrics": len(scores),
+            "rubric_reward": 0.0, "rubric_avg": 0.0, "rubric_pass_rate": 0.0,
+            "rubric_passes": 0, "rubric_fails": 0, "rubric_total": 0,
+        }
+    total = sum(s.get("score") for s in applicable)
+    rubric_avg = total / denom
+    return {
+        "rubric_scores": scores, "num_rubrics": len(scores),
+        "rubric_reward": rubric_avg * scale, "rubric_avg": rubric_avg,
+        "rubric_pass_rate": passes / denom,
+        "rubric_passes": passes, "rubric_fails": fails, "rubric_total": denom,
+    }
+
+
+def compute_discriminative_reward(
+    members: list[tuple[str, list[dict]]],
+    group_key: str = "",
+    member_uids: dict[str, str] | None = None,
+) -> tuple[dict[str, tuple[float, dict]], dict]:
+    """Static-rubric reward that drops rubrics passed by EVERY member of the group.
+
+    `members` is [(request_id, messages), ...] for all rollouts sharing a GRPO `uid`.
+    Identical to the plain static-rubric baseline, with ONE group-level step added:
+
+      1. Stage 1 once — static rubrics from the shared agent prompt (cached → 1 call).
+      2. Score each member's trajectory against that set (one judge call per member).
+      3. Find rubrics where ALL members scored PASS (score==1) — non-discriminative.
+      4. Each member's reward = average over the REMAINING rubrics (the unanimous-pass
+         ones are dropped from the denominator). No re-scoring / no extra LLM call —
+         step 4 is pure arithmetic over the step-2 scores.
+
+    Dropping rubrics that everyone passes removes the constant offset that washes out
+    the GRPO group-relative signal, so the surviving rubrics differentiate the group.
+
+    Returns ({request_id: (reward, metrics)}, shared_ctx). Per-member rows go to
+    judge_calls.jsonl (with the drop bookkeeping); one summary row per group goes to
+    discriminative_calls.jsonl.
+    """
+    scale = _get_reward_scale()
+    t_group = time.time()
+    if not members:
+        return {}, {}
+
+    # Shared agent prompt / task input from the first member (identical across group).
+    agent_prompt = _extract_agent_prompt(members[0][1])
+    task_input = _extract_task_input(members[0][1])
+
+    # Stage 1: load the STATIC rubric set (discriminative is a static-rubric
+    # baseline; every group sees the same rubrics). No fallback to per-task
+    # generation — _load_static_rubrics() raises if the file is unset.
+    if not os.environ.get("APPWORLD_RUBRIC_STATIC_FILE"):
+        raise RuntimeError(
+            "APPWORLD_RUBRIC_MODE=discriminative requires APPWORLD_RUBRIC_STATIC_FILE."
+        )
+    t1 = time.time()
+    rubrics = list(_load_static_rubrics())  # list() so we don't mutate the cache
+    stage1_latency = time.time() - t1
+    num_rubrics = len(rubrics)
+    logger.warning(
+        "[discriminative group=%s] %d static rubrics in %.1fs (%d members)",
+        group_key, num_rubrics, stage1_latency, len(members),
+    )
+    if not rubrics:
+        logger.warning("[discriminative group=%s] no rubrics; returning 0 rewards", group_key)
+        return {rid: (0.0, {"num_rubrics": 0}) for rid, _ in members}, {}
+
+    # Step 2: one judge call per member → raw per-rubric scores (no reward yet).
+    # Wrap each member's scoring in its own join-ctx so the raw LLM-call rows
+    # (llm_calls.jsonl) carry the member's uid/request_id, not the coordinator's.
+    member_scores: dict[str, list[dict]] = {}
+    _uids = member_uids or {}
+    for rid, msgs in members:
+        traj = _messages_to_trajectory_text(msgs)
+        with _member_join_ctx(_uids.get(rid, ""), rid):
+            member_scores[rid] = score_trajectory(task_input, traj, rubrics)
+
+    # Step 3: drop rubrics no member failed (non-discriminative). Shared helper.
+    non_discriminative = _non_discriminative_indices(members, member_scores, num_rubrics)
+    logger.warning(
+        "[discriminative group=%s] dropped %d/%d unanimous-PASS rubrics from denominator",
+        group_key, len(non_discriminative), num_rubrics,
+    )
+
+    # Step 4: per-member reward over the surviving rubrics (pure arithmetic).
+    credit_mode = os.environ.get("APPWORLD_REWARD_MODE", "") == "rubric_credit"
+    results: dict[str, tuple[float, dict]] = {}
+    full_rewards: dict[str, float] = {}  # reward WITHOUT the drop, for comparison
+    for rid, msgs in members:
+        scores = member_scores[rid]
+        m = _reward_from_scores(scores, scale, dropped_indices=non_discriminative)
+        full = _reward_from_scores(scores, scale, dropped_indices=set())
+        full_rewards[rid] = full["rubric_reward"]
+        reward = m["rubric_reward"]
+        metrics = {
+            **m,
+            "discriminative_group_key": str(group_key),
+            "discriminative_dropped_count": len(non_discriminative),
+            "discriminative_kept_count": num_rubrics - len(non_discriminative),
+            "discriminative_reward_full": full["rubric_reward"],
+            "stage1_count": num_rubrics,
+            "stage1_latency_s": stage1_latency,
+        }
+
+        # In rubric_credit mode, run Stage 4 over the SAME
+        # surviving rubric scores so the per-step credit matches the reward denominator.
+        if credit_mode:
+            kept_scores = [s for i, s in enumerate(scores) if i not in non_discriminative]
+            metrics.update(
+                _run_credit_stage4(msgs, kept_scores, rid, metrics.get("artifact_dir"),
+                                   rollout_uid=(member_uids or {}).get(rid, ""))
+            )
+
+        # One judge_calls.jsonl row per member (final discriminative reward).
+        _append_jsonl(
+            "judge_calls.jsonl",
+            {
+                **({"rollout_uid": (member_uids or {}).get(rid, "")}
+                   if member_uids else {}),
+                "request_id": rid, "reward": reward,
+                "rubric_avg": metrics["rubric_avg"], "pass_rate": metrics["rubric_pass_rate"],
+                "n_rubrics": metrics["rubric_total"], "n_rubrics_total": num_rubrics,
+                "n_pass": metrics["rubric_passes"], "n_fail": metrics["rubric_fails"],
+                "total_latency_s": time.time() - t_group,
+                "mode": "discriminative",
+                "discriminative_dropped_count": len(non_discriminative),
+                "discriminative_kept_count": num_rubrics - len(non_discriminative),
+                "reward_full": full["rubric_reward"],
+                "rubric_scores": [
+                    {"title": s.get("rubric_title"), "score": s.get("score"),
+                     "dropped": i in non_discriminative}
+                    for i, s in enumerate(scores)
+                ],
+            },
+        )
+        results[rid] = (reward, metrics)
+
+    group_latency = time.time() - t_group
+    _log_cache_stats()
+
+    # One summary row per group (rubric titles + which were dropped + before/after).
+    # Keyed by rollout_uid (stable per-rollout join key) rather than request_id,
+    # which is reused across rollouts and cannot be joined to the other logs.
+    _uids = member_uids or {}
+    _uid = lambda rid: _uids.get(rid, rid)
+    _append_jsonl(
+        "discriminative_calls.jsonl",
+        {
+            "group_key": str(group_key), "n_members": len(members),
+            "member_rollout_uids": [_uid(rid) for rid, _ in members],
+            "n_rubrics_total": num_rubrics,
+            "n_rubrics_dropped": len(non_discriminative),
+            "n_rubrics_kept": num_rubrics - len(non_discriminative),
+            "dropped_rubric_indices": sorted(non_discriminative),
+            "dropped_rubric_titles": [
+                rubrics[i].get("title", rubrics[i].get("rubric_title", f"rubric_{i}"))
+                for i in sorted(non_discriminative)
+            ],
+            "stage1_latency_s": stage1_latency, "group_latency_s": group_latency,
+            "rewards_full": {_uid(rid): r for rid, r in full_rewards.items()},
+            "rewards_discriminative": {_uid(rid): r for rid, (r, _m) in results.items()},
+        },
+    )
+    logger.warning(
+        "[discriminative group=%s] %d members, kept %d/%d rubrics in %.1fs; rewards=%s (full=%s)",
+        group_key, len(members), num_rubrics - len(non_discriminative), num_rubrics, group_latency,
+        {rid: round(r, 2) for rid, (r, _m) in results.items()},
+        {rid: round(r, 2) for rid, r in full_rewards.items()},
+    )
+
+    # Late members (stragglers) re-derive their reward from the SAME dropped set.
+    # (Dict key kept as "unanimous_pass" for back-compat with the reader in
+    # agent_loop; its VALUE is now the non-discriminative set — rubrics no member
+    # failed — per the updated drop rule above.)
+    shared_ctx = {
+        "rubrics": rubrics, "unanimous_pass": sorted(non_discriminative),
+        "task_input": task_input, "scale": scale, "group_key": str(group_key),
+    }
+    return results, shared_ctx
+
+
+def score_member_against_discriminative(
+    messages: list[dict],
+    rubrics: list[dict],
+    unanimous_pass: list[int],
+    task_input: str,
+    scale: float,
+    request_id: str = "",
+) -> tuple[float, dict]:
+    """Score ONE straggler against the group's rubrics, dropping the same set.
+
+    Used for a group member that arrived after the coordinator scored the batch, so it
+    stays apples-to-apples: same rubrics, same dropped indices. `unanimous_pass` is the
+    coordinator's dropped set — under the current rule, the non-discriminative rubrics
+    (those NO member failed); the param name is retained for call-site compatibility.
+    """
+    try:
+        if not rubrics:
+            return 0.0, {"num_rubrics": 0, "discriminative_late_member": True}
+        traj = _messages_to_trajectory_text(messages)
+        scores = score_trajectory(task_input, traj, rubrics)
+        dropped = set(unanimous_pass or [])
+        m = _reward_from_scores(scores, scale, dropped_indices=dropped)
+        m["discriminative_late_member"] = True
+        m["discriminative_dropped_count"] = len(dropped)
+        m["discriminative_kept_count"] = len(rubrics) - len(dropped)
+        _append_jsonl(
+            "judge_calls.jsonl",
+            {
+                "request_id": request_id, "reward": m["rubric_reward"],
+                "rubric_avg": m["rubric_avg"], "pass_rate": m["rubric_pass_rate"],
+                "n_rubrics": m["rubric_total"], "n_rubrics_total": len(rubrics),
+                "n_pass": m["rubric_passes"], "n_fail": m["rubric_fails"],
+                "mode": "discriminative", "discriminative_late_member": True,
+                "discriminative_dropped_count": len(dropped),
+            },
+        )
+        credit_mode = os.environ.get("APPWORLD_REWARD_MODE", "") == "rubric_credit"
+        if credit_mode:
+            kept_scores = [s for i, s in enumerate(scores) if i not in dropped]
+            m.update(_run_credit_stage4(messages, kept_scores, request_id, m.get("artifact_dir")))
+        return m["rubric_reward"], m
+    except Exception as e:
+        logger.warning("[%s] Late-member discriminative scoring failed: %s", request_id, e)
+        return 0.0, {"num_rubrics": 0, "error": str(e)}
+
+
+def score_member_against_shared(
+    messages: list[dict],
+    shared_rubrics: list[dict],
+    task_input: str,
+    scale: float,
+    request_id: str = "",
+    non_discriminative: list[int] | None = None,
+) -> tuple[float, dict]:
+    """Score ONE trajectory against an already-computed shared rubric set.
+
+    Used for a group member that was not part of the coordinator's scoring batch
+    (a straggler that arrived after the union was built). Scores it against the
+    SAME shared set AND drops the SAME non-discriminative rubric indices the
+    coordinator dropped, so it stays apples-to-apples with its group. ALWAYS emits
+    a judge_calls.jsonl row (even on parse failure → 0.0). Never raises.
+    """
+    try:
+        trajectory = _messages_to_trajectory_text(messages)
+        _r, metrics, _ = _score_trajectory_against_rubrics(
+            task_input, trajectory, shared_rubrics, request_id, scale,
+            gen_metrics={"stage1_count": 0, "stage2_count": 0,
+                         "stage1_latency_s": 0.0, "stage2_latency_s": 0.0,
+                         "union_shared_count": len(shared_rubrics),
+                         "union_late_member": True},
+            t_start=time.time(),
+        )
+        # Apply the group's drop set so the late member's reward uses the same
+        # denominator as its peers (same rule as the coordinator).
+        dropped = set(non_discriminative or [])
+        scores = metrics.get("rubric_scores") or []
+        m = _reward_from_scores(scores, scale, dropped_indices=dropped)
+        metrics.update(m)
+        reward = m["rubric_reward"]
+        metrics["union_late_member"] = True
+        metrics["union_dropped_count"] = len(dropped)
+        # late members get Stage 4 too, so they carry the same
+        # credit fields as their group (apples-to-apples for advantage masking).
+        if os.environ.get("APPWORLD_REWARD_MODE", "") == "rubric_credit":
+            kept_scores = [s for i, s in enumerate(scores) if i not in dropped]
+            metrics.update(
+                _run_credit_stage4(
+                    messages, kept_scores, request_id,
+                    metrics.get("artifact_dir"),
+                )
+            )
+        return reward, metrics
+    except Exception as e:
+        logger.warning("[union] late-member scoring failed for req=%s: %s", request_id, e)
+        return 0.0, {"union_late_member": True, "error": str(e)}
