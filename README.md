@@ -2,7 +2,13 @@
 
 这是 taowen 的个人工作区，用于存放需要通过 Git 进行版本控制的源代码、脚本、配置文件、项目文档和经确认需要保留的派生数据。
 
-当前工作重点是研究 AppWorld 工具型智能体的轨迹学习：从可验证的正确 ReAct 轨迹构造监督数据，在同一 Qwen3-8B 基座上完成 LoRA 和全参数 SFT，并使用统一的 AppWorld Dev 协议比较训练前后的能力。
+当前工作重点是研究 AppWorld 工具型智能体的轨迹学习：在 Qwen3-8B 上比较 LoRA 与全参数 SFT、经验证的单步修复训练，以及固定 rubric 评分能否提供有效的策略学习信号。
+
+截至 **2026-10-09**，原始 Qwen3-8B 与现有 train90 / epoch5 SFT LoRA 各完成 540 条配对采样，共 1,080 条训练集轨迹并通过验收。当前下一步是统一静态 rubric 评分；本系列尚未执行 rubric 评分、GRPO 更新或新的 Dev 评测。
+
+- 当前安排：[静态 rubric 研究待办](plans/2026-10-08_rubric_research/README.md) · [实验计划](plans/2026-10-08_rubric_research/EXPERIMENT_PLAN.md) · [长期研究设想](plans/2026-10-08_rubric_research/RESEARCH_IDEA.md)。
+- 最新实验：[原始模型采样](experiments/2026-10-08_static_rubric_grpo/README.md) · [SFT LoRA 采样](experiments/2026-10-08_static_rubric_grpo_lora_init/README.md) · [完整实验报告](experiments/2026-10-08_static_rubric_grpo_lora_init/RUBRIC_GRPO_EXPERIMENT_REPORT.md)。
+- 前一阶段：[Dynamic CFST 实验总览](experiments/2026-09-28_dynamic_cfst/README.md)。以下按日期保留各阶段的主要结果。
 
 ## 原始数据位置
 
@@ -227,3 +233,38 @@ Git 只保留轻量报告、聚合元数据和复现配置；`logs/`、`cache/`�
 - 训练约69.9分钟，正式评测约84.2分钟；保留epoch1和最终epoch2两份BF16模型，各约15.27GiB，无optimizer重启分片。168题状态、官方评分、30个模型文件哈希、1008份任务证据及归档校验全部通过，GPU已释放。
 - [详细中文评测报告](experiments/2026-09-23_093945_appworld_qwen3-8b_react_full_sft_codex_rft_train90_epoch2_prefix5_test_normal168/REPORT.md) · [训练报告](experiments/2026-09-23_093945_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch2_prefix5/REPORT.md) · [六组配对案例](experiments/2026-09-23_093945_appworld_qwen3-8b_react_full_sft_codex_rft_train90_epoch2_prefix5_test_normal168/CASE_STUDIES.md) · [逐题CSV](experiments/2026-09-23_093945_appworld_qwen3-8b_react_full_sft_codex_rft_train90_epoch2_prefix5_test_normal168/task_comparison.csv) · [场景CSV](experiments/2026-09-23_093945_appworld_qwen3-8b_react_full_sft_codex_rft_train90_epoch2_prefix5_test_normal168/scenario_comparison.csv)。
 - [两轮/五轮loss对比](experiments/2026-09-23_093945_appworld_qwen3-8b_full_sft_codex_rft_train90_epoch2_prefix5/metrics/loss_comparison.png) · [性能对比图](experiments/2026-09-23_093945_appworld_qwen3-8b_react_full_sft_codex_rft_train90_epoch2_prefix5_test_normal168/metrics/performance_comparison.png) · [结构化结果](experiments/2026-09-23_093945_appworld_qwen3-8b_react_full_sft_codex_rft_train90_epoch2_prefix5_test_normal168/summary.json) · [最终核验](experiments/2026-09-23_093945_appworld_qwen3-8b_react_full_sft_codex_rft_train90_epoch2_prefix5_test_normal168/metrics/final_validation.json)。图像同时保存PDF，权重和原始运行轨迹仅保留在服务器本次实验目录。
+
+## 2026-09-28—29：Dynamic CFST 单步修复训练与 Dev57 评测
+
+- 从已有 train90 / epoch5 SFT LoRA 出发，完成 train90 学生轨迹采集，官方成功 46/90；按任务族冻结来源 60 题与检查 30 题，只在来源侧构造和验证教师单步替代动作。
+- 共得到 20 条官方成功验证的修复样本，形成 State 12 条、Action 8 条、Mixed 20 条三个独立训练包。各包 1 epoch 分支分别更新 6、4、10 次；检查 30 题成功数分别为 17、19、15，按冻结规则选出 Action 候选。
+- 完整 Dev57 结果如下；原 epoch5 基线复用历史记录，State 与 Mixed 为后续补充诊断。
+
+| 模型 | Dev57 官方成功 | 测试条件通过 |
+| --- | ---: | ---: |
+| 原 train90 LoRA epoch5 | 23/57（40.4%） | 206/291 |
+| CFST-Action，1 epoch | 31/57（54.4%） | 215/291 |
+| CFST-State，1 epoch | 25/57（43.9%） | 179/291 |
+| CFST-Mixed，1 epoch | 21/57（36.8%） | 184/291 |
+
+- Action 相对基线新增成功 14 题、退步 6 题，净增 8 题，通过既有接受门槛。上述为本阶段 Dev 结果，尚未执行来源 60 题刷新；后续 State/Mixed 诊断保留原 Action 选择记录。
+- [实验总览](experiments/2026-09-28_dynamic_cfst/README.md) · [1 epoch 训练记录](experiments/2026-09-28_dynamic_cfst/step06b_lora_one_epoch/README.md) · [Action Dev57 报告](experiments/2026-09-28_dynamic_cfst/step07c_dev57_action_one_epoch/README.md) · [四模型逐题对照](experiments/2026-09-28_dynamic_cfst/step07e_dev57_state_one_epoch/four_model_per_task.csv) · [研究方案](plans/2026-09-28_capability_frontier/README.md)。
+
+## 2026-10-08—09：静态 rubric 实验的双起点 train90 采样
+
+本系列准备采用 DRACO 的固定 21 条规则进行轨迹级评分，再验证其是否能提供有效的 GRPO 相对优势。**目前只完成采样与验收；尚无 rubric 评分、GRPO 权重更新或本系列的新 Dev 结果。**
+
+| 训练集采样诊断 | 原始 Qwen3-8B | 现有 SFT LoRA |
+| --- | ---: | ---: |
+| 完整轨迹 / 每题六条的完整组 | 540 / 90 | 540 / 90 |
+| 官方终态成功轨迹 | 39/540（7.22%） | 186/540（34.44%） |
+| 六次全失败的任务 | 70 | 23 |
+| 成功与失败混合的任务 | 20 | 63 |
+| 六次全成功的任务 | 0 | 4 |
+
+- 两组使用相同的 train90 任务、六个固定 seed、ReAct prompt、parser 与执行预算。temperature `1`、top_p `1`、top_k `-1`、repetition_penalty `1`、`enable_thinking=false`；每题最多 50 步、上下文 32000、每步最多 3000 输出 tokens，超窗时结束且不裁剪历史。GPU 0 生成，最多六路隔离环境并发。
+- LoRA 起点为已有 train90 / epoch5 adapter（rank 8、alpha 16）。它已使用同一 train90 的 Codex 示范训练，因此上表是训练内随机采样诊断，两组差值不能解释为 rubric 收益或 Dev 泛化提升。
+- 两组全部轨迹通过完整性、token 重建与旧策略 logprob 对齐验收。LoRA 采样因 Ellipsis 日志序列化错误中断后，保留原有 342 条完整轨迹不变，修复日志兼容性并补齐 198 条；失败、无代码和预算耗尽样本均保留。
+- 下一步按计划先检查 24 条轨迹的静态评分，再覆盖全部 1,080 条，分析规则判定与组内差异；评分可用后再接入 GRPO 续训和统一 Dev57 对照。实验目录中的早期训练原型与旧预算不代表已执行训练。
+- [原始模型采样说明](experiments/2026-10-08_static_rubric_grpo/README.md) · [LoRA 采样说明](experiments/2026-10-08_static_rubric_grpo_lora_init/README.md) · [完整实验报告](experiments/2026-10-08_static_rubric_grpo_lora_init/RUBRIC_GRPO_EXPERIMENT_REPORT.md) · [配对采样统计](experiments/2026-10-08_static_rubric_grpo_lora_init/preparation/collection_comparison.json) · [恢复验收记录](experiments/2026-10-08_static_rubric_grpo_lora_init/recovery/2026-10-09/final_diagnostics.json)。
+- 总体规划集中在 [plans/2026-10-08_rubric_research/](plans/2026-10-08_rubric_research/README.md)，实际运行记录保留在 experiments。完整采样轨迹所在的 `runs/`、运行时缓存和模型权重由 `.gitignore` 排除；Git 中保留实验代码、配置、报告、来源快照及已纳入版本控制的恢复记录。
