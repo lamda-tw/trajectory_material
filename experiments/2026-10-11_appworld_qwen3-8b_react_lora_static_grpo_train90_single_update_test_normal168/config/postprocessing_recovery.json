@@ -1,0 +1,14 @@
+{
+  "official_evaluation": "168/168 completed once; both workers exit 0 and full official aggregation passed",
+  "report_recovery": {
+    "initial_error": "AppWorld environment lacks NumPy",
+    "resolution": "Use existing .conda-training environment with NumPy and Matplotlib; controller report subprocess corrected for reproducibility"
+  },
+  "probe_recovery": {
+    "initial_error": "NumPy percentile on boolean array after 24 forwards",
+    "resolution": "Cast statistic arrays to float64 and save raw records; repeated same immutable train-only plan, final SUCCESS artifact verified",
+    "second_attempt_process": "exited and reaped"
+  },
+  "no_policy_mutation": true,
+  "no_test_rollout_retries": true
+}

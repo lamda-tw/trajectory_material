@@ -1,0 +1,13 @@
+{
+  "version": "smoke_v3_calibrated",
+  "wrapper": "stages/step02_static_scores/calibration_v3/judge_wrapper.txt",
+  "semantic_validation": "Recovers from failures score must be -1 or +1; reject NA, never coerce score",
+  "scope": "same 12 trajectories as smoke_v2; no new rollout, no GRPO, no dev",
+  "max_attempts_per_trajectory": 2,
+  "reward_scale": 10.0,
+  "changes": [
+    "specific rubric instructions override generic NA defaults",
+    "observed execution versus unexecuted code or intent",
+    "separate rubric scopes without adding task-specific criteria"
+  ]
+}

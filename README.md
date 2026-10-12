@@ -4,10 +4,11 @@
 
 当前工作重点是研究 AppWorld 工具型智能体的轨迹学习：在 Qwen3-8B 上比较 LoRA 与全参数 SFT、经验证的单步修复训练，以及固定 rubric 评分能否提供有效的策略学习信号。
 
-截至 **2026-10-09**，原始 Qwen3-8B 与现有 train90 / epoch5 SFT LoRA 各完成 540 条配对采样，共 1,080 条训练集轨迹并通过验收。当前下一步是统一静态 rubric 评分；本系列尚未执行 rubric 评分、GRPO 更新或新的 Dev 评测。
+截至 **2026-10-12**，已完成 SFT LoRA 分支全部 540 条 train90 轨迹的静态 rubric 评分、一次全量 GRPO 更新，以及完整 Dev57 和 test_normal168 评测。更新后成功数分别为 **16/57、37/168**，低于更新前历史 LoRA 对照的 **23/57、51/168**；当前保留逐题对照和训练诊断，不将单次更新结果视为完整 DRACO 训练效果。
 
-- 当前安排：[静态 rubric 研究待办](plans/2026-10-08_rubric_research/README.md) · [实验计划](plans/2026-10-08_rubric_research/EXPERIMENT_PLAN.md) · [长期研究设想](plans/2026-10-08_rubric_research/RESEARCH_IDEA.md)。
-- 最新实验：[原始模型采样](experiments/2026-10-08_static_rubric_grpo/README.md) · [SFT LoRA 采样](experiments/2026-10-08_static_rubric_grpo_lora_init/README.md) · [完整实验报告](experiments/2026-10-08_static_rubric_grpo_lora_init/RUBRIC_GRPO_EXPERIMENT_REPORT.md)。
+- 研究安排：[静态 rubric 进展与计划](plans/2026-10-08_rubric_research/README.md) · [实验计划](plans/2026-10-08_rubric_research/EXPERIMENT_PLAN.md) · [长期研究设想](plans/2026-10-08_rubric_research/RESEARCH_IDEA.md)。
+- 最新结果：[Dev57 报告](experiments/2026-10-11_appworld_qwen3-8b_react_lora_static_grpo_train90_single_update_dev57/REPORT.md) · [test_normal168 报告](experiments/2026-10-11_appworld_qwen3-8b_react_lora_static_grpo_train90_single_update_test_normal168/REPORT.md) · [训练原因分析](experiments/2026-10-11_appworld_qwen3-8b_react_lora_static_grpo_train90_single_update_test_normal168/TRAINING_DIAGNOSIS.md)。
+- 实验来源：[原始模型采样](experiments/2026-10-08_static_rubric_grpo/README.md) · [SFT LoRA 实验总览](experiments/2026-10-08_static_rubric_grpo_lora_init/README.md) · [完整阶段报告](experiments/2026-10-08_static_rubric_grpo_lora_init/RUBRIC_GRPO_EXPERIMENT_REPORT.md)。
 - 前一阶段：[Dynamic CFST 实验总览](experiments/2026-09-28_dynamic_cfst/README.md)。以下按日期保留各阶段的主要结果。
 
 ## 原始数据位置
@@ -252,7 +253,7 @@ Git 只保留轻量报告、聚合元数据和复现配置；`logs/`、`cache/`�
 
 ## 2026-10-08—09：静态 rubric 实验的双起点 train90 采样
 
-本系列准备采用 DRACO 的固定 21 条规则进行轨迹级评分，再验证其是否能提供有效的 GRPO 相对优势。**目前只完成采样与验收；尚无 rubric 评分、GRPO 权重更新或本系列的新 Dev 结果。**
+本阶段完成两个起点的采样与验收，为 DRACO 固定 21 条规则的轨迹级评分准备数据。下表保留当时的训练内采样结果；后续 LoRA 分支的评分、单次 GRPO 更新与 Dev/Test 评测见下一节。
 
 | 训练集采样诊断 | 原始 Qwen3-8B | 现有 SFT LoRA |
 | --- | ---: | ---: |
@@ -265,6 +266,25 @@ Git 只保留轻量报告、聚合元数据和复现配置；`logs/`、`cache/`�
 - 两组使用相同的 train90 任务、六个固定 seed、ReAct prompt、parser 与执行预算。temperature `1`、top_p `1`、top_k `-1`、repetition_penalty `1`、`enable_thinking=false`；每题最多 50 步、上下文 32000、每步最多 3000 输出 tokens，超窗时结束且不裁剪历史。GPU 0 生成，最多六路隔离环境并发。
 - LoRA 起点为已有 train90 / epoch5 adapter（rank 8、alpha 16）。它已使用同一 train90 的 Codex 示范训练，因此上表是训练内随机采样诊断，两组差值不能解释为 rubric 收益或 Dev 泛化提升。
 - 两组全部轨迹通过完整性、token 重建与旧策略 logprob 对齐验收。LoRA 采样因 Ellipsis 日志序列化错误中断后，保留原有 342 条完整轨迹不变，修复日志兼容性并补齐 198 条；失败、无代码和预算耗尽样本均保留。
-- 下一步按计划先检查 24 条轨迹的静态评分，再覆盖全部 1,080 条，分析规则判定与组内差异；评分可用后再接入 GRPO 续训和统一 Dev57 对照。实验目录中的早期训练原型与旧预算不代表已执行训练。
+- 当时计划先检查小批量静态评分，再扩展到两组共 1,080 条；后续实际完成的是 LoRA 分支 540 条的全量评分和一次更新。早期原型及已取消的固定数据五轮方案均不代表本次实际训练，执行范围以最新阶段记录为准。
 - [原始模型采样说明](experiments/2026-10-08_static_rubric_grpo/README.md) · [LoRA 采样说明](experiments/2026-10-08_static_rubric_grpo_lora_init/README.md) · [完整实验报告](experiments/2026-10-08_static_rubric_grpo_lora_init/RUBRIC_GRPO_EXPERIMENT_REPORT.md) · [配对采样统计](experiments/2026-10-08_static_rubric_grpo_lora_init/preparation/collection_comparison.json) · [恢复验收记录](experiments/2026-10-08_static_rubric_grpo_lora_init/recovery/2026-10-09/final_diagnostics.json)。
 - 总体规划集中在 [plans/2026-10-08_rubric_research/](plans/2026-10-08_rubric_research/README.md)，实际运行记录保留在 experiments。完整采样轨迹所在的 `runs/`、运行时缓存和模型权重由 `.gitignore` 排除；Git 中保留实验代码、配置、报告、来源快照及已纳入版本控制的恢复记录。
+
+## 2026-10-09—11：LoRA 静态评分、全量单次 GRPO 更新与 Dev/Test 评测
+
+- 在既有 SFT LoRA 采集的完整 train90 × 6 = 540 条轨迹上完成固定 21 条规则评分，共 11,340 项判定；每题六条独立计算 reward/advantage，90 个组均有非零优势。正式主线沿用原始静态基线与必要协议适配，小批量校准结果保留为历史诊断。
+- 本次全量训练从生成这批轨迹的初始 SFT LoRA 重新开始，reference 独立加载并冻结；不继承前期单题工程验证的 checkpoint。GPU 0、1 各累计 45 题、270 条的梯度，合并后完成 **一个 PPO epoch、一次 optimizer step**。全部 540 条只用于这一次更新，没有后续重采样或第二次更新；此前固定数据五轮方案未执行。
+- policy 权重已变化，reference 保持不变，保存重载后的真实 token logprob 最大误差为 0。最终模型为 Qwen3-8B 加本地 `experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step06_train90_two_gpu_v1/checkpoint` 中的 adapter；模型及 optimizer 文件通过 SHA-256 核验，权重和训练状态继续保留在服务器本地。
+- 同一最终 checkpoint 完成完整 Dev57 与 test_normal168 官方评测，结果与历史对照如下。更新前 LoRA 和全参数 SFT 均引用既有评测，本次没有重跑基线或进行多 seed 重复实验。
+
+| 模型 | Dev57 成功 / TGC | Dev SGC | test_normal168 成功 / TGC | Test SGC |
+| --- | ---: | ---: | ---: | ---: |
+| 更新前 train90 SFT LoRA（历史） | 23/57（40.4%） | 21.1% | 51/168（30.4%） | 16.1% |
+| 静态 rubric GRPO 单次更新 | 16/57（28.1%） | 10.5% | 37/168（22.0%） | 16.1% |
+| train90 全参数 SFT（历史参考） | 12/57（21.1%） | 0.0% | 28/168（16.7%） | 5.4% |
+
+- Dev 新增成功 4 题、退化 11 题，净少 7 题；Test 新增成功 7 题、退化 21 题，净少 14 题。Test 条件通过数由 598/1077 变为 594/1077，21 道退化题中 16 道只差一项条件，且没有退化题因上下文中断；部分条件接近不代表整题成功率相同。
+- 评测沿用历史 ReAct 提示词、temperature `0`、seed `100`、50 步、每次 3000 输出 tokens、32000 上下文、无 reasoning parser，且不覆盖 `enable_thinking`；与采样显式关闭 thinking 的设置有区别。Dev57 顺序执行；Test 两卡各执行 84 题后按完整清单官方聚合。全部首次 messages 与历史对照一致，任务及评分记录完整，无评分器或基础设施故障，上下文拒绝按原协议保留。
+- 训练审计未发现重复更新、梯度合并或模型保存错误。静态奖励整体与成功相关，但 280 条正优势轨迹中有 122 条官方失败；统一轨迹优势也会对其中的错误步骤赋予正权重。唯一一次 backward 的起点 policy 与 reference 相同，KL 值和一阶梯度均为零。上述证据提供排查方向，尚不能确定各因素对退化的因果贡献，也不能仅凭此次结果判定学习率过大或静态方法无效。
+- [两卡训练执行说明](experiments/2026-10-08_static_rubric_grpo_lora_init/stages/step06_train90_two_gpu/README.md) · [Dev57 报告](experiments/2026-10-11_appworld_qwen3-8b_react_lora_static_grpo_train90_single_update_dev57/REPORT.md) · [Test 报告](experiments/2026-10-11_appworld_qwen3-8b_react_lora_static_grpo_train90_single_update_test_normal168/REPORT.md) · [逐题对照](experiments/2026-10-11_appworld_qwen3-8b_react_lora_static_grpo_train90_single_update_test_normal168/task_comparison.csv)。
+- [训练原因分析](experiments/2026-10-11_appworld_qwen3-8b_react_lora_static_grpo_train90_single_update_test_normal168/TRAINING_DIAGNOSIS.md) · [成对轨迹案例](experiments/2026-10-11_appworld_qwen3-8b_react_lora_static_grpo_train90_single_update_test_normal168/CASE_STUDIES.md) · [性能对比图](experiments/2026-10-11_appworld_qwen3-8b_react_lora_static_grpo_train90_single_update_test_normal168/metrics/performance_comparison.png) · [最终核验](experiments/2026-10-11_appworld_qwen3-8b_react_lora_static_grpo_train90_single_update_test_normal168/FINAL_VALIDATION.json)。逐题输入输出索引见各实验的 TASKS.md；完整运行日志、轨迹及模型由现有忽略规则保留在本地。

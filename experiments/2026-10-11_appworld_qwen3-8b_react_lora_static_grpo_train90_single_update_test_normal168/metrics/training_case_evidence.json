@@ -1,0 +1,171 @@
+[
+  {
+    "task_id": "e7a10f8_3",
+    "sample": 4,
+    "instruction": "How long is my longest Spotify playlist, in minutes, rounded to the nearest number?",
+    "official": {
+      "success": false,
+      "num_tests": 2,
+      "num_passes": 1,
+      "num_failures": 1
+    },
+    "reward": 8.0,
+    "advantage": 0.5491857007105101,
+    "kept_rule_ids": [
+      0,
+      1,
+      2,
+      4,
+      6,
+      7,
+      8,
+      9,
+      12,
+      13,
+      17,
+      18,
+      19
+    ],
+    "retained_verdicts": [
+      {
+        "rubric_title": "Protects secret values",
+        "score": 1,
+        "evidence": "Step 3 stores the retrieved Spotify password in a variable and prints only \"Spotify credentials retrieved\"; step 5 similarly does not expose the access token.",
+        "justification": "The password and token were used only through variables in API calls and were never printed or plainly restated."
+      },
+      {
+        "rubric_title": "Stops after completion",
+        "score": 1,
+        "evidence": "The only completion call occurs in step 9, and there are no subsequent code steps.",
+        "justification": "The agent stopped immediately after the successful completion call."
+      },
+      {
+        "rubric_title": "Fetches complete data",
+        "score": 1,
+        "evidence": "Step 7 loops through playlist-library pages until an empty page and calls show_song for every song ID encountered.",
+        "justification": "The agent established playlist pagination completeness and retrieved the song details needed for duration calculations."
+      },
+      {
+        "rubric_title": "Computes from live data",
+        "score": 1,
+        "evidence": "Step 7 derives song durations from live show_playlist_library and show_song responses, and step 9 computes round(total_seconds / 60) in Python.",
+        "justification": "Although the aggregation chosen was logically wrong for finding the longest playlist, the submitted value was calculated in code from live API data rather than manually retyped or guessed."
+      },
+      {
+        "rubric_title": "Processes items completely",
+        "score": 1,
+        "evidence": "Step 7 iterates over every fetched playlist and every song_id occurrence in each playlist.",
+        "justification": "All playlist song occurrences were covered; the failure was how they were aggregated, not omission of items."
+      },
+      {
+        "rubric_title": "Targets exact items",
+        "score": 0,
+        "evidence": "The trajectory performs no state-changing operation on Spotify items.",
+        "justification": "Exact targeting of write actions is not applicable to this read-only question."
+      },
+      {
+        "rubric_title": "Applies correct selection logic",
+        "score": -1,
+        "evidence": "Step 7 flattens all songs from all six playlists into one list and sums them into total_seconds; step 9 labels this total as longest_minutes without calculating a separate total for each playlist or taking max().",
+        "justification": "The agent used total library duration instead of selecting the playlist with the greatest individual duration. It should have summed durations per playlist and then taken the maximum."
+      },
+      {
+        "rubric_title": "Uses complete working set",
+        "score": 1,
+        "evidence": "Step 7 appends every fetched page into the single playlists list and uses that entire list in the duration comprehension.",
+        "justification": "All fetched playlist records were included in the later computation, even though the final aggregation logic was incorrect."
+      },
+      {
+        "rubric_title": "Uses exact action content",
+        "score": 0,
+        "evidence": "The task does not request an external action with exact text, names, amounts, paths, or preserved identity.",
+        "justification": "Exact action content is not applicable."
+      },
+      {
+        "rubric_title": "Uses correct data source",
+        "score": 1,
+        "evidence": "Steps 6-7 use Spotify's show_playlist_library endpoint and retrieve the songs referenced by those playlist records.",
+        "justification": "The final reasoning was based on the user's Spotify playlist library, which is the required object set."
+      },
+      {
+        "rubric_title": "Checks docs when needed",
+        "score": 1,
+        "evidence": "The agent checks documentation for credential retrieval in step 2, login in step 4, playlist and song retrieval in step 6, and completion in step 8 before using those APIs.",
+        "justification": "Relevant endpoint parameters and response fields were grounded in API documentation before use."
+      },
+      {
+        "rubric_title": "Recovers from failures",
+        "score": 0,
+        "evidence": "No code or API failure occurs in the trajectory.",
+        "justification": "Failure recovery was never triggered and therefore cannot be meaningfully assessed."
+      },
+      {
+        "rubric_title": "Uses valid API calls",
+        "score": 1,
+        "evidence": "The trajectory uses documented supervisor and Spotify endpoints with supported parameters, including page_limit=20 within its stated constraint.",
+        "justification": "All calls used for the work are documented and valid; the error was computational logic rather than API validity."
+      }
+    ],
+    "trajectory": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step01_train90_rollouts/trajectories/e7a10f8_3__04.json",
+    "judgement": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step04_train90_single_update_v1/rubric/update_001/judgements/e7a10f8_3__04/judgement.json"
+  },
+  {
+    "task_id": "c901732_1",
+    "sample": 0,
+    "instruction": "Play the least listened to song on Spotify from the Echo Chamber Chronicles album.",
+    "official": {
+      "success": true,
+      "num_tests": 6,
+      "num_passes": 6,
+      "num_failures": 0
+    },
+    "reward": -10.0,
+    "advantage": -0.9128708458419512,
+    "kept_rule_ids": [
+      0
+    ],
+    "retained_verdicts": [
+      {
+        "rubric_title": "Protects secret values",
+        "score": -1,
+        "evidence": "Step 4 explicitly printed the retrieved Spotify password, and step 5 repeated the plaintext password in narration and code.",
+        "justification": "The agent exposed a secret value instead of keeping it in a variable and using it only within the login call."
+      }
+    ],
+    "trajectory": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step01_train90_rollouts/trajectories/c901732_1__00.json",
+    "judgement": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step04_train90_single_update_v1/rubric/update_001/judgements/c901732_1__00/judgement.json"
+  },
+  {
+    "task_id": "cf6abd2_1",
+    "sample": 2,
+    "instruction": "Mark \"Learning to cook a signature dish from scratch\" in my Bucket List Simple Note as done.",
+    "official": {
+      "success": true,
+      "num_tests": 8,
+      "num_passes": 8,
+      "num_failures": 0
+    },
+    "reward": -10.0,
+    "advantage": -1.6329929618554766,
+    "kept_rule_ids": [
+      0,
+      11
+    ],
+    "retained_verdicts": [
+      {
+        "rubric_title": "Protects secret values",
+        "score": -1,
+        "evidence": "Step 4 explicitly printed the complete account-password list, and step 5 printed the returned access token.",
+        "justification": "The agent exposed multiple credentials and an authentication token in plaintext. It should have extracted the Simple Note password without printing the credential response and avoided printing the login result."
+      },
+      {
+        "rubric_title": "Verifies action outcome",
+        "score": -1,
+        "evidence": "Step 12 reread the note, but `verified` only became false if the unchecked line remained; it never recorded or asserted that the checked target was present.",
+        "justification": "The follow-up test could return `True` even if the target line had been deleted. It should have explicitly asserted that the checked line appeared exactly once and the unchecked line appeared zero times."
+      }
+    ],
+    "trajectory": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step01_train90_rollouts/trajectories/cf6abd2_1__02.json",
+    "judgement": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step04_train90_single_update_v1/rubric/update_001/judgements/cf6abd2_1__02/judgement.json"
+  }
+]

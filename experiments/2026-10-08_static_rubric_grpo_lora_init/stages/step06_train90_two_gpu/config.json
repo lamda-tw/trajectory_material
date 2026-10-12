@@ -1,0 +1,14 @@
+{
+  "name": "train90-two-gpu-single-update-v1",
+  "gpus": ["0", "1"],
+  "world_size": 2,
+  "groups": 90,
+  "group_size": 6,
+  "ppo_epochs": 1,
+  "optimizer_steps": 1,
+  "gradient_recovery_every_episodes": 6,
+  "partition": "deterministic cost-balanced whole groups; 45 groups per GPU",
+  "gradient_reduction": "SUM; each trajectory loss already divided by 540 and its action-token count",
+  "clip_gradients": "once, after both complete shards are summed",
+  "gpu_authorization": "2026-10-10 user explicitly authorized both GPUs for parallel execution"
+}

@@ -1,0 +1,52 @@
+{
+  "ready_for_evaluation": true,
+  "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+  "tokenizer": "/root/autodl-tmp/models/Qwen3-8B",
+  "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step06_train90_two_gpu_v1/checkpoint",
+  "policy_id": "c0894f1560ce153461a745aed1416ca6a7032ddb1e0017d017c499d26e425eeb",
+  "checkpoint_manifest": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step06_train90_two_gpu_v1/checkpoint/manifest.json",
+  "artifact_type": "PEFT LoRA adapter; load with the Qwen3-8B base model",
+  "adapter_files": {
+    "adapter_config.json": "a68b73e91f46e7c42f7072a4bfd58cf871b664c00e08e79398d8e3cf37dc50aa",
+    "adapter_model.safetensors": "aacf254b702c646614715beee77da0ae231443f54010d20caa14ff8398eb73bd"
+  },
+  "batch": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step04_train90_single_update_v1/rubric/update_001/batch.json",
+  "batch_sha256": "b02e408209a09bef3b5b83664aca325b30f3ba70b4506340895b769dc169a670",
+  "training_groups": 90,
+  "training_trajectories": 540,
+  "optimizer_steps": 1,
+  "ppo_epochs": 1,
+  "gpus": [
+    "0",
+    "1"
+  ],
+  "enable_thinking": false,
+  "evaluation_executed": false,
+  "created_at": "2026-10-11T06:39:25.423179+08:00",
+  "metrics": {
+    "loss": 0.00011178033457426295,
+    "kl": 0.0,
+    "ratio_mean": 1.0000193363976457,
+    "clip_fraction": 0.0040011327509905745,
+    "old_new_abs_logprob_mean": 0.008690300684581691,
+    "max_old_new_abs_logprob": 1.4013891220092773,
+    "max_step_mean_logprob_error": 0.04914301261305809,
+    "gradient_norm_before_clip": 0.030232228338718414,
+    "policy_changed": true,
+    "reference_unchanged": true,
+    "optimizer_steps": 1,
+    "ppo_epochs": 1,
+    "trajectories": 540,
+    "generated_tokens": 1785724,
+    "reload_max_abs_logprob_error": 0.0,
+    "worker_elapsed_seconds": [
+      53911.896511968225,
+      53854.9915356189
+    ],
+    "worker_peak_gpu_allocated_gib": [
+      54.53700828552246,
+      54.53701829910278
+    ],
+    "finalization_seconds": 22.220029409974813
+  }
+}

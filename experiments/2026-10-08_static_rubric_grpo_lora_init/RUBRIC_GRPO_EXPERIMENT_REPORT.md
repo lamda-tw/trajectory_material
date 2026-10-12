@@ -1,12 +1,54 @@
 # 静态 Rubric GRPO 实验报告
 
+## 2026-10-11：test_normal168 评测与原因分析已完成
+
+完整 **168/168** 题已按 2026-09-23 参考协议完成，两张卡各运行 84 题，官方全量聚合于 **2026-10-11 19:00（北京时间）** 完成。模型仍为完整 train90 × 6 单次更新得到的 step06 LoRA；本次未追加训练。两个评测分片均正常退出，全部首次提示词及固定请求字段与历史对照一致，模型 SHA 核验通过。补充只读诊断完成后，两张 GPU 均已释放。
+
+| test_normal 模型 | 成功任务 | TGC | SGC |
+|---|---:|---:|---:|
+| 更新前 SFT LoRA（历史） | 51/168 | 30.4% | 16.1% |
+| 静态 rubric GRPO 单次更新 | **37/168** | **22.0%** | **16.1%** |
+| 参考全参数 SFT（历史） | 28/168 | 16.7% | 5.4% |
+
+相对初始 LoRA，新增成功 7 题、退化 21 题，净减少 14 题，TGC 下降 8.3 个百分点。21 道退化题均有提交动作但未满足全部条件，16 道只少通过一项；没有退化题因上下文中断。条件通过数 598 → 594；完整成功场景均为 9/56，但场景身份有变化。此前同一模型的 dev57 为 23/57 → 16/57。
+
+训练审计未发现多次 step、梯度合并或保存错模型的证据。静态奖励整体与成功相关，但 280 条正优势轨迹中有 122 条官方失败，27 条成功轨迹为负优势；整条轨迹统一优势会把正确与错误步骤一起加权。首步 KL 的值和梯度在起点均为零。固定训练 probe 测得更新后条件分布确有变化，但不足以证明学习率过大；各机制的因果贡献仍需 Dev 对照，不能归结为单一原因。
+
+[完整 test 报告](/root/autodl-tmp/workspace-tw/experiments/2026-10-11_appworld_qwen3-8b_react_lora_static_grpo_train90_single_update_test_normal168/REPORT.md) · [训练原因分析](/root/autodl-tmp/workspace-tw/experiments/2026-10-11_appworld_qwen3-8b_react_lora_static_grpo_train90_single_update_test_normal168/TRAINING_DIAGNOSIS.md) · [成对轨迹案例](/root/autodl-tmp/workspace-tw/experiments/2026-10-11_appworld_qwen3-8b_react_lora_static_grpo_train90_single_update_test_normal168/CASE_STUDIES.md) · [168 题全部输入输出](/root/autodl-tmp/workspace-tw/experiments/2026-10-11_appworld_qwen3-8b_react_lora_static_grpo_train90_single_update_test_normal168/TASKS.md) · [逐题对照](/root/autodl-tmp/workspace-tw/experiments/2026-10-11_appworld_qwen3-8b_react_lora_static_grpo_train90_single_update_test_normal168/task_comparison.csv)。下方保留此前阶段记录。
+
+## 2026-10-11：全量单次更新和 dev57 已完成
+
+北京时间 2026-10-11 06:39，完整 **90 题 × 6 = 540 条** 的梯度已在两张卡上算完并合并，完成 **1 个 PPO epoch、1 次 optimizer step**。policy 权重已变化，reference 未变化；保存重载 logprob 最大误差为 0。checkpoint 三个文件 SHA-256 与训练来源已核验。
+
+最终模型为 Qwen3-8B 基座加 [step06 LoRA checkpoint](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step06_train90_two_gpu_v1/checkpoint)。原单卡/五轮入口不再执行。
+
+用户要求的完整 dev57 评测于 **2026-10-11 17:54** 结束。复用 2026-09-23 参考实验的官方 57 题、ReAct 提示词、temperature=0、seed=100、50 步、3000 输出 tokens、32000 窗口及无 reasoning parser 的历史 dev 协议；耗时 31.0 分钟。每题仅运行一次，57 个唯一结果与官方聚合完全一致，无评分器或基础设施故障；7 题上下文超限按原协议保留。
+
+| 模型 | 成功任务 | TGC | SGC |
+|---|---:|---:|---:|
+| 更新前 SFT LoRA（历史） | 23/57 | 40.4% | 21.1% |
+| 本次静态 rubric GRPO 单次更新 | 16/57 | 28.1% | 10.5% |
+| 参考全参数 SFT（历史） | 12/57 | 21.1% | 0.0% |
+
+相对更新前 LoRA，新增成功 4 题、退化 11 题，净减少 7 题，TGC 下降 12.3 个百分点。该次评测未观察到提升；这是单次更新及历史对照的结果，不代表完整 DRACO 训练效果。
+
+[完整评测报告](/root/autodl-tmp/workspace-tw/experiments/2026-10-11_appworld_qwen3-8b_react_lora_static_grpo_train90_single_update_dev57/REPORT.md) · [逐题输入输出](/root/autodl-tmp/workspace-tw/experiments/2026-10-11_appworld_qwen3-8b_react_lora_static_grpo_train90_single_update_dev57/TASKS.md) · [逐题对照 CSV](/root/autodl-tmp/workspace-tw/experiments/2026-10-11_appworld_qwen3-8b_react_lora_static_grpo_train90_single_update_dev57/task_comparison.csv)。下方内容为此前阶段的历史记录，以本节为当前状态。
+
+## 本次已完成：DRACO 静态 GRPO 工程闭环
+
+2026-10-09：新题评分 **18/18**、378 项判定、3 个完整组；GPU 1 完成 Qwen3-8B SFT LoRA **一次真实更新**，policy 权重发生变化、初始 SFT reference 保持冻结、保存重载 logprob 检查通过。未运行全量 540 评分或 dev57，不据此宣称效果提升。
+
+[本次完整工程报告](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step03_grpo_framework_v1/FRAMEWORK_REPORT.md) · [框架入口](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/stages/step03_grpo_framework/README.md) · [训练 checkpoint](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step03_grpo_framework_v1/rubric/update_001/checkpoint)
+
 本报告持续追加实验步骤；时间使用 Asia/Shanghai。
 
 ## 当前完成状态
 
-原始 Qwen3-8B 与现有 SFT LoRA 各完成完整 train90 × 6，共 1,080 条轨迹，两边均通过数据验收。本次系列尚无 rubric 评分、GRPO 更新或新 dev 评测结果。
+原始 Qwen3-8B 与 SFT LoRA 各完成 train90 × 6，共 1,080 条轨迹；LoRA 的原始 12 条 smoke 与同批校准重测已完成。当前按用户要求回到官方静态基线，只保留必要协议适配，v3 校准结果作为历史记录保留。
 
-本报告只记录已执行过程、结果与解释。总体规划及后续步骤统一见 [当前待办](/root/autodl-tmp/workspace-tw/plans/2026-10-08_rubric_research/README.md) 和 [实验计划](/root/autodl-tmp/workspace-tw/plans/2026-10-08_rubric_research/EXPERIMENT_PLAN.md)。以下按实际发生顺序保留历史记录。
+另三个新 train 题的 18 条评分输入已经冻结，但启动遇到本执行环境的独立 Codex CLI 认证错误，已停止，尚无新分数。详见 [当前启动记录](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step02_static_scores/draco_baseline_newtasks_v1/SMOKE_REPORT.md)。本系列尚无 GRPO 更新或新 dev 评测结果。
+
+本报告只记录实际执行；总体安排见 [当前待办](/root/autodl-tmp/workspace-tw/plans/2026-10-08_rubric_research/README.md) 和 [实验计划](/root/autodl-tmp/workspace-tw/plans/2026-10-08_rubric_research/EXPERIMENT_PLAN.md)。以下历史记录按发生顺序保留。
 
 ## 第一步：完整训练集采样
 
@@ -186,3 +228,255 @@
 本次恢复耗时 58.1 分钟；含昨夜失败尝试的累计运行时间约 214.8 分钟，不含中间无人运行的间隔。
 
 详细统计：[final_diagnostics.json](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/recovery/2026-10-09/final_diagnostics.json)。报告现仅位于本实验目录，工作区根目录原报告已移除。
+
+<!-- STEP02_SMOKE_STATUS_START -->
+## 2026-10-09：LoRA 静态 rubric smoke 完成
+
+只对固定两题的 12 条已有轨迹评分，共 252 项：PASS 127、FAIL 86、NA 39。两组六条均有非零 rubric 优势，也均为 outcome 混合组；不能由本次证明全失败组能受益。没有重采样、GRPO 或 dev。
+
+用户明确授权后，由服务器的独立 Codex CLI 调用实验配置的 gpt-5.6-sol/high。实际 13 次请求，包含首条因本地启动提示校验误判产生的一次多余重试。已修复阶段兼容逻辑，采用第一次完整返回；原 judge.py、规则和采样数据未改。
+
+工程验收通过，证据质量仍需校准：三条无错误轨迹被违反原规则地判为恢复项 NA；一项将未执行的打印判为秘密泄露；额外重试的一条规则判定有分歧。30 项固定抽查与扩大核查均已留档，未手改原始分数，也未将它们用于训练。
+
+完整结果及成本：[SMOKE_REPORT.md](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step02_static_scores/smoke_v2/SMOKE_REPORT.md)。后续规划统一在 plans。
+<!-- STEP02_SMOKE_STATUS_END -->
+
+<!-- STEP02_CALIBRATED_SMOKE_START -->
+## 2026-10-09：LoRA 校准重测 smoke 与 reward 计算明细
+
+完成时间：2026-10-09T14:23:01+08:00。评分运行于 2026-10-09 14:11–14:17（Asia/Shanghai）。
+
+**同一批 12 条已校准重测，原先四处明确问题得到纠正；工程链路通过，语义验收仍未通过。** 复核新结果又发现一处把未执行分页当作完成分页的依据错误。以下 reward 是完整保留的真实 judge 输出经程序计算所得，不能把“算得出来”当作“已适合训练”。本次未扩大至 540 条、未运行 GRPO、未新增 dev 评测。
+
+## 这次改了什么，什么没有改
+
+沿用 LoRA 的两个固定 train 题 `e7a10f8_3`、`29caf6f_1`，每题六条。选题来自预先固定的 SHA256 排序，没有按成功标签选题。这 12 条轨迹、官方 21 条规则、judge 模型别名 `gpt-5.6-sol` / high、reward 公式与缩放均未改变。
+
+新版本为 `smoke_v3_calibrated`，在独立 wrapper 中说明三件事：具体规则的 evaluator_instruction 优先于通用 NA 提示；提交的代码不等于全部执行成功，要检查异常之前与之后；各项依据按自己的规则边界判断，不因为最终答案错误就把所有相关项都判 FAIL。
+
+本地增加 R19（零基 rule_id=18）不得返回 NA 的语义校验：原规则明确无 meaningful failure 时给 +1，因此返回 0 会使请求失败并走原有重试机制，**不会把 0 私自改成 +1**。本轮 12 次请求均首次成功，没有触发重试。校准说明没有给出题目答案、旧评分或官方 success。
+
+原始 v2 判定、旧奖励和采样源码均保留。新评分有独立 manifest、提示、响应与源码快照，不能把两版判定混起来使用。
+
+## 评分究竟在哪里、按什么单位做
+
+服务器运行独立 Codex CLI，按实验配置请求 `gpt-5.6-sol` / high。它不是当前聊天助手直接填写评分，也不是本地 Qwen 8B 推理。我们能记录模型别名、请求、响应和用量，不能仅凭别名独立验证远端实际权重版本。
+
+**一次请求读一条完整 rollout，输出 21 项 PASS/FAIL/NA；不是每个 step 都单独输出 21 项。** step 编号用来定位判定证据。六条 rollout 分别判断完，再由本地程序作为同题一组计算 reward。这个 static 版本没有步骤 credit。
+
+judge 能看到公开任务、初始协议与示范、实际编号步骤的模型文本/提交代码/观察、终止原因；看不到官方成功标签、隐藏测试与私有解法。所有请求都通过无工具调用的事件检查。官方终态结果只在评分完成后的诊断表展示。
+
+## 重测结果和调用成本
+
+| 项目 | v2 原始 smoke | v3 校准重测 |
+| --- | --- | --- |
+| 轨迹 / 完整六条组 | 12 / 2 | 12 / 2 |
+| 规则判定 | 252 | 252 |
+| PASS / FAIL / NA | 127 / 86 / 39 | 137 / 78 / 37 |
+| 相对 v2 改变的判定 | — | 13 / 252 |
+| 实际 judge 请求 | 13（含一次额外重试） | 12（无重试） |
+| rubric 有非零组内优势 | 2 / 2 | 2 / 2 |
+| outcome 有非零组内优势 | 2 / 2 | 2 / 2 |
+
+v3 输入 token 348,628，其中缓存输入 43,008；输出 token 29,190，其中报告的 reasoning token 13,527。缓存和 reasoning 都是相应总量的子项，不重复相加。两路并发，12 次成功请求的耗时之和 669.40 秒；这不是墙钟耗时，也不推算美元账单。
+
+六个数均按 sample 00–05 排列：
+
+| 题目 | v2 reward | v3 reward |
+| --- | --- | --- |
+| Spotify `e7a10f8_3` | [6.363636, -10, 10, 2, 6, 10] | [8.181818, -10, 10, 4.545455, 8.181818, 10] |
+| 短信 `29caf6f_1` | [-1.111111, -5.555556, 5.555556, -8.888889, -6.666667, 3.333333] | [2.222222, -5.555556, 5.555556, -6.666667, -7.647059, 3.333333] |
+
+两组保留的规则分别为 12 条、18 条。它们本来就是官方成功/失败混合组，所以本次没有证明 rubric 能给全失败组增加可靠的学习信号。reward 上升也不是模型进步：模型与轨迹完全没变，变化来自判分口径和 judge 再次调用。
+
+## 复核：修好了哪些，仍有什么问题
+
+- Spotify 02、03、04 的 R19，从 NA 改为 PASS，符合“无 meaningful failure 默认 +1”的原条款。
+- 短信 03 的 R01，从 FAIL 改为 PASS：第 2 步打印表达式在参数求值时先报 NameError，没有输出秘密值。
+- 固定的同一批 30 项复核：27 项在所查上下文中有支持，3 项仍有规则边界疑问。另复核全部 13 项分数变化：8 项有支持、4 项有边界疑问、1 项有执行依据错误；两批合计 42 个不同的轨迹—规则对。这是当前助手的证据复核，**不是独立人工金标或 judge 准确率**。
+
+新增明确问题在短信 00 的 R10「使用完整工作集」。judge 给 PASS，并说第 10 步按需合并了第二页。但实际代码顺序是：
+
+```text
+第 6 行：获取 recommendation_notes 的第 0 页，赋值完成。
+第 7 行：search_text_messages 使用不支持的 other_number 参数，抛出异常。
+第 8–9 行：如果 notes 满一页，再 extend 第 1 页；没有执行到。
+```
+
+因此，“代码写了分页”不能当成“分页实际发生”的证据。第一页面的数据可能已经留下来，后面的分页却没有发生。我们不据此擅自改成某个最终分数，因为 R10 还需要判断实际已获取项目的使用情况；这里能确定的是 **当前 PASS 的一条关键依据不成立**。原响应与 reward 仍保留，问题单另存。
+
+边界项还包括：未实际发送时评价候选消息内容还是动作参数；可见的解析结果错误是否算 recovery 中的 meaningful failure；实时数据上的错误算法与 unsupported assumption 如何区分；查询了正确 app 但没有读取请求细节，是否满足最终决策使用正确来源。它们不应被包装成所有判定已经可靠。
+
+校准 wrapper 使用了这同一批样本暴露的问题，重测因此只检查校准后的行为，**不是独立样本上的泛化检验**。后续安排单独记录在 plans，本报告保留本轮结果。
+
+## 一个真实题目的完整计算：六条 Spotify 轨迹
+
+固定示例为 `e7a10f8_3`：询问最长 Spotify 播放列表的时长，换算成分钟并四舍五入。00–05 对应该题六条已有采样轨迹；使用本次校准后的 judge 原始判定。例题在读取新分数前已固定。
+
+### 第一步：把 21 条规则的判定全部列出来
+
+P = PASS（+1），F = FAIL（−1），NA = 不适用（0）。这里的 0 是判定编码，后面算平均时 NA 不计入分母。R01–R21 按官方规则原顺序编号，对应 JSON 的零基 rule_id 0–20。Codex 只提供这些判定与证据；以下过滤、计数、reward 和 advantage 均由确定性的 Python 代码计算。
+
+| 规则 | 轨迹00 | 轨迹01 | 轨迹02 | 轨迹03 | 轨迹04 | 轨迹05 | 本组计算时 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| R01 不暴露秘密值 | P | F | P | P | P | P | 保留：出现过 F |
+| R02 完成后停止 | P | P | P | P | P | P | 删除：没有 F |
+| R03 取全需要的数据 | P | F | P | P | P | P | 保留：出现过 F |
+| R04 正确调用完成接口 | P | F | P | P | P | P | 保留：出现过 F |
+| R05 基于实时数据计算 | P | F | P | P | P | P | 保留：出现过 F |
+| R06 正确处理时间条件 | NA | NA | NA | NA | NA | NA | 删除：没有 F |
+| R07 完整处理项目 | P | F | P | F | P | P | 保留：出现过 F |
+| R08 写操作只针对正确目标 | NA | F | NA | NA | NA | NA | 保留：出现过 F |
+| R09 使用正确筛选逻辑 | F | F | P | F | F | P | 保留：出现过 F |
+| R10 使用完整工作集 | P | F | P | F | P | P | 保留：出现过 F |
+| R11 执行所需写操作 | NA | NA | NA | NA | NA | NA | 删除：没有 F |
+| R12 验证写操作结果 | NA | NA | NA | NA | NA | NA | 删除：没有 F |
+| R13 写入内容准确 | NA | NA | NA | NA | NA | NA | 删除：没有 F |
+| R14 使用正确数据来源 | P | F | P | P | P | P | 保留：出现过 F |
+| R15 正确认证 | P | P | P | P | P | P | 删除：没有 F |
+| R16 获取所需凭据 | P | P | P | P | P | P | 删除：没有 F |
+| R17 使用可运行 Python | P | P | P | P | P | P | 删除：没有 F |
+| R18 需要时查阅文档 | P | F | P | P | P | P | 保留：出现过 F |
+| R19 从失败中恢复 | P | F | P | P | P | P | 保留：出现过 F |
+| R20 API 调用有效 | P | F | P | P | P | P | 保留：出现过 F |
+| R21 只用允许的工具 | P | P | P | P | P | P | 删除：没有 F |
+
+### 第二步：先按整组六条过滤规则
+
+**逐行检查，而不是每条轨迹自己挑规则。** 只要某规则在这六条里至少有一个 FAIL，就进入该组共同的保留集合 K；全 PASS、全 NA、PASS/NA 混合都删除。六条全 FAIL 仍保留，不能把“全 FAIL”误删。
+
+- 保留 **12 条**：R01、R03、R04、R05、R07、R08、R09、R10、R14、R18、R19、R20。
+- 删除 **9 条**：R02、R06、R11、R12、R13、R15、R16、R17、R21。
+
+规则文件本身没有变化。这只是决定本组哪些已有判定参与 reward；换一个题，保留集合可能不同。
+
+读表时可先看几行：R02 六个 PASS，所以删除；R06 六个 NA，也删除；R09 出现 FAIL，所以保留。R08 虽然多数为 NA，但轨迹 01 实际调用 play_music 改变了播放状态，违反只读任务的目标约束，得到 FAIL；因此 R08 也保留。它只进入轨迹 01 的分母，另外五条的该项为 NA，不进分母。
+
+### 第三步：每条轨迹在保留集合里数 PASS、FAIL、NA
+
+| 轨迹 | 保留项中的 PASS 规则 | 保留项中的 FAIL 规则 | 保留项中的 NA 规则 |
+| --- | --- | --- | --- |
+| 00 | R01、R03、R04、R05、R07、R10、R14、R18、R19、R20 | R09 | R08 |
+| 01 | 无 | R01、R03、R04、R05、R07、R08、R09、R10、R14、R18、R19、R20 | 无 |
+| 02 | R01、R03、R04、R05、R07、R09、R10、R14、R18、R19、R20 | 无 | R08 |
+| 03 | R01、R03、R04、R05、R14、R18、R19、R20 | R07、R09、R10 | R08 |
+| 04 | R01、R03、R04、R05、R07、R10、R14、R18、R19、R20 | R09 | R08 |
+| 05 | R01、R03、R04、R05、R07、R09、R10、R14、R18、R19、R20 | 无 | R08 |
+
+| 轨迹 | 过滤前 P/F/NA（总数21） | 过滤后 P | 过滤后 F | 过滤后 NA | 分子 P−F | 分母 P+F |
+| --- | --- | --- | --- | --- | --- | --- |
+| 00 | 15/1/5 | 10 | 1 | 1 | 9 | 11 |
+| 01 | 5/12/4 | 0 | 12 | 0 | -12 | 12 |
+| 02 | 16/0/5 | 11 | 0 | 1 | 11 | 11 |
+| 03 | 13/3/5 | 8 | 3 | 1 | 5 | 11 |
+| 04 | 15/1/5 | 10 | 1 | 1 | 9 | 11 |
+| 05 | 16/0/5 | 11 | 0 | 1 | 11 | 11 |
+
+### 第四步：逐条代入 reward 公式
+
+$$r_i=10\times\frac{P_i-F_i}{P_i+F_i}$$
+
+P、F 都只数过滤后的规则。NA 不进入分母；若 P+F=0，则 reward=0。这不是除以原来的 21，也不一定除以保留规则总数。10 是本次沿用的奖励缩放。
+
+| 轨迹 | 实际代入 | 精确 reward | 小数 reward |
+| --- | --- | --- | --- |
+| 00 | 10 × (10−1)/(10+1) = 10 × 9/11 | 90/11 | 8.181818 |
+| 01 | 10 × (0−12)/(0+12) = 10 × -12/12 | -10 | -10.000000 |
+| 02 | 10 × (11−0)/(11+0) = 10 × 11/11 | 10 | 10.000000 |
+| 03 | 10 × (8−3)/(8+3) = 10 × 5/11 | 50/11 | 4.545455 |
+| 04 | 10 × (10−1)/(10+1) = 10 × 9/11 | 90/11 | 8.181818 |
+| 05 | 10 × (11−0)/(11+0) = 10 × 11/11 | 10 | 10.000000 |
+
+以轨迹 00 为例：保留规则里有 **10 个 PASS、1 个 FAIL、1 个 NA**。因此分子是 10−1=9，分母是 10+1=11，乘以 10 后得到 **8.181818**。
+
+### 第五步：GRPO 再把六个 reward 变成相对优势
+
+**reward 到上一步已经算完。** 下面的 advantage 是训练所用的组内相对信号，不要把两个量混为一谈。本次仅计算，没有执行训练。
+
+$$\bar r=\frac{1}{6}\sum_{i=1}^{6}r_i,\quad s=\sqrt{\frac{\sum_{i=1}^{6}(r_i-\bar r)^2}{6-1}},\quad A_i=\frac{r_i-\bar r}{s+10^{-6}}$$
+
+本组 reward 向量为 **[8.181818, -10.000000, 10.000000, 4.545455, 8.181818, 10.000000]**。
+
+- 六个 reward 的和为 30.909090909，均值 = 30.909090909/6 = **5.151515152**。
+- 离均差平方和为 295.316804408；使用样本标准差，所以除以 6−1=5：s = sqrt(295.316804408/5) = **7.685269083**。
+- 归一化分母 s+1e−6 = **7.685270083**。
+
+| 轨迹 | reward | reward−组均值 | 除以 s+1e−6 后的 advantage | 官方终态成功（不进入该 reward） |
+| --- | --- | --- | --- | --- |
+| 00 | 8.181818182 | 3.030303030 | 0.394300135 | 否 |
+| 01 | -10.000000000 | -15.151515152 | -1.971500674 | 否 |
+| 02 | 10.000000000 | 4.848484848 | 0.630880216 | 是 |
+| 03 | 4.545454545 | -0.606060606 | -0.078860027 | 否 |
+| 04 | 8.181818182 | 3.030303030 | 0.394300135 | 否 |
+| 05 | 10.000000000 | 4.848484848 | 0.630880216 | 是 |
+
+六个 reward 全相同时，约定全部 advantage=0。正优势只表示比本组六条平均分高，不等于官方任务成功；失败轨迹也可能得到正优势。本静态版本没有步骤 credit，若以后训练，该轨迹的相对优势用于其模型生成 token，工具观察和提示不作为生成动作计损失。
+
+判定、过滤、求均值与缩放对齐 [DRACO 官方 Stage 3–4](https://github.com/IBM/draco/blob/main/training/docs/REWARD_PIPELINE.md)。这里展示的是本次真实数据的计算，不是为公式编造的例子。
+
+## 复现与产物
+
+[校准前后逐项对照](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step02_static_scores/smoke_v3_calibrated/verdict_changes.json)、[全部 252 项判定及证据](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step02_static_scores/smoke_v3_calibrated/all_verdicts.csv)、[逐组 reward / advantage](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step02_static_scores/smoke_v3_calibrated/group_rewards.json)、[同批证据复核](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step02_static_scores/smoke_v3_calibrated/evidence_review.json)、[新增执行证据问题](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step02_static_scores/smoke_v3_calibrated/execution_evidence_issue.json)。
+
+[六条轨迹算例的机器可读数据](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step02_static_scores/smoke_v3_calibrated/reward_worked_example.json)、[技术验收](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step02_static_scores/smoke_v3_calibrated/technical_validation.json)、[输入与来源清单](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step02_static_scores/smoke_v3_calibrated/manifest.json)、[校准 wrapper](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/stages/step02_static_scores/calibration_v3/judge_wrapper.txt)。
+
+实际评分入口为 `python -u stages/step02_static_scores/smoke_v3.py --execute --workers 2`。结果分析使用 `python stages/step02_static_scores/analyze_calibrated.py`，证据复核与报告归档使用 `python stages/step02_static_scores/finalize_calibrated.py`；后两条只处理现有文件，不调用模型。
+
+本地用 Fraction 重新推导示例六条 reward，独立计算均值、样本标准差与 advantage，与存储结果逐项一致；12 条判定均与被接受的原始响应完全相同，全部输入和冻结来源 hash 匹配。技术验收的 passed 只覆盖这些检查，不表示语义验收通过。
+
+阶段 fingerprint：`60be918e95812cf2baeaae76127d29d7e6e86cc13a898bff8a44ded5c06e1535`。采样 runtime fingerprint 仍为 `0084e5d4cca518ee3fb956a5c6e7cf93d0c12111e5928cf687f1380e12606052`；21 条规则 SHA256 仍为 `3b359e117973a4d0f20047e159a8c3ef5efe8b52a7421e1194744c8aef815358`。
+
+<!-- STEP02_CALIBRATED_SMOKE_END -->
+
+<!-- DRACO_BASELINE_NEWTASKS_START -->
+## 2026-10-09：回到原始 DRACO 静态基线，新题启动遇到认证问题
+
+更新：2026-10-09T15:45:42+08:00。
+
+**已退回仅含必要协议适配的原始静态基线，18 条新题输入已准备。实际启动遇到本执行环境的 CLI 认证错误，已停止；有效评分 0/18，不能给出新 reward 或复核结论。**
+
+## 当前实际使用的评分方式
+
+与原始 `smoke_v2` 相同：21 条官方规则原文、官方评分正文、PASS/FAIL/NA 编码、组内过滤和 reward 公式保持不变。只保留 Python fence / 自动结束协议、示范与实际步骤边界、JSON 顶层对象等本地接口适配。
+
+`smoke_v3_calibrated` 中额外的规则边界说明、默认条款优先说明，以及 R19 禁止 NA 的语义校验均未进入当前调用。现仅检查输出结构完整、21 项标题顺序正确、分数为 -1/0/+1、证据和解释非空。R19 的合法 NA 返回不会被额外拒绝，也不会被本地改写为 PASS。
+
+这不是否认先前发现的误判，而是将复现基线与改进 judge 分开。v2/v3 的原始响应、奖励和报告均保留。新题不用于逐题调整提示，评分误差会按实际证据记录。总体决策与后续安排只写在 plans。
+
+## 已冻结的输入和检查
+
+按原排序 `sha256("static-score-v1:20261009:" + task_id)` 取第 3–5 题；全部来自 train，每题六条既有 LoRA 轨迹。
+
+| 题目 | 公开任务概述 | 轨迹数 |
+| --- | --- | --- |
+| afc0fce_1 | 给最近五天收到的同事 Venmo 付款评论 Thank you! 并点赞 | 6 |
+| e85d92a_3 | 查询 Jasper Skye 播放次数最多的 Spotify 歌曲标题 | 6 |
+| 7d7fbf6_3 | 将各度假地点的图片目录压缩到指定路径并删除原子目录 | 6 |
+
+选题没有读取 success 标签来筛选；没有重采样。评分前按固定 hash 每题抽出 10 个轨迹—规则对，共 30 项，已写入 analysis_spec.json，但没有可供复核的新判定。
+
+离线验证通过：18 条轨迹 hash 与原采样记录匹配；没有使用 dev；规则和官方评分正文未变；judge 配置等于 v2；同一旧输入构建出的完整 prompt 与 v2 保存文本逐字节一致；隐藏评价与模型元信息的 canary 不影响输入。只有这些离线检查已通过，实际评分链路本次未完成。
+
+## 本次调用实际发生了什么
+
+2026-10-09 15:33（Asia/Shanghai）启动两路并发，使用服务器独立 Codex CLI，请求原配置 `gpt-5.6-sol` / high。没有使用当前聊天助手代填评分，也没有启动本地 Qwen 推理。
+
+前四条轨迹开始过调用；已落盘的 6 个尝试事件流均记录 `401 Unauthorized: Missing bearer or basic authentication in header`，没有完成的模型输出或 usage。另有未完成调用被停止，不能把落盘事件数当成全部网络重连次数，也不能推断精确计费 token。
+
+只读排查显示 `codex login status` 返回 Not logged in，默认凭据文件不存在，常用认证环境变量未设置。没有修改用户登录配置、查找其他账户密钥、替换 judge 模型或打印凭据。认证检查参考 [OpenAI 官方认证说明](https://learn.chatgpt.com/docs/auth)。
+
+本实验的评分主进程及其子进程已停止。数据状态为 **0 个有效判定、0 个完整评分组、无新 reward**；认证失败没有记成模型 FAIL、NA 或 reward=0。原先采样的官方成败数据也没有变化。
+
+## 已准备的恢复入口与产物
+
+恢复入口 `python stages/step02_static_scores/resume_baseline_newtasks.py --execute` 已完成离线检查，当前没有执行评分恢复。它先检查 CLI 登录；可用后将失败目录另行归档，先完成一条请求，再保持最多两条在途任务。发生调用失败时不继续提交其余题目。它只改运行调度，不改 prompt、规则、judge 配置或 reward。
+
+- [冻结清单](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step02_static_scores/draco_baseline_newtasks_v1/manifest.json)、[离线验证](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step02_static_scores/draco_baseline_newtasks_v1/offline_validation.json)、[预先固定的抽查项](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step02_static_scores/draco_baseline_newtasks_v1/analysis_spec.json)。
+- [认证诊断](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step02_static_scores/draco_baseline_newtasks_v1/authentication_diagnostic.json)、[运行日志](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step02_static_scores/draco_baseline_newtasks_v1/run.log)、[当前状态](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step02_static_scores/draco_baseline_newtasks_v1/status.json)。
+- [原始基线入口](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/stages/step02_static_scores/baseline_newtasks.py)、[恢复入口](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/stages/step02_static_scores/resume_baseline_newtasks.py)、[结果分析脚本](/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/stages/step02_static_scores/analyze_baseline_newtasks.py)。
+
+阶段 fingerprint：`0196d8f17de56c9b0ed543960c98eb18567469461522b6e28a65b4057b86f8ed`。原采样源码、模型、540 条轨迹以及 v2/v3 的冻结文件均未修改。本次没有运行全量评分、GRPO 或新 dev。
+
+<!-- DRACO_BASELINE_NEWTASKS_END -->
+
+认证排查补充：用户确认在自己的服务器终端直接输入 codex 可以使用。上文 Not logged in 仅是本助手执行环境中的观测，不能据此断言用户终端未登录。已核对本环境 root、主机 autodl-container-65d14488ce-cd05d5ef；正常 PATH 和实验入口指向同一安装，未发现自定义 provider 被忽略的证据。正在等待可用终端的入口/认证方式以继续对照。

@@ -1,0 +1,37 @@
+{
+  "name": "draco-static-offline-train90-ppo5-v1",
+  "groups_per_update": 90,
+  "task_order_prefix": "static-score-v1:20261009:",
+  "task_order_offset": 2,
+  "judge_workers": 2,
+  "training": {
+    "learning_rate": 5e-05,
+    "weight_decay": 0.0,
+    "clip_epsilon": 0.2,
+    "kl_beta": 0.01,
+    "max_grad_norm": 1.0,
+    "advantage_epsilon": 1e-06,
+    "head_chunk_size": 128,
+    "old_logprob_mean_tolerance": 0.1,
+    "ppo_epochs_per_batch": 5,
+    "loss_reduction": "mean_of_trajectory_token_means",
+    "zero_advantage_batch": "retain_all_trajectories_and_apply_kl",
+    "reference": "separate_frozen_initial_sft_model",
+    "optimizer_steps_per_epoch": 1,
+    "gradient_checkpoint_every_episodes": 6,
+    "reference_logprob_cache": true,
+    "behavior_logprobs": "frozen_original_vllm_logprobs_all_epochs",
+    "reward_advantage": "fixed_once_before_epoch_1",
+    "likelihood_check": "reference_vs_behavior_all_epochs; current_vs_behavior_only_epoch_1"
+  },
+  "initial_score_cache": "runs/step02_static_scores/draco_baseline_newtasks_cli0162_v1/judgements",
+  "execution_gpu": "1",
+  "gpu_authorization": "GPU use is on hold pending a new explicit user instruction; planned device is GPU 1",
+  "optimizer_updates": 5,
+  "initialization": "frozen_initial_sft_with_fresh_optimizer",
+  "offline_fixed_dataset": true,
+  "execution_authorization": "Scoring and CPU preparation authorized; user explicitly put GPU use on hold on 2026-10-10. No automatic training when GPUs become free.",
+  "additional_score_caches": [
+    "runs/step04_train90_single_update_v1/rubric/update_001/judgements"
+  ]
+}
