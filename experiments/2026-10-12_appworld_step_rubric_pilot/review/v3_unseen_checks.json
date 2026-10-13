@@ -1,0 +1,179 @@
+{
+  "frozen_at": "2026-10-12T20:21:39.699770+08:00",
+  "prompt_sha256": "1743b4b6cd6082c809bbde4791c087ff00428233b914dd5e359f745e48e40151",
+  "frozen_before_judging_these_inputs": true,
+  "status": "Task families not used for prompt edits; expectations authored from visible evidence by the same assistant, not independent human labels. Official outcomes used only for sampling.",
+  "checks": [
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 2,
+      "rubric": "R1",
+      "expected": [
+        "F"
+      ],
+      "rationale": "无认证访问目录，401。"
+    },
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 4,
+      "rubric": "R1",
+      "expected": [
+        "F"
+      ],
+      "rationale": "登录缺少必填username，422。"
+    },
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 9,
+      "rubric": "R1",
+      "expected": [
+        "P"
+      ],
+      "rationale": "登录成功；沿用之前赋值的密码变量合法。"
+    },
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 9,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "认证准备不属于账单任务的业务修改。"
+    },
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 12,
+      "rubric": "R8",
+      "expected": [
+        "F"
+      ],
+      "rationale": "未调用当前时间接口/函数，却把this year指定为2023，违反明确时间协议。"
+    },
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 14,
+      "rubric": "R1",
+      "expected": [
+        "F"
+      ],
+      "rationale": "对包含美元符号的金额直接float，ValueError。"
+    },
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 15,
+      "rubric": "R1",
+      "expected": [
+        "P"
+      ],
+      "rationale": "去掉美元符号并计算得到368.0，执行成功。"
+    },
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 15,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "针对上步ValueError去掉美元符号，且重置累计值。"
+    },
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 16,
+      "rubric": "R8",
+      "expected": [
+        "F"
+      ],
+      "rationale": "没有取得complete_task完整规格。"
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 1,
+      "rubric": "R1",
+      "expected": [
+        "F"
+      ],
+      "rationale": "调用不存在的show_directories。"
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 3,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "改用真实show_directory修复接口名，虽又出现认证错误。"
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 7,
+      "rubric": "R1",
+      "expected": [
+        "F"
+      ],
+      "rationale": "取得token后仍未传入，调用401。"
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 8,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "传入access_token并成功列目录。"
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 10,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "路径以斜杠结尾，split最后一项为空，输出文件名错误。"
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 12,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "仍取空basename，且把输出父目录改错。"
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 13,
+      "rubric": "R6",
+      "expected": [
+        "F"
+      ],
+      "rationale": "上步循环可能部分成功并删除目录，未检查便从头overwrite重试。"
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 16,
+      "rubric": "R1",
+      "expected": [
+        "P"
+      ],
+      "rationale": "三个压缩调用实际执行成功。"
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 16,
+      "rubric": "R5",
+      "expected": [
+        "F"
+      ],
+      "rationale": "输出到photographs而非任务规定的photographs/vacations；执行成功不等于业务正确。"
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 17,
+      "rubric": "R7",
+      "expected": [
+        "F"
+      ],
+      "rationale": "输出路径错误且没有实际执行complete_task，仍宣称完成。"
+    }
+  ]
+}

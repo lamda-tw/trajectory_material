@@ -1,0 +1,32 @@
+{
+  "model": "gpt-6.1-sol",
+  "status": "passed",
+  "elapsed_seconds": 10.188802003860474,
+  "audit": {
+    "usage": {
+      "input_tokens": 10035,
+      "cached_input_tokens": 8320,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 9,
+      "reasoning_output_tokens": 0
+    },
+    "event_types": [
+      "thread.started",
+      "item.completed",
+      "turn.started",
+      "item.completed",
+      "turn.completed"
+    ],
+    "tool_items": [],
+    "nonfatal_error_events": [
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "error",
+          "message": "Code Mode is unavailable because code-mode host is disabled. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`."
+        }
+      }
+    ]
+  }
+}

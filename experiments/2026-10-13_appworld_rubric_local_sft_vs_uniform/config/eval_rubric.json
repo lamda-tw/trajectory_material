@@ -1,0 +1,109 @@
+{
+  "experiment": "static-rubric-grpo-v1",
+  "paths": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "appworld_python": "/root/autodl-tmp/envs/appworld-0.2.0-py312/bin/python",
+    "training_python": "/root/autodl-tmp/workspace-tw/.conda-training/bin/python",
+    "vllm_python": "/root/autodl-tmp/envs/qwen3-vllm-py312/bin/python",
+    "codex": "/root/.nvm/versions/node/v26.8.1/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex",
+    "appworld_data": "/root/autodl-tmp/data/benchmarks/appworld/runtime/data",
+    "appworld_test_cache": "/root/autodl-tmp/workspace-tw/experiments/2026-09-10_173848_appworld_qwen3-8b_react_oneshot_smoke/cache/tests"
+  },
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8141,
+    "gpu": "0",
+    "model_name": "qwen3-8b",
+    "adapter_name": "rubric-adapter",
+    "gpu_memory_utilization": 0.8,
+    "startup_timeout_seconds": 900,
+    "request_timeout_seconds": 600,
+    "max_num_seqs": 3,
+    "minimum_free_gpu_gib": 80
+  },
+  "agent": {
+    "prompt": "config/agent_prompt.txt",
+    "enable_thinking": false,
+    "max_steps": 50,
+    "max_model_len": 32000,
+    "max_new_tokens": 3000,
+    "context_overflow": "terminate_without_truncation",
+    "parser": "first_python_fence_with_partial_fence_recovery"
+  },
+  "sampling": {
+    "group_size": 6,
+    "temperature": 1.0,
+    "top_p": 1.0,
+    "top_k": -1,
+    "repetition_penalty": 1.0,
+    "seed": 20261008,
+    "pilot_seed": 20261108
+  },
+  "judge": {
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "timeout_seconds": 600,
+    "max_attempts": 2,
+    "rules": "assets/draco/static_rubrics.json",
+    "official_prompt": "assets/draco/score_rubrics.txt",
+    "wrapper": "assets/judge_wrapper.txt",
+    "schema": "assets/judge_schema.json",
+    "reward_scale": 10.0,
+    "filter_no_fail": true
+  },
+  "training": {
+    "gpu": "1",
+    "seed": 20261008,
+    "updates": 10,
+    "groups_per_update": 2,
+    "train_tasks": "config/train_all.txt",
+    "learning_rate": 5e-05,
+    "weight_decay": 0.0,
+    "clip_epsilon": 0.2,
+    "kl_beta": 0.01,
+    "max_grad_norm": 1.0,
+    "advantage_epsilon": 1e-06,
+    "advantage_std": "sample",
+    "loss_reduction": "mean_of_trajectory_token_means",
+    "ppo_epochs_per_batch": 1,
+    "head_chunk_size": 128,
+    "lora": {
+      "r": 16,
+      "lora_alpha": 32,
+      "lora_dropout": 0.0,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ],
+      "bias": "none",
+      "task_type": "CAUSAL_LM"
+    },
+    "minimum_free_gpu_gib": 80
+  },
+  "evaluation": {
+    "tasks": "config/dev.txt",
+    "temperature": 0.0,
+    "seed": 100,
+    "checkpoints": [
+      0,
+      10
+    ],
+    "primary_metric": "official_task_goal_completion",
+    "rubric_on_dev": false
+  },
+  "collection": {
+    "tasks": "assets/splits/train_all.txt",
+    "workers": 6,
+    "rollouts_per_task": 6,
+    "initial_sequential_rollouts": 1,
+    "official_terminal_evaluation": true,
+    "report": "../2026-10-08_static_rubric_grpo_lora_init/RUBRIC_GRPO_EXPERIMENT_REPORT.md"
+  },
+  "experiment_arm": "rubric",
+  "worker_count": 3
+}

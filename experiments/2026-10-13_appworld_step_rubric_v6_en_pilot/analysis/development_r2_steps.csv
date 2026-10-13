@@ -1,0 +1,292 @@
+id,step,reason,R1,R2,R3,R4,R5,R6,R7,R8
+302c169_2__02,1,Unauthorized call; API spec not checked.,F,N,N,N,N,N,N,F
+302c169_2__02,2,Recovery API was guessed and did not exist.,F,N,N,N,N,U,N,F
+302c169_2__02,3,Supervisor API spec was not checked.,P,P,P,N,N,P,N,F
+302c169_2__02,4,Email used for phone-number username field.,F,N,F,N,N,N,N,F
+302c169_2__02,5,,P,P,N,N,N,P,N,P
+302c169_2__02,6,,P,N,P,N,N,P,N,P
+302c169_2__02,7,Alarm-list API spec was not checked.,P,P,N,N,N,N,N,F
+302c169_2__02,8,,P,P,P,P,N,N,N,P
+302c169_2__02,9,,P,N,P,P,N,N,N,P
+302c169_2__02,10,Update API spec was not checked.,P,N,P,P,P,N,N,F
+302c169_2__02,11,Completion API spec was not checked.,P,N,P,N,N,N,P,F
+302c169_3__02,1,Unknown API called without checking its spec.,F,N,N,N,N,N,N,F
+302c169_3__02,2,,P,P,N,N,N,P,N,P
+302c169_3__02,3,Alarm read lacked a spec and failed authorization.,F,N,N,N,N,P,N,F
+302c169_3__02,4,Repeated the same API listing without need.,P,P,N,N,N,F,N,P
+302c169_3__02,5,Bad password extraction; required specs unchecked.,F,P,N,N,N,P,N,F
+302c169_3__02,6,Login omitted username; required specs unchecked.,F,P,N,N,N,P,N,F
+302c169_3__02,7,,P,P,N,N,N,P,N,P
+302c169_3__02,8,Password API spec was not checked.,P,P,P,N,N,P,N,F
+302c169_3__02,9,Alarm API spec was not checked.,P,P,P,N,N,P,N,F
+302c169_3__02,10,Wake Up was baselessly treated as go-to-sleep.,P,P,F,F,N,N,N,P
+302c169_3__02,11,Wrong alarm/time updated; update spec unchecked.,P,N,F,F,F,N,N,F
+302c169_3__02,12,Claimed completion after wrong edits; spec unchecked.,P,N,F,N,N,N,F,F
+60d0b5b_1__02,1,,P,P,N,N,N,N,N,P
+60d0b5b_1__02,2,Repeated API list did not retrieve requests.,P,F,N,N,N,F,N,P
+60d0b5b_1__02,3,,P,P,N,N,N,N,N,P
+60d0b5b_1__02,4,Repeated API list did not retrieve requests.,P,F,N,N,N,F,N,P
+60d0b5b_1__02,5,Repeated API list did not retrieve requests.,P,F,N,N,N,F,N,P
+60d0b5b_1__02,6,Repeated API list did not retrieve requests.,P,F,N,N,N,F,N,P
+60d0b5b_1__02,7,Undefined access-token variable caused NameError.,F,N,N,N,N,N,N,P
+60d0b5b_1__02,8,,P,P,N,N,N,P,N,P
+60d0b5b_1__02,9,Password parsing failed; API spec was unchecked.,F,N,N,N,N,P,N,F
+60d0b5b_1__02,10,Supervisor password API spec was never checked.,P,P,P,N,N,P,N,F
+60d0b5b_1__02,11,,P,P,P,N,N,P,N,P
+60d0b5b_1__02,12,,P,P,P,N,N,P,N,P
+60d0b5b_1__02,13,Picked the oldest shown item; more pages unchecked.,P,U,F,F,N,N,N,F
+60d0b5b_1__02,14,Wrong ID claim; repeated query and extra code blocks.,P,P,F,N,N,F,N,F
+60d0b5b_1__02,15,,P,P,N,N,N,N,N,P
+60d0b5b_1__02,16,Repeated the API list without new information.,P,P,P,N,N,F,N,P
+60d0b5b_1__02,17,Delete is not a refund; completed request was rejected.,F,N,F,F,N,N,N,P
+60d0b5b_1__02,18,Gave up despite create_transaction; completion spec absent.,P,N,F,F,N,F,F,F
+60d0b5b_2__03,1,,P,N,N,N,N,N,N,P
+60d0b5b_2__03,2,,P,N,N,N,N,N,N,P
+60d0b5b_2__03,3,Undefined access-token variable caused failure.,F,N,N,N,N,N,N,P
+60d0b5b_2__03,4,Passwords was undefined; login spec unchecked.,F,N,N,N,N,P,N,F
+60d0b5b_2__03,5,Credential API spec was not checked.,P,P,N,N,N,P,N,F
+60d0b5b_2__03,6,Boolean list was indexed; login spec unchecked.,F,N,P,N,N,P,N,F
+60d0b5b_2__03,7,Venmo login spec was not checked.,P,N,P,N,N,P,N,F
+60d0b5b_2__03,8,,P,P,P,N,N,N,N,P
+60d0b5b_2__03,9,Cory claim skipped pages; phone API was guessed.,F,F,F,F,N,N,N,F
+60d0b5b_2__03,10,Token was missing; phone API spec unchecked.,F,N,P,N,N,P,N,F
+60d0b5b_2__03,11,Boolean list was indexed; login spec unchecked.,F,N,P,N,N,P,N,F
+60d0b5b_2__03,12,Login failed; phone login spec was unchecked.,F,N,P,N,N,P,N,F
+60d0b5b_2__03,13,,P,P,P,N,N,P,N,P
+60d0b5b_2__03,14,Repeated unchanged invalid login without its spec.,F,N,P,N,N,F,N,F
+60d0b5b_2__03,15,"Profile call used unsupported, undocumented args.",F,N,P,N,N,P,N,F
+60d0b5b_2__03,16,Phone profile spec was not checked.,P,P,P,N,N,P,N,F
+60d0b5b_2__03,17,Phone login spec was not checked.,P,N,P,N,N,P,N,F
+60d0b5b_2__03,18,Contact-search spec was not checked.,P,P,P,N,N,P,N,F
+60d0b5b_2__03,19,Extra executable blocks appeared in commentary.,P,P,P,P,N,N,N,F
+60d0b5b_2__03,20,Fabricated searches; queried a known non-Cory ID.,P,F,F,F,N,F,N,F
+60d0b5b_2__03,21,,P,P,P,P,N,P,N,P
+60d0b5b_2__03,22,Used a denied request and invented refund success.,P,F,F,F,N,F,F,F
+60d0b5b_2__03,23,Treated Nancy's $41 request as Cory's.,P,F,F,F,N,F,F,F
+60d0b5b_2__03,24,"Nonexistent API, wrong request, and fake success.",F,N,F,F,N,F,F,F
+60d0b5b_2__03,25,,P,N,P,N,N,P,N,P
+60d0b5b_2__03,26,Repeated the same docs query without new need.,P,N,P,N,N,F,N,P
+60d0b5b_2__03,27,Deletion failed; the plan would not repay Cory.,F,N,F,F,N,F,F,F
+60d0b5b_2__03,28,Unauthorized approve would not repay Cory.,F,N,F,F,N,F,F,F
+60d0b5b_2__03,29,Assumed an ID mapping and fabricated an update.,F,N,F,F,N,F,F,F
+60d0b5b_2__03,30,Encoding failed; transaction and success invented.,F,N,F,F,N,P,F,F
+60d0b5b_2__03,31,Results were unrelated; update success invented.,P,F,F,F,N,P,F,F
+60d0b5b_2__03,32,ID search missed the target; result was invented.,P,F,F,F,N,P,F,F
+60d0b5b_2__03,33,Repeated the same failed search and fake result.,P,F,F,F,N,F,F,F
+60d0b5b_2__03,34,Repeated the same failed search and fake result.,P,F,F,F,N,F,F,F
+60d0b5b_2__03,35,Repeated the same failed search and fake result.,P,F,F,F,N,F,F,F
+60d0b5b_2__03,36,Repeated the same failed search and fake result.,P,F,F,F,N,F,F,F
+60d0b5b_2__03,37,Repeated the same failed search and fake result.,P,F,F,F,N,F,F,F
+60d0b5b_2__03,38,Repeated the same failed search and fake result.,P,F,F,F,N,F,N,F
+76f2c72_1__03,1,,P,P,N,N,N,N,N,P
+76f2c72_1__03,2,Undocumented call failed authentication.,F,N,N,N,N,N,N,F
+76f2c72_1__03,3,Repeated the same API listing without need.,P,P,N,N,N,F,N,P
+76f2c72_1__03,4,Undocumented login omitted a required field.,F,P,P,N,N,P,N,F
+76f2c72_1__03,5,,P,P,N,N,N,P,N,P
+76f2c72_1__03,6,"Undocumented, nonexistent API call failed.",F,N,N,N,N,P,N,F
+76f2c72_1__03,7,,P,P,N,N,N,P,N,P
+76f2c72_1__03,8,show_profile was called without its spec.,P,P,P,N,N,P,N,F
+76f2c72_1__03,9,,P,N,P,N,N,P,N,P
+76f2c72_1__03,10,show_directory was called without its spec.,P,P,P,N,N,P,N,F
+76f2c72_1__03,11,,P,P,P,P,N,N,N,P
+76f2c72_1__03,12,2023 was assumed without checking current date.,P,P,U,F,N,N,N,F
+76f2c72_1__03,13,show_file was called without its spec.,P,P,P,N,N,N,N,F
+76f2c72_1__03,14,Parsing failed; show_file spec was not checked.,F,P,P,P,N,P,N,F
+76f2c72_1__03,15,May's PDF was omitted from the computed total.,P,F,U,F,N,P,N,F
+76f2c72_1__03,16,Submitted an unverified subtotal; API spec unchecked.,P,F,U,F,N,N,U,F
+7d7fbf6_1__00,1,Unknown API; specification not checked.,F,N,N,N,N,N,N,F
+7d7fbf6_1__00,2,,P,P,P,N,N,P,N,P
+7d7fbf6_1__00,3,Missing token; specification not checked.,F,N,P,N,N,P,N,F
+7d7fbf6_1__00,4,Missing login fields; spec not checked.,F,N,P,N,N,P,N,F
+7d7fbf6_1__00,5,Supervisor API specification not checked.,P,P,P,N,N,P,N,F
+7d7fbf6_1__00,6,Login specification not checked.,P,N,P,N,N,P,N,F
+7d7fbf6_1__00,7,Token omitted again; spec not checked.,F,N,P,N,N,F,N,F
+7d7fbf6_1__00,8,Directory API specification not checked.,P,P,P,N,N,P,N,F
+7d7fbf6_1__00,9,Directory API specification not checked.,P,P,P,N,N,N,N,F
+7d7fbf6_1__00,10,Empty spot name; unsupported parameter.,F,N,F,F,N,N,N,F
+7d7fbf6_1__00,11,,P,P,P,N,N,P,N,P
+7d7fbf6_1__00,12,Empty spot name and wrong archive path.,F,N,F,F,N,P,N,P
+7d7fbf6_1__00,13,Empty archive name; partial effect unresolved.,F,N,F,F,U,P,N,F
+7d7fbf6_1__00,14,Extra code block; API spec not checked.,P,P,P,N,N,P,N,F
+7d7fbf6_1__00,15,Directory APIs used without specifications.,P,P,P,N,N,P,N,F
+7d7fbf6_1__00,16,Archives written outside required directory.,P,N,F,F,F,P,N,F
+7d7fbf6_1__00,17,False completion; complete_task not called.,F,N,F,N,N,N,F,F
+b0a8eae_3__03,1,"Called a nonexistent, undocumented API.",F,N,N,N,N,N,N,F
+b0a8eae_3__03,2,,P,P,N,N,N,P,N,P
+b0a8eae_3__03,3,Missing token caused 401; API undocumented.,F,N,N,N,N,N,N,F
+b0a8eae_3__03,4,Repeated the same API list without need.,P,P,N,N,N,F,N,P
+b0a8eae_3__03,5,Called APIs without checking their specs.,P,P,P,N,N,P,N,F
+b0a8eae_3__03,6,Omitted the token again; API undocumented.,F,N,P,N,N,F,N,F
+b0a8eae_3__03,7,Called search_notes without its full spec.,P,P,P,N,N,P,N,F
+b0a8eae_3__03,8,Exact title unverified; API undocumented.,P,P,U,P,N,N,N,F
+b0a8eae_3__03,9,Summed the full week instead of today.,P,P,P,F,N,N,N,P
+b0a8eae_3__03,10,spotify_access_token was undefined.,F,N,P,N,N,N,N,P
+b0a8eae_3__03,11,Supervisor API spec was not checked.,P,P,P,N,N,P,N,F
+b0a8eae_3__03,12,,P,P,P,N,N,P,N,P
+b0a8eae_3__03,13,Invented KeyError; equated minutes to songs.,P,P,F,F,N,N,N,F
+b0a8eae_3__03,14,,P,P,N,N,N,N,N,P
+b0a8eae_3__03,15,"Summed all playlists, not each playlist.",P,P,P,F,N,F,N,P
+b0a8eae_3__03,16,Reused the invalid 315-song threshold.,P,P,P,F,N,F,N,P
+b0a8eae_3__03,17,Unsupported 315-song claim repeated.,P,N,F,F,N,F,N,P
+b0a8eae_3__03,18,Repeated search; None was called an error.,P,P,F,F,N,F,N,P
+b0a8eae_3__03,19,Repeated search; None was called an error.,P,P,F,F,N,F,N,P
+b0a8eae_3__03,20,Repeated search; None was called an error.,P,P,F,F,N,F,N,P
+b0a8eae_3__03,21,Repeated search; None was called an error.,P,P,F,F,N,F,N,P
+b0a8eae_3__03,22,Repeated search; None was called an error.,P,P,F,F,N,F,N,P
+b0a8eae_3__03,23,Repeated search; None was called an error.,P,P,F,F,N,F,N,P
+b0a8eae_3__03,24,Repeated search; None was called an error.,P,P,F,F,N,F,N,P
+b0a8eae_3__03,25,Chose a playlist below its own threshold.,P,P,P,F,N,F,N,P
+b0a8eae_3__03,26,Nonexistent API; chosen list was too short.,F,N,P,F,N,N,N,F
+b0a8eae_3__03,27,,P,P,N,N,N,P,N,P
+b0a8eae_3__03,28,Sufficiency unverified; API spec unchecked.,P,N,P,F,U,P,N,F
+b0a8eae_3__03,29,Completed with sufficiency unverified.,P,N,P,N,N,N,U,F
+b7a9ee9_1__05,1,Undefined passwords variable caused NameError.,F,N,N,N,N,N,N,P
+b7a9ee9_1__05,2,Supervisor password API spec was not checked.,P,P,N,N,N,P,N,F
+b7a9ee9_1__05,3,,P,P,P,N,N,P,N,P
+b7a9ee9_1__05,4,,P,P,P,N,N,N,N,P
+b7a9ee9_1__05,5,Playlist objects were mistaken for songs.,P,F,F,N,N,N,N,F
+b7a9ee9_1__05,6,Strings were treated as song objects.,F,N,F,N,N,N,N,P
+b7a9ee9_1__05,7,"Claimed a string, but songs was a list.",P,P,F,N,N,P,N,P
+b7a9ee9_1__05,8,Used a nonexistent API and misread song entries.,F,N,F,N,N,P,N,F
+b7a9ee9_1__05,9,,P,P,N,N,N,P,N,P
+b7a9ee9_1__05,10,Undocumented call used a dict as song_id.,F,N,F,N,N,P,N,F
+b7a9ee9_1__05,11,,P,P,N,N,N,P,N,P
+b7a9ee9_1__05,12,A song dict was passed instead of an integer.,F,N,F,N,N,P,N,F
+b7a9ee9_1__05,13,Called song_id a string; it was a dict.,P,P,F,N,N,P,N,P
+b7a9ee9_1__05,14,,P,P,P,N,N,P,N,P
+b7a9ee9_1__05,15,show_playlist spec was never checked.,P,P,P,N,N,P,N,F
+b7a9ee9_1__05,16,,P,P,P,P,N,N,N,P
+b7a9ee9_1__05,17,,P,P,P,P,N,N,N,P
+b7a9ee9_1__05,18,Missing token and duplicate artist targets.,F,N,P,F,N,N,N,F
+b7a9ee9_1__05,19,,P,P,N,N,N,P,N,P
+b7a9ee9_1__05,20,Blind follow hit an already-followed artist.,F,N,P,F,N,P,N,P
+b7a9ee9_1__05,21,Wrong ID key; API spec was not checked.,F,P,F,N,N,P,N,F
+b7a9ee9_1__05,22,,P,P,P,N,N,P,N,P
+b7a9ee9_1__05,23,"Stale, possibly partial state caused refollow.",F,U,F,F,P,P,N,F
+b7a9ee9_1__05,24,The artist IDs visibly matched the target IDs.,P,P,F,N,N,P,N,P
+b7a9ee9_1__05,25,Following-artists API spec was not checked.,P,P,P,P,N,P,N,F
+b7a9ee9_1__05,26,complete_task spec was not checked.,P,N,P,N,N,N,P,F
+cf6abd2_2__01,1,,P,P,N,N,N,N,N,P
+cf6abd2_2__01,2,,P,P,P,N,N,N,N,P
+cf6abd2_2__01,3,Unauthorized call; API spec was not checked.,F,N,N,N,N,N,N,F
+cf6abd2_2__01,4,Login omitted required credentials.,F,N,N,N,N,P,N,F
+cf6abd2_2__01,5,API specification was not checked.,P,P,N,N,N,P,N,F
+cf6abd2_2__01,6,"Called a nonexistent, undocumented API.",F,N,P,N,N,P,N,F
+cf6abd2_2__01,7,"Called a nonexistent, undocumented API.",F,N,P,N,N,P,N,F
+cf6abd2_2__01,8,API specification was not checked.,P,P,P,N,N,P,N,F
+cf6abd2_2__01,9,API specification was not checked.,P,N,P,N,N,P,N,F
+cf6abd2_2__01,10,API specification was not checked.,P,P,P,N,N,N,N,F
+cf6abd2_2__01,11,Confused the checklist item with a note.,P,P,F,N,N,P,N,F
+cf6abd2_2__01,12,Repeated query and confused item with note.,P,P,F,N,N,F,N,F
+cf6abd2_2__01,13,Confused the checklist item with a note.,P,P,F,N,N,P,N,F
+cf6abd2_2__01,14,Confused the checklist item with a note.,P,P,F,N,N,P,N,F
+cf6abd2_2__01,15,API specification was not checked.,P,P,P,N,N,N,N,F
+cf6abd2_2__01,16,API specification was not checked.,P,N,P,P,P,N,N,F
+cf6abd2_2__01,17,complete_task specification was not checked.,P,N,P,N,N,N,P,F
+e7a10f8_1__05,1,Undefined variable caused NameError.,F,N,N,N,N,N,N,P
+e7a10f8_1__05,2,Supervisor API lacked prior documentation.,P,P,N,N,N,P,N,F
+e7a10f8_1__05,3,,P,P,P,N,N,P,N,P
+e7a10f8_1__05,4,,P,P,N,N,N,N,N,P
+e7a10f8_1__05,5,Undocumented API and field led to KeyError.,F,P,F,F,N,N,N,F
+e7a10f8_1__05,6,,P,P,P,N,N,P,N,P
+e7a10f8_1__05,7,Pagination and duration unit remain unverified.,P,U,P,U,N,P,N,P
+e7a10f8_1__05,8,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,9,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,10,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,11,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,12,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,13,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,14,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,15,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,16,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,17,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,18,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,19,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,20,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,21,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,22,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,23,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,24,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,25,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,26,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,27,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,28,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,29,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,30,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,31,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,32,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,33,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,34,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,35,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,36,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,37,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,38,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,39,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,40,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,41,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,42,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,43,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,44,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,45,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,46,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,47,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,48,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,49,Result remained unshown; operation was repeated.,P,N,U,N,N,F,N,P
+e7a10f8_1__05,50,"Result unshown; repeated, with no complete_task call.",P,N,U,N,N,F,F,P
+e7a10f8_2__02,1,Undefined passwords caused NameError.,F,N,N,N,N,N,N,P
+e7a10f8_2__02,2,Supervisor API specification was not checked.,P,P,N,N,N,P,N,F
+e7a10f8_2__02,3,,P,P,P,N,N,P,N,P
+e7a10f8_2__02,4,,P,N,P,N,N,P,N,P
+e7a10f8_2__02,5,,P,P,P,N,N,N,N,P
+e7a10f8_2__02,6,show_playlist specification was not checked.,P,P,P,N,N,N,N,F
+e7a10f8_2__02,7,KeyError; playlist fields were confused.,F,N,F,P,N,N,N,P
+e7a10f8_2__02,8,,P,P,P,N,N,P,N,P
+e7a10f8_2__02,9,Duration unit was assumed without evidence.,P,N,U,F,N,P,N,P
+e7a10f8_2__02,10,Repeated the same unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,11,,P,P,P,N,N,P,N,P
+e7a10f8_2__02,12,Repeated the same unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,13,,P,P,P,P,N,P,N,P
+e7a10f8_2__02,14,Repeated known data; unit remained unsupported.,P,P,U,F,N,F,N,P
+e7a10f8_2__02,15,Re-read known value; unit claim unsupported.,P,P,U,N,N,F,N,P
+e7a10f8_2__02,16,Unsupported conversion did not resolve the error.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,17,Unsupported conversion did not resolve the error.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,18,Unsupported conversion did not resolve the error.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,19,Unsupported conversion did not resolve the error.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,20,Unsupported conversion did not resolve the error.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,21,Repeated known value; unit claim unsupported.,P,P,U,N,N,F,N,P
+e7a10f8_2__02,22,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,23,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,24,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,25,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,26,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,27,Repeated known value; unit claim unsupported.,P,P,U,N,N,F,N,P
+e7a10f8_2__02,28,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,29,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,30,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,31,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,32,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,33,Repeated known value; unit claim unsupported.,P,P,U,N,N,F,N,P
+e7a10f8_2__02,34,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,35,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,36,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,37,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,38,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,39,Repeated known value; unit claim unsupported.,P,P,U,N,N,F,N,P
+e7a10f8_2__02,40,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,41,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,42,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,43,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,44,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,45,Repeated known value; unit claim unsupported.,P,P,U,N,N,F,N,P
+e7a10f8_2__02,46,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,47,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,48,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,49,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_2__02,50,Repeated an unsupported conversion.,P,N,U,F,N,F,N,P
+e7a10f8_3__04,1,Unknown API; guessed duration rule.,F,N,N,F,N,N,N,F
+e7a10f8_3__04,2,Supervisor API spec was not checked.,P,P,P,N,N,P,N,F
+e7a10f8_3__04,3,,P,N,P,N,N,N,N,P
+e7a10f8_3__04,4,Pagination loop required but not performed.,P,P,P,N,N,N,N,F
+e7a10f8_3__04,5,Coverage unknown; song count is not duration.,P,U,U,F,N,N,N,P
+e7a10f8_3__04,6,Duration was based on an invented average.,P,N,F,F,N,N,N,P
+e7a10f8_3__04,7,Estimated duration submitted without API spec.,P,N,U,F,N,N,F,F

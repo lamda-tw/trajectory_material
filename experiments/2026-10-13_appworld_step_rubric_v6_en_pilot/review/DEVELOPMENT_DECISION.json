@@ -1,0 +1,24 @@
+{
+  "frozen_at": "2026-10-13T18:06:25.727012+08:00",
+  "proceed_to_holdout": true,
+  "prompt_sha256": "df4e8fb406551f2d90e38bbe83838db181bda18e01d947b236ee10a05c633109",
+  "prompt": "assets/prompt_v6_en_format.txt",
+  "decision": "Freeze original English-v6 scoring semantics with the shorter-reason output instruction for held-out diagnostic validation.",
+  "basis": {
+    "baseline_legacy_regression_checks": "52/52",
+    "baseline_new_boundary_checks": "27/33",
+    "baseline_repeat_agreement": 0.8741258741258742,
+    "r1_repeat_agreement": 0.8601398601398601,
+    "r2_repeat_agreement": 0.8035714285714286,
+    "semantic_expansion_result": "No consistent gain across targeted checks and repeat stability; do not retain longer rules merely because they were proposed.",
+    "format_result": "No format-invalid outputs observed in completed r1/r2 calls; original scoring rules are preserved exactly."
+  },
+  "remaining_format_probe": "Four paired format-only development calls are still finishing. They will be reported, but this freeze is committed before their results; no subsequent wording changes based on them or the holdout.",
+  "known_limitations": [
+    "R5 partial-loop effects remain difficult despite visible later evidence.",
+    "R7 attempted-answer versus intermediate-step boundary is unstable on one long repeated trajectory.",
+    "R2 initial retrieval versus global coverage judgments remain variable."
+  ],
+  "not_a_production_accuracy_certification": true,
+  "holdout_inspected_before_freeze": false
+}

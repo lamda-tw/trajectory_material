@@ -1,0 +1,65 @@
+{
+  "scope": "Targeted primary-assistant evidence review; not independent human gold and not an exhaustive population accuracy audit.",
+  "cases": [
+    {
+      "id": "b7a9ee9_1__05",
+      "step": 20,
+      "rubric": "R5",
+      "r0": "N",
+      "expected": "P",
+      "classification": "clear_error",
+      "evidence": "First three target follower counts each increase by one before later duplicate error; subsequent following snapshot confirms effects.",
+      "revision_addressed": "r1 whole-step pre-write-rejection clarification"
+    },
+    {
+      "id": "7d7fbf6_1__00",
+      "step": 12,
+      "rubric": "R5",
+      "r0": "N",
+      "expected": "F",
+      "classification": "clear_error",
+      "evidence": "Athens existed before writes and is absent after failed loop; archive path lacks required vacations directory.",
+      "revision_addressed": "r1 partial-write clarification"
+    },
+    {
+      "id": "7d7fbf6_1__00",
+      "step": 13,
+      "rubric": "R5",
+      "r0": "F",
+      "expected": "N",
+      "classification": "clear_error",
+      "evidence": "New step fails on its first Athens call with no files; earlier wrong archive effects belong to step12.",
+      "revision_addressed": "r1 whole-step no-write condition"
+    },
+    {
+      "id": "cf6abd2_2__01",
+      "step": 9,
+      "rubric": "R4",
+      "r0": "F",
+      "expected": "N",
+      "classification": "clear_error",
+      "evidence": "Authentication-only step is explicitly N under R4; username choice does not turn login into task business logic.",
+      "revision_addressed": "No special-case rule added; original v6 already explicit. Monitor r1."
+    },
+    {
+      "id": "60d0b5b_1__02",
+      "step": 12,
+      "rubric": "R2",
+      "r0": "U",
+      "expected": "P",
+      "classification": "clear_error",
+      "evidence": "Successful local first-page retrieval precedes the actual latest-request decision; v6 exempts intermediate retrieval from future global conclusions.",
+      "revision_addressed": "No special-case rule added; original v6 already explicit. Monitor r1."
+    },
+    {
+      "id": "b0a8eae_3__03",
+      "step": 18,
+      "rubric": "R2",
+      "r0": "F",
+      "repeat": "P",
+      "classification": "boundary_disagreement",
+      "evidence": "Same records reused under wrong duration-to-song-count rule. R4 violation is clear; whether R2 also fails for the inadequate measure varies.",
+      "revision_addressed": "Do not overstate all disagreement as known error; report separately."
+    }
+  ]
+}

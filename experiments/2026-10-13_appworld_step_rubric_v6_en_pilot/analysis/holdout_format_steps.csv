@@ -1,0 +1,346 @@
+id,step,reason,R1,R2,R3,R4,R5,R6,R7,R8
+07b42fd_1__05,1,Password API spec was not checked.,P,P,P,N,N,N,N,F
+07b42fd_1__05,2,Unexpected access_token argument caused failure.,F,N,N,N,N,N,N,F
+07b42fd_1__05,3,Nonexistent show_artists API caused failure.,F,N,N,N,N,P,N,F
+07b42fd_1__05,4,page_limit 100 exceeded the API maximum.,F,N,N,N,N,P,N,F
+07b42fd_1__05,5,search_artists spec was not checked.,P,P,P,N,N,P,N,F
+07b42fd_1__05,6,Wrong artist ID key caused KeyError.,F,P,F,P,N,P,N,F
+07b42fd_1__05,7,,P,P,P,N,N,P,N,P
+07b42fd_1__05,8,API specs were not checked before calls.,P,N,P,P,P,P,P,F
+07b42fd_2__01,1,,P,P,N,N,N,N,N,P
+07b42fd_2__01,2,Supervisor API spec was not checked.,P,P,P,N,N,N,N,F
+07b42fd_2__01,3,Unsupported access_token caused failure.,F,N,N,N,N,N,N,F
+07b42fd_2__01,4,"Used a nonexistent, undocumented API.",F,N,F,N,N,P,N,F
+07b42fd_2__01,5,Search API specification was not checked.,P,P,N,N,N,P,N,F
+07b42fd_2__01,6,List response was parsed as a dictionary.,F,N,F,N,N,F,N,F
+07b42fd_2__01,7,,P,N,P,N,N,P,N,P
+07b42fd_2__01,8,Wrong field; EDM scope was unsupported.,F,N,F,F,N,N,N,F
+07b42fd_2__01,9,,P,P,P,N,N,P,N,P
+07b42fd_2__01,10,Wrong ID and incomplete source scope.,F,U,F,F,N,P,N,F
+07b42fd_2__01,11,Repeated an already retrieved API spec.,P,P,P,N,N,F,N,P
+07b42fd_2__01,12,Genre and full-page scope were unverified.,P,U,U,F,U,P,N,F
+07b42fd_2__01,13,Completion followed an incomplete search.,P,N,F,N,N,N,F,F
+07b42fd_3__00,1,Password API spec was not checked.,P,P,P,N,N,N,N,F
+07b42fd_3__00,2,Unknown API caused execution failure.,F,N,N,N,N,N,N,F
+07b42fd_3__00,3,,P,P,N,N,N,P,N,P
+07b42fd_3__00,4,Bad parameter caused execution failure.,F,N,N,N,N,P,N,F
+07b42fd_3__00,5,Unread pages may contain relevant artists.,P,U,P,N,N,P,N,F
+07b42fd_3__00,6,Auth failed; artist coverage remains unknown.,F,U,P,P,N,N,N,F
+07b42fd_3__00,7,Artist coverage remains unknown.,P,U,P,P,P,P,N,F
+07b42fd_3__00,8,Completion lacks evidence of all artists.,P,N,N,N,N,N,U,F
+229360a_2__00,1,Supervisor API used without prior spec.,P,P,P,N,N,N,N,F
+229360a_2__00,2,Unread pages may contain library items.,P,U,N,N,N,N,N,F
+229360a_2__00,3,"KeyError, wrong album rule, extra code block.",F,N,F,F,N,N,N,F
+229360a_2__00,4,,P,P,P,N,N,P,N,P
+229360a_2__00,5,,P,P,P,N,N,P,N,P
+229360a_2__00,6,Repeated irrelevant playlist-doc lookup.,P,F,P,N,N,F,N,P
+229360a_2__00,7,Guessed API name returned 422.,F,N,P,N,N,P,N,P
+229360a_2__00,8,Guessed API name returned 422.,F,N,P,N,N,P,N,P
+229360a_2__00,9,Failed task on incomplete API discovery.,P,N,F,F,N,F,P,F
+22cc237_1__02,1,Unknown API failed; spec was not checked.,F,N,N,N,N,N,N,F
+22cc237_1__02,2,,P,P,P,N,N,P,N,P
+22cc237_1__02,3,Unauthorized call; spec was not checked.,F,N,N,N,N,P,N,F
+22cc237_1__02,4,Repeated an already-seen API listing.,P,P,P,N,N,F,N,P
+22cc237_1__02,5,,P,P,P,N,N,P,N,P
+22cc237_1__02,6,Unknown Supervisor API; spec not checked.,F,N,N,N,N,P,N,F
+22cc237_1__02,7,,P,P,P,N,N,P,N,P
+22cc237_1__02,8,show_profile called without its API spec.,P,P,P,N,N,P,N,F
+22cc237_1__02,9,Extra unexecuted code block broke protocol.,P,P,P,N,N,P,N,F
+22cc237_1__02,10,Fabricated password; no code or completion.,F,N,F,N,N,N,F,F
+27e1026_2__05,1,Supervisor API spec was not checked.,P,P,P,N,N,N,N,F
+27e1026_2__05,2,Song details were fabricated.,P,P,F,F,N,N,N,P
+27e1026_2__05,3,,P,P,N,N,N,P,N,P
+27e1026_2__05,4,,P,P,N,N,N,N,N,P
+27e1026_2__05,5,Used unsupported release-date sorting.,F,N,F,F,N,N,N,P
+27e1026_2__05,6,Page limit violated the documented cap.,F,N,N,F,N,P,N,P
+27e1026_2__05,7,Only one global page was checked.,P,F,F,F,N,P,N,P
+27e1026_2__05,8,Answer lacks library-wide evidence.,P,N,F,F,N,N,F,F
+287e338_1__01,1,Password API spec was not checked.,P,P,P,N,N,N,N,F
+287e338_1__01,2,,P,N,P,N,N,N,N,P
+287e338_1__01,3,,P,P,P,N,N,N,N,P
+287e338_1__01,4,,P,P,N,N,N,N,N,P
+287e338_1__01,5,Only page 0 fetched; completeness unknown.,P,U,U,N,N,N,N,F
+287e338_1__01,6,Unread pages may change the top artist.,P,U,U,F,N,N,N,P
+287e338_1__01,7,Answer relies on unread pages; spec unchecked.,P,U,U,F,N,N,U,F
+29caf6f_3__02,1,Unknown API; specification was not checked.,F,N,N,N,N,N,N,F
+29caf6f_3__02,2,,P,P,N,N,N,P,N,P
+29caf6f_3__02,3,Unauthorized call lacked the required API spec.,F,N,N,N,N,P,N,F
+29caf6f_3__02,4,Repeated API listing added no new information.,P,P,N,N,N,F,N,P
+29caf6f_3__02,5,Invented credential caused authentication failure.,F,N,F,N,N,F,N,F
+29caf6f_3__02,6,Undefined variable caused the recovery to fail.,F,N,N,N,N,F,N,P
+29caf6f_3__02,7,Supervisor API specification was not checked.,P,P,N,N,N,P,N,F
+29caf6f_3__02,8,Auth combination failed; login spec was unchecked.,F,N,U,N,N,P,N,F
+29caf6f_3__02,9,Invalid parameter and known auth issue were ignored.,F,N,N,N,N,F,N,F
+29caf6f_3__02,10,,P,P,N,N,N,P,N,P
+29caf6f_3__02,11,Repeated unauthorized call; contact spec unchecked.,F,N,N,N,N,F,N,F
+29caf6f_3__02,12,Repeated known-invalid login; spec unchecked.,F,N,U,N,N,F,N,F
+29caf6f_3__02,13,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,14,Repeated known-invalid login; spec unchecked.,F,N,U,N,N,F,N,F
+29caf6f_3__02,15,Repeated known-invalid login; spec unchecked.,F,N,U,N,N,F,N,F
+29caf6f_3__02,16,Password parsing failed; supervisor spec unchecked.,F,P,N,N,N,F,N,F
+29caf6f_3__02,17,Supervisor API specification was not checked.,P,P,P,N,N,P,N,F
+29caf6f_3__02,18,Repeated known-invalid login; spec unchecked.,F,N,U,N,N,F,N,F
+29caf6f_3__02,19,Repeated known-invalid login; spec unchecked.,F,N,U,N,N,F,N,F
+29caf6f_3__02,20,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,21,Repeated known-invalid login; spec unchecked.,F,N,U,N,N,F,N,F
+29caf6f_3__02,22,Credential lookup was redundant and undocumented.,P,P,P,N,N,F,N,F
+29caf6f_3__02,23,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,24,Repeated known-invalid login; spec unchecked.,F,N,U,N,N,F,N,F
+29caf6f_3__02,25,Repeated known-invalid login; spec unchecked.,F,N,U,N,N,F,N,F
+29caf6f_3__02,26,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,27,Repeated known-invalid login; spec unchecked.,F,N,U,N,N,F,N,F
+29caf6f_3__02,28,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,29,Repeated known-invalid login; spec unchecked.,F,N,U,N,N,F,N,F
+29caf6f_3__02,30,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,31,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,32,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,33,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,34,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,35,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,36,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,37,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,38,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,39,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,40,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,41,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,42,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,43,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,44,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,45,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,46,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,47,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,48,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,49,Repeated call omitted the required access token.,F,N,N,N,N,F,N,P
+29caf6f_3__02,50,Repeated unauthorized call; task ended undelivered.,F,N,N,N,N,F,F,P
+2a163ab_3__04,1,,P,N,N,N,N,N,N,P
+2a163ab_3__04,2,,P,N,N,N,N,N,N,P
+2a163ab_3__04,3,,P,N,N,N,N,N,N,P
+2a163ab_3__04,4,API spec unchecked before password call.,P,P,N,N,N,N,N,F
+2a163ab_3__04,5,Boolean indexing caused a TypeError.,F,N,N,N,N,N,N,P
+2a163ab_3__04,6,,P,N,P,N,N,P,N,P
+2a163ab_3__04,7,,P,N,N,N,N,N,N,P
+2a163ab_3__04,8,,P,N,N,N,N,N,N,P
+2a163ab_3__04,9,,P,N,N,N,N,N,N,P
+2a163ab_3__04,10,Undefined token caused a NameError.,F,N,N,N,N,N,N,P
+2a163ab_3__04,11,Venmo token was invalid for the phone API.,F,N,F,N,N,P,N,P
+2a163ab_3__04,12,,P,N,P,N,N,P,N,P
+2a163ab_3__04,13,Repeated an already-known API listing.,P,N,N,N,N,F,N,P
+2a163ab_3__04,14,Repeated password read; API spec unchecked.,P,P,N,N,N,F,N,F
+2a163ab_3__04,15,,P,N,P,N,N,P,N,P
+2a163ab_3__04,16,Own-number query did not prove all coworkers.,P,F,P,N,N,P,N,F
+2a163ab_3__04,17,Undefined token; extra commentary code block.,F,N,N,N,N,N,N,F
+2a163ab_3__04,18,Paginated searches did not process all pages.,P,P,P,N,N,P,N,F
+2a163ab_3__04,19,Extra code block appeared in commentary.,P,N,N,N,N,N,N,F
+2a163ab_3__04,20,Ten-page cap left feed coverage unknown.,P,U,N,N,N,N,N,F
+2a163ab_3__04,21,Liked coworker transactions on four dates.,P,F,N,F,F,N,N,F
+2a163ab_3__04,22,Completed despite likes spanning four dates.,P,N,U,N,N,N,F,F
+34d9492_2__03,1,Unknown API called without its spec.,F,N,N,N,N,N,N,F
+34d9492_2__03,2,,P,P,P,N,N,P,N,P
+34d9492_2__03,3,Wrong argument; full API spec was not checked.,F,N,P,N,N,P,N,F
+34d9492_2__03,4,Call lacked auth and full API spec.,F,N,P,N,N,P,N,F
+34d9492_2__03,5,Repeated API list despite login already known.,P,P,P,N,N,F,N,P
+34d9492_2__03,6,Guessed credentials; login failed.,F,N,F,F,N,F,N,F
+34d9492_2__03,7,Supervisor API spec was not checked.,P,P,P,N,N,P,N,F
+34d9492_2__03,8,Login API spec was not checked.,P,N,P,N,N,P,N,F
+34d9492_2__03,9,Directory API spec was not checked.,P,P,P,N,N,P,N,F
+34d9492_2__03,10,Extra code block and no API specs.,P,P,P,N,N,N,N,F
+3c13f5a_1__02,1,Unknown API used before its spec was checked.,F,N,N,N,N,N,N,F
+3c13f5a_1__02,2,,P,P,N,N,N,P,N,P
+3c13f5a_1__02,3,,P,P,N,N,N,P,N,P
+3c13f5a_1__02,4,Required access token was omitted.,F,N,N,N,N,N,N,F
+3c13f5a_1__02,5,Repeated the same API listing without need.,P,P,N,N,N,F,N,P
+3c13f5a_1__02,6,Invented credentials caused login failure.,F,N,F,N,N,F,N,F
+3c13f5a_1__02,7,Supervisor API spec was not checked.,P,P,N,N,N,P,N,F
+3c13f5a_1__02,8,Password extraction raised TypeError.,F,N,P,N,N,P,N,F
+3c13f5a_1__02,9,Prior TypeError was miscalled a syntax error.,F,N,F,N,N,P,N,F
+3c13f5a_1__02,10,Repeated a known password without new evidence.,P,P,N,N,N,F,N,P
+3c13f5a_1__02,11,Repeated credentials already known to fail.,F,N,P,N,N,F,N,F
+3c13f5a_1__02,12,Phone login spec was never checked.,P,N,N,N,N,P,N,F
+3c13f5a_1__02,13,Contact pagination was not exhausted.,P,U,P,N,N,N,N,F
+3c13f5a_1__02,14,Guessed file and API were unsupported.,F,N,F,N,N,N,N,F
+3c13f5a_1__02,15,,P,P,N,N,N,P,N,P
+3c13f5a_1__02,16,Wrong argument used without checking the spec.,F,N,P,N,N,P,N,F
+3c13f5a_1__02,17,A placeholder path was invented.,F,N,F,N,N,P,N,F
+3c13f5a_1__02,18,File-system login spec was not checked.,P,N,N,N,N,P,N,F
+3c13f5a_1__02,19,The invented path was reused.,F,N,F,N,N,P,N,F
+3c13f5a_1__02,20,Known token requirement was ignored.,F,N,N,N,N,F,N,F
+3c13f5a_1__02,21,show_directory spec was not checked.,P,P,P,N,N,P,N,F
+3c13f5a_1__02,22,show_directory spec was not checked.,P,P,P,N,N,P,N,F
+3c13f5a_1__02,23,Current date was never obtained for last month.,P,P,U,U,N,P,N,F
+3c13f5a_1__02,24,Commentary contained extra code blocks.,P,N,P,P,N,N,N,F
+3c13f5a_1__02,25,Proposed sending money instead of requesting it.,P,N,P,F,N,N,N,F
+3c13f5a_1__02,26,"No requests ran, yet completion was claimed.",P,N,F,N,N,N,F,F
+692c77d_3__00,1,Supervisor API specification was not checked.,P,P,P,N,N,N,N,F
+692c77d_3__00,2,Playlists cannot establish album-library scope.,P,F,N,F,N,N,N,P
+692c77d_3__00,3,Playlist songs were assumed liked; API missing.,F,F,F,F,N,N,N,F
+692c77d_3__00,4,,P,P,N,N,N,P,N,P
+692c77d_3__00,5,Used aggregate rating and an invalid argument.,F,F,F,F,N,P,N,F
+692c77d_3__00,6,,P,P,N,N,N,P,N,P
+692c77d_3__00,7,Wrong rating scope; update arguments invalid.,F,F,F,F,N,P,N,F
+692c77d_3__00,8,,P,P,N,N,N,P,N,P
+692c77d_3__00,9,Review query and ownership handling were wrong.,F,F,F,F,N,P,N,F
+692c77d_3__00,10,,P,P,N,N,N,P,N,P
+692c77d_3__00,11,It attempted to update another user's review.,F,F,F,F,U,P,N,F
+692c77d_3__00,12,"Album scope, pagination, and unrated songs omitted.",P,F,F,F,U,P,N,F
+692c77d_3__00,13,No complete_task call; success claim unsupported.,F,N,F,N,N,N,F,F
+6ea6792_3__02,1,,P,P,N,N,N,N,N,P
+6ea6792_3__02,2,Missing token; API spec was not checked.,F,N,N,N,N,N,N,F
+6ea6792_3__02,3,Fabricated password caused invalid credentials.,F,N,F,N,N,P,N,F
+6ea6792_3__02,4,Supervisor API spec was not checked.,P,P,P,N,N,P,N,F
+6ea6792_3__02,5,Login API spec was not checked.,P,N,P,N,N,P,N,F
+6ea6792_3__02,6,Repeated request without the access token.,F,N,N,N,N,F,N,F
+6ea6792_3__02,7,Relogin ignored that no token was sent.,P,N,N,N,N,F,N,F
+6ea6792_3__02,8,Approved items were mislabeled as pending.,P,P,F,N,N,P,N,F
+6ea6792_3__02,9,No contact check; requester status unknown.,P,F,U,F,U,N,N,F
+6ea6792_3__02,10,No contact evidence or complete_task call.,F,F,U,N,N,N,F,F
+771d8fc_3__02,1,Unknown API called without checking its spec.,F,N,N,N,N,N,N,F
+771d8fc_3__02,2,Auth failed; API spec was not checked.,F,N,N,N,N,P,N,F
+771d8fc_3__02,3,,P,P,P,N,N,P,N,P
+771d8fc_3__02,4,,P,P,P,N,N,P,N,P
+771d8fc_3__02,5,Guessed password caused 401; no API spec.,F,N,F,N,N,F,N,F
+771d8fc_3__02,6,Supervisor API spec was not checked.,P,P,P,N,N,P,N,F
+771d8fc_3__02,7,Email username caused 401; spec unchecked.,F,N,F,N,N,P,N,F
+771d8fc_3__02,8,,P,P,P,N,N,P,N,P
+771d8fc_3__02,9,,P,N,P,N,N,P,N,P
+771d8fc_3__02,10,Returned records do not match; spec unchecked.,P,U,P,N,N,N,N,F
+771d8fc_3__02,11,Repeated identical query; spec still unchecked.,P,U,P,N,N,F,N,F
+771d8fc_3__02,12,Absence unproven; identical query repeated.,P,U,U,N,N,F,N,F
+771d8fc_3__02,13,Absence unproven; identical query repeated.,P,U,U,N,N,F,N,F
+771d8fc_3__02,14,Absence unproven; identical query repeated.,P,U,U,N,N,F,N,F
+771d8fc_3__02,15,Absence unproven; identical query repeated.,P,U,U,N,N,F,N,F
+771d8fc_3__02,16,Absence unproven; identical query repeated.,P,U,U,N,N,F,N,F
+771d8fc_3__02,17,Absence unproven; identical query repeated.,P,U,U,N,N,F,N,F
+771d8fc_3__02,18,Wrong parameter; contact absence unproven.,F,N,U,N,N,P,N,F
+771d8fc_3__02,19,Only first pages read; full specs unchecked.,P,U,P,N,N,P,N,F
+771d8fc_3__02,20,"Coverage unknown; extra block, specs missing.",P,U,P,P,P,N,N,F
+771d8fc_3__02,21,No code ran; completion claim and protocol failed.,F,N,F,N,N,N,F,F
+82e2fac_1__04,1,Undefined variable caused NameError.,F,N,N,N,N,N,N,P
+82e2fac_1__04,2,No API spec checked for password lookup.,P,P,N,N,N,P,N,F
+82e2fac_1__04,3,Boolean value was indexed as a password entry.,F,N,N,N,N,P,N,P
+82e2fac_1__04,4,,P,P,P,P,N,P,N,P
+82e2fac_1__04,5,,P,N,P,N,N,N,N,P
+82e2fac_1__04,6,,P,P,N,N,N,N,N,P
+82e2fac_1__04,7,show_song used without its API specification.,F,N,N,P,N,N,N,F
+82e2fac_1__04,8,show_song used without its API specification.,P,P,P,P,N,P,N,F
+82e2fac_1__04,9,complete_task used without its API spec.,P,N,P,N,N,N,P,F
+aa8502b_3__00,1,,P,P,N,N,N,N,N,P
+aa8502b_3__00,2,Supervisor API spec was not checked.,P,P,P,P,N,N,N,F
+aa8502b_3__00,3,,P,N,P,N,N,N,N,P
+aa8502b_3__00,4,,P,P,N,N,N,N,N,P
+aa8502b_3__00,5,,P,P,N,N,N,N,N,P
+aa8502b_3__00,6,,P,P,P,N,N,N,N,P
+aa8502b_3__00,7,Fabricated artist output; extra code block.,P,P,F,P,N,N,N,F
+aa8502b_3__00,8,,P,P,N,N,N,N,N,P
+aa8502b_3__00,9,,P,P,N,N,N,N,N,P
+aa8502b_3__00,10,,P,P,P,P,N,N,N,P
+aa8502b_3__00,11,Duplicate follow caused a 422 exception.,F,N,N,P,N,N,N,P
+aa8502b_3__00,12,Follower count is not user follow status.,F,N,F,F,N,F,N,F
+aa8502b_3__00,13,Follow status was misread without API specs.,F,F,F,F,N,F,N,F
+aa8502b_3__00,14,Contradicts known API list; needless repeat.,P,P,F,N,N,F,N,P
+aa8502b_3__00,15,Repeated the same unverified status check.,F,F,F,F,N,F,N,F
+aa8502b_3__00,16,Repeated a known duplicate-follow failure.,F,N,F,F,N,F,N,P
+aa8502b_3__00,17,Errors were treated as not-following.,F,N,N,F,N,F,N,F
+aa8502b_3__00,18,Exception attributes were unsupported.,F,N,N,P,N,F,N,P
+aa8502b_3__00,19,,P,P,P,P,P,P,N,P
+aa8502b_3__00,20,complete_task spec was not checked.,P,N,P,N,N,N,P,F
+afc0fce_1__02,1,Unknown API; date window spans six days.,F,N,N,F,N,N,N,F
+afc0fce_1__02,2,,P,P,N,N,N,P,N,P
+afc0fce_1__02,3,,P,P,N,N,N,P,N,P
+afc0fce_1__02,4,Token missing; date window spans six days.,F,N,N,F,N,P,N,P
+afc0fce_1__02,5,Password variable was undefined.,F,N,N,N,N,F,N,F
+afc0fce_1__02,6,Passwords variable was undefined.,F,N,N,N,N,F,N,P
+afc0fce_1__02,7,Supervisor API spec was not checked.,P,P,N,N,N,P,N,F
+afc0fce_1__02,8,Boolean value was indexed as a record.,F,N,N,N,N,P,N,P
+afc0fce_1__02,9,,P,P,P,N,N,P,N,P
+afc0fce_1__02,10,Venmo login spec was not checked.,P,N,P,N,N,P,N,F
+afc0fce_1__02,11,Pagination incomplete; date range is wrong.,P,U,P,F,N,P,N,F
+afc0fce_1__02,12,Coworkers unverified; write specs unchecked.,P,U,U,F,U,N,N,F
+afc0fce_1__02,13,No code ran; completion was not submitted.,F,N,F,N,N,N,F,F
+c901732_3__04,1,Unknown API; no specification was checked.,F,N,N,N,N,N,N,F
+c901732_3__04,2,Credential API was used without its spec.,P,P,N,N,N,P,N,F
+c901732_3__04,3,,P,P,P,P,N,N,N,P
+c901732_3__04,4,,P,N,P,N,N,N,N,P
+c901732_3__04,5,Only the default playlist page was read.,P,F,N,N,N,N,N,P
+c901732_3__04,6,IDs were misread and playlist counts used.,F,F,F,F,N,N,N,F
+c901732_3__04,7,Unchecked API had an invalid parameter.,F,N,P,F,N,P,N,F
+c901732_3__04,8,,P,P,N,N,N,P,N,P
+c901732_3__04,9,Playlist frequency was mistaken for plays.,F,F,F,F,N,P,N,F
+c901732_3__04,10,,P,P,N,N,N,P,N,P
+c901732_3__04,11,Chosen song was unsupported; token omitted.,F,N,F,F,N,P,N,F
+c901732_3__04,12,,P,P,N,N,N,P,N,P
+c901732_3__04,13,Wrong metric; correct target remains unknown.,P,N,F,F,U,P,N,P
+c901732_3__04,14,Completion claimed without target evidence.,P,N,U,N,N,N,U,F
+ccb4494_1__05,1,,P,P,N,N,N,N,N,P
+ccb4494_1__05,2,Unauthorized call; API spec unchecked.,F,N,N,N,N,N,N,F
+ccb4494_1__05,3,Bad password extraction; API spec unchecked.,F,N,N,N,N,P,N,F
+ccb4494_1__05,4,Password API spec was not checked.,P,P,P,N,N,P,N,F
+ccb4494_1__05,5,,P,N,P,N,N,N,N,P
+ccb4494_1__05,6,Queue API spec was not checked.,P,P,P,N,N,P,N,F
+ccb4494_1__05,7,Liked unplayed songs; API spec unchecked.,P,P,P,F,F,N,N,F
+ccb4494_1__05,8,Completion API spec was not checked.,P,N,P,N,N,N,P,F
+ce359b5_3__04,1,,P,P,N,N,N,N,N,P
+ce359b5_3__04,2,,P,P,N,N,N,N,N,P
+ce359b5_3__04,3,Undefined token; pagination was capped.,F,N,N,N,N,N,N,F
+ce359b5_3__04,4,Undefined passwords and malformed selection.,F,N,N,F,N,F,N,P
+ce359b5_3__04,5,Supervisor API spec was not checked.,P,P,N,N,N,P,N,F
+ce359b5_3__04,6,Boolean list item indexed as a record.,F,N,N,F,N,P,N,P
+ce359b5_3__04,7,,P,P,P,P,N,P,N,P
+ce359b5_3__04,8,,P,P,N,N,N,N,N,P
+ce359b5_3__04,9,Used added_at as the release year.,P,F,F,F,N,N,N,P
+ce359b5_3__04,10,Addition dates do not prove release years.,P,P,P,F,N,N,N,P
+ce359b5_3__04,11,Repeated page 10; release evidence absent.,P,F,F,F,N,F,N,P
+ce359b5_3__04,12,Repeated page 10; release evidence absent.,P,F,F,F,N,F,N,P
+ce359b5_3__04,13,Repeated page 10; release evidence absent.,P,F,F,F,N,F,N,P
+ce359b5_3__04,14,Repeated page 10; release evidence absent.,P,F,F,F,N,F,N,P
+ce359b5_3__04,15,Repeated page 10; release evidence absent.,P,F,F,F,N,F,N,P
+ce359b5_3__04,16,Repeated page 10; release evidence absent.,P,F,F,F,N,F,N,P
+ce359b5_3__04,17,Repeated page 10; release evidence absent.,P,F,F,F,N,F,N,P
+ce359b5_3__04,18,Repeated page 10; release evidence absent.,P,F,F,F,N,F,N,P
+ce359b5_3__04,19,Repeated page 10; release evidence absent.,P,F,F,F,N,F,N,P
+ce359b5_3__04,20,Repeated page 10; release evidence absent.,P,F,F,F,N,F,N,P
+ce359b5_3__04,21,Repeated page 10; release evidence absent.,P,F,F,F,N,F,N,P
+ce359b5_3__04,22,Repeated page 10; release evidence absent.,P,F,F,F,N,F,N,P
+ce359b5_3__04,23,Repeated page 10; release evidence absent.,P,F,F,F,N,F,N,P
+d0b1f43_1__05,1,API specification was not checked.,P,P,N,N,N,N,N,F
+d0b1f43_1__05,2,,P,P,P,N,N,N,N,P
+d0b1f43_1__05,3,API specification was not checked.,P,N,P,N,N,N,N,F
+d0b1f43_1__05,4,Invented roommates and invalid API arguments.,F,N,F,F,N,N,N,F
+d0b1f43_1__05,5,Invented roommates; date format was invalid.,F,N,F,F,N,P,N,F
+d0b1f43_1__05,6,Uses invented roommates and omits pagination.,P,F,F,F,N,P,N,F
+d0b1f43_1__05,7,Totals evidence for invented roommates.,P,F,F,P,N,N,N,P
+d0b1f43_1__05,8,Unsupported total submitted without API docs.,P,N,F,F,N,N,F,F
+e3d6c94_2__00,1,,P,P,N,N,N,N,N,P
+e3d6c94_2__00,2,Call failed 401; API spec was not checked.,F,N,N,N,N,N,N,F
+e3d6c94_2__00,3,Repeated the same query without new information.,P,P,P,N,N,F,N,P
+e3d6c94_2__00,4,Repeated the same query without new information.,P,P,P,N,N,F,N,P
+e3d6c94_2__00,5,Repeated the same query without new information.,P,P,P,N,N,F,N,P
+e3d6c94_2__00,6,Login was visible; query was needlessly repeated.,P,P,F,N,N,F,N,P
+e3d6c94_2__00,7,Login was visible; query was needlessly repeated.,P,P,F,N,N,F,N,P
+e3d6c94_2__00,8,Login was visible; query was needlessly repeated.,P,P,F,N,N,F,N,P
+e3d6c94_2__00,9,Login was visible; query was needlessly repeated.,P,P,F,N,N,F,N,P
+e3d6c94_2__00,10,Login was visible; query was needlessly repeated.,P,P,F,N,N,F,N,P
+e3d6c94_2__00,11,Login was visible; query was needlessly repeated.,P,P,F,N,N,F,N,P
+e3d6c94_2__00,12,Login was visible; query was needlessly repeated.,P,P,F,N,N,F,N,P
+e3d6c94_2__00,13,Login was visible; query was needlessly repeated.,P,P,F,N,N,F,N,P
+e85d92a_1__05,1,,P,P,N,N,N,N,N,P
+e85d92a_1__05,2,,P,P,N,N,N,N,N,P
+e85d92a_1__05,3,show_account_passwords spec not checked.,P,P,N,N,N,N,N,F
+e85d92a_1__05,4,Boolean result indexed as a password row.,F,N,F,N,N,N,N,P
+e85d92a_1__05,5,,P,P,P,N,N,P,N,P
+e85d92a_1__05,6,search_songs spec not checked.,P,P,P,N,N,N,N,F
+e85d92a_1__05,7,Complete song coverage was not established.,P,U,U,U,N,N,N,P
+e85d92a_1__05,8,Coverage unknown; complete_task doc missing.,P,N,U,U,N,N,U,F
+e85d92a_2__01,1,Undefined passwords caused NameError.,F,N,N,N,N,N,N,P
+e85d92a_2__01,2,Supervisor API spec was not checked.,P,P,N,N,N,P,N,F
+e85d92a_2__01,3,"Boolean was indexed, causing TypeError.",F,N,N,N,N,P,N,P
+e85d92a_2__01,4,,P,P,P,N,N,P,N,P
+e85d92a_2__01,5,"Nonexistent, undocumented search API was called.",F,N,N,N,N,N,N,F
+e85d92a_2__01,6,,P,P,N,N,N,P,N,P
+e85d92a_2__01,7,Called search_songs without checking its spec.,F,N,N,N,N,P,N,F
+e85d92a_2__01,8,Kept a parameter known to be unsupported.,F,N,N,N,N,F,N,F
+e85d92a_2__01,9,,P,P,N,N,N,P,N,P
+e85d92a_2__01,10,page_limit=100 violated the documented maximum.,F,N,N,N,N,P,N,F
+e85d92a_2__01,11,,P,P,N,N,N,P,N,P
+e85d92a_2__01,12,Commentary added a second nonempty code block.,P,P,P,P,N,N,N,F
+e85d92a_2__01,13,Unread pages may contain lower-play songs.,P,U,P,P,N,N,N,P
+e85d92a_2__01,14,Answer rests on an incomplete pagination check.,P,U,U,N,N,N,U,F

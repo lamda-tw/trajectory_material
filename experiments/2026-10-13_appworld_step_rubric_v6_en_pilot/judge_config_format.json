@@ -1,0 +1,27 @@
+{
+  "status": "development_format_validation",
+  "execution_enabled": true,
+  "purpose": "Quality-first validation of English v6; no mandatory Chinese/English A/B experiment.",
+  "model": "gpt-5.6-sol",
+  "reasoning_effort": "high",
+  "initial_workers": 2,
+  "max_workers": 2,
+  "rubric_version": "appworld-step-v6",
+  "prompt": "assets/prompt_v6_en_format.txt",
+  "prompt_sha256": "df4e8fb406551f2d90e38bbe83838db181bda18e01d947b236ee10a05c633109",
+  "chinese_reference_only": "assets/prompt_v6_zh.txt",
+  "output_schema": "assets/output_schema_v6.json",
+  "replication": "One first-valid result for 36 trajectories; one additional independent call for 8 selected trajectories.",
+  "planned_initial_calls_before_retries": 44,
+  "stage_calls": {
+    "development_including_repeats": 16,
+    "holdout_including_repeats": 28
+  },
+  "retry_rule": "Only transport/schema failures; never choose best-of valid labels; retain every attempt.",
+  "model_snapshot_policy": "Record resolved model/version if available; an alias may change over time.",
+  "source_payload_rule": "Pass only the pinned prepared input JSON; never include selection metadata, old judgments, official outcomes, or reference labels.",
+  "fallback_policy": "Review concrete English-v6 errors against Chinese v6 and v5; use English v5 only if evidence favors its rules. Do not infer a better prompt without pilot evidence.",
+  "timeout_seconds": 900,
+  "max_attempts": 3,
+  "english_revision": "format_only"
+}

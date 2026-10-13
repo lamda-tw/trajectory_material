@@ -1,0 +1,394 @@
+{
+  "frozen_at": "2026-10-12T21:02:00.070220+08:00",
+  "prompt_sha256": "90bdf0447b228d8699f11e9ec4fcea9e23474d591a778fa59a84c04a5f38756a",
+  "status": "Checks authored from visible evidence after v4 prompt freeze and before any judge call on these inputs; not independent human labels. Official success not supplied to judge.",
+  "checks": [
+    {
+      "trajectory": "b0a8eae_3__03",
+      "step": 5,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "登录准备不是播放业务操作。"
+    },
+    {
+      "trajectory": "b0a8eae_3__03",
+      "step": 7,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "补传token，修复401。"
+    },
+    {
+      "trajectory": "b0a8eae_3__03",
+      "step": 13,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "把全周分钟数315直接当歌曲数量门槛，不符合今天时长需求。"
+    },
+    {
+      "trajectory": "b0a8eae_3__03",
+      "step": 17,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "把315分钟直接赋为所需歌曲数。"
+    },
+    {
+      "trajectory": "b0a8eae_3__03",
+      "step": 19,
+      "rubric": "R6",
+      "expected": [
+        "F"
+      ],
+      "rationale": "输入未变，继续重复得到None的同一筛选。"
+    },
+    {
+      "trajectory": "b0a8eae_3__03",
+      "step": 28,
+      "rubric": "R5",
+      "expected": [
+        "U"
+      ],
+      "rationale": "实际开始播放，但未取得今天运动时长与候选歌单时长，是否足够未知。"
+    },
+    {
+      "trajectory": "b0a8eae_3__03",
+      "step": 29,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "只有complete_task，无业务修改。"
+    },
+    {
+      "trajectory": "b7a9ee9_1__05",
+      "step": 3,
+      "rubric": "R4",
+      "expected": [
+        "N"
+      ],
+      "rationale": "认证准备不触发业务决策维度。"
+    },
+    {
+      "trajectory": "b7a9ee9_1__05",
+      "step": 5,
+      "rubric": "R3",
+      "expected": [
+        "F"
+      ],
+      "rationale": "把扩展字典得到的80个键当作80首歌。"
+    },
+    {
+      "trajectory": "b7a9ee9_1__05",
+      "step": 16,
+      "rubric": "R4",
+      "expected": [
+        "P"
+      ],
+      "rationale": "对实际取得的歌曲详情按classical筛选，局部条件正确。"
+    },
+    {
+      "trajectory": "b7a9ee9_1__05",
+      "step": 20,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "补传token修复旧鉴权错误，新的already-following另计。"
+    },
+    {
+      "trajectory": "b7a9ee9_1__05",
+      "step": 25,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "先读取当前关注状态再跳过已关注项，执行成功。"
+    },
+    {
+      "trajectory": "b7a9ee9_1__05",
+      "step": 26,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "完成提交不是业务修改。"
+    },
+    {
+      "trajectory": "60d0b5b_1__02",
+      "step": 5,
+      "rubric": "R6",
+      "expected": [
+        "F"
+      ],
+      "rationale": "重复已取得的相同规格，无新增必要信息。"
+    },
+    {
+      "trajectory": "60d0b5b_1__02",
+      "step": 10,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "修复布尔列表错误，成功取密码。"
+    },
+    {
+      "trajectory": "60d0b5b_1__02",
+      "step": 11,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "登录准备。"
+    },
+    {
+      "trajectory": "60d0b5b_1__02",
+      "step": 13,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "把列表最后一项当最近请求，与已见日期顺序不符。"
+    },
+    {
+      "trajectory": "60d0b5b_1__02",
+      "step": 17,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "删付款请求不能实现把已收到的钱退回。"
+    },
+    {
+      "trajectory": "60d0b5b_1__02",
+      "step": 18,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "仅失败提交，不是退款操作。"
+    },
+    {
+      "trajectory": "771d8fc_1__01",
+      "step": 13,
+      "rubric": "R3",
+      "expected": [
+        "F"
+      ],
+      "rationale": "把上一轮文档查询当成实际取密码，错误声称密码API没返回密码。"
+    },
+    {
+      "trajectory": "771d8fc_1__01",
+      "step": 17,
+      "rubric": "R5",
+      "expected": [
+        "P"
+      ],
+      "rationale": "实际删除第一条目标短信，局部操作正确。"
+    },
+    {
+      "trajectory": "771d8fc_1__01",
+      "step": 18,
+      "rubric": "R3",
+      "expected": [
+        "F"
+      ],
+      "rationale": "仅删除一条却声称所有短信已删除。"
+    },
+    {
+      "trajectory": "771d8fc_1__01",
+      "step": 19,
+      "rubric": "R5",
+      "expected": [
+        "P"
+      ],
+      "rationale": "实际删除第一条目标语音，局部操作正确。"
+    },
+    {
+      "trajectory": "771d8fc_1__01",
+      "step": 20,
+      "rubric": "R7",
+      "expected": [
+        "F"
+      ],
+      "rationale": "其余可见消息未实际删除却宣称全部完成。"
+    },
+    {
+      "trajectory": "771d8fc_1__01",
+      "step": 20,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "单独complete_task。"
+    },
+    {
+      "trajectory": "6104387_1__05",
+      "step": 5,
+      "rubric": "R6",
+      "expected": [
+        "F"
+      ],
+      "rationale": "重复已见相同API规格，无新增信息。"
+    },
+    {
+      "trajectory": "6104387_1__05",
+      "step": 13,
+      "rubric": "R2",
+      "expected": [
+        "P"
+      ],
+      "rationale": "循环取得歌曲库全部分页，当前子目标完成。"
+    },
+    {
+      "trajectory": "6104387_1__05",
+      "step": 18,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "已修复song_details未定义，本步另有参数错误。"
+    },
+    {
+      "trajectory": "6104387_1__05",
+      "step": 24,
+      "rubric": "R8",
+      "expected": [
+        "F"
+      ],
+      "rationale": "使用被明确禁止的操作系统文件接口。"
+    },
+    {
+      "trajectory": "6104387_1__05",
+      "step": 29,
+      "rubric": "R3",
+      "expected": [
+        "F"
+      ],
+      "rationale": "写文件失败，销户代码未执行，却声称已备份销户。"
+    },
+    {
+      "trajectory": "6104387_1__05",
+      "step": 29,
+      "rubric": "R7",
+      "expected": [
+        "F"
+      ],
+      "rationale": "实际未完成备份和销户。"
+    },
+    {
+      "trajectory": "6104387_1__05",
+      "step": 29,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "只有完成提交。"
+    },
+    {
+      "trajectory": "29caf6f_1__00",
+      "step": 12,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "修正密码筛选类型错误。"
+    },
+    {
+      "trajectory": "29caf6f_1__00",
+      "step": 13,
+      "rubric": "R6",
+      "expected": [
+        "F"
+      ],
+      "rationale": "重复同一组已失败登录参数。"
+    },
+    {
+      "trajectory": "29caf6f_1__00",
+      "step": 49,
+      "rubric": "R6",
+      "expected": [
+        "F"
+      ],
+      "rationale": "继续无信息变化的已失败登录。"
+    },
+    {
+      "trajectory": "29caf6f_1__00",
+      "step": 50,
+      "rubric": "R1",
+      "expected": [
+        "P"
+      ],
+      "rationale": "show_profile调用本身成功，预算终止不使其执行错误。"
+    },
+    {
+      "trajectory": "29caf6f_1__00",
+      "step": 50,
+      "rubric": "R7",
+      "expected": [
+        "N"
+      ],
+      "rationale": "预算终止，没有在最后一步宣称或提交完成。"
+    },
+    {
+      "trajectory": "2a163ab_1__03",
+      "step": 3,
+      "rubric": "R1",
+      "expected": [
+        "F"
+      ],
+      "rationale": "布尔元素被当字典索引，TypeError。"
+    },
+    {
+      "trajectory": "2a163ab_1__03",
+      "step": 4,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "正确筛选凭据，修复旧错。"
+    },
+    {
+      "trajectory": "2a163ab_1__03",
+      "step": 8,
+      "rubric": "R1",
+      "expected": [
+        "P"
+      ],
+      "rationale": "循环取数据成功；后续context_limit不倒置执行结果。"
+    },
+    {
+      "trajectory": "2a163ab_1__03",
+      "step": 8,
+      "rubric": "R2",
+      "expected": [
+        "P"
+      ],
+      "rationale": "本步只完整取得社交动态，尚未宣称已筛选今天室友交易。"
+    },
+    {
+      "trajectory": "2a163ab_1__03",
+      "step": 8,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "只读取，未点赞。"
+    },
+    {
+      "trajectory": "2a163ab_1__03",
+      "step": 8,
+      "rubric": "R7",
+      "expected": [
+        "N"
+      ],
+      "rationale": "context_limit后终止，没有交付或虚假完成。"
+    }
+  ]
+}

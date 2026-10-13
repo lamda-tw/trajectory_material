@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Compact unweighted AppWorld step judgements",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "output_mode",
+    "trajectory_id",
+    "rubric_version",
+    "steps",
+    "notes"
+  ],
+  "properties": {
+    "output_mode": {
+      "enum": [
+        "audit",
+        "batch"
+      ]
+    },
+    "trajectory_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rubric_version": {
+      "const": "appworld-step-v2"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "type": "string",
+            "pattern": "^[PFUN]{8}$"
+          }
+        ],
+        "items": false,
+        "minItems": 2,
+        "maxItems": 2
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "type": "string",
+            "pattern": "^R[1-8](,R[1-8])*$"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        ],
+        "items": false,
+        "minItems": 4,
+        "maxItems": 4
+      }
+    }
+  },
+  "$comment": "Beyond schema validation, check original step ID coverage/order, trajectory ID and output mode equality, valid evidence IDs, and in audit mode a matching note for every F/U cell. Batch omits explanations. Labels are not rewards or weights.",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "output_mode": {
+            "const": "batch"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "notes": {
+            "maxItems": 0
+          }
+        }
+      }
+    }
+  ]
+}

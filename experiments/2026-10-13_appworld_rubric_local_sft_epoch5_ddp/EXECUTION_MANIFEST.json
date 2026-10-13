@@ -1,0 +1,33 @@
+{
+  "frozen_at": "2026-10-13T14:35:01.145374+08:00",
+  "files": {
+    "PLAN.md": "d65a562fc88f6480713e60e7965f99f9eb6fe7da809d5090db95f27cee55f6c0",
+    "data/DATA_MANIFEST.json": "e30524181a6519607bb8b3122fdbd756dbe07aaed8873bca3c363822ec5705b2",
+    "data/FIVE_EPOCH_VALIDATION.json": "246f2e0fc9779df927c8fdfba6961f9301e15a807d09d213fe4a98c365e6f5c9",
+    "probe/COMPLETE.json": "fa9a9ff5c92adf01128c9fa8b5c2c5761456abe31a72f8efac2775a0872e4458",
+    "config/agent_prompt.txt": "c41f7852217d46586047a38f68e88b827cb9dcbe624e9651f9db8301547a534b",
+    "config/train_all.txt": "3aad17d37dd9946e4a8a76fb30a736d435fc09a086caaef2c6354436d576ffd2",
+    "config/dev.txt": "b3a6059ce361c3b3ccc78b1cf54e39d437bf07e04eadd23f2cece7cde77df3c3",
+    "config/scoring_prompt_v5.txt": "bc6335bf245b1c0991970662bad230cd30d6ae04c0e7e8fb8af0e1d57c70de4b",
+    "config/training.json": "78d1635d30a1e9a8a502899f3e71e2ac2611b20bb8fb0f6da66fa45ae5917aa5",
+    "config/eval_rubric.json": "a3ad44bf73de41a15a2ca4279fc220e02984737cf9734fece9b2cd0418d80e66",
+    "config/PREFLIGHT.json": "0af0526026c1f1bba5b036b1219591d1c743d9ef19b435421e3caa732b22c36b",
+    "scripts/evaluate.py": "3490b58fcad3fc6f11a6df3b35d880ce080f5ed151999eb3958193d4e3de6050",
+    "scripts/train_ddp.py": "93e5c4cf6b5286acd0a24aa38804eb5c6d05b339ce868735f24da2b04b712ba6",
+    "scripts/prepare_orders.py": "f2df2794b60ac79f459278d34dbdaf1fb047665cdff440d75765fc92a014f92a",
+    "scripts/test_ddp_loss.py": "41b56adc216c61c58120f12996b124b02bfa233c5ea719a7f9f4caac95835c85",
+    "scripts/run_experiment.py": "189dda2e4a58211722c58781fae52872444856a48eea68d49dab0cb3f5ac7d9b",
+    "runtime_code/common.py": "018ea1e22671ec8cf0451ed124bb9d7cf8e000b46e111495a0b22c38a6ac2451",
+    "runtime_code/policy_server.py": "7ec7303c39bc0837e468a5a6731e03d46defd0cf222ac24b43240e72ed1e6afb",
+    "runtime_code/resources.py": "42c99a8190fd28775eb3a57cbc038a6e4b22a67da9fa6934b2c3cf369580c359",
+    "runtime_code/rollout_worker.py": "65c2e0563b56b9e712c1709c190c7fe98166343ff53cdd514aaa4a6e7f860ee5"
+  },
+  "initialization": "fresh_base_and_LoRA",
+  "constraints": [
+    "rubric_only",
+    "5_epochs",
+    "no_old_adapter",
+    "no_teacher_actions",
+    "DEV57_only_after_epoch5"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "from": "appworld-step-v4",
+  "to": "appworld-step-v5",
+  "prompt_sha256": "bc6335bf245b1c0991970662bad230cd30d6ae04c0e7e8fb8af0e1d57c70de4b",
+  "characters": 2111,
+  "frozen": true,
+  "changes": [
+    "F要求本维度的明确违反证据，未知效果保留U。",
+    "R3聚焦具体事实，计划或搜索线索不当事实定罪；R4区分具体业务决策与一般计划。",
+    "R5明确决策错误不自动证明实际效果错误。",
+    "R6覆盖无异常时的无效重复查询，依据当前状态判断同代码重试。"
+  ],
+  "unchanged": [
+    "8维PFUN，无总分和权重",
+    "单条完整轨迹一次调用，每步统一三列输出",
+    "无audit/batch模式",
+    "输入适配器v3，未给judge官方成败",
+    "gpt-5.6-sol/high，最多2并发"
+  ],
+  "evaluation_change": "用户接受少量噪声。以完整样本的证据可辩护性、明确误判及关键错误定位评估实用性；重复一致性仅作诊断，不要求完美一致。",
+  "known_limits_before_v5_results": "开发者复核不是独立人工真值，定向样本不能证明全量总体95%准确率。"
+}

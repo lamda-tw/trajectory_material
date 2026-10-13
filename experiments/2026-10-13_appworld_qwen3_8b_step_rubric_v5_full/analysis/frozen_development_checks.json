@@ -1,0 +1,1007 @@
+{
+  "matches": 85,
+  "total": 91,
+  "checks": [
+    {
+      "trajectory": "302c169_2__02",
+      "step": 1,
+      "rubric": "R1",
+      "expected": [
+        "F"
+      ],
+      "rationale": "无令牌调用返回401，成功轨迹也保留局部执行错误。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 7,
+      "rubric": "R2",
+      "expected": [
+        "P"
+      ],
+      "rationale": "本步只成功取得当前页；未宣称全覆盖，不能把后续全集义务提前当成本步取证不确定。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 8,
+      "rubric": "R2",
+      "expected": [
+        "P"
+      ],
+      "rationale": "筛选当前已见Wake Up并打印ID，没有宣称全局唯一；全集问题应在依赖全集时评价。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 9,
+      "rubric": "R4",
+      "expected": [
+        "P"
+      ],
+      "rationale": "07:30减40分钟得到06:50，代码和观察一致。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 10,
+      "rubric": "R5",
+      "expected": [
+        "P"
+      ],
+      "rationale": "可见当前列表中的目标更新时间，其余关闭；局部执行效果有依据，全集覆盖另评。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 11,
+      "rubric": "R8",
+      "expected": [
+        "F"
+      ],
+      "rationale": "明确协议要求先看API规格，输入未提供complete_task完整规格且没有查询；不能因调用成功豁免。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 12,
+      "rubric": "R6",
+      "expected": [
+        "F"
+      ],
+      "rationale": "已有Bucket List结果，仍否认目标并无改变地重复同一搜索。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 16,
+      "rubric": "R5",
+      "expected": [
+        "P"
+      ],
+      "rationale": "精确替换目标条目前缀，其余内容保留，update_note执行成功。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "e7a10f8_3__04",
+      "step": 5,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "用歌曲数量替代总时长判断最长。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "e7a10f8_3__04",
+      "step": 6,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "用未经支持的每首3分钟估算所需精确答案。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "e7a10f8_3__04",
+      "step": 7,
+      "rubric": "R7",
+      "expected": [
+        "F"
+      ],
+      "rationale": "将估算24作为实际最长时长交付，证据不支持。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 2,
+      "rubric": "R1",
+      "expected": [
+        "F"
+      ],
+      "rationale": "无认证访问目录，401。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 4,
+      "rubric": "R1",
+      "expected": [
+        "F"
+      ],
+      "rationale": "登录缺少必填username，422。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 9,
+      "rubric": "R1",
+      "expected": [
+        "P"
+      ],
+      "rationale": "登录成功；沿用之前赋值的密码变量合法。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 9,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "认证准备不属于账单任务的业务修改。",
+      "observed": "N",
+      "matches": true
+    },
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 12,
+      "rubric": "R8",
+      "expected": [
+        "F"
+      ],
+      "rationale": "未调用当前时间接口/函数，却把this year指定为2023，违反明确时间协议。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 14,
+      "rubric": "R1",
+      "expected": [
+        "F"
+      ],
+      "rationale": "对包含美元符号的金额直接float，ValueError。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 15,
+      "rubric": "R1",
+      "expected": [
+        "P"
+      ],
+      "rationale": "去掉美元符号并计算得到368.0，执行成功。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 15,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "针对上步ValueError去掉美元符号，且重置累计值。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 16,
+      "rubric": "R8",
+      "expected": [
+        "F"
+      ],
+      "rationale": "没有取得complete_task完整规格。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 1,
+      "rubric": "R1",
+      "expected": [
+        "F"
+      ],
+      "rationale": "调用不存在的show_directories。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 3,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "改用真实show_directory修复接口名，虽又出现认证错误。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 7,
+      "rubric": "R1",
+      "expected": [
+        "F"
+      ],
+      "rationale": "取得token后仍未传入，调用401。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 8,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "传入access_token并成功列目录。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 10,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "路径以斜杠结尾，split最后一项为空，输出文件名错误。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 12,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "仍取空basename，且把输出父目录改错。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 13,
+      "rubric": "R6",
+      "expected": [
+        "F"
+      ],
+      "rationale": "上步循环可能部分成功并删除目录，未检查便从头overwrite重试。",
+      "observed": "P",
+      "matches": false
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 16,
+      "rubric": "R1",
+      "expected": [
+        "P"
+      ],
+      "rationale": "三个压缩调用实际执行成功。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 16,
+      "rubric": "R5",
+      "expected": [
+        "F"
+      ],
+      "rationale": "输出到photographs而非任务规定的photographs/vacations；执行成功不等于业务正确。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 17,
+      "rubric": "R7",
+      "expected": [
+        "F"
+      ],
+      "rationale": "输出路径错误且没有实际执行complete_task，仍宣称完成。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 16,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "Only complete_task; submission is never business modification.",
+      "observed": "N",
+      "matches": true
+    },
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 15,
+      "rubric": "R2",
+      "expected": [
+        "U"
+      ],
+      "rationale": "Unknown relevance of unread PDF and current year; not an established omitted amount.",
+      "observed": "F",
+      "matches": false
+    },
+    {
+      "trajectory": "76f2c72_1__03",
+      "step": 16,
+      "rubric": "R7",
+      "expected": [
+        "U"
+      ],
+      "rationale": "Completion evidence uncertain; protocol violations alone do not prove answer wrong.",
+      "observed": "F",
+      "matches": false
+    },
+    {
+      "trajectory": "b0a8eae_3__03",
+      "step": 5,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "登录准备不是播放业务操作。",
+      "observed": "N",
+      "matches": true
+    },
+    {
+      "trajectory": "b0a8eae_3__03",
+      "step": 7,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "补传token，修复401。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "b0a8eae_3__03",
+      "step": 13,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "把全周分钟数315直接当歌曲数量门槛，不符合今天时长需求。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "b0a8eae_3__03",
+      "step": 17,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "把315分钟直接赋为所需歌曲数。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "b0a8eae_3__03",
+      "step": 19,
+      "rubric": "R6",
+      "expected": [
+        "F"
+      ],
+      "rationale": "输入未变，继续重复得到None的同一筛选。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "b0a8eae_3__03",
+      "step": 28,
+      "rubric": "R5",
+      "expected": [
+        "U"
+      ],
+      "rationale": "实际开始播放，但未取得今天运动时长与候选歌单时长，是否足够未知。",
+      "observed": "U",
+      "matches": true
+    },
+    {
+      "trajectory": "b0a8eae_3__03",
+      "step": 29,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "只有complete_task，无业务修改。",
+      "observed": "N",
+      "matches": true
+    },
+    {
+      "trajectory": "b7a9ee9_1__05",
+      "step": 3,
+      "rubric": "R4",
+      "expected": [
+        "N"
+      ],
+      "rationale": "认证准备不触发业务决策维度。",
+      "observed": "N",
+      "matches": true
+    },
+    {
+      "trajectory": "b7a9ee9_1__05",
+      "step": 5,
+      "rubric": "R3",
+      "expected": [
+        "F"
+      ],
+      "rationale": "把扩展字典得到的80个键当作80首歌。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "b7a9ee9_1__05",
+      "step": 16,
+      "rubric": "R4",
+      "expected": [
+        "P"
+      ],
+      "rationale": "对实际取得的歌曲详情按classical筛选，局部条件正确。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "b7a9ee9_1__05",
+      "step": 20,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "补传token修复旧鉴权错误，新的already-following另计。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "b7a9ee9_1__05",
+      "step": 25,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "先读取当前关注状态再跳过已关注项，执行成功。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "b7a9ee9_1__05",
+      "step": 26,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "完成提交不是业务修改。",
+      "observed": "N",
+      "matches": true
+    },
+    {
+      "trajectory": "60d0b5b_1__02",
+      "step": 5,
+      "rubric": "R6",
+      "expected": [
+        "F"
+      ],
+      "rationale": "重复已取得的相同规格，无新增必要信息。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "60d0b5b_1__02",
+      "step": 10,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "修复布尔列表错误，成功取密码。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "60d0b5b_1__02",
+      "step": 11,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "登录准备。",
+      "observed": "N",
+      "matches": true
+    },
+    {
+      "trajectory": "60d0b5b_1__02",
+      "step": 13,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "把列表最后一项当最近请求，与已见日期顺序不符。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "60d0b5b_1__02",
+      "step": 17,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "删付款请求不能实现把已收到的钱退回。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "60d0b5b_1__02",
+      "step": 18,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "仅失败提交，不是退款操作。",
+      "observed": "N",
+      "matches": true
+    },
+    {
+      "trajectory": "07b42fd_2__00",
+      "step": 5,
+      "rubric": "R2",
+      "expected": [
+        "P"
+      ],
+      "rationale": "分页循环遇空停止，实际仅一位合格艺人；不能因固定上限臆造遗漏。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "07b42fd_2__00",
+      "step": 5,
+      "rubric": "R4",
+      "expected": [
+        "P"
+      ],
+      "rationale": "EDM 与 min_follower_count=23 符合业务条件。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "07b42fd_2__00",
+      "step": 6,
+      "rubric": "R1",
+      "expected": [
+        "F"
+      ],
+      "rationale": "关注缺少令牌，观察401。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "07b42fd_2__00",
+      "step": 8,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "修正布尔列表取密码错误。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "07b42fd_2__00",
+      "step": 10,
+      "rubric": "R5",
+      "expected": [
+        "P"
+      ],
+      "rationale": "真实关注已检出的合格艺人，观察确认成功。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "07b42fd_2__00",
+      "step": 11,
+      "rubric": "R7",
+      "expected": [
+        "P"
+      ],
+      "rationale": "全部检出的合格艺人已关注，未查规格单列R8。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "07b42fd_2__00",
+      "step": 11,
+      "rubric": "R8",
+      "expected": [
+        "F"
+      ],
+      "rationale": "提交前未查 complete_task 完整规格。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "82e2fac_2__02",
+      "step": 5,
+      "rubric": "R2",
+      "expected": [
+        "P"
+      ],
+      "rationale": "完整分页累积19首；未打印详情不意味着变量缺失。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "82e2fac_2__02",
+      "step": 7,
+      "rubric": "R6",
+      "expected": [
+        "F"
+      ],
+      "rationale": "已取得完整 songs 后无新增信息或核验需求重复同一全量查询。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "82e2fac_2__02",
+      "step": 7,
+      "rubric": "R8",
+      "expected": [
+        "F"
+      ],
+      "rationale": "同一步含多个代码块，只有首块实际执行。",
+      "observed": "P",
+      "matches": false
+    },
+    {
+      "trajectory": "82e2fac_2__02",
+      "step": 8,
+      "rubric": "R3",
+      "expected": [
+        "F"
+      ],
+      "rationale": "声称已取得 play_count，但统计代码只在上步未执行部分。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "82e2fac_2__02",
+      "step": 9,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "定义旧缺失变量，随后出现独立的参数错误。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "82e2fac_2__02",
+      "step": 11,
+      "rubric": "R4",
+      "expected": [
+        "P"
+      ],
+      "rationale": "读取歌曲 play_count 后对完整库取最小值。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "82e2fac_2__02",
+      "step": 11,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "删除上步已知不支持的 access_token 参数。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "82e2fac_2__02",
+      "step": 12,
+      "rubric": "R7",
+      "expected": [
+        "P"
+      ],
+      "rationale": "提交实际计算出的最少播放歌曲标题。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "82e2fac_2__02",
+      "step": 12,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "提交答案不是业务状态修改。",
+      "observed": "N",
+      "matches": true
+    },
+    {
+      "trajectory": "22cc237_3__00",
+      "step": 12,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "修正 email 为 query；新未定义令牌不抵消接口旧错修复。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "22cc237_3__00",
+      "step": 16,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "把收到的索款请求用于识别别人已付来的晚餐款，业务方向错误。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "22cc237_3__00",
+      "step": 17,
+      "rubric": "R3",
+      "expected": [
+        "F"
+      ],
+      "rationale": "把历史 approved 收款请求发送人说成已付晚餐份额；生成集合还与实际观察不同。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "22cc237_3__00",
+      "step": 17,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "不核对交易方向、日期和晚餐备注便当作已付名单。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "22cc237_3__00",
+      "step": 18,
+      "rubric": "R3",
+      "expected": [
+        "F"
+      ],
+      "rationale": "付款请求创建和回执仅出现在未执行文本，实际只计算名单。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "22cc237_3__00",
+      "step": 18,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "未读份额笔记，却提出一律50元且据错误的已付集合排除对象。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "22cc237_3__00",
+      "step": 18,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "实际代码只生成 remaining_contacts，没有调用创建请求。",
+      "observed": "N",
+      "matches": true
+    },
+    {
+      "trajectory": "22cc237_3__00",
+      "step": 18,
+      "rubric": "R7",
+      "expected": [
+        "F"
+      ],
+      "rationale": "未执行创建请求却明确声称已创建并完成。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "22cc237_3__00",
+      "step": 19,
+      "rubric": "R3",
+      "expected": [
+        "F"
+      ],
+      "rationale": "继续称付款请求已创建，实际轨迹没有创建。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "22cc237_3__00",
+      "step": 19,
+      "rubric": "R7",
+      "expected": [
+        "F"
+      ],
+      "rationale": "任务所需实际付款请求未创建。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "34d9492_1__01",
+      "step": 1,
+      "rubric": "R1",
+      "expected": [
+        "F"
+      ],
+      "rationale": "本机目录访问返回 FileNotFoundError。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "34d9492_1__01",
+      "step": 1,
+      "rubric": "R8",
+      "expected": [
+        "F"
+      ],
+      "rationale": "使用 OS 文件操作违反明确环境协议。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "34d9492_1__01",
+      "step": 9,
+      "rubric": "R2",
+      "expected": [
+        "P"
+      ],
+      "rationale": "通过规定文件系统API取得完整照片路径，属于合理中间取证。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "34d9492_1__01",
+      "step": 10,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "从已见哈希式文件名臆测年月，不是文件创建时间。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "34d9492_1__01",
+      "step": 11,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "加 isdigit 不会为错误的文件名日期假设提供依据。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "34d9492_1__01",
+      "step": 12,
+      "rubric": "R6",
+      "expected": [
+        "F"
+      ],
+      "rationale": "面对空分类结果重复完全相同算法，没有新信息。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "34d9492_1__01",
+      "step": 15,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "实际执行在 directory_exists 读操作401时已停止，业务写入均未到达。",
+      "observed": "N",
+      "matches": true
+    },
+    {
+      "trajectory": "34d9492_1__01",
+      "step": 17,
+      "rubric": "R1",
+      "expected": [
+        "P"
+      ],
+      "rationale": "改正移动参数后13次移动均正常执行。",
+      "observed": "F",
+      "matches": false
+    },
+    {
+      "trajectory": "34d9492_1__01",
+      "step": 17,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "继续使用文件名字符假设来选择其他月份照片。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "34d9492_1__01",
+      "step": 17,
+      "rubric": "R5",
+      "expected": [
+        "U"
+      ],
+      "rationale": "确有13次移动，但未获取创建日期，不能证实这些照片归属错误或正确。",
+      "observed": "F",
+      "matches": false
+    },
+    {
+      "trajectory": "34d9492_1__01",
+      "step": 17,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "修正移动参数；前次在第一个 move 参数检查就失败，重试不重复已完成移动。",
+      "observed": "P",
+      "matches": true
+    },
+    {
+      "trajectory": "34d9492_1__01",
+      "step": 18,
+      "rubric": "R7",
+      "expected": [
+        "F"
+      ],
+      "rationale": "原目录42张照片只移动13张，其余分类均空，已知存在未完成义务。",
+      "observed": "F",
+      "matches": true
+    },
+    {
+      "trajectory": "34d9492_1__01",
+      "step": 18,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "complete_task 不计作照片移动。",
+      "observed": "N",
+      "matches": true
+    }
+  ]
+}

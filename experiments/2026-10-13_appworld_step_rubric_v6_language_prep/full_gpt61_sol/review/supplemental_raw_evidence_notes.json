@@ -1,0 +1,43 @@
+{
+  "prepared_at": "2026-10-13T11:39:02.100167+00:00",
+  "current_full_labels_inspected": false,
+  "scope": "Supplemental known pilot/mechanical cases; not part of the fixed 12-trajectory review denominator and not independent gold.",
+  "cases": [
+    {
+      "id": "b7a9ee9_1__05",
+      "steps": [
+        20,
+        23,
+        25
+      ],
+      "evidence": "step24 prints original classical_artists order 21,28,10,28,12,21,33,12,28,33 and old per-artist follower counts. step22/24 following snapshot has 21/28/10 each count increased by one and identical new followed_at. Only step20 could produce those preceding changes; duplicate28 triggers its trailing exception. step23 refreshes old following snapshot, skips21/28/10, follows12 then33 before duplicate12 raises. step25 refreshes following state and the same loop succeeds; identical code is not itself failed recovery.",
+      "expected_local": "R5 step20 P, step23 P; step25 actual new-write evidence needs care (refreshed state can skip all work), R6 step25 P."
+    },
+    {
+      "id": "7d7fbf6_1__00",
+      "steps": [
+        12,
+        13,
+        14
+      ],
+      "evidence": "step9 lists trailing-slash paths. split(\"/\")[-1] produces empty vacation_spot; step12 writes ~/photographs/.zip, deletes Athens, then next directory conflicts at same archive path. step13 starts Athens again and fails because it is already gone; step14 confirms exists=false. Wrong-path partial effects belong to step12, not step13.",
+      "expected_local": "R5 step12 F, step13 N; R6 step13 F for repeating compound writes without checking partial success."
+    },
+    {
+      "id": "22cc237_1__02",
+      "steps": [
+        10
+      ],
+      "evidence": "Final empty code only prints a fabricated password in commentary; no task answer or completion claim is present.",
+      "expected_local": "R1 F, R3 F, R5 N, R7 N."
+    },
+    {
+      "id": "34d9492_1__01",
+      "steps": [
+        17
+      ],
+      "evidence": "API argument names are repaired and observation prints 13 successful moves without exception. Other task-level issues do not invalidate execution.",
+      "expected_local": "R1 P."
+    }
+  ]
+}

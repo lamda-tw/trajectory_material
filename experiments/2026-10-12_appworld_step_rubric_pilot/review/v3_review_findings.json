@@ -1,0 +1,61 @@
+{
+  "status": "Post-run review from visible inputs and v3 definitions; original outputs preserved, no label rewrites. Additional findings do not alter the denominator of the 19 predeclared checks.",
+  "findings": [
+    {
+      "id": "submission_misclassified_as_business_operation",
+      "trajectory": "76f2c72_1__03",
+      "step": 16,
+      "rubric": "R5",
+      "observed": "F",
+      "review_expected": [
+        "N"
+      ],
+      "severity": "clear_dimension_applicability_error",
+      "evidence": "本步code只有apis.supervisor.complete_task(answer=368.0)。v3 R5明确将提交列为N。没有实际账单业务写入。",
+      "implication": "答案或覆盖问题被传播到不适用的操作维度，不能把F数直接用于训练权重。",
+      "part_of_predeclared_checks": false
+    },
+    {
+      "id": "partial_execution_retry_not_penalized",
+      "trajectory": "7d7fbf6_1__00",
+      "step": 13,
+      "rubric": "R6",
+      "observed": "P",
+      "review_expected": [
+        "F"
+      ],
+      "severity": "failed_predeclared_check",
+      "evidence": "步骤12在for循环内压缩并删除原目录，随后409；步骤13未检查已完成范围便从头overwrite重试；步骤14证实Athens目录已不存在。",
+      "implication": "修复overwrite参数的局部进展掩盖了未确认部分副作用便重试的问题。按v3同维度明确违反优先F。",
+      "part_of_predeclared_checks": true
+    },
+    {
+      "id": "overwrite_flag_treated_as_observed_overwrite",
+      "trajectory": "7d7fbf6_1__00",
+      "step": 16,
+      "rubric": "short_reason",
+      "observed": "压缩包被写到错误目录，并覆盖了已有文件。",
+      "review_expected": [
+        "可确认目录错误；没有证据确认目标同名文件已存在且被覆盖。"
+      ],
+      "severity": "unsupported_reason_claim",
+      "evidence": "overwrite=True允许覆盖，不证明发生覆盖；此前根目录列表及调用没有显示maui.zip、stockholm.zip、tokyo.zip已存在。",
+      "implication": "即使R5的F有正确依据，短解释仍可能添加未经支持的事实。",
+      "part_of_predeclared_checks": false
+    },
+    {
+      "id": "unread_pdf_overconfidence",
+      "trajectory": "76f2c72_1__03",
+      "step": 15,
+      "rubric": "R2_and_short_reason",
+      "observed": "F；漏算仅有PDF的五月账单",
+      "review_expected": [
+        "对未读PDF、账单覆盖和年份依据保留不确定性，不把文件名等同于已知应计金额。"
+      ],
+      "severity": "evidence_boundary_concern",
+      "evidence": "可见目录含2023-05.pdf，但未读内容，也没有取得当前日期；已读四份TXT金额总和确为368。官方成功仅作研究者对照，不据此强迫judge输出P。",
+      "implication": "应区分局部算术正确、全局覆盖未知及明确漏算；当前短依据过度确定。",
+      "part_of_predeclared_checks": false
+    }
+  ]
+}

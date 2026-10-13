@@ -1,0 +1,71 @@
+{
+  "status": "Residual issues from original frozen checks and visible evidence; not an exhaustive human audit, raw labels and check denominators unchanged.",
+  "findings": [
+    {
+      "id": "unread_bill_coverage",
+      "set": "regression",
+      "trajectory": "76f2c72_1__03",
+      "steps": [
+        15,
+        16
+      ],
+      "rubrics": [
+        "R2",
+        "R7"
+      ],
+      "expected": "U",
+      "observed": "F",
+      "finding": "仍把未读五月PDF当成确定漏算，继而把总额判为确定错误。",
+      "evidence": "未读PDF内容且未取得当前日期；四份已读TXT总和368正确。",
+      "impact": "F与U边界偏严，不应把所有F直接解释为已证实的结果错误。"
+    },
+    {
+      "id": "unverified_playback_effect",
+      "set": "fresh",
+      "trajectory": "b0a8eae_3__03",
+      "steps": [
+        28
+      ],
+      "rubrics": [
+        "R5"
+      ],
+      "expected": "U",
+      "observed": "F",
+      "finding": "时长未验证被判为实际操作效果违反。",
+      "evidence": "播放API成功，但未取得今日运动时长和歌单总时长；此前歌曲数代替分钟数的决策错误有明确证据，可由R4表达。",
+      "impact": "决策过程错误仍可能扩散到效果维度。"
+    },
+    {
+      "id": "state_refresh_retry",
+      "set": "fresh",
+      "trajectory": "b7a9ee9_1__05",
+      "steps": [
+        25
+      ],
+      "rubrics": [
+        "R6"
+      ],
+      "expected": "P",
+      "observed": "F",
+      "finding": "已重新读取关注状态并跳过已关注艺人，仍因沿用相同逻辑和潜在重复而判F。",
+      "evidence": "步骤23可能已完成部分关注才报重复；25重新读取当前状态后成功。相同代码在不同状态下可走不同分支。25的文字诊断另有错误，R3可分别评价。",
+      "impact": "R6对有效恢复、错误诊断和潜在算法风险的界限仍有争议；原预设P保留，未为匹配模型改写。"
+    },
+    {
+      "id": "repeated_docs_without_error",
+      "set": "fresh",
+      "trajectory": "60d0b5b_1__02",
+      "steps": [
+        5
+      ],
+      "rubrics": [
+        "R6"
+      ],
+      "expected": "F",
+      "observed": "N",
+      "finding": "重复已见API规格无新增信息，却因没有前置执行错误而被视为不适用。",
+      "evidence": "步骤3、4、5连续请求同一完整规格。",
+      "impact": "R6开头的触发条件可能过窄，削弱无效循环检测；其他已有报错后的循环仍能识别。"
+    }
+  ]
+}

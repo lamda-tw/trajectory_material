@@ -1,0 +1,208 @@
+{
+  "reviewed_at": "2026-10-13T13:54:49.105856+00:00",
+  "scope": "评分后定向检查：全部机械不匹配、已知pilot边界与终止不一致案例。选择有偏，不与固定12条合并为准确率。未改写任何原始标签。",
+  "findings": [
+    {
+      "id": "692c77d_1__02",
+      "step": 17,
+      "rubric": "R1",
+      "expected": "P",
+      "observed": "F",
+      "matches": false,
+      "kind": "normal_execution_observation",
+      "review_verdict": "mechanical_anchor_boundary_not_confirmed_error",
+      "evidence": "代码try/except内部的5次API操作确实抛异常并打印Failed to update；外层无未捕获异常不等于各API正常执行。R1=F有执行契约失败依据，不能把这处自动锚点不匹配直接算误判。"
+    },
+    {
+      "id": "287e338_2__05",
+      "step": 3,
+      "rubric": "R5",
+      "expected": "N",
+      "observed": "F",
+      "matches": false,
+      "kind": "conservative_read_only_ast",
+      "review_verdict": "clear_error",
+      "evidence": "实际代码只有读取/鉴权准备或complete_task，不调用业务修改；按R5明文应为N。多个FNPNPNN*行呈现可能的R5/R6位置混淆样式，但不能仅凭输出确认原因。"
+    },
+    {
+      "id": "22cc237_3__03",
+      "step": 4,
+      "rubric": "R5",
+      "expected": "N",
+      "observed": "P",
+      "matches": false,
+      "kind": "conservative_read_only_ast",
+      "review_verdict": "clear_error",
+      "evidence": "实际代码只有读取/鉴权准备或complete_task，不调用业务修改；按R5明文应为N。多个FNPNPNN*行呈现可能的R5/R6位置混淆样式，但不能仅凭输出确认原因。"
+    },
+    {
+      "id": "22cc237_3__03",
+      "step": 6,
+      "rubric": "R5",
+      "expected": "N",
+      "observed": "U",
+      "matches": false,
+      "kind": "conservative_read_only_ast",
+      "review_verdict": "clear_error",
+      "evidence": "实际代码只有读取/鉴权准备或complete_task，不调用业务修改；按R5明文应为N。多个FNPNPNN*行呈现可能的R5/R6位置混淆样式，但不能仅凭输出确认原因。"
+    },
+    {
+      "id": "22cc237_3__03",
+      "step": 7,
+      "rubric": "R5",
+      "expected": "N",
+      "observed": "U",
+      "matches": false,
+      "kind": "conservative_read_only_ast",
+      "review_verdict": "clear_error",
+      "evidence": "实际代码只有读取/鉴权准备或complete_task，不调用业务修改；按R5明文应为N。多个FNPNPNN*行呈现可能的R5/R6位置混淆样式，但不能仅凭输出确认原因。"
+    },
+    {
+      "id": "22cc237_3__03",
+      "step": 15,
+      "rubric": "R5",
+      "expected": "N",
+      "observed": "U",
+      "matches": false,
+      "kind": "conservative_read_only_ast",
+      "review_verdict": "clear_error",
+      "evidence": "实际代码只有读取/鉴权准备或complete_task，不调用业务修改；按R5明文应为N。多个FNPNPNN*行呈现可能的R5/R6位置混淆样式，但不能仅凭输出确认原因。"
+    },
+    {
+      "id": "22cc237_3__03",
+      "step": 18,
+      "rubric": "R5",
+      "expected": "N",
+      "observed": "P",
+      "matches": false,
+      "kind": "conservative_read_only_ast",
+      "review_verdict": "clear_error",
+      "evidence": "实际代码只有读取/鉴权准备或complete_task，不调用业务修改；按R5明文应为N。多个FNPNPNN*行呈现可能的R5/R6位置混淆样式，但不能仅凭输出确认原因。"
+    },
+    {
+      "id": "d0b1f43_1__00",
+      "step": 7,
+      "rubric": "R5",
+      "expected": "N",
+      "observed": "P",
+      "matches": false,
+      "kind": "conservative_read_only_ast",
+      "review_verdict": "clear_error",
+      "evidence": "实际代码只有读取/鉴权准备或complete_task，不调用业务修改；按R5明文应为N。多个FNPNPNN*行呈现可能的R5/R6位置混淆样式，但不能仅凭输出确认原因。"
+    },
+    {
+      "id": "d0b1f43_1__00",
+      "step": 8,
+      "rubric": "R5",
+      "expected": "N",
+      "observed": "P",
+      "matches": false,
+      "kind": "conservative_read_only_ast",
+      "review_verdict": "clear_error",
+      "evidence": "实际代码只有读取/鉴权准备或complete_task，不调用业务修改；按R5明文应为N。多个FNPNPNN*行呈现可能的R5/R6位置混淆样式，但不能仅凭输出确认原因。"
+    },
+    {
+      "id": "22cc237_1__02",
+      "step": 10,
+      "rubric": "R7",
+      "observed": "F",
+      "expected": "N",
+      "review_verdict": "clear_error",
+      "evidence": "末步只有未执行的虚构密码文本，没有答案或任务完成声明。按v6的R7触发条件应N；缺少可执行代码及虚构凭据分别归R1/R3。"
+    },
+    {
+      "id": "302c169_3__02",
+      "step": 6,
+      "rubric": "R6",
+      "observed": "F",
+      "expected": "P",
+      "review_verdict": "debatable",
+      "evidence": "修复bool索引错误后遇到独立的缺username错误，旧冻结检查偏P。但本步也无必要再次读取已保留的密码列表，按R6重复查询规则可支撑F。保留冻结检查不匹配事实，不直接计明确误判。"
+    },
+    {
+      "id": "e7a10f8_3__04",
+      "step": 7,
+      "rubric": "R7",
+      "observed": "U",
+      "expected": "F",
+      "review_verdict": "v6_semantics_defensible",
+      "evidence": "24分钟来自8首×假定3分钟，实际时长没有证据。R4=F已经批评估算规则；按v6区分错误规则与未知结果，R7=U有据，不能把旧v5偏F的检查不匹配直接当作退步。"
+    },
+    {
+      "id": "ccb4494_1__01",
+      "step": 5,
+      "rubric": "R7",
+      "observed": "P",
+      "expected": "F under full-goal interpretation",
+      "review_verdict": "boundary_inconsistency",
+      "evidence": "所有应点赞歌曲已点赞，也多点赞未来歌曲；前步R4/R5=F。此处和ccb4494_2__05末步获P，而固定样本ccb4494_1__02同类完成声明获F，应明确额外副作用是否使交付本身失败。"
+    },
+    {
+      "id": "ccb4494_2__05",
+      "step": 6,
+      "rubric": "R7",
+      "observed": "P",
+      "expected": "F under full-goal interpretation",
+      "review_verdict": "boundary_inconsistency",
+      "evidence": "同上；这两条是声明成功且R7=P但官方失败的全部案例。未臆造隐藏断言原因，可见多点赞已足以提出范围边界问题。"
+    }
+  ],
+  "positive_controls": [
+    {
+      "id": "b7a9ee9_1__05",
+      "steps": [
+        20,
+        23
+      ],
+      "rubric": "R5",
+      "observed": [
+        "P",
+        "P"
+      ],
+      "verdict": "supported",
+      "evidence": "后续保存的艺术家列表、关注时间/计数及循环顺序支持在重复关注异常前已发生正确关注；没有把整步异常错误等同于回滚。"
+    },
+    {
+      "id": "b7a9ee9_1__05",
+      "steps": [
+        25
+      ],
+      "rubric": "R5/R6",
+      "observed": [
+        "N/P"
+      ],
+      "verdict": "supported",
+      "evidence": "刷新关注状态后同样的循环可跳过已经完成的工作。R6=P合理，不能因代码相同直接F；没有新增业务写入时R5=N。"
+    },
+    {
+      "id": "7d7fbf6_1__00",
+      "steps": [
+        12,
+        13
+      ],
+      "rubric": "R5",
+      "observed": [
+        "F",
+        "N"
+      ],
+      "verdict": "supported",
+      "evidence": "尾斜杠导致空目录名，step12实际写错归档路径并删除首目录后才冲突；step13首调用因已删除目录而拒绝，未发生新的修改。"
+    },
+    {
+      "id": "34d9492_1__01",
+      "steps": [
+        17
+      ],
+      "rubric": "R1",
+      "observed": [
+        "P"
+      ],
+      "verdict": "supported",
+      "evidence": "13次文件移动均有正常执行输出；旧版误把任务逻辑问题混进执行有效性，本轮已修正。"
+    }
+  ],
+  "confirmed_R5_read_only_errors": 8,
+  "confirmed_R7_applicability_error": 1,
+  "R5_errors_enter_current_common_pool": 0,
+  "R1_mechanical_mismatch_is_not_confirmed_error": true
+}

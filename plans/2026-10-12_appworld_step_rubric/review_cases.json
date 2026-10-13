@@ -1,0 +1,577 @@
+{
+  "status": "Manual design review, not external judge output and not an independent evaluation set.",
+  "rubric_version": "appworld-step-v1",
+  "usage": "Check selected dimensions and interpretation boundaries. Omitted dimensions are unlabelled, not N. Multiple permitted labels mean this case only excludes a specified misreading; these are not calibrated gold labels.",
+  "sources": {
+    "302c169_2__02.json": {
+      "source_sha256": "1f09464e5da6d7d7abcb8f278c74339aba0211ae031cc59dc193229ad686da9b",
+      "official_success_for_human_audit_only": false,
+      "steps": 11
+    },
+    "302c169_2__00.json": {
+      "source_sha256": "32520c9f42fae415dbe4f136c080234c3dd99c986817ac3c97f1da590b6d3565",
+      "official_success_for_human_audit_only": true,
+      "steps": 12
+    },
+    "cf6abd2_2__01.json": {
+      "source_sha256": "d5f072cfe3477f2e383bee8001ea41a575661843b4186843b819280305e488c0",
+      "official_success_for_human_audit_only": false,
+      "steps": 11
+    },
+    "692c77d_2__03.json": {
+      "source_sha256": "cef6cf399eee8512c6d84168f357fc2f1b58bffc636b29348cae59f27b03aa57",
+      "official_success_for_human_audit_only": true,
+      "steps": 17
+    },
+    "229360a_3__01.json": {
+      "source_sha256": "f79bcd6120e09ec7e3e5a1b58f2ac98b7e687ba965c0b5b4742161404ca69a65",
+      "official_success_for_human_audit_only": true,
+      "steps": 16
+    },
+    "229360a_3__04.json": {
+      "source_sha256": "e20dbea38bb372af02def340e723c2a82e0d40507e1146601440b0166e669643",
+      "official_success_for_human_audit_only": false,
+      "steps": 13
+    },
+    "07b42fd_1__02.json": {
+      "source_sha256": "86f30a2696a3d047eb971bf7e1466b31ac955746a163333b18a6da4023cb216a",
+      "official_success_for_human_audit_only": false,
+      "steps": 10
+    },
+    "e7a10f8_3__04.json": {
+      "source_sha256": "92c32a2df82e4dc7f9be47b75d8be7ea3673499dc2426ba74a19be02e917bca4",
+      "official_success_for_human_audit_only": false,
+      "steps": 9
+    },
+    "7d7fbf6_1__02.json": {
+      "source_sha256": "c78869be6095c3753d66ef24bcafefe46ea57139488d7a7aa834bf5933d32970",
+      "official_success_for_human_audit_only": false,
+      "steps": 15
+    },
+    "34d9492_1__04.json": {
+      "source_sha256": "91ce172850fad7a10b38ca115de6361074eaaf32dea4667b6a51c308d707259e",
+      "official_success_for_human_audit_only": false,
+      "steps": 15
+    },
+    "76f2c72_1__05.json": {
+      "source_sha256": "a2fb5a2477687db4702c8ae27579a8c925d60f57c51a23fb40305e953edecb17",
+      "official_success_for_human_audit_only": false,
+      "steps": 11
+    },
+    "29caf6f_1__02.json": {
+      "source_sha256": "099c09e151d983d6d1b6fc0b14cc57463c7f3a5e0b404cdadcf44bd1da36d041",
+      "official_success_for_human_audit_only": true,
+      "steps": 14
+    },
+    "6104387_3__01.json": {
+      "source_sha256": "0072ec1166b12f4cb5218a0f0d13ba57dfedc883bf6c8e2595ab9a73da63f51d",
+      "official_success_for_human_audit_only": false,
+      "steps": 13
+    }
+  },
+  "cases": [
+    {
+      "trajectory": "302c169_2__02.json",
+      "step": 9,
+      "evidence_steps": [
+        7,
+        9
+      ],
+      "expected_selected_dimensions": {
+        "R1": [
+          "P"
+        ],
+        "R4": [
+          "F"
+        ],
+        "R5": [
+          "F"
+        ]
+      },
+      "manual_note": "真实参数仍是7:30，和提前40分钟不符；不能依据口头的06:50或接口成功消息判通过。",
+      "code_fragments": [
+        "wake_new_time = f\"{int(wake_old_time[:2]) - 0}:{wake_old_time[3:]}\""
+      ],
+      "observation_fragments": [
+        "\"wake_new\": \"7:30\""
+      ]
+    },
+    {
+      "trajectory": "302c169_2__00.json",
+      "step": 10,
+      "evidence_steps": [
+        8,
+        10
+      ],
+      "expected_selected_dimensions": {
+        "R1": [
+          "P"
+        ],
+        "R4": [
+          "P"
+        ],
+        "R5": [
+          "P"
+        ]
+      },
+      "manual_note": "已有07:30作为依据，直接使用06:50并逐项关闭其他闹钟，不强制增加datetime计算。",
+      "code_fragments": [
+        "'time': '06:50'"
+      ],
+      "observation_fragments": []
+    },
+    {
+      "trajectory": "cf6abd2_2__01.json",
+      "step": 8,
+      "evidence_steps": [
+        7,
+        8,
+        9
+      ],
+      "expected_selected_dimensions": {
+        "R4": [
+          "F"
+        ],
+        "R5": [
+          "F"
+        ]
+      },
+      "manual_note": "替换表达式命中目标行后面的勾选标记，目标仍已完成，还会改动下一行；Note updated不是任务成功。",
+      "code_fragments": [
+        ".replace('Taking a solo backpacking trip\\n[x]', 'Taking a solo backpacking trip\\n[ ]')"
+      ],
+      "observation_fragments": []
+    },
+    {
+      "trajectory": "cf6abd2_2__01.json",
+      "step": 9,
+      "evidence_steps": [
+        9
+      ],
+      "expected_selected_dimensions": {
+        "R1": [
+          "P"
+        ],
+        "R2": [
+          "P"
+        ],
+        "R5": [
+          "N"
+        ]
+      },
+      "manual_note": "本步正确回读并显示目标仍为[x]，这是有效取证，不能因看到坏结果而给本步执行F。",
+      "code_fragments": [],
+      "observation_fragments": [
+        "[x] Taking a solo backpacking trip"
+      ]
+    },
+    {
+      "trajectory": "cf6abd2_2__01.json",
+      "step": 10,
+      "evidence_steps": [
+        9,
+        10
+      ],
+      "expected_selected_dimensions": {
+        "R3": [
+          "F"
+        ],
+        "R6": [
+          "F"
+        ]
+      },
+      "manual_note": "查提交接口本身可运行，但commentary声称已验证，与上一条回读相反。",
+      "code_fragments": [],
+      "observation_fragments": []
+    },
+    {
+      "trajectory": "cf6abd2_2__01.json",
+      "step": 11,
+      "evidence_steps": [
+        9,
+        11
+      ],
+      "expected_selected_dimensions": {
+        "R7": [
+          "F"
+        ]
+      },
+      "manual_note": "已有明确反例却成功提交，不能拿complete_task返回值代替完成证据。",
+      "code_fragments": [],
+      "observation_fragments": []
+    },
+    {
+      "trajectory": "692c77d_2__03.json",
+      "step": 10,
+      "evidence_steps": [
+        9,
+        10,
+        13
+      ],
+      "expected_selected_dimensions": {
+        "R1": [
+          "F"
+        ],
+        "R5": [
+          "P"
+        ]
+      },
+      "manual_note": "循环前三项已创建1星评分，第四项缺song_review_id失败；第13步回读确认前三项状态。R5的P仅指这些已实施的正确写入，不代表全批完成。",
+      "code_fragments": [
+        "review_id = song['song_review_id']"
+      ],
+      "observation_fragments": [
+        "KeyError: 'song_review_id'"
+      ]
+    },
+    {
+      "trajectory": "692c77d_2__03.json",
+      "step": 12,
+      "evidence_steps": [
+        12
+      ],
+      "expected_selected_dimensions": {
+        "R1": [
+          "F"
+        ],
+        "R5": [
+          "N"
+        ]
+      },
+      "manual_note": "本步是语法错误，不能声称本代码块的读取/写入已发生；不影响第10步先前已发生的写入。",
+      "code_fragments": [],
+      "observation_fragments": [
+        "Syntax error in line:"
+      ]
+    },
+    {
+      "trajectory": "692c77d_2__03.json",
+      "step": 13,
+      "evidence_steps": [
+        9,
+        10,
+        12,
+        13
+      ],
+      "expected_selected_dimensions": {
+        "R1": [
+          "P"
+        ],
+        "R6": [
+          "P"
+        ]
+      },
+      "manual_note": "修复语法并回读取出评分ID和现状，随后可区分已完成与待更新项。",
+      "code_fragments": [],
+      "observation_fragments": []
+    },
+    {
+      "trajectory": "692c77d_2__03.json",
+      "step": 14,
+      "evidence_steps": [
+        13,
+        14
+      ],
+      "expected_selected_dimensions": {
+        "R1": [
+          "P"
+        ],
+        "R5": [
+          "P"
+        ]
+      },
+      "manual_note": "依据新快照更新旧高分和缺少评分的项，跳过已为1星项。",
+      "code_fragments": [],
+      "observation_fragments": []
+    },
+    {
+      "trajectory": "229360a_3__01.json",
+      "step": 12,
+      "evidence_steps": [
+        11,
+        12
+      ],
+      "expected_selected_dimensions": {
+        "R3": [
+          "F"
+        ]
+      },
+      "manual_note": "把删除前song_library构造的集合当删除后剩余集合；最终任务成功也不能使这段核验正确。",
+      "code_fragments": [
+        "remaining_song_ids = {item['song_id'] for item in song_library}"
+      ],
+      "observation_fragments": []
+    },
+    {
+      "trajectory": "229360a_3__04.json",
+      "step": 7,
+      "evidence_steps": [
+        6,
+        7
+      ],
+      "expected_selected_dimensions": {
+        "R3": [
+          "F"
+        ],
+        "R4": [
+          "F"
+        ]
+      },
+      "manual_note": "专辑接口没有downloaded字段，额外的存在性门槛使逐歌all判断被短路。",
+      "code_fragments": [
+        "'downloaded' in status and all("
+      ],
+      "observation_fragments": []
+    },
+    {
+      "trajectory": "07b42fd_1__02.json",
+      "step": 8,
+      "evidence_steps": [
+        8
+      ],
+      "expected_selected_dimensions": {
+        "R2": [
+          "P"
+        ],
+        "R4": [
+          "P",
+          "N",
+          "U"
+        ]
+      },
+      "manual_note": "当前明确只获取粉丝阈值候选，可后续筛genre；不能仅因未传genre就认定本步已实施错误关注。",
+      "code_fragments": [
+        "min_follower_count=22"
+      ],
+      "observation_fragments": []
+    },
+    {
+      "trajectory": "07b42fd_1__02.json",
+      "step": 10,
+      "evidence_steps": [
+        8,
+        10
+      ],
+      "expected_selected_dimensions": {
+        "R4": [
+          "F"
+        ],
+        "R5": [
+          "F"
+        ],
+        "R7": [
+          "F"
+        ]
+      },
+      "manual_note": "本步将7位不同genre艺术家全部当合格对象关注并结束，出现明确的遗漏筛选。",
+      "code_fragments": [
+        "for artist in artists:"
+      ],
+      "observation_fragments": []
+    },
+    {
+      "trajectory": "e7a10f8_3__04.json",
+      "step": 7,
+      "evidence_steps": [
+        7
+      ],
+      "expected_selected_dimensions": {
+        "R4": [
+          "P",
+          "N",
+          "U"
+        ]
+      },
+      "manual_note": "全库小计本身不是错误算术，commentary也未声称它是最大歌单；不可只用没有max来判错。第9步将其用作答案才明确违反要求。",
+      "code_fragments": [
+        "total_seconds = sum(song_durations)"
+      ],
+      "observation_fragments": []
+    },
+    {
+      "trajectory": "e7a10f8_3__04.json",
+      "step": 9,
+      "evidence_steps": [
+        7,
+        9
+      ],
+      "expected_selected_dimensions": {
+        "R4": [
+          "F"
+        ],
+        "R7": [
+          "F"
+        ]
+      },
+      "manual_note": "把全库时长小计换算后当最长歌单提交；需引用第7步来源，但不强制为第7步赋唯一因果根因。",
+      "code_fragments": [
+        "longest_minutes = round(total_seconds / 60)"
+      ],
+      "observation_fragments": []
+    },
+    {
+      "trajectory": "7d7fbf6_1__02.json",
+      "step": 12,
+      "evidence_steps": [
+        12
+      ],
+      "expected_selected_dimensions": {
+        "R5": [
+          "P"
+        ],
+        "R7": [
+          "N"
+        ]
+      },
+      "manual_note": "先压缩第一目录且暂不删除是合法阶段划分；不能追溯要求本步立即完成全部工作。",
+      "code_fragments": [
+        "first_vacation_delete_directory = False"
+      ],
+      "observation_fragments": []
+    },
+    {
+      "trajectory": "7d7fbf6_1__02.json",
+      "step": 14,
+      "evidence_steps": [
+        12,
+        13,
+        14
+      ],
+      "expected_selected_dimensions": {
+        "R3": [
+          "F"
+        ]
+      },
+      "manual_note": "此时声称每个源目录都由API处理删除，与第一目录delete_directory=False且无后续删除矛盾。",
+      "code_fragments": [],
+      "observation_fragments": []
+    },
+    {
+      "trajectory": "7d7fbf6_1__02.json",
+      "step": 15,
+      "evidence_steps": [
+        12,
+        13,
+        15
+      ],
+      "expected_selected_dimensions": {
+        "R7": [
+          "F"
+        ]
+      },
+      "manual_note": "成功提交前仍留有可见的第一目录删除义务。",
+      "code_fragments": [],
+      "observation_fragments": []
+    },
+    {
+      "trajectory": "34d9492_1__04.json",
+      "step": 9,
+      "evidence_steps": [
+        9
+      ],
+      "expected_selected_dimensions": {
+        "R1": [
+          "F"
+        ],
+        "R2": [
+          "P"
+        ]
+      },
+      "manual_note": "读取及变量构建已经完成，最后打印FakeDatetime序列化失败，不能视为所有读取和赋值无效。",
+      "code_fragments": [],
+      "observation_fragments": [
+        "TypeError: Object of type FakeDatetime is not JSON serializable"
+      ]
+    },
+    {
+      "trajectory": "34d9492_1__04.json",
+      "step": 13,
+      "evidence_steps": [
+        9,
+        10,
+        13
+      ],
+      "expected_selected_dimensions": {
+        "R3": [
+          "F"
+        ],
+        "R4": [
+          "F"
+        ],
+        "R5": [
+          "F"
+        ]
+      },
+      "manual_note": "手工拼出少量元数据，将这些文件全部移到Petra；其中3月文件不应归Petra。",
+      "code_fragments": [
+        "destination_directories['Petra']"
+      ],
+      "observation_fragments": []
+    },
+    {
+      "trajectory": "76f2c72_1__05.json",
+      "step": 11,
+      "evidence_steps": [
+        7,
+        9,
+        11
+      ],
+      "expected_selected_dimensions": {
+        "R4": [
+          "F"
+        ],
+        "R7": [
+          "F"
+        ]
+      },
+      "manual_note": "修正语法后仍累计跨年份的全部electricity_bill_records，缺少今年条件，并提交。",
+      "code_fragments": [
+        "for record in electricity_bill_records:",
+        "current_year_total += float(match.group(1))"
+      ],
+      "observation_fragments": []
+    },
+    {
+      "trajectory": "29caf6f_1__02.json",
+      "step": 4,
+      "evidence_steps": [
+        4
+      ],
+      "expected_selected_dimensions": {
+        "R1": [
+          "F"
+        ],
+        "R5": [
+          "N"
+        ]
+      },
+      "manual_note": "把Christopher姓名用作phone_number导致409；整题后续成功不改变本步真实调用失败。",
+      "code_fragments": [
+        "phone_number='Christopher'"
+      ],
+      "observation_fragments": [
+        "does not exist"
+      ]
+    },
+    {
+      "trajectory": "6104387_3__01.json",
+      "step": 3,
+      "evidence_steps": [
+        3
+      ],
+      "expected_selected_dimensions": {
+        "R1": [
+          "F"
+        ],
+        "R5": [
+          "N"
+        ]
+      },
+      "manual_note": "在查询不存在的album应用接口处就异常；不能把后面未执行的辅助函数与业务操作当成已产生副作用。",
+      "code_fragments": [],
+      "observation_fragments": [
+        "No APIs with name show_album_library found for the album app"
+      ]
+    }
+  ]
+}

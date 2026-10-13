@@ -1,0 +1,124 @@
+{
+  "scope": "Descriptive analyses after all scoring finished; not causal validation or gold labels.",
+  "step_flags": {
+    "any_F": 9596,
+    "only_R8_F": 1384,
+    "no_F_or_U": 1592
+  },
+  "tasks_with_success": 20,
+  "termination": {
+    "completion_api": 312,
+    "step_limit": 97,
+    "no_python_code": 111,
+    "context_limit": 20
+  },
+  "step_outcomes": {
+    "False": 10753,
+    "True": 501
+  },
+  "within_task": {
+    "R1": {
+      "tasks": 20,
+      "lower_F_fraction_for_success": 12,
+      "equal": 0,
+      "higher": 8,
+      "mean_difference": -0.07791856671982107
+    },
+    "R2": {
+      "tasks": 20,
+      "lower_F_fraction_for_success": 16,
+      "equal": 0,
+      "higher": 4,
+      "mean_difference": -0.16025647756613048
+    },
+    "R3": {
+      "tasks": 20,
+      "lower_F_fraction_for_success": 15,
+      "equal": 0,
+      "higher": 5,
+      "mean_difference": -0.1866315434220205
+    },
+    "R4": {
+      "tasks": 20,
+      "lower_F_fraction_for_success": 17,
+      "equal": 1,
+      "higher": 2,
+      "mean_difference": -0.35888410894660894
+    },
+    "R5": {
+      "tasks": 9,
+      "lower_F_fraction_for_success": 5,
+      "equal": 1,
+      "higher": 3,
+      "mean_difference": -0.075
+    },
+    "R6": {
+      "tasks": 20,
+      "lower_F_fraction_for_success": 16,
+      "equal": 0,
+      "higher": 4,
+      "mean_difference": -0.19399690583138945
+    },
+    "R7": {
+      "tasks": 20,
+      "lower_F_fraction_for_success": 18,
+      "equal": 2,
+      "higher": 0,
+      "mean_difference": -0.6633333333333333
+    },
+    "R8": {
+      "tasks": 20,
+      "lower_F_fraction_for_success": 11,
+      "equal": 0,
+      "higher": 9,
+      "mean_difference": -0.08583290697646542
+    }
+  },
+  "candidates": {
+    "records": 6617,
+    "distinct_steps": 6381,
+    "by_kind": {
+      "business_or_factual_failure_candidate": 4733,
+      "execution_recovery_candidate": 1884
+    },
+    "recovery_with_business_F": 236,
+    "recovery_from_official_failure": 1742
+  },
+  "invalid_attempts": [
+    {
+      "id": "287e338_3__03",
+      "attempt": 1,
+      "status": "invalid",
+      "elapsed_seconds": 75.51750247552991,
+      "category": "other",
+      "error": "JSONDecodeError: Expecting ',' delimiter: line 1 column 343 (char 342)"
+    },
+    {
+      "id": "07b42fd_3__02",
+      "attempt": 1,
+      "status": "invalid",
+      "elapsed_seconds": 36.940187990665436,
+      "category": "other",
+      "error": "ValidationError: 'PPPNNP NF' does not match '^[PFUN]{8}$'\n\nFailed validating 'pattern' in schema['properties']['steps']['items']['prefixItems'][1]:\n    {'type': 'string', 'pattern': '^[PFUN]{8}$'}\n\nOn instance['steps'][3][1]:\n    'PPPNNP NF'"
+    }
+  ],
+  "invalid_attempt_usage": {
+    "input_tokens": 31486,
+    "cached_input_tokens": 14592,
+    "output_tokens": 4501,
+    "reasoning_output_tokens": 4140
+  },
+  "repeat_by_rubric": {
+    "R2": 28,
+    "R4": 15,
+    "R3": 49,
+    "R6": 20,
+    "R8": 15,
+    "R5": 5,
+    "R1": 1
+  },
+  "mechanical_miss_labels": {
+    "P": 196,
+    "N": 52
+  }
+}

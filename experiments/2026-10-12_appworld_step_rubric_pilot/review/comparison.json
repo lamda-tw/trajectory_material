@@ -1,0 +1,1387 @@
+{
+  "generated_at": "2026-10-12T19:51:33.327725+08:00",
+  "versions": {
+    "v1": {
+      "valid_trajectories": 6,
+      "steps": 66,
+      "cells": 528,
+      "label_counts": {
+        "R1": {
+          "F": 18,
+          "P": 48
+        },
+        "R2": {
+          "U": 12,
+          "N": 9,
+          "P": 34,
+          "F": 11
+        },
+        "R3": {
+          "N": 21,
+          "P": 33,
+          "F": 12
+        },
+        "R4": {
+          "N": 43,
+          "P": 10,
+          "F": 13
+        },
+        "R5": {
+          "N": 61,
+          "P": 4,
+          "F": 1
+        },
+        "R6": {
+          "N": 35,
+          "F": 4,
+          "P": 27
+        },
+        "R7": {
+          "N": 60,
+          "U": 1,
+          "F": 3,
+          "P": 2
+        },
+        "R8": {
+          "F": 47,
+          "P": 18,
+          "N": 1
+        }
+      },
+      "completed_call_usage": {
+        "input_tokens": 102791,
+        "cached_input_tokens": 29184,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 29647,
+        "reasoning_output_tokens": 26854
+      },
+      "samples": [
+        {
+          "id": "302c169_2__02",
+          "steps": 11,
+          "official_success_for_researcher_only": true,
+          "seconds": 93.1391759775579,
+          "usage": {
+            "input_tokens": 16145,
+            "cached_input_tokens": 7296,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 5015,
+            "reasoning_output_tokens": 4609
+          },
+          "notes": 8,
+          "attempt": "runs/v1_audit/302c169_2__02/attempt_1",
+          "judgement": "runs/v1_audit_recovered/302c169_2__02/judgement.json"
+        },
+        {
+          "id": "302c169_3__03",
+          "steps": 10,
+          "official_success_for_researcher_only": false,
+          "seconds": 82.80919801816344,
+          "usage": {
+            "input_tokens": 17226,
+            "cached_input_tokens": 7296,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 3914,
+            "reasoning_output_tokens": 3522
+          },
+          "notes": 8,
+          "attempt": "runs/v1_audit/302c169_3__03/attempt_1",
+          "judgement": "runs/v1_audit_recovered/302c169_3__03/judgement.json"
+        },
+        {
+          "id": "cf6abd2_2__01",
+          "steps": 17,
+          "official_success_for_researcher_only": true,
+          "seconds": 99.0577748529613,
+          "usage": {
+            "input_tokens": 19730,
+            "cached_input_tokens": 0,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 4706,
+            "reasoning_output_tokens": 4042
+          },
+          "notes": 21,
+          "attempt": "runs/v1_audit_recovered/cf6abd2_2__01/attempt_1",
+          "judgement": "runs/v1_audit_recovered/cf6abd2_2__01/judgement.json"
+        },
+        {
+          "id": "cf6abd2_2__02",
+          "steps": 12,
+          "official_success_for_researcher_only": false,
+          "seconds": 188.01460891216993,
+          "usage": {
+            "input_tokens": 17098,
+            "cached_input_tokens": 7296,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 9963,
+            "reasoning_output_tokens": 9322
+          },
+          "notes": 19,
+          "attempt": "runs/v1_audit_recovered/cf6abd2_2__02/attempt_1",
+          "judgement": "runs/v1_audit_recovered/cf6abd2_2__02/judgement.json"
+        },
+        {
+          "id": "e7a10f8_3__02",
+          "steps": 9,
+          "official_success_for_researcher_only": true,
+          "seconds": 77.89652033895254,
+          "usage": {
+            "input_tokens": 17028,
+            "cached_input_tokens": 0,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 3918,
+            "reasoning_output_tokens": 3586
+          },
+          "notes": 7,
+          "attempt": "runs/v1_audit_recovered/e7a10f8_3__02/attempt_1",
+          "judgement": "runs/v1_audit_recovered/e7a10f8_3__02/judgement.json"
+        },
+        {
+          "id": "e7a10f8_3__04",
+          "steps": 7,
+          "official_success_for_researcher_only": false,
+          "seconds": 55.08826008439064,
+          "usage": {
+            "input_tokens": 15564,
+            "cached_input_tokens": 7296,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 2131,
+            "reasoning_output_tokens": 1773
+          },
+          "notes": 8,
+          "attempt": "runs/v1_audit_recovered/e7a10f8_3__04/attempt_1",
+          "judgement": "runs/v1_audit_recovered/e7a10f8_3__04/judgement.json"
+        }
+      ],
+      "development_check_matches": 24,
+      "development_checks_total": 28,
+      "development_checks": [
+        {
+          "trajectory": "302c169_2__02",
+          "step": 1,
+          "rubric": "R1",
+          "expected": [
+            "F"
+          ],
+          "rationale": "无令牌调用返回401，成功轨迹也保留局部执行错误。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_2__02",
+          "step": 7,
+          "rubric": "R2",
+          "expected": [
+            "P"
+          ],
+          "rationale": "本步只成功取得当前页；未宣称全覆盖，不能把后续全集义务提前当成本步取证不确定。",
+          "observed": "U",
+          "matches": false
+        },
+        {
+          "trajectory": "302c169_2__02",
+          "step": 8,
+          "rubric": "R2",
+          "expected": [
+            "P"
+          ],
+          "rationale": "筛选当前已见Wake Up并打印ID，没有宣称全局唯一；全集问题应在依赖全集时评价。",
+          "observed": "U",
+          "matches": false
+        },
+        {
+          "trajectory": "302c169_2__02",
+          "step": 9,
+          "rubric": "R4",
+          "expected": [
+            "P"
+          ],
+          "rationale": "07:30减40分钟得到06:50，代码和观察一致。",
+          "observed": "P",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_2__02",
+          "step": 10,
+          "rubric": "R5",
+          "expected": [
+            "P"
+          ],
+          "rationale": "可见当前列表中的目标更新时间，其余关闭；局部执行效果有依据，全集覆盖另评。",
+          "observed": "P",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_2__02",
+          "step": 11,
+          "rubric": "R8",
+          "expected": [
+            "F"
+          ],
+          "rationale": "明确协议要求先看API规格，输入未提供complete_task完整规格且没有查询；不能因调用成功豁免。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_3__03",
+          "step": 5,
+          "rubric": "R1",
+          "expected": [
+            "F"
+          ],
+          "rationale": "布尔列表元素按字典取password，返回TypeError。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_3__03",
+          "step": 6,
+          "rubric": "R6",
+          "expected": [
+            "P"
+          ],
+          "rationale": "修复列表筛选并成功登录，属于有效恢复。",
+          "observed": "P",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_3__03",
+          "step": 8,
+          "rubric": "R4",
+          "expected": [
+            "F"
+          ],
+          "rationale": "将Wake Up当作go-to-sleep目标，没有任务与数据支持。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_3__03",
+          "step": 9,
+          "rubric": "R5",
+          "expected": [
+            "F"
+          ],
+          "rationale": "真正执行的是修改407号Wake Up；禁用其余闹钟的第二段代码没有执行。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_3__03",
+          "step": 10,
+          "rubric": "R3",
+          "expected": [
+            "F"
+          ],
+          "rationale": "声称其余闹钟已禁用，但没有执行对应循环。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_3__03",
+          "step": 10,
+          "rubric": "R7",
+          "expected": [
+            "F"
+          ],
+          "rationale": "已见目标错误且禁用未执行，仍提交完成。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_3__03",
+          "step": 10,
+          "rubric": "R8",
+          "expected": [
+            "F"
+          ],
+          "rationale": "与另一闹钟轨迹相同，调用complete_task前没有取得完整API规格。",
+          "observed": "P",
+          "matches": false
+        },
+        {
+          "trajectory": "cf6abd2_2__01",
+          "step": 12,
+          "rubric": "R6",
+          "expected": [
+            "F"
+          ],
+          "rationale": "已有Bucket List结果，仍否认目标并无改变地重复同一搜索。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "cf6abd2_2__01",
+          "step": 16,
+          "rubric": "R5",
+          "expected": [
+            "P"
+          ],
+          "rationale": "精确替换目标条目前缀，其余内容保留，update_note执行成功。",
+          "observed": "P",
+          "matches": true
+        },
+        {
+          "trajectory": "cf6abd2_2__02",
+          "step": 6,
+          "rubric": "R6",
+          "expected": [
+            "P"
+          ],
+          "rationale": "本步已修复上一轮passwords未定义；本轮新TypeError归R1/R3，不能抹掉局部恢复。",
+          "observed": "P",
+          "matches": true
+        },
+        {
+          "trajectory": "cf6abd2_2__02",
+          "step": 11,
+          "rubric": "R3",
+          "expected": [
+            "F"
+          ],
+          "rationale": "观察显示目标[x]，说明却说已经not done。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "cf6abd2_2__02",
+          "step": 11,
+          "rubric": "R5",
+          "expected": [
+            "P"
+          ],
+          "rationale": "实际更新代码正确把目标[x]变[ ]；不能因整条失败否定本步写入。",
+          "observed": "P",
+          "matches": true
+        },
+        {
+          "trajectory": "cf6abd2_2__02",
+          "step": 12,
+          "rubric": "R7",
+          "expected": [
+            "F"
+          ],
+          "rationale": "最后无代码；前步complete_task只出现在未执行的第二代码块，未完成规定交付。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "e7a10f8_3__02",
+          "step": 1,
+          "rubric": "R1",
+          "expected": [
+            "P"
+          ],
+          "rationale": "赋值和打印fake_access_token能运行，伪凭据问题属于其他维度。",
+          "observed": "P",
+          "matches": true
+        },
+        {
+          "trajectory": "e7a10f8_3__02",
+          "step": 1,
+          "rubric": "R3",
+          "expected": [
+            "F"
+          ],
+          "rationale": "演示伪令牌被声称为已获得的真实认证状态。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "e7a10f8_3__02",
+          "step": 6,
+          "rubric": "R4",
+          "expected": [
+            "F"
+          ],
+          "rationale": "已明确提出每首歌一律3分钟，不能仅凭未执行到乘法忽略确定的业务假设错误。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "e7a10f8_3__02",
+          "step": 8,
+          "rubric": "R4",
+          "expected": [
+            "P"
+          ],
+          "rationale": "按实际duration求和、换算、取最大；先四舍五入再取最大仍给出所需最大时长的舍入值。",
+          "observed": "P",
+          "matches": true
+        },
+        {
+          "trajectory": "e7a10f8_3__02",
+          "step": 8,
+          "rubric": "R6",
+          "expected": [
+            "P"
+          ],
+          "rationale": "根据show_playlist文档改用songs[].duration，成功恢复。",
+          "observed": "P",
+          "matches": true
+        },
+        {
+          "trajectory": "e7a10f8_3__04",
+          "step": 5,
+          "rubric": "R4",
+          "expected": [
+            "F"
+          ],
+          "rationale": "用歌曲数量替代总时长判断最长。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "e7a10f8_3__04",
+          "step": 6,
+          "rubric": "R4",
+          "expected": [
+            "F"
+          ],
+          "rationale": "用未经支持的每首3分钟估算所需精确答案。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "e7a10f8_3__04",
+          "step": 7,
+          "rubric": "R7",
+          "expected": [
+            "F"
+          ],
+          "rationale": "将估算24作为实际最长时长交付，证据不支持。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "e7a10f8_3__02",
+          "step": 4,
+          "rubric": "R5",
+          "expected": [
+            "N"
+          ],
+          "rationale": "本任务要查询歌单时长，登录只是认证准备，不是任务要求的业务写入。",
+          "observed": "P",
+          "matches": false
+        }
+      ]
+    },
+    "v2": {
+      "valid_trajectories": 6,
+      "steps": 66,
+      "cells": 528,
+      "label_counts": {
+        "R1": {
+          "F": 18,
+          "P": 48
+        },
+        "R2": {
+          "N": 17,
+          "P": 40,
+          "U": 2,
+          "F": 7
+        },
+        "R3": {
+          "N": 23,
+          "P": 31,
+          "F": 12
+        },
+        "R4": {
+          "N": 49,
+          "P": 8,
+          "F": 9
+        },
+        "R5": {
+          "N": 62,
+          "P": 3,
+          "F": 1
+        },
+        "R6": {
+          "N": 39,
+          "F": 4,
+          "P": 23
+        },
+        "R7": {
+          "N": 60,
+          "U": 1,
+          "F": 3,
+          "P": 2
+        },
+        "R8": {
+          "F": 48,
+          "P": 18
+        }
+      },
+      "completed_call_usage": {
+        "input_tokens": 106357,
+        "cached_input_tokens": 14592,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 25183,
+        "reasoning_output_tokens": 22472
+      },
+      "samples": [
+        {
+          "id": "302c169_2__02",
+          "steps": 11,
+          "official_success_for_researcher_only": true,
+          "seconds": 90.32801814004779,
+          "usage": {
+            "input_tokens": 16742,
+            "cached_input_tokens": 0,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 3999,
+            "reasoning_output_tokens": 3585
+          },
+          "notes": 10,
+          "attempt": "runs/v2_audit/302c169_2__02/attempt_1",
+          "judgement": "runs/v2_audit/302c169_2__02/judgement.json"
+        },
+        {
+          "id": "302c169_3__03",
+          "steps": 10,
+          "official_success_for_researcher_only": false,
+          "seconds": 109.38500581681728,
+          "usage": {
+            "input_tokens": 17823,
+            "cached_input_tokens": 0,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 4966,
+            "reasoning_output_tokens": 4565
+          },
+          "notes": 9,
+          "attempt": "runs/v2_audit/302c169_3__03/attempt_1",
+          "judgement": "runs/v2_audit/302c169_3__03/judgement.json"
+        },
+        {
+          "id": "cf6abd2_2__01",
+          "steps": 17,
+          "official_success_for_researcher_only": true,
+          "seconds": 63.962140049785376,
+          "usage": {
+            "input_tokens": 20323,
+            "cached_input_tokens": 0,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 3593,
+            "reasoning_output_tokens": 2948
+          },
+          "notes": 15,
+          "attempt": "runs/v2_audit/cf6abd2_2__01/attempt_1",
+          "judgement": "runs/v2_audit/cf6abd2_2__01/judgement.json"
+        },
+        {
+          "id": "cf6abd2_2__02",
+          "steps": 12,
+          "official_success_for_researcher_only": false,
+          "seconds": 122.68211128935218,
+          "usage": {
+            "input_tokens": 17691,
+            "cached_input_tokens": 7296,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 6247,
+            "reasoning_output_tokens": 5696
+          },
+          "notes": 15,
+          "attempt": "runs/v2_audit/cf6abd2_2__02/attempt_1",
+          "judgement": "runs/v2_audit/cf6abd2_2__02/judgement.json"
+        },
+        {
+          "id": "e7a10f8_3__02",
+          "steps": 9,
+          "official_success_for_researcher_only": true,
+          "seconds": 80.25426295399666,
+          "usage": {
+            "input_tokens": 17621,
+            "cached_input_tokens": 7296,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 3966,
+            "reasoning_output_tokens": 3608
+          },
+          "notes": 8,
+          "attempt": "runs/v2_audit/e7a10f8_3__02/attempt_1",
+          "judgement": "runs/v2_audit/e7a10f8_3__02/judgement.json"
+        },
+        {
+          "id": "e7a10f8_3__04",
+          "steps": 7,
+          "official_success_for_researcher_only": false,
+          "seconds": 56.42403621226549,
+          "usage": {
+            "input_tokens": 16157,
+            "cached_input_tokens": 0,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 2412,
+            "reasoning_output_tokens": 2070
+          },
+          "notes": 8,
+          "attempt": "runs/v2_audit/e7a10f8_3__04/attempt_1",
+          "judgement": "runs/v2_audit/e7a10f8_3__04/judgement.json"
+        }
+      ],
+      "development_check_matches": 27,
+      "development_checks_total": 28,
+      "development_checks": [
+        {
+          "trajectory": "302c169_2__02",
+          "step": 1,
+          "rubric": "R1",
+          "expected": [
+            "F"
+          ],
+          "rationale": "无令牌调用返回401，成功轨迹也保留局部执行错误。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_2__02",
+          "step": 7,
+          "rubric": "R2",
+          "expected": [
+            "P"
+          ],
+          "rationale": "本步只成功取得当前页；未宣称全覆盖，不能把后续全集义务提前当成本步取证不确定。",
+          "observed": "P",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_2__02",
+          "step": 8,
+          "rubric": "R2",
+          "expected": [
+            "P"
+          ],
+          "rationale": "筛选当前已见Wake Up并打印ID，没有宣称全局唯一；全集问题应在依赖全集时评价。",
+          "observed": "P",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_2__02",
+          "step": 9,
+          "rubric": "R4",
+          "expected": [
+            "P"
+          ],
+          "rationale": "07:30减40分钟得到06:50，代码和观察一致。",
+          "observed": "P",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_2__02",
+          "step": 10,
+          "rubric": "R5",
+          "expected": [
+            "P"
+          ],
+          "rationale": "可见当前列表中的目标更新时间，其余关闭；局部执行效果有依据，全集覆盖另评。",
+          "observed": "P",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_2__02",
+          "step": 11,
+          "rubric": "R8",
+          "expected": [
+            "F"
+          ],
+          "rationale": "明确协议要求先看API规格，输入未提供complete_task完整规格且没有查询；不能因调用成功豁免。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_3__03",
+          "step": 5,
+          "rubric": "R1",
+          "expected": [
+            "F"
+          ],
+          "rationale": "布尔列表元素按字典取password，返回TypeError。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_3__03",
+          "step": 6,
+          "rubric": "R6",
+          "expected": [
+            "P"
+          ],
+          "rationale": "修复列表筛选并成功登录，属于有效恢复。",
+          "observed": "P",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_3__03",
+          "step": 8,
+          "rubric": "R4",
+          "expected": [
+            "F"
+          ],
+          "rationale": "将Wake Up当作go-to-sleep目标，没有任务与数据支持。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_3__03",
+          "step": 9,
+          "rubric": "R5",
+          "expected": [
+            "F"
+          ],
+          "rationale": "真正执行的是修改407号Wake Up；禁用其余闹钟的第二段代码没有执行。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_3__03",
+          "step": 10,
+          "rubric": "R3",
+          "expected": [
+            "F"
+          ],
+          "rationale": "声称其余闹钟已禁用，但没有执行对应循环。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_3__03",
+          "step": 10,
+          "rubric": "R7",
+          "expected": [
+            "F"
+          ],
+          "rationale": "已见目标错误且禁用未执行，仍提交完成。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "302c169_3__03",
+          "step": 10,
+          "rubric": "R8",
+          "expected": [
+            "F"
+          ],
+          "rationale": "与另一闹钟轨迹相同，调用complete_task前没有取得完整API规格。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "cf6abd2_2__01",
+          "step": 12,
+          "rubric": "R6",
+          "expected": [
+            "F"
+          ],
+          "rationale": "已有Bucket List结果，仍否认目标并无改变地重复同一搜索。",
+          "observed": "N",
+          "matches": false
+        },
+        {
+          "trajectory": "cf6abd2_2__01",
+          "step": 16,
+          "rubric": "R5",
+          "expected": [
+            "P"
+          ],
+          "rationale": "精确替换目标条目前缀，其余内容保留，update_note执行成功。",
+          "observed": "P",
+          "matches": true
+        },
+        {
+          "trajectory": "cf6abd2_2__02",
+          "step": 6,
+          "rubric": "R6",
+          "expected": [
+            "P"
+          ],
+          "rationale": "本步已修复上一轮passwords未定义；本轮新TypeError归R1/R3，不能抹掉局部恢复。",
+          "observed": "P",
+          "matches": true
+        },
+        {
+          "trajectory": "cf6abd2_2__02",
+          "step": 11,
+          "rubric": "R3",
+          "expected": [
+            "F"
+          ],
+          "rationale": "观察显示目标[x]，说明却说已经not done。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "cf6abd2_2__02",
+          "step": 11,
+          "rubric": "R5",
+          "expected": [
+            "P"
+          ],
+          "rationale": "实际更新代码正确把目标[x]变[ ]；不能因整条失败否定本步写入。",
+          "observed": "P",
+          "matches": true
+        },
+        {
+          "trajectory": "cf6abd2_2__02",
+          "step": 12,
+          "rubric": "R7",
+          "expected": [
+            "F"
+          ],
+          "rationale": "最后无代码；前步complete_task只出现在未执行的第二代码块，未完成规定交付。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "e7a10f8_3__02",
+          "step": 1,
+          "rubric": "R1",
+          "expected": [
+            "P"
+          ],
+          "rationale": "赋值和打印fake_access_token能运行，伪凭据问题属于其他维度。",
+          "observed": "P",
+          "matches": true
+        },
+        {
+          "trajectory": "e7a10f8_3__02",
+          "step": 1,
+          "rubric": "R3",
+          "expected": [
+            "F"
+          ],
+          "rationale": "演示伪令牌被声称为已获得的真实认证状态。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "e7a10f8_3__02",
+          "step": 6,
+          "rubric": "R4",
+          "expected": [
+            "F"
+          ],
+          "rationale": "已明确提出每首歌一律3分钟，不能仅凭未执行到乘法忽略确定的业务假设错误。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "e7a10f8_3__02",
+          "step": 8,
+          "rubric": "R4",
+          "expected": [
+            "P"
+          ],
+          "rationale": "按实际duration求和、换算、取最大；先四舍五入再取最大仍给出所需最大时长的舍入值。",
+          "observed": "P",
+          "matches": true
+        },
+        {
+          "trajectory": "e7a10f8_3__02",
+          "step": 8,
+          "rubric": "R6",
+          "expected": [
+            "P"
+          ],
+          "rationale": "根据show_playlist文档改用songs[].duration，成功恢复。",
+          "observed": "P",
+          "matches": true
+        },
+        {
+          "trajectory": "e7a10f8_3__04",
+          "step": 5,
+          "rubric": "R4",
+          "expected": [
+            "F"
+          ],
+          "rationale": "用歌曲数量替代总时长判断最长。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "e7a10f8_3__04",
+          "step": 6,
+          "rubric": "R4",
+          "expected": [
+            "F"
+          ],
+          "rationale": "用未经支持的每首3分钟估算所需精确答案。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "e7a10f8_3__04",
+          "step": 7,
+          "rubric": "R7",
+          "expected": [
+            "F"
+          ],
+          "rationale": "将估算24作为实际最长时长交付，证据不支持。",
+          "observed": "F",
+          "matches": true
+        },
+        {
+          "trajectory": "e7a10f8_3__02",
+          "step": 4,
+          "rubric": "R5",
+          "expected": [
+            "N"
+          ],
+          "rationale": "本任务要查询歌单时长，登录只是认证准备，不是任务要求的业务写入。",
+          "observed": "N",
+          "matches": true
+        }
+      ]
+    }
+  },
+  "changed_cells": [
+    {
+      "trajectory": "302c169_2__02",
+      "step": 1,
+      "rubric": "R2",
+      "v1": "U",
+      "v2": "N"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 6,
+      "rubric": "R2",
+      "v1": "N",
+      "v2": "P"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 7,
+      "rubric": "R2",
+      "v1": "U",
+      "v2": "P"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 8,
+      "rubric": "R2",
+      "v1": "U",
+      "v2": "P"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 11,
+      "rubric": "R2",
+      "v1": "N",
+      "v2": "U"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 2,
+      "rubric": "R2",
+      "v1": "U",
+      "v2": "N"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 4,
+      "rubric": "R3",
+      "v1": "P",
+      "v2": "N"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 4,
+      "rubric": "R6",
+      "v1": "N",
+      "v2": "P"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 7,
+      "rubric": "R2",
+      "v1": "U",
+      "v2": "P"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 7,
+      "rubric": "R3",
+      "v1": "P",
+      "v2": "N"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 7,
+      "rubric": "R6",
+      "v1": "P",
+      "v2": "N"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 8,
+      "rubric": "R8",
+      "v1": "F",
+      "v2": "P"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 10,
+      "rubric": "R4",
+      "v1": "F",
+      "v2": "N"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 10,
+      "rubric": "R8",
+      "v1": "P",
+      "v2": "F"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 3,
+      "rubric": "R2",
+      "v1": "U",
+      "v2": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 6,
+      "rubric": "R2",
+      "v1": "U",
+      "v2": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 6,
+      "rubric": "R6",
+      "v1": "N",
+      "v2": "F"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 7,
+      "rubric": "R2",
+      "v1": "U",
+      "v2": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 11,
+      "rubric": "R6",
+      "v1": "P",
+      "v2": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 12,
+      "rubric": "R2",
+      "v1": "F",
+      "v2": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 12,
+      "rubric": "R6",
+      "v1": "F",
+      "v2": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 13,
+      "rubric": "R6",
+      "v1": "P",
+      "v2": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 14,
+      "rubric": "R4",
+      "v1": "P",
+      "v2": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 14,
+      "rubric": "R6",
+      "v1": "P",
+      "v2": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 15,
+      "rubric": "R6",
+      "v1": "P",
+      "v2": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 17,
+      "rubric": "R3",
+      "v1": "P",
+      "v2": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 1,
+      "rubric": "R2",
+      "v1": "F",
+      "v2": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 3,
+      "rubric": "R2",
+      "v1": "F",
+      "v2": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 3,
+      "rubric": "R4",
+      "v1": "F",
+      "v2": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 5,
+      "rubric": "R2",
+      "v1": "F",
+      "v2": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 5,
+      "rubric": "R4",
+      "v1": "F",
+      "v2": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 6,
+      "rubric": "R4",
+      "v1": "F",
+      "v2": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 7,
+      "rubric": "R4",
+      "v1": "P",
+      "v2": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 9,
+      "rubric": "R4",
+      "v1": "F",
+      "v2": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 10,
+      "rubric": "R4",
+      "v1": "N",
+      "v2": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 11,
+      "rubric": "R4",
+      "v1": "P",
+      "v2": "F"
+    },
+    {
+      "trajectory": "e7a10f8_3__02",
+      "step": 2,
+      "rubric": "R2",
+      "v1": "U",
+      "v2": "N"
+    },
+    {
+      "trajectory": "e7a10f8_3__02",
+      "step": 2,
+      "rubric": "R3",
+      "v1": "N",
+      "v2": "F"
+    },
+    {
+      "trajectory": "e7a10f8_3__02",
+      "step": 4,
+      "rubric": "R5",
+      "v1": "P",
+      "v2": "N"
+    },
+    {
+      "trajectory": "e7a10f8_3__02",
+      "step": 6,
+      "rubric": "R2",
+      "v1": "U",
+      "v2": "P"
+    },
+    {
+      "trajectory": "e7a10f8_3__04",
+      "step": 1,
+      "rubric": "R2",
+      "v1": "U",
+      "v2": "N"
+    },
+    {
+      "trajectory": "e7a10f8_3__04",
+      "step": 5,
+      "rubric": "R8",
+      "v1": "N",
+      "v2": "F"
+    },
+    {
+      "trajectory": "e7a10f8_3__04",
+      "step": 7,
+      "rubric": "R3",
+      "v1": "F",
+      "v2": "P"
+    }
+  ],
+  "attempts": [
+    {
+      "path": "runs/v1_audit/302c169_2__02/attempt_1",
+      "completed": true,
+      "reported_usage": {
+        "input_tokens": 16145,
+        "cached_input_tokens": 7296,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 5015,
+        "reasoning_output_tokens": 4609
+      }
+    },
+    {
+      "path": "runs/v1_audit/302c169_2__02/attempt_2",
+      "completed": false,
+      "reported_usage": null
+    },
+    {
+      "path": "runs/v1_audit/302c169_3__03/attempt_1",
+      "completed": true,
+      "reported_usage": {
+        "input_tokens": 17226,
+        "cached_input_tokens": 7296,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3914,
+        "reasoning_output_tokens": 3522
+      }
+    },
+    {
+      "path": "runs/v1_audit/302c169_3__03/attempt_2",
+      "completed": false,
+      "reported_usage": null
+    },
+    {
+      "path": "runs/v1_audit_recovered/cf6abd2_2__01/attempt_1",
+      "completed": true,
+      "reported_usage": {
+        "input_tokens": 19730,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 4706,
+        "reasoning_output_tokens": 4042
+      }
+    },
+    {
+      "path": "runs/v1_audit_recovered/cf6abd2_2__02/attempt_1",
+      "completed": true,
+      "reported_usage": {
+        "input_tokens": 17098,
+        "cached_input_tokens": 7296,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 9963,
+        "reasoning_output_tokens": 9322
+      }
+    },
+    {
+      "path": "runs/v1_audit_recovered/e7a10f8_3__02/attempt_1",
+      "completed": true,
+      "reported_usage": {
+        "input_tokens": 17028,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3918,
+        "reasoning_output_tokens": 3586
+      }
+    },
+    {
+      "path": "runs/v1_audit_recovered/e7a10f8_3__04/attempt_1",
+      "completed": true,
+      "reported_usage": {
+        "input_tokens": 15564,
+        "cached_input_tokens": 7296,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2131,
+        "reasoning_output_tokens": 1773
+      }
+    },
+    {
+      "path": "runs/v2_audit/302c169_2__02/attempt_1",
+      "completed": true,
+      "reported_usage": {
+        "input_tokens": 16742,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3999,
+        "reasoning_output_tokens": 3585
+      }
+    },
+    {
+      "path": "runs/v2_audit/302c169_3__03/attempt_1",
+      "completed": true,
+      "reported_usage": {
+        "input_tokens": 17823,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 4966,
+        "reasoning_output_tokens": 4565
+      }
+    },
+    {
+      "path": "runs/v2_audit/cf6abd2_2__01/attempt_1",
+      "completed": true,
+      "reported_usage": {
+        "input_tokens": 20323,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3593,
+        "reasoning_output_tokens": 2948
+      }
+    },
+    {
+      "path": "runs/v2_audit/cf6abd2_2__02/attempt_1",
+      "completed": true,
+      "reported_usage": {
+        "input_tokens": 17691,
+        "cached_input_tokens": 7296,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 6247,
+        "reasoning_output_tokens": 5696
+      }
+    },
+    {
+      "path": "runs/v2_audit/e7a10f8_3__02/attempt_1",
+      "completed": true,
+      "reported_usage": {
+        "input_tokens": 17621,
+        "cached_input_tokens": 7296,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3966,
+        "reasoning_output_tokens": 3608
+      }
+    },
+    {
+      "path": "runs/v2_audit/e7a10f8_3__04/attempt_1",
+      "completed": true,
+      "reported_usage": {
+        "input_tokens": 16157,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2412,
+        "reasoning_output_tokens": 2070
+      }
+    }
+  ],
+  "caveats": [
+    "Development checks were chosen from these trajectories; not independent accuracy.",
+    "One judgement per input per prompt version; no repeatability measurement.",
+    "Cancelled calls lack completed usage; do not interpret missing usage as zero.",
+    "No reward, weight, trajectory replay, training, or claim of downstream improvement."
+  ]
+}

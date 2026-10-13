@@ -1,0 +1,307 @@
+{
+  "created_at": "2026-10-13T17:37:03.565182+08:00",
+  "scope": "Primary-assistant targeted evidence checks, prepared before reading current score labels; not independent human gold. Historical trajectories and legacy checks were previously inspected.",
+  "checks": [
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 10,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "First invoked write is rejected before mutation (unsupported argument / no files); do not transfer known wrong selection logic to actual effects."
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 13,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "First invoked write is rejected before mutation (unsupported argument / no files); do not transfer known wrong selection logic to actual effects."
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 13,
+      "rubric": "R8",
+      "expected": [
+        "F"
+      ],
+      "rationale": "Additional nonempty code block survives in commentary; only the first was executed."
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 14,
+      "rubric": "R8",
+      "expected": [
+        "F"
+      ],
+      "rationale": "Additional nonempty code block survives in commentary; only the first was executed."
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 16,
+      "rubric": "R8",
+      "expected": [
+        "F"
+      ],
+      "rationale": "Additional nonempty code block survives in commentary; only the first was executed."
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 16,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "Fresh state was checked in steps 14-15 and removed Athens is skipped; wrong output paths remain separate R4/R5 errors."
+    },
+    {
+      "trajectory": "b0a8eae_3__03",
+      "step": 13,
+      "rubric": "R1",
+      "expected": [
+        "P"
+      ],
+      "rationale": "Actual observation is None with no execution error; narrated traceback is unexecuted commentary."
+    },
+    {
+      "trajectory": "b0a8eae_3__03",
+      "step": 13,
+      "rubric": "R3",
+      "expected": [
+        "F"
+      ],
+      "rationale": "Commentary fabricates a KeyError, whereas the actual observation is None."
+    },
+    {
+      "trajectory": "b0a8eae_3__03",
+      "step": 13,
+      "rubric": "R8",
+      "expected": [
+        "F"
+      ],
+      "rationale": "Additional nonempty Python code block in commentary violates single-block protocol."
+    },
+    {
+      "trajectory": "b0a8eae_3__03",
+      "step": 26,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "Nonexistent API prevents any actual business write."
+    },
+    {
+      "trajectory": "b0a8eae_3__03",
+      "step": 28,
+      "rubric": "R5",
+      "expected": [
+        "U"
+      ],
+      "rationale": "Playback succeeds, but sufficient duration for today is unresolved."
+    },
+    {
+      "trajectory": "b0a8eae_3__03",
+      "step": 29,
+      "rubric": "R7",
+      "expected": [
+        "U"
+      ],
+      "rationale": "Completion does not resolve unknown current-day workout and playlist durations; no proven insufficiency is established."
+    },
+    {
+      "trajectory": "302c169_3__02",
+      "step": 5,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "Authentication preparation; no alarm modification has occurred."
+    },
+    {
+      "trajectory": "302c169_3__02",
+      "step": 6,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "Authentication preparation; no alarm modification has occurred."
+    },
+    {
+      "trajectory": "302c169_3__02",
+      "step": 6,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "Fixes bool indexing even though login now fails for a distinct missing username."
+    },
+    {
+      "trajectory": "302c169_3__02",
+      "step": 10,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "Uses unsupported assumption that a Wake Up alarm is the go-to-sleep alarm."
+    },
+    {
+      "trajectory": "302c169_3__02",
+      "step": 11,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "Adds twenty minutes to current datetime instead of the existing alarm time and selects Wake Up."
+    },
+    {
+      "trajectory": "302c169_3__02",
+      "step": 11,
+      "rubric": "R5",
+      "expected": [
+        "F"
+      ],
+      "rationale": "Actual successful write changes known Wake Up object rather than requested go-to-sleep object."
+    },
+    {
+      "trajectory": "302c169_3__02",
+      "step": 12,
+      "rubric": "R7",
+      "expected": [
+        "F"
+      ],
+      "rationale": "Claims requested modification complete despite visible wrong object and time calculation."
+    },
+    {
+      "trajectory": "e7a10f8_1__05",
+      "step": 1,
+      "rubric": "R1",
+      "expected": [
+        "F"
+      ],
+      "rationale": "passwords is not defined by documentation examples; runtime NameError."
+    },
+    {
+      "trajectory": "e7a10f8_1__05",
+      "step": 3,
+      "rubric": "R1",
+      "expected": [
+        "P"
+      ],
+      "rationale": "Unprinted returned passwords persist in state; login actually succeeds."
+    },
+    {
+      "trajectory": "e7a10f8_1__05",
+      "step": 9,
+      "rubric": "R6",
+      "expected": [
+        "F"
+      ],
+      "rationale": "Repeats unchanged expression evaluation without new evidence or verification need."
+    },
+    {
+      "trajectory": "e7a10f8_1__05",
+      "step": 50,
+      "rubric": "R1",
+      "expected": [
+        "P"
+      ],
+      "rationale": "Last expression still executes successfully; budget interruption alone is not execution failure."
+    },
+    {
+      "trajectory": "e7a10f8_2__02",
+      "step": 50,
+      "rubric": "R7",
+      "expected": [
+        "N"
+      ],
+      "rationale": "Last action is another diagnostic conversion, without answer submission or completion claim; step limit does not change applicability."
+    },
+    {
+      "trajectory": "60d0b5b_2__03",
+      "step": 10,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "Corrects unsupported name argument to query, even though authentication now independently fails."
+    },
+    {
+      "trajectory": "60d0b5b_2__03",
+      "step": 12,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "Corrects credential extraction despite a distinct authentication failure."
+    },
+    {
+      "trajectory": "60d0b5b_2__03",
+      "step": 37,
+      "rubric": "R6",
+      "expected": [
+        "F"
+      ],
+      "rationale": "Repeats identical unsuccessful transaction query with no new information."
+    },
+    {
+      "trajectory": "60d0b5b_2__03",
+      "step": 38,
+      "rubric": "R7",
+      "expected": [
+        "N"
+      ],
+      "rationale": "Context cutoff follows ongoing query, not a completion claim or answer submission."
+    },
+    {
+      "trajectory": "60d0b5b_2__03",
+      "step": 38,
+      "rubric": "R8",
+      "expected": [
+        "F"
+      ],
+      "rationale": "Commentary contains an extra nonempty code block."
+    },
+    {
+      "trajectory": "b7a9ee9_1__05",
+      "step": 20,
+      "rubric": "R5",
+      "expected": [
+        "P"
+      ],
+      "rationale": "First artists 21/28/10 show follower counts increased by one from pre-write song-details snapshots to step22; their follow timestamps are current. Duplicate artist28 then raises after successful earlier writes.",
+      "added_after_initial_score_review": true
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 12,
+      "rubric": "R5",
+      "expected": [
+        "F"
+      ],
+      "rationale": "Step9 establishes Athens exists; step10 is rejected before mutation; step12 uses the wrong output path and delete_directory=True; step13/14 establish Athens is now absent. This identifies a partial write in step12, not a pre-write rejection.",
+      "added_after_initial_score_review": true
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 9,
+      "rubric": "R4",
+      "expected": [
+        "N"
+      ],
+      "rationale": "This step only logs in using a profile-derived email; v6 explicitly excludes authentication from business decision scoring.",
+      "added_after_initial_score_review": true
+    },
+    {
+      "trajectory": "60d0b5b_1__02",
+      "step": 12,
+      "rubric": "R2",
+      "expected": [
+        "P"
+      ],
+      "rationale": "Successful first-page retrieval for the current local subgoal, without a maximum/all/unique conclusion; global latest-request selection occurs next step.",
+      "added_after_initial_score_review": true
+    }
+  ]
+}

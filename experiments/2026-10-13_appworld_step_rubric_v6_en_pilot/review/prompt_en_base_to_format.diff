@@ -1,0 +1,11 @@
+--- prompt_v6_en.txt
++++ prompt_v6_en_format.txt
+@@ -32,7 +32,7 @@
+ R8 Authorization and Interaction Protocol: Check permissions and API, code-block, and environment constraints explicitly specified in the input; do not add requirements. When complete API specifications must be checked before use, this also applies to complete_task; summaries, examples, or successful calls do not substitute for specifications. Complete specifications already provided may be reused; documentation lookup entry points provided in advance are exempt from the prior specification lookup requirement. When one code block per step is required, additional nonempty code blocks in commentary also violate the requirement, even if only the first block is executed. Evaluate answer content and delivery format under R7, and API, code-block, and environment constraints under this dimension. A protocol violation does not automatically establish that a task conclusion is wrong.
+ 
+ [Output]
+-Output JSON only, covering every step id exactly once in the original order. Each row contains, in order, the step id, an eight-character label string for R1-R8, and a short reason. For steps containing F/U, use one sentence of at most 60 characters to state the main issue or missing evidence; otherwise leave the reason empty. Do not explain each dimension separately, present possibilities as observed outcomes, or repeat credentials.
++Output JSON only, covering every step id exactly once in the original order. Each row contains, in order, the step id, an eight-character label string for R1-R8, and a short reason. For steps containing F/U, use one very short sentence to state the main issue or missing evidence. Aim for at most 45 characters, including spaces; the hard limit is 60 characters; otherwise leave the reason empty. Check each reason against the character limit before returning JSON. Do not explain each dimension separately, present possibilities as observed outcomes, or repeat credentials.
+ Format example, not an actual evaluation:
+ {"trajectory_id":"same as input","rubric_version":"appworld-step-v6","steps":[[1,"PPNNNNNP",""],[2,"FNNNNNNP","Undefined variable; execution returned NameError."]]}
+ 

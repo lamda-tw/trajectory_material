@@ -1,0 +1,1411 @@
+{
+  "generated_at": "2026-10-12T20:29:49.846571+08:00",
+  "primary": {
+    "run": "v3_test",
+    "valid_trajectories": 6,
+    "steps": 66,
+    "cells": 528,
+    "samples": [
+      {
+        "id": "302c169_2__02",
+        "steps": 11,
+        "official_success_for_researcher_only": true,
+        "seconds": 47.722681526094675,
+        "usage": {
+          "input_tokens": 14258,
+          "cached_input_tokens": 7296,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1642,
+          "reasoning_output_tokens": 1429
+        },
+        "attempts": 1,
+        "response_characters": 403
+      },
+      {
+        "id": "302c169_3__03",
+        "steps": 10,
+        "official_success_for_researcher_only": false,
+        "seconds": 115.48525789380074,
+        "usage": {
+          "input_tokens": 15339,
+          "cached_input_tokens": 7296,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 5137,
+          "reasoning_output_tokens": 4907
+        },
+        "attempts": 1,
+        "response_characters": 438
+      },
+      {
+        "id": "cf6abd2_2__01",
+        "steps": 17,
+        "official_success_for_researcher_only": true,
+        "seconds": 113.82532205060124,
+        "usage": {
+          "input_tokens": 17839,
+          "cached_input_tokens": 7296,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 5851,
+          "reasoning_output_tokens": 5472
+        },
+        "attempts": 1,
+        "response_characters": 733
+      },
+      {
+        "id": "cf6abd2_2__02",
+        "steps": 12,
+        "official_success_for_researcher_only": false,
+        "seconds": 85.7386499941349,
+        "usage": {
+          "input_tokens": 15207,
+          "cached_input_tokens": 7296,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 3417,
+          "reasoning_output_tokens": 3106
+        },
+        "attempts": 1,
+        "response_characters": 524
+      },
+      {
+        "id": "e7a10f8_3__02",
+        "steps": 9,
+        "official_success_for_researcher_only": true,
+        "seconds": 57.39934365451336,
+        "usage": {
+          "input_tokens": 15137,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2049,
+          "reasoning_output_tokens": 1841
+        },
+        "attempts": 1,
+        "response_characters": 373
+      },
+      {
+        "id": "e7a10f8_3__04",
+        "steps": 7,
+        "official_success_for_researcher_only": false,
+        "seconds": 49.11852431297302,
+        "usage": {
+          "input_tokens": 13673,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1408,
+          "reasoning_output_tokens": 1208
+        },
+        "attempts": 1,
+        "response_characters": 343
+      }
+    ],
+    "mean_call_seconds": 78.21496323868632,
+    "median_call_seconds": 71.56899682432413,
+    "completed_call_usage": {
+      "input_tokens": 91453,
+      "cached_input_tokens": 29184,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 19504,
+      "reasoning_output_tokens": 17963
+    },
+    "label_counts": {
+      "R1": {
+        "F": 18,
+        "P": 48
+      },
+      "R2": {
+        "N": 30,
+        "P": 31,
+        "F": 5
+      },
+      "R3": {
+        "N": 18,
+        "P": 32,
+        "F": 16
+      },
+      "R4": {
+        "N": 47,
+        "P": 9,
+        "F": 10
+      },
+      "R5": {
+        "N": 62,
+        "P": 3,
+        "F": 1
+      },
+      "R6": {
+        "N": 25,
+        "P": 31,
+        "F": 10
+      },
+      "R7": {
+        "N": 60,
+        "P": 3,
+        "F": 3
+      },
+      "R8": {
+        "F": 48,
+        "P": 18
+      }
+    },
+    "check_matches": 28,
+    "checks_total": 28,
+    "checks": [
+      {
+        "trajectory": "302c169_2__02",
+        "step": 1,
+        "rubric": "R1",
+        "expected": [
+          "F"
+        ],
+        "rationale": "无令牌调用返回401，成功轨迹也保留局部执行错误。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 7,
+        "rubric": "R2",
+        "expected": [
+          "P"
+        ],
+        "rationale": "本步只成功取得当前页；未宣称全覆盖，不能把后续全集义务提前当成本步取证不确定。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 8,
+        "rubric": "R2",
+        "expected": [
+          "P"
+        ],
+        "rationale": "筛选当前已见Wake Up并打印ID，没有宣称全局唯一；全集问题应在依赖全集时评价。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 9,
+        "rubric": "R4",
+        "expected": [
+          "P"
+        ],
+        "rationale": "07:30减40分钟得到06:50，代码和观察一致。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 10,
+        "rubric": "R5",
+        "expected": [
+          "P"
+        ],
+        "rationale": "可见当前列表中的目标更新时间，其余关闭；局部执行效果有依据，全集覆盖另评。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 11,
+        "rubric": "R8",
+        "expected": [
+          "F"
+        ],
+        "rationale": "明确协议要求先看API规格，输入未提供complete_task完整规格且没有查询；不能因调用成功豁免。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_3__03",
+        "step": 5,
+        "rubric": "R1",
+        "expected": [
+          "F"
+        ],
+        "rationale": "布尔列表元素按字典取password，返回TypeError。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_3__03",
+        "step": 6,
+        "rubric": "R6",
+        "expected": [
+          "P"
+        ],
+        "rationale": "修复列表筛选并成功登录，属于有效恢复。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_3__03",
+        "step": 8,
+        "rubric": "R4",
+        "expected": [
+          "F"
+        ],
+        "rationale": "将Wake Up当作go-to-sleep目标，没有任务与数据支持。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_3__03",
+        "step": 9,
+        "rubric": "R5",
+        "expected": [
+          "F"
+        ],
+        "rationale": "真正执行的是修改407号Wake Up；禁用其余闹钟的第二段代码没有执行。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_3__03",
+        "step": 10,
+        "rubric": "R3",
+        "expected": [
+          "F"
+        ],
+        "rationale": "声称其余闹钟已禁用，但没有执行对应循环。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_3__03",
+        "step": 10,
+        "rubric": "R7",
+        "expected": [
+          "F"
+        ],
+        "rationale": "已见目标错误且禁用未执行，仍提交完成。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_3__03",
+        "step": 10,
+        "rubric": "R8",
+        "expected": [
+          "F"
+        ],
+        "rationale": "与另一闹钟轨迹相同，调用complete_task前没有取得完整API规格。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 12,
+        "rubric": "R6",
+        "expected": [
+          "F"
+        ],
+        "rationale": "已有Bucket List结果，仍否认目标并无改变地重复同一搜索。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 16,
+        "rubric": "R5",
+        "expected": [
+          "P"
+        ],
+        "rationale": "精确替换目标条目前缀，其余内容保留，update_note执行成功。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__02",
+        "step": 6,
+        "rubric": "R6",
+        "expected": [
+          "P"
+        ],
+        "rationale": "本步已修复上一轮passwords未定义；本轮新TypeError归R1/R3，不能抹掉局部恢复。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__02",
+        "step": 11,
+        "rubric": "R3",
+        "expected": [
+          "F"
+        ],
+        "rationale": "观察显示目标[x]，说明却说已经not done。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__02",
+        "step": 11,
+        "rubric": "R5",
+        "expected": [
+          "P"
+        ],
+        "rationale": "实际更新代码正确把目标[x]变[ ]；不能因整条失败否定本步写入。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__02",
+        "step": 12,
+        "rubric": "R7",
+        "expected": [
+          "F"
+        ],
+        "rationale": "最后无代码；前步complete_task只出现在未执行的第二代码块，未完成规定交付。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "e7a10f8_3__02",
+        "step": 1,
+        "rubric": "R1",
+        "expected": [
+          "P"
+        ],
+        "rationale": "赋值和打印fake_access_token能运行，伪凭据问题属于其他维度。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "e7a10f8_3__02",
+        "step": 1,
+        "rubric": "R3",
+        "expected": [
+          "F"
+        ],
+        "rationale": "演示伪令牌被声称为已获得的真实认证状态。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "e7a10f8_3__02",
+        "step": 6,
+        "rubric": "R4",
+        "expected": [
+          "F"
+        ],
+        "rationale": "已明确提出每首歌一律3分钟，不能仅凭未执行到乘法忽略确定的业务假设错误。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "e7a10f8_3__02",
+        "step": 8,
+        "rubric": "R4",
+        "expected": [
+          "P"
+        ],
+        "rationale": "按实际duration求和、换算、取最大；先四舍五入再取最大仍给出所需最大时长的舍入值。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "e7a10f8_3__02",
+        "step": 8,
+        "rubric": "R6",
+        "expected": [
+          "P"
+        ],
+        "rationale": "根据show_playlist文档改用songs[].duration，成功恢复。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "e7a10f8_3__04",
+        "step": 5,
+        "rubric": "R4",
+        "expected": [
+          "F"
+        ],
+        "rationale": "用歌曲数量替代总时长判断最长。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "e7a10f8_3__04",
+        "step": 6,
+        "rubric": "R4",
+        "expected": [
+          "F"
+        ],
+        "rationale": "用未经支持的每首3分钟估算所需精确答案。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "e7a10f8_3__04",
+        "step": 7,
+        "rubric": "R7",
+        "expected": [
+          "F"
+        ],
+        "rationale": "将估算24作为实际最长时长交付，证据不支持。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "e7a10f8_3__02",
+        "step": 4,
+        "rubric": "R5",
+        "expected": [
+          "N"
+        ],
+        "rationale": "本任务要查询歌单时长，登录只是认证准备，不是任务要求的业务写入。",
+        "observed": "N",
+        "matches": true
+      }
+    ]
+  },
+  "v2_to_v3_changes": [
+    {
+      "trajectory": "302c169_2__02",
+      "step": 2,
+      "rubric": "R6",
+      "v2": "F",
+      "v3": "P"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 4,
+      "rubric": "R3",
+      "v2": "F",
+      "v3": "N"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 4,
+      "rubric": "R6",
+      "v2": "N",
+      "v3": "P"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 6,
+      "rubric": "R2",
+      "v2": "P",
+      "v3": "N"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 9,
+      "rubric": "R2",
+      "v2": "P",
+      "v3": "N"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 10,
+      "rubric": "R2",
+      "v2": "U",
+      "v3": "N"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 11,
+      "rubric": "R2",
+      "v2": "U",
+      "v3": "N"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 11,
+      "rubric": "R3",
+      "v2": "N",
+      "v3": "P"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 11,
+      "rubric": "R7",
+      "v2": "U",
+      "v3": "P"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 4,
+      "rubric": "R3",
+      "v2": "N",
+      "v3": "P"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 5,
+      "rubric": "R2",
+      "v2": "P",
+      "v3": "N"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 5,
+      "rubric": "R6",
+      "v2": "N",
+      "v3": "P"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 7,
+      "rubric": "R3",
+      "v2": "N",
+      "v3": "P"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 7,
+      "rubric": "R6",
+      "v2": "N",
+      "v3": "P"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 9,
+      "rubric": "R6",
+      "v2": "N",
+      "v3": "F"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 10,
+      "rubric": "R4",
+      "v2": "N",
+      "v3": "F"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 10,
+      "rubric": "R6",
+      "v2": "N",
+      "v3": "F"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 5,
+      "rubric": "R3",
+      "v2": "P",
+      "v3": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 6,
+      "rubric": "R6",
+      "v2": "F",
+      "v3": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 8,
+      "rubric": "R3",
+      "v2": "P",
+      "v3": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 9,
+      "rubric": "R4",
+      "v2": "P",
+      "v3": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 10,
+      "rubric": "R6",
+      "v2": "N",
+      "v3": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 11,
+      "rubric": "R6",
+      "v2": "N",
+      "v3": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 12,
+      "rubric": "R6",
+      "v2": "N",
+      "v3": "F"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 13,
+      "rubric": "R6",
+      "v2": "N",
+      "v3": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 14,
+      "rubric": "R6",
+      "v2": "N",
+      "v3": "F"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 15,
+      "rubric": "R6",
+      "v2": "N",
+      "v3": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 16,
+      "rubric": "R2",
+      "v2": "P",
+      "v3": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 17,
+      "rubric": "R3",
+      "v2": "N",
+      "v3": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 1,
+      "rubric": "R4",
+      "v2": "F",
+      "v3": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 2,
+      "rubric": "R3",
+      "v2": "N",
+      "v3": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 3,
+      "rubric": "R3",
+      "v2": "N",
+      "v3": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 4,
+      "rubric": "R3",
+      "v2": "N",
+      "v3": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 4,
+      "rubric": "R6",
+      "v2": "P",
+      "v3": "F"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 5,
+      "rubric": "R4",
+      "v2": "N",
+      "v3": "F"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 6,
+      "rubric": "R4",
+      "v2": "N",
+      "v3": "F"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 7,
+      "rubric": "R4",
+      "v2": "N",
+      "v3": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 8,
+      "rubric": "R2",
+      "v2": "P",
+      "v3": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 10,
+      "rubric": "R3",
+      "v2": "P",
+      "v3": "F"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 11,
+      "rubric": "R2",
+      "v2": "P",
+      "v3": "N"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 11,
+      "rubric": "R4",
+      "v2": "F",
+      "v3": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 12,
+      "rubric": "R3",
+      "v2": "P",
+      "v3": "F"
+    },
+    {
+      "trajectory": "e7a10f8_3__02",
+      "step": 1,
+      "rubric": "R2",
+      "v2": "F",
+      "v3": "N"
+    },
+    {
+      "trajectory": "e7a10f8_3__02",
+      "step": 6,
+      "rubric": "R2",
+      "v2": "P",
+      "v3": "N"
+    },
+    {
+      "trajectory": "e7a10f8_3__02",
+      "step": 7,
+      "rubric": "R3",
+      "v2": "N",
+      "v3": "P"
+    },
+    {
+      "trajectory": "e7a10f8_3__02",
+      "step": 9,
+      "rubric": "R2",
+      "v2": "P",
+      "v3": "N"
+    },
+    {
+      "trajectory": "e7a10f8_3__04",
+      "step": 3,
+      "rubric": "R2",
+      "v2": "P",
+      "v3": "N"
+    },
+    {
+      "trajectory": "e7a10f8_3__04",
+      "step": 4,
+      "rubric": "R3",
+      "v2": "P",
+      "v3": "F"
+    },
+    {
+      "trajectory": "e7a10f8_3__04",
+      "step": 5,
+      "rubric": "R3",
+      "v2": "P",
+      "v3": "F"
+    },
+    {
+      "trajectory": "e7a10f8_3__04",
+      "step": 5,
+      "rubric": "R6",
+      "v2": "N",
+      "v3": "F"
+    },
+    {
+      "trajectory": "e7a10f8_3__04",
+      "step": 6,
+      "rubric": "R6",
+      "v2": "N",
+      "v3": "F"
+    },
+    {
+      "trajectory": "e7a10f8_3__04",
+      "step": 7,
+      "rubric": "R2",
+      "v2": "F",
+      "v3": "N"
+    },
+    {
+      "trajectory": "e7a10f8_3__04",
+      "step": 7,
+      "rubric": "R3",
+      "v2": "P",
+      "v3": "F"
+    },
+    {
+      "trajectory": "e7a10f8_3__04",
+      "step": 7,
+      "rubric": "R6",
+      "v2": "N",
+      "v3": "F"
+    }
+  ],
+  "historical": {
+    "v1": {
+      "valid_trajectories": 6,
+      "steps": 66,
+      "cells": 528,
+      "development_check_matches": 24,
+      "development_checks_total": 28,
+      "completed_call_usage": {
+        "input_tokens": 102791,
+        "cached_input_tokens": 29184,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 29647,
+        "reasoning_output_tokens": 26854
+      }
+    },
+    "v2": {
+      "valid_trajectories": 6,
+      "steps": 66,
+      "cells": 528,
+      "development_check_matches": 27,
+      "development_checks_total": 28,
+      "completed_call_usage": {
+        "input_tokens": 106357,
+        "cached_input_tokens": 14592,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 25183,
+        "reasoning_output_tokens": 22472
+      }
+    }
+  },
+  "caveats": [
+    "Original 28 checks are development checks, not independent accuracy.",
+    "Labels are never converted into totals, rewards or training weights.",
+    "Latency depends on reasoning and service conditions as well as prompt length."
+  ],
+  "repeat": {
+    "run": "v3_repeat",
+    "valid_trajectories": 2,
+    "steps": 28,
+    "cells": 224,
+    "samples": [
+      {
+        "id": "302c169_2__02",
+        "steps": 11,
+        "official_success_for_researcher_only": true,
+        "seconds": 109.9586417041719,
+        "usage": {
+          "input_tokens": 14258,
+          "cached_input_tokens": 7296,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 4277,
+          "reasoning_output_tokens": 4056
+        },
+        "attempts": 1,
+        "response_characters": 403
+      },
+      {
+        "id": "cf6abd2_2__01",
+        "steps": 17,
+        "official_success_for_researcher_only": true,
+        "seconds": 136.66720544919372,
+        "usage": {
+          "input_tokens": 17839,
+          "cached_input_tokens": 7296,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 6064,
+          "reasoning_output_tokens": 5696
+        },
+        "attempts": 1,
+        "response_characters": 657
+      }
+    ],
+    "mean_call_seconds": 123.3129235766828,
+    "median_call_seconds": 123.3129235766828,
+    "completed_call_usage": {
+      "input_tokens": 32097,
+      "cached_input_tokens": 14592,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 10341,
+      "reasoning_output_tokens": 9752
+    },
+    "label_counts": {
+      "R1": {
+        "F": 7,
+        "P": 21
+      },
+      "R2": {
+        "N": 12,
+        "P": 16
+      },
+      "R3": {
+        "N": 11,
+        "P": 16,
+        "F": 1
+      },
+      "R4": {
+        "N": 20,
+        "F": 1,
+        "P": 7
+      },
+      "R5": {
+        "N": 26,
+        "P": 2
+      },
+      "R6": {
+        "N": 12,
+        "P": 12,
+        "F": 4
+      },
+      "R7": {
+        "N": 26,
+        "P": 2
+      },
+      "R8": {
+        "F": 22,
+        "P": 6
+      }
+    },
+    "check_matches": 8,
+    "checks_total": 8,
+    "checks": [
+      {
+        "trajectory": "302c169_2__02",
+        "step": 1,
+        "rubric": "R1",
+        "expected": [
+          "F"
+        ],
+        "rationale": "无令牌调用返回401，成功轨迹也保留局部执行错误。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 7,
+        "rubric": "R2",
+        "expected": [
+          "P"
+        ],
+        "rationale": "本步只成功取得当前页；未宣称全覆盖，不能把后续全集义务提前当成本步取证不确定。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 8,
+        "rubric": "R2",
+        "expected": [
+          "P"
+        ],
+        "rationale": "筛选当前已见Wake Up并打印ID，没有宣称全局唯一；全集问题应在依赖全集时评价。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 9,
+        "rubric": "R4",
+        "expected": [
+          "P"
+        ],
+        "rationale": "07:30减40分钟得到06:50，代码和观察一致。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 10,
+        "rubric": "R5",
+        "expected": [
+          "P"
+        ],
+        "rationale": "可见当前列表中的目标更新时间，其余关闭；局部执行效果有依据，全集覆盖另评。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 11,
+        "rubric": "R8",
+        "expected": [
+          "F"
+        ],
+        "rationale": "明确协议要求先看API规格，输入未提供complete_task完整规格且没有查询；不能因调用成功豁免。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 12,
+        "rubric": "R6",
+        "expected": [
+          "F"
+        ],
+        "rationale": "已有Bucket List结果，仍否认目标并无改变地重复同一搜索。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 16,
+        "rubric": "R5",
+        "expected": [
+          "P"
+        ],
+        "rationale": "精确替换目标条目前缀，其余内容保留，update_note执行成功。",
+        "observed": "P",
+        "matches": true
+      }
+    ],
+    "changed_cells": [
+      {
+        "trajectory": "302c169_2__02",
+        "step": 4,
+        "rubric": "R3",
+        "first": "N",
+        "repeat": "F"
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 4,
+        "rubric": "R4",
+        "first": "N",
+        "repeat": "F"
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 4,
+        "rubric": "R6",
+        "first": "P",
+        "repeat": "N"
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 6,
+        "rubric": "R2",
+        "first": "N",
+        "repeat": "P"
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 6,
+        "rubric": "R4",
+        "first": "N",
+        "repeat": "P"
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 9,
+        "rubric": "R4",
+        "first": "N",
+        "repeat": "P"
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 13,
+        "rubric": "R6",
+        "first": "P",
+        "repeat": "F"
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 15,
+        "rubric": "R4",
+        "first": "N",
+        "repeat": "P"
+      }
+    ],
+    "same_cells": 216
+  },
+  "unseen": {
+    "run": "v3_unseen",
+    "valid_trajectories": 2,
+    "steps": 33,
+    "cells": 264,
+    "samples": [
+      {
+        "id": "76f2c72_1__03",
+        "steps": 16,
+        "official_success_for_researcher_only": true,
+        "seconds": 102.69981963187456,
+        "usage": {
+          "input_tokens": 18477,
+          "cached_input_tokens": 7296,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 4498,
+          "reasoning_output_tokens": 4166
+        },
+        "attempts": 1,
+        "response_characters": 644
+      },
+      {
+        "id": "7d7fbf6_1__00",
+        "steps": 17,
+        "official_success_for_researcher_only": false,
+        "seconds": 132.38648104295135,
+        "usage": {
+          "input_tokens": 17187,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 6022,
+          "reasoning_output_tokens": 5622
+        },
+        "attempts": 1,
+        "response_characters": 692
+      }
+    ],
+    "mean_call_seconds": 117.54315033741295,
+    "median_call_seconds": 117.54315033741295,
+    "completed_call_usage": {
+      "input_tokens": 35664,
+      "cached_input_tokens": 7296,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 10520,
+      "reasoning_output_tokens": 9788
+    },
+    "label_counts": {
+      "R1": {
+        "P": 21,
+        "F": 12
+      },
+      "R2": {
+        "P": 16,
+        "N": 14,
+        "U": 1,
+        "F": 2
+      },
+      "R3": {
+        "N": 14,
+        "P": 14,
+        "F": 5
+      },
+      "R4": {
+        "N": 23,
+        "P": 1,
+        "F": 9
+      },
+      "R5": {
+        "N": 29,
+        "F": 4
+      },
+      "R6": {
+        "N": 10,
+        "F": 3,
+        "P": 20
+      },
+      "R7": {
+        "N": 31,
+        "F": 2
+      },
+      "R8": {
+        "P": 11,
+        "F": 22
+      }
+    },
+    "check_matches": 18,
+    "checks_total": 19,
+    "checks": [
+      {
+        "trajectory": "76f2c72_1__03",
+        "step": 2,
+        "rubric": "R1",
+        "expected": [
+          "F"
+        ],
+        "rationale": "无认证访问目录，401。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "76f2c72_1__03",
+        "step": 4,
+        "rubric": "R1",
+        "expected": [
+          "F"
+        ],
+        "rationale": "登录缺少必填username，422。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "76f2c72_1__03",
+        "step": 9,
+        "rubric": "R1",
+        "expected": [
+          "P"
+        ],
+        "rationale": "登录成功；沿用之前赋值的密码变量合法。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "76f2c72_1__03",
+        "step": 9,
+        "rubric": "R5",
+        "expected": [
+          "N"
+        ],
+        "rationale": "认证准备不属于账单任务的业务修改。",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "76f2c72_1__03",
+        "step": 12,
+        "rubric": "R8",
+        "expected": [
+          "F"
+        ],
+        "rationale": "未调用当前时间接口/函数，却把this year指定为2023，违反明确时间协议。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "76f2c72_1__03",
+        "step": 14,
+        "rubric": "R1",
+        "expected": [
+          "F"
+        ],
+        "rationale": "对包含美元符号的金额直接float，ValueError。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "76f2c72_1__03",
+        "step": 15,
+        "rubric": "R1",
+        "expected": [
+          "P"
+        ],
+        "rationale": "去掉美元符号并计算得到368.0，执行成功。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "76f2c72_1__03",
+        "step": 15,
+        "rubric": "R6",
+        "expected": [
+          "P"
+        ],
+        "rationale": "针对上步ValueError去掉美元符号，且重置累计值。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "76f2c72_1__03",
+        "step": 16,
+        "rubric": "R8",
+        "expected": [
+          "F"
+        ],
+        "rationale": "没有取得complete_task完整规格。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "7d7fbf6_1__00",
+        "step": 1,
+        "rubric": "R1",
+        "expected": [
+          "F"
+        ],
+        "rationale": "调用不存在的show_directories。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "7d7fbf6_1__00",
+        "step": 3,
+        "rubric": "R6",
+        "expected": [
+          "P"
+        ],
+        "rationale": "改用真实show_directory修复接口名，虽又出现认证错误。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "7d7fbf6_1__00",
+        "step": 7,
+        "rubric": "R1",
+        "expected": [
+          "F"
+        ],
+        "rationale": "取得token后仍未传入，调用401。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "7d7fbf6_1__00",
+        "step": 8,
+        "rubric": "R6",
+        "expected": [
+          "P"
+        ],
+        "rationale": "传入access_token并成功列目录。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "7d7fbf6_1__00",
+        "step": 10,
+        "rubric": "R4",
+        "expected": [
+          "F"
+        ],
+        "rationale": "路径以斜杠结尾，split最后一项为空，输出文件名错误。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "7d7fbf6_1__00",
+        "step": 12,
+        "rubric": "R4",
+        "expected": [
+          "F"
+        ],
+        "rationale": "仍取空basename，且把输出父目录改错。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "7d7fbf6_1__00",
+        "step": 13,
+        "rubric": "R6",
+        "expected": [
+          "F"
+        ],
+        "rationale": "上步循环可能部分成功并删除目录，未检查便从头overwrite重试。",
+        "observed": "P",
+        "matches": false
+      },
+      {
+        "trajectory": "7d7fbf6_1__00",
+        "step": 16,
+        "rubric": "R1",
+        "expected": [
+          "P"
+        ],
+        "rationale": "三个压缩调用实际执行成功。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "7d7fbf6_1__00",
+        "step": 16,
+        "rubric": "R5",
+        "expected": [
+          "F"
+        ],
+        "rationale": "输出到photographs而非任务规定的photographs/vacations；执行成功不等于业务正确。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "7d7fbf6_1__00",
+        "step": 17,
+        "rubric": "R7",
+        "expected": [
+          "F"
+        ],
+        "rationale": "输出路径错误且没有实际执行complete_task，仍宣称完成。",
+        "observed": "F",
+        "matches": true
+      }
+    ]
+  }
+}

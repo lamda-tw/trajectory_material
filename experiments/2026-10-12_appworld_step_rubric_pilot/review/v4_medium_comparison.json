@@ -1,0 +1,1138 @@
+{
+  "first": {
+    "run": "v4_medium",
+    "valid": 2,
+    "steps": 28,
+    "cells": 224,
+    "samples": [
+      {
+        "id": "302c169_2__02",
+        "steps": 11,
+        "input_characters": 15629,
+        "seconds": 102.54623219370842,
+        "seconds_including_retries": 102.54738212749362,
+        "official_success_for_researcher_only": true,
+        "attempts": 1,
+        "response_characters": 437
+      },
+      {
+        "id": "cf6abd2_2__01",
+        "steps": 17,
+        "input_characters": 26808,
+        "seconds": 78.26771560311317,
+        "seconds_including_retries": 78.26963570713997,
+        "official_success_for_researcher_only": true,
+        "attempts": 1,
+        "response_characters": 667
+      }
+    ],
+    "attempts": [
+      {
+        "trajectory": "302c169_2__02",
+        "attempt": 1,
+        "status": "valid",
+        "seconds": 102.54623219370842,
+        "completed": true,
+        "reported_usage": {
+          "input_tokens": 14525,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 4027,
+          "reasoning_output_tokens": 3792
+        },
+        "errors": []
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "attempt": 1,
+        "status": "valid",
+        "seconds": 78.26771560311317,
+        "completed": true,
+        "reported_usage": {
+          "input_tokens": 18106,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2741,
+          "reasoning_output_tokens": 2374
+        },
+        "errors": []
+      }
+    ],
+    "mean_seconds": 90.4069738984108,
+    "median_seconds": 90.4069738984108,
+    "usage": {
+      "input_tokens": 32631,
+      "cached_input_tokens": 0,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 6768,
+      "reasoning_output_tokens": 6166
+    },
+    "label_counts": {
+      "R1": {
+        "F": 7,
+        "P": 21
+      },
+      "R2": {
+        "N": 9,
+        "P": 17,
+        "U": 2
+      },
+      "R3": {
+        "N": 16,
+        "P": 12
+      },
+      "R4": {
+        "N": 24,
+        "P": 4
+      },
+      "R5": {
+        "N": 26,
+        "P": 2
+      },
+      "R6": {
+        "N": 14,
+        "P": 10,
+        "F": 4
+      },
+      "R7": {
+        "N": 26,
+        "U": 1,
+        "P": 1
+      },
+      "R8": {
+        "F": 22,
+        "P": 6
+      }
+    },
+    "checks": [
+      {
+        "trajectory": "302c169_2__02",
+        "step": 1,
+        "rubric": "R1",
+        "expected": [
+          "F"
+        ],
+        "rationale": "无令牌调用返回401，成功轨迹也保留局部执行错误。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 7,
+        "rubric": "R2",
+        "expected": [
+          "P"
+        ],
+        "rationale": "本步只成功取得当前页；未宣称全覆盖，不能把后续全集义务提前当成本步取证不确定。",
+        "observed": "U",
+        "matches": false
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 8,
+        "rubric": "R2",
+        "expected": [
+          "P"
+        ],
+        "rationale": "筛选当前已见Wake Up并打印ID，没有宣称全局唯一；全集问题应在依赖全集时评价。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 9,
+        "rubric": "R4",
+        "expected": [
+          "P"
+        ],
+        "rationale": "07:30减40分钟得到06:50，代码和观察一致。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 10,
+        "rubric": "R5",
+        "expected": [
+          "P"
+        ],
+        "rationale": "可见当前列表中的目标更新时间，其余关闭；局部执行效果有依据，全集覆盖另评。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 11,
+        "rubric": "R8",
+        "expected": [
+          "F"
+        ],
+        "rationale": "明确协议要求先看API规格，输入未提供complete_task完整规格且没有查询；不能因调用成功豁免。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 12,
+        "rubric": "R6",
+        "expected": [
+          "F"
+        ],
+        "rationale": "已有Bucket List结果，仍否认目标并无改变地重复同一搜索。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 16,
+        "rubric": "R5",
+        "expected": [
+          "P"
+        ],
+        "rationale": "精确替换目标条目前缀，其余内容保留，update_note执行成功。",
+        "observed": "P",
+        "matches": true
+      }
+    ],
+    "check_matches": 7,
+    "checks_total": 8,
+    "anchors": [
+      {
+        "trajectory": "302c169_2__02",
+        "step": 1,
+        "rubric": "R1",
+        "expected": "F",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 1,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 2,
+        "rubric": "R1",
+        "expected": "F",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 3,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 4,
+        "rubric": "R1",
+        "expected": "F",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 4,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 5,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 6,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 7,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 8,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 11,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 1,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 2,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 3,
+        "rubric": "R1",
+        "expected": "F",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 3,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 4,
+        "rubric": "R1",
+        "expected": "F",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 4,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 5,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 6,
+        "rubric": "R1",
+        "expected": "F",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 6,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 7,
+        "rubric": "R1",
+        "expected": "F",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 7,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 8,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 9,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 10,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 11,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 12,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 13,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 14,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 15,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 17,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      }
+    ],
+    "anchor_matches": 31,
+    "anchors_total": 31
+  },
+  "repeat": {
+    "run": "v4_medium_repeat",
+    "valid": 2,
+    "steps": 28,
+    "cells": 224,
+    "samples": [
+      {
+        "id": "302c169_2__02",
+        "steps": 11,
+        "input_characters": 15629,
+        "seconds": 57.438713777810335,
+        "seconds_including_retries": 57.43973342701793,
+        "official_success_for_researcher_only": true,
+        "attempts": 1,
+        "response_characters": 450
+      },
+      {
+        "id": "cf6abd2_2__01",
+        "steps": 17,
+        "input_characters": 26808,
+        "seconds": 96.09678455814719,
+        "seconds_including_retries": 96.09767445921898,
+        "official_success_for_researcher_only": true,
+        "attempts": 1,
+        "response_characters": 662
+      }
+    ],
+    "attempts": [
+      {
+        "trajectory": "302c169_2__02",
+        "attempt": 1,
+        "status": "valid",
+        "seconds": 57.438713777810335,
+        "completed": true,
+        "reported_usage": {
+          "input_tokens": 14527,
+          "cached_input_tokens": 7296,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2044,
+          "reasoning_output_tokens": 1819
+        },
+        "errors": []
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "attempt": 1,
+        "status": "valid",
+        "seconds": 96.09678455814719,
+        "completed": true,
+        "reported_usage": {
+          "input_tokens": 18108,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 4241,
+          "reasoning_output_tokens": 3866
+        },
+        "errors": []
+      }
+    ],
+    "mean_seconds": 76.76774916797876,
+    "median_seconds": 76.76774916797876,
+    "usage": {
+      "input_tokens": 32635,
+      "cached_input_tokens": 7296,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 6285,
+      "reasoning_output_tokens": 5685
+    },
+    "label_counts": {
+      "R1": {
+        "F": 7,
+        "P": 21
+      },
+      "R2": {
+        "N": 10,
+        "P": 18
+      },
+      "R3": {
+        "N": 6,
+        "P": 20,
+        "F": 2
+      },
+      "R4": {
+        "N": 24,
+        "P": 4
+      },
+      "R5": {
+        "N": 26,
+        "P": 2
+      },
+      "R6": {
+        "N": 13,
+        "F": 6,
+        "P": 9
+      },
+      "R7": {
+        "N": 26,
+        "P": 2
+      },
+      "R8": {
+        "F": 22,
+        "P": 6
+      }
+    },
+    "checks": [
+      {
+        "trajectory": "302c169_2__02",
+        "step": 1,
+        "rubric": "R1",
+        "expected": [
+          "F"
+        ],
+        "rationale": "无令牌调用返回401，成功轨迹也保留局部执行错误。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 7,
+        "rubric": "R2",
+        "expected": [
+          "P"
+        ],
+        "rationale": "本步只成功取得当前页；未宣称全覆盖，不能把后续全集义务提前当成本步取证不确定。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 8,
+        "rubric": "R2",
+        "expected": [
+          "P"
+        ],
+        "rationale": "筛选当前已见Wake Up并打印ID，没有宣称全局唯一；全集问题应在依赖全集时评价。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 9,
+        "rubric": "R4",
+        "expected": [
+          "P"
+        ],
+        "rationale": "07:30减40分钟得到06:50，代码和观察一致。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 10,
+        "rubric": "R5",
+        "expected": [
+          "P"
+        ],
+        "rationale": "可见当前列表中的目标更新时间，其余关闭；局部执行效果有依据，全集覆盖另评。",
+        "observed": "P",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 11,
+        "rubric": "R8",
+        "expected": [
+          "F"
+        ],
+        "rationale": "明确协议要求先看API规格，输入未提供complete_task完整规格且没有查询；不能因调用成功豁免。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 12,
+        "rubric": "R6",
+        "expected": [
+          "F"
+        ],
+        "rationale": "已有Bucket List结果，仍否认目标并无改变地重复同一搜索。",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 16,
+        "rubric": "R5",
+        "expected": [
+          "P"
+        ],
+        "rationale": "精确替换目标条目前缀，其余内容保留，update_note执行成功。",
+        "observed": "P",
+        "matches": true
+      }
+    ],
+    "check_matches": 8,
+    "checks_total": 8,
+    "anchors": [
+      {
+        "trajectory": "302c169_2__02",
+        "step": 1,
+        "rubric": "R1",
+        "expected": "F",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 1,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 2,
+        "rubric": "R1",
+        "expected": "F",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 3,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 4,
+        "rubric": "R1",
+        "expected": "F",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 4,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 5,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 6,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 7,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 8,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "302c169_2__02",
+        "step": 11,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 1,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 2,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 3,
+        "rubric": "R1",
+        "expected": "F",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 3,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 4,
+        "rubric": "R1",
+        "expected": "F",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 4,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 5,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 6,
+        "rubric": "R1",
+        "expected": "F",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 6,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 7,
+        "rubric": "R1",
+        "expected": "F",
+        "observed": "F",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 7,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 8,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 9,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 10,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 11,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 12,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 13,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 14,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 15,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      },
+      {
+        "trajectory": "cf6abd2_2__01",
+        "step": 17,
+        "rubric": "R5",
+        "expected": "N",
+        "observed": "N",
+        "matches": true
+      }
+    ],
+    "anchor_matches": 31,
+    "anchors_total": 31
+  },
+  "same_cells": 197,
+  "cells": 224,
+  "changed_cells": [
+    {
+      "trajectory": "302c169_2__02",
+      "step": 2,
+      "rubric": "R3",
+      "first": "P",
+      "repeat": "N"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 2,
+      "rubric": "R6",
+      "first": "P",
+      "repeat": "F"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 4,
+      "rubric": "R3",
+      "first": "P",
+      "repeat": "N"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 4,
+      "rubric": "R6",
+      "first": "P",
+      "repeat": "N"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 5,
+      "rubric": "R3",
+      "first": "P",
+      "repeat": "N"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 6,
+      "rubric": "R2",
+      "first": "P",
+      "repeat": "N"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 7,
+      "rubric": "R2",
+      "first": "U",
+      "repeat": "P"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 7,
+      "rubric": "R3",
+      "first": "P",
+      "repeat": "N"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 10,
+      "rubric": "R2",
+      "first": "U",
+      "repeat": "P"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 11,
+      "rubric": "R3",
+      "first": "N",
+      "repeat": "P"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 11,
+      "rubric": "R7",
+      "first": "U",
+      "repeat": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 2,
+      "rubric": "R3",
+      "first": "N",
+      "repeat": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 3,
+      "rubric": "R3",
+      "first": "N",
+      "repeat": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 4,
+      "rubric": "R3",
+      "first": "N",
+      "repeat": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 5,
+      "rubric": "R3",
+      "first": "N",
+      "repeat": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 6,
+      "rubric": "R3",
+      "first": "N",
+      "repeat": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 7,
+      "rubric": "R3",
+      "first": "N",
+      "repeat": "F"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 8,
+      "rubric": "R3",
+      "first": "N",
+      "repeat": "F"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 10,
+      "rubric": "R3",
+      "first": "N",
+      "repeat": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 11,
+      "rubric": "R3",
+      "first": "N",
+      "repeat": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 11,
+      "rubric": "R6",
+      "first": "N",
+      "repeat": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 12,
+      "rubric": "R3",
+      "first": "N",
+      "repeat": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 13,
+      "rubric": "R3",
+      "first": "N",
+      "repeat": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 13,
+      "rubric": "R6",
+      "first": "P",
+      "repeat": "F"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 14,
+      "rubric": "R3",
+      "first": "N",
+      "repeat": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 15,
+      "rubric": "R6",
+      "first": "N",
+      "repeat": "P"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 17,
+      "rubric": "R3",
+      "first": "N",
+      "repeat": "P"
+    }
+  ],
+  "f_switches": [
+    {
+      "trajectory": "302c169_2__02",
+      "step": 2,
+      "rubric": "R6",
+      "first": "P",
+      "repeat": "F"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 7,
+      "rubric": "R3",
+      "first": "N",
+      "repeat": "F"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 8,
+      "rubric": "R3",
+      "first": "N",
+      "repeat": "F"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 13,
+      "rubric": "R6",
+      "first": "P",
+      "repeat": "F"
+    }
+  ],
+  "mean_medium_seconds": 83.58736153319478,
+  "same_pair_high_same_cells": 204,
+  "same_pair_high_f_switches": 12,
+  "mean_same_pair_high_seconds": 114.20991877652705,
+  "attempts": 4,
+  "completed_calls": 4,
+  "reported_usage": {
+    "input_tokens": 65266,
+    "cached_input_tokens": 7296,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 13053,
+    "reasoning_output_tokens": 11851
+  },
+  "caveat": "Two development trajectories, two repeats per setting; effort is the intended variable, while service/cache/session effects were not controlled. Consistency is not accuracy."
+}

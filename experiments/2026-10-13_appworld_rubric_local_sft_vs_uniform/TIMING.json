@@ -1,0 +1,45 @@
+{
+  "execution_started_at": "2026-10-13T09:54:03.720513+08:00",
+  "training_and_dev_finished_at": "2026-10-13T13:37:32.991770+08:00",
+  "analysis_and_verification_finished_at": "2026-10-13T13:42:55.933059+08:00",
+  "training_and_dev_wall_seconds": 13409.271257,
+  "total_execution_to_verified_completion_seconds": 13732.212546,
+  "stages": [
+    {
+      "kind": "evaluate",
+      "arm": "base",
+      "started_at": "2026-10-13T09:54:03.723862+08:00",
+      "finished_at": "2026-10-13T10:14:14.827245+08:00",
+      "process_wall_seconds": 1211.103383
+    },
+    {
+      "kind": "evaluate",
+      "arm": "rubric",
+      "started_at": "2026-10-13T12:16:40.679078+08:00",
+      "finished_at": "2026-10-13T12:45:05.721302+08:00",
+      "process_wall_seconds": 1705.042224
+    },
+    {
+      "kind": "evaluate",
+      "arm": "uniform",
+      "started_at": "2026-10-13T13:03:19.779970+08:00",
+      "finished_at": "2026-10-13T13:37:32.991770+08:00",
+      "process_wall_seconds": 2053.2118
+    },
+    {
+      "kind": "train",
+      "arm": "rubric",
+      "started_at": "2026-10-13T10:14:14.828622+08:00",
+      "finished_at": "2026-10-13T12:16:40.677742+08:00",
+      "process_wall_seconds": 7345.84912
+    },
+    {
+      "kind": "train",
+      "arm": "uniform",
+      "started_at": "2026-10-13T09:54:03.722692+08:00",
+      "finished_at": "2026-10-13T13:03:19.778728+08:00",
+      "process_wall_seconds": 11356.056036
+    }
+  ],
+  "note": "Two GPU lanes overlap. Sum of stage wall times is not total elapsed time. No external model scoring or teacher action generation."
+}

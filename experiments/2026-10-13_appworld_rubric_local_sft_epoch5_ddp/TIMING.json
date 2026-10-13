@@ -1,0 +1,84 @@
+{
+  "started_at": "2026-10-13T14:35:01.146382+08:00",
+  "training_and_dev_finished_at": "2026-10-13T22:32:30.444817+08:00",
+  "verified_at": "2026-10-13T22:34:45.612411+08:00",
+  "training_seconds": 24991.995531730354,
+  "dev_seconds_by_checkpoint": {
+    "1": 1932.9737255498767,
+    "3": 1725.0213712081313,
+    "5": 1709.9117963127792
+  },
+  "training_and_dev_total_wall_seconds": 28649.298435,
+  "stages": [
+    {
+      "kind": "evaluate_epoch1",
+      "attempt": 1,
+      "started_at": "2026-10-13T22:00:17.263749+08:00",
+      "command": [
+        "/root/autodl-tmp/envs/appworld-0.2.0-py312/bin/python",
+        "-u",
+        "/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_rubric_local_sft_epoch5_ddp/scripts/evaluate_checkpoint.py",
+        "--epoch",
+        "1",
+        "--execute"
+      ],
+      "status": "complete",
+      "pid": 454870,
+      "exit_code": 0,
+      "finished_at": "2026-10-13T22:32:30.443653+08:00"
+    },
+    {
+      "kind": "evaluate_epoch3",
+      "attempt": 1,
+      "started_at": "2026-10-13T22:00:17.264144+08:00",
+      "command": [
+        "/root/autodl-tmp/envs/appworld-0.2.0-py312/bin/python",
+        "-u",
+        "/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_rubric_local_sft_epoch5_ddp/scripts/evaluate_checkpoint.py",
+        "--epoch",
+        "3",
+        "--execute"
+      ],
+      "status": "complete",
+      "pid": 454871,
+      "exit_code": 0,
+      "finished_at": "2026-10-13T22:29:02.490623+08:00"
+    },
+    {
+      "kind": "evaluate",
+      "attempt": 1,
+      "started_at": "2026-10-13T21:31:37.943299+08:00",
+      "command": [
+        "/root/autodl-tmp/envs/appworld-0.2.0-py312/bin/python",
+        "-u",
+        "/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_rubric_local_sft_epoch5_ddp/scripts/evaluate.py",
+        "--arm",
+        "rubric",
+        "--execute"
+      ],
+      "status": "complete",
+      "pid": 448883,
+      "exit_code": 0,
+      "finished_at": "2026-10-13T22:00:08.173511+08:00"
+    },
+    {
+      "kind": "train",
+      "attempt": 1,
+      "started_at": "2026-10-13T14:35:01.147937+08:00",
+      "command": [
+        "/root/autodl-tmp/workspace-tw/.conda-training/bin/python",
+        "-m",
+        "torch.distributed.run",
+        "--standalone",
+        "--nproc_per_node=2",
+        "/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_rubric_local_sft_epoch5_ddp/scripts/train_ddp.py",
+        "--execute"
+      ],
+      "status": "complete",
+      "pid": 309509,
+      "exit_code": 0,
+      "finished_at": "2026-10-13T21:31:37.941888+08:00"
+    }
+  ],
+  "probe_excluded_from_formal_training": true
+}

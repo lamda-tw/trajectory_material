@@ -1,0 +1,18 @@
+{
+  "parent": "appworld-step-v1",
+  "version": "appworld-step-v2",
+  "prompt_sha256": "e8d175badc15c138459840950922cd282ce24ea82e9f66e8f830abf5aa4986d0",
+  "input_unchanged": true,
+  "dimensions_unchanged": true,
+  "labels_unchanged": true,
+  "weights_added": false,
+  "changes": [
+    "局部取证与全集消费分开；不得将已见匹配对象解释为全局唯一",
+    "明确失败读取的R1/R2职责，U不等于已知运行失败",
+    "认证准备通常不适用R5业务效果",
+    "API规格协议一致适用于complete_task，不外溢到其他维度",
+    "分页判断只依本次可见规格或反馈"
+  ],
+  "evidence_check_sha256": "3719d1931c79cfe29a9e163a71546072dfd4694b1ad5cd97a86d6474423b770b",
+  "validation_plan": "Same six complete inputs, same model/effort, fresh v2 requests; compare 28 development evidence checks and all changed cells; not independent accuracy."
+}

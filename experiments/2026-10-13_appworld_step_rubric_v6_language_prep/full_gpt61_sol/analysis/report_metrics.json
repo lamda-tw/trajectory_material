@@ -1,0 +1,161 @@
+{
+  "scope": "Descriptive analyses after all scoring finished; not causal validation or gold labels.",
+  "step_flags": {
+    "any_F": 9539,
+    "only_R8_F": 1498,
+    "no_F_or_U": 1664
+  },
+  "tasks_with_success": 20,
+  "termination": {
+    "completion_api": 312,
+    "step_limit": 97,
+    "no_python_code": 111,
+    "context_limit": 20
+  },
+  "step_outcomes": {
+    "False": 10753,
+    "True": 501
+  },
+  "within_task": {
+    "R1": {
+      "tasks": 20,
+      "lower_F_fraction_for_success": 12,
+      "equal": 0,
+      "higher": 8,
+      "mean_difference": -0.07791856671982107
+    },
+    "R2": {
+      "tasks": 20,
+      "lower_F_fraction_for_success": 11,
+      "equal": 5,
+      "higher": 4,
+      "mean_difference": -0.06761507586526937
+    },
+    "R3": {
+      "tasks": 20,
+      "lower_F_fraction_for_success": 13,
+      "equal": 0,
+      "higher": 7,
+      "mean_difference": -0.11499391999150835
+    },
+    "R4": {
+      "tasks": 20,
+      "lower_F_fraction_for_success": 17,
+      "equal": 1,
+      "higher": 2,
+      "mean_difference": -0.36494617994617995
+    },
+    "R5": {
+      "tasks": 9,
+      "lower_F_fraction_for_success": 2,
+      "equal": 7,
+      "higher": 0,
+      "mean_difference": -0.0962962962962963
+    },
+    "R6": {
+      "tasks": 20,
+      "lower_F_fraction_for_success": 15,
+      "equal": 1,
+      "higher": 4,
+      "mean_difference": -0.17422821723335433
+    },
+    "R7": {
+      "tasks": 20,
+      "lower_F_fraction_for_success": 16,
+      "equal": 3,
+      "higher": 1,
+      "mean_difference": -0.5033333333333333
+    },
+    "R8": {
+      "tasks": 20,
+      "lower_F_fraction_for_success": 15,
+      "equal": 0,
+      "higher": 5,
+      "mean_difference": -0.0972853167802004
+    }
+  },
+  "candidates": {
+    "records": 6099,
+    "distinct_steps": 5860,
+    "by_kind": {
+      "business_or_factual_failure_candidate": 4119,
+      "execution_recovery_candidate": 1980
+    },
+    "recovery_with_business_F": 239,
+    "recovery_from_official_failure": 1834
+  },
+  "invalid_attempts": [
+    {
+      "id": "27e1026_1__03",
+      "attempt": 1,
+      "status": "invalid",
+      "elapsed_seconds": 156.9172413982451,
+      "category": "other",
+      "error": "JSONDecodeError: Expecting ',' delimiter: line 1 column 98 (char 97)"
+    },
+    {
+      "id": "22cc237_3__00",
+      "attempt": 1,
+      "status": "invalid",
+      "elapsed_seconds": 167.92150091007352,
+      "category": "other",
+      "error": "JSONDecodeError: Expecting ',' delimiter: line 1 column 252 (char 251)"
+    },
+    {
+      "id": "b7a9ee9_2__05",
+      "attempt": 1,
+      "status": "invalid",
+      "elapsed_seconds": 88.29400026425719,
+      "category": "other",
+      "error": "JSONDecodeError: Expecting ',' delimiter: line 1 column 326 (char 325)"
+    },
+    {
+      "id": "7d7fbf6_3__01",
+      "attempt": 1,
+      "status": "invalid",
+      "elapsed_seconds": 139.75421983748674,
+      "category": "other",
+      "error": "ValidationError: 'FNPNPNP' does not match '^[PFUN]{8}$'\n\nFailed validating 'pattern' in schema['properties']['steps']['items']['prefixItems'][1]:\n    {'type': 'string', 'pattern': '^[PFUN]{8}$'}\n\nOn instance['steps'][10][1]:\n    'FNPNPNP'"
+    },
+    {
+      "id": "60d0b5b_2__04",
+      "attempt": 1,
+      "status": "invalid",
+      "elapsed_seconds": 18.012532651424408,
+      "category": "capacity_or_rate_limit",
+      "error": "AssertionError: Codex exit 1"
+    },
+    {
+      "id": "3c13f5a_3__00",
+      "attempt": 1,
+      "status": "invalid",
+      "elapsed_seconds": 151.00651312619448,
+      "category": "other",
+      "error": "ValidationError: 'FNPNNPP' does not match '^[PFUN]{8}$'\n\nFailed validating 'pattern' in schema['properties']['steps']['items']['prefixItems'][1]:\n    {'type': 'string', 'pattern': '^[PFUN]{8}$'}\n\nOn instance['steps'][6][1]:\n    'FNPNNPP'"
+    },
+    {
+      "id": "e7a10f8_2__00",
+      "attempt": 1,
+      "status": "invalid",
+      "elapsed_seconds": 6.8303935341537,
+      "category": "capacity_or_rate_limit",
+      "error": "AssertionError: Codex exit 1"
+    }
+  ],
+  "invalid_attempt_usage": {
+    "input_tokens": 108077,
+    "cached_input_tokens": 41600,
+    "output_tokens": 18523,
+    "reasoning_output_tokens": 16082
+  },
+  "legacy_pilot_changes_by_rubric": {
+    "R3": 52,
+    "R6": 18,
+    "R2": 42,
+    "R7": 3,
+    "R4": 10,
+    "R8": 14,
+    "R5": 9
+  },
+  "mechanical_miss_labels": {}
+}

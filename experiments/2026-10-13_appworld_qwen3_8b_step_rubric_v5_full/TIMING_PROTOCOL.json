@@ -1,0 +1,25 @@
+{
+  "primary_metric": "scoring_wall_seconds",
+  "start": "Immediately before the first codex scoring subprocess is launched.",
+  "end": "After every one of the 540 new judgements has been schema/coverage validated and persisted.",
+  "included": [
+    "CLI startup and inference",
+    "local output validation and persistence",
+    "failed attempts, retry backoff, rate-limit waits",
+    "any recovery interruption after scoring begins"
+  ],
+  "excluded": [
+    "experiment and input preparation before first request",
+    "official outcome comparisons",
+    "semantic review or supplementary model review calls",
+    "report writing"
+  ],
+  "secondary_metrics": [
+    "sum of scoring subprocess elapsed seconds, not parallel wall time",
+    "first valid attempt latency by trajectory",
+    "end-to-end experiment elapsed time",
+    "post-scoring evaluation/report elapsed time"
+  ],
+  "timezone": "Asia/Shanghai",
+  "resume": "UTC epoch difference across invocations; monotonic elapsed for subprocess calls. Timer does not reset on restart."
+}

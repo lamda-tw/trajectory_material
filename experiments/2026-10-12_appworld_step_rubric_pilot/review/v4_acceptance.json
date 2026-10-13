@@ -1,0 +1,12 @@
+{
+  "purpose": "Practical readiness for offline corpus annotation, not proof of error-free labels or training benefit. Frozen before fresh judge calls.",
+  "criteria": [
+    "Every sampled complete trajectory has valid JSON and exact step coverage after bounded transport retries.",
+    "No silent truncation; judge the corpus-largest input using the same protocol.",
+    "Review all failed evidence checks; mandatory focus on R5 submission exclusion and R6 partial-write retries.",
+    "Report repeat consistency and F/non-F switches instead of demanding identical P/N labels.",
+    "Identify remaining semantic concerns explicitly; do not relabel raw outputs or treat official success as judge truth.",
+    "Full run uses frozen prompt/model/input hashes and local structural validation; no weights or reward synthesis."
+  ],
+  "fresh_predeclared_checks": 43
+}

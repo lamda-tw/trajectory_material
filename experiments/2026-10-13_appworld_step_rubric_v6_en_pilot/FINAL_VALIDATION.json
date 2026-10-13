@@ -1,0 +1,151 @@
+{
+  "status": "passed",
+  "audited_at": "2026-10-13T10:41:04.533048+00:00",
+  "stages": {
+    "development": {
+      "planned": 12,
+      "accepted": 12,
+      "failed_calls": [],
+      "attempts": 15,
+      "invalid_attempts": 3,
+      "first_attempt_valid": 10,
+      "failures": [
+        {
+          "id": "b0a8eae_3__03",
+          "attempt": 1,
+          "error": "ValidationError: 'Used an undocumented nonexistent API on an unverified choice.' is too long"
+        },
+        {
+          "id": "e7a10f8_1__05",
+          "attempt": 1,
+          "error": "ValidationError: 'Supervisor API was called without checking its specification.' is too long"
+        },
+        {
+          "id": "e7a10f8_1__05",
+          "attempt": 2,
+          "error": "ValidationError: 'Supervisor API was called without checking its specification.' is too long"
+        }
+      ]
+    },
+    "development_repeat": {
+      "planned": 4,
+      "accepted": 4,
+      "failed_calls": [],
+      "attempts": 5,
+      "invalid_attempts": 1,
+      "first_attempt_valid": 3,
+      "failures": [
+        {
+          "id": "b7a9ee9_1__05",
+          "attempt": 1,
+          "error": "ValidationError: 'The ID mismatch claim is false and the read API is unchecked.' is too long"
+        }
+      ]
+    },
+    "development_r1": {
+      "planned": 12,
+      "accepted": 12,
+      "failed_calls": [],
+      "attempts": 12,
+      "invalid_attempts": 0,
+      "first_attempt_valid": 12,
+      "failures": []
+    },
+    "development_r1_repeat": {
+      "planned": 4,
+      "accepted": 4,
+      "failed_calls": [],
+      "attempts": 4,
+      "invalid_attempts": 0,
+      "first_attempt_valid": 4,
+      "failures": []
+    },
+    "development_r2": {
+      "planned": 12,
+      "accepted": 12,
+      "failed_calls": [],
+      "attempts": 12,
+      "invalid_attempts": 0,
+      "first_attempt_valid": 12,
+      "failures": []
+    },
+    "development_r2_repeat": {
+      "planned": 4,
+      "accepted": 4,
+      "failed_calls": [],
+      "attempts": 4,
+      "invalid_attempts": 0,
+      "first_attempt_valid": 4,
+      "failures": []
+    },
+    "development_format": {
+      "planned": 4,
+      "accepted": 4,
+      "failed_calls": [],
+      "attempts": 4,
+      "invalid_attempts": 0,
+      "first_attempt_valid": 4,
+      "failures": []
+    },
+    "development_format_repeat": {
+      "planned": 4,
+      "accepted": 4,
+      "failed_calls": [],
+      "attempts": 6,
+      "invalid_attempts": 2,
+      "first_attempt_valid": 3,
+      "failures": [
+        {
+          "id": "b7a9ee9_1__05",
+          "attempt": 1,
+          "error": "TimeoutExpired: Command '['/root/.nvm/versions/node/v26.8.1/bin/codex', 'exec', '--ephemeral', '--ignore-user-config', '--ignore-rules', '--skip-git-repo-check', '--color', 'never', '--sandbox', 'read-only', '--disable', 'shell_tool', '--disable', 'unified_exec', '--disable', 'apps', '--disable', 'plugins', '--disable', 'multi_agent', '--disable', 'browser_use', '--disable', 'browser_use_external', '--disable', 'computer_use', '--disable', 'image_generation', '--disable', 'view_image', '--disable', 'sleep_tool', '--disable', 'skill_search', '--disable', 'code_mode_host', '-c', 'web_search=\"disabled\"', '--cd', '/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_step_rubric_v6_en_pilot/runs/development_format_repeat/b7a9ee9_1__05/empty_cwd', '--output-last-message', '/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_step_rubric_v6_en_pilot/runs/development_format_repeat/b7a9ee9_1__05/attempt_1/response.json', '--model', 'gpt-5.6-sol', '-c', 'model_reasoning_effort=\"high\"', '--json', '-']' timed out after 899.8871139548719 seconds"
+        },
+        {
+          "id": "b7a9ee9_1__05",
+          "attempt": 2,
+          "error": "TimeoutExpired: Command '['/root/.nvm/versions/node/v26.8.1/bin/codex', 'exec', '--ephemeral', '--ignore-user-config', '--ignore-rules', '--skip-git-repo-check', '--color', 'never', '--sandbox', 'read-only', '--disable', 'shell_tool', '--disable', 'unified_exec', '--disable', 'apps', '--disable', 'plugins', '--disable', 'multi_agent', '--disable', 'browser_use', '--disable', 'browser_use_external', '--disable', 'computer_use', '--disable', 'image_generation', '--disable', 'view_image', '--disable', 'sleep_tool', '--disable', 'skill_search', '--disable', 'code_mode_host', '-c', 'web_search=\"disabled\"', '--cd', '/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_step_rubric_v6_en_pilot/runs/development_format_repeat/b7a9ee9_1__05/empty_cwd', '--output-last-message', '/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_step_rubric_v6_en_pilot/runs/development_format_repeat/b7a9ee9_1__05/attempt_2/response.json', '--model', 'gpt-5.6-sol', '-c', 'model_reasoning_effort=\"high\"', '--json', '-']' timed out after 899.88019040972 seconds"
+        }
+      ]
+    },
+    "holdout_format": {
+      "planned": 24,
+      "accepted": 24,
+      "failed_calls": [],
+      "attempts": 24,
+      "invalid_attempts": 0,
+      "first_attempt_valid": 24,
+      "failures": []
+    },
+    "holdout_format_repeat": {
+      "planned": 4,
+      "accepted": 4,
+      "failed_calls": [],
+      "attempts": 4,
+      "invalid_attempts": 0,
+      "first_attempt_valid": 4,
+      "failures": []
+    }
+  },
+  "unique_trajectories": 36,
+  "unique_steps": 636,
+  "development_families": 8,
+  "holdout_families": 21,
+  "families_disjoint": true,
+  "planned_calls": 84,
+  "accepted_calls": 84,
+  "failed_calls": 0,
+  "actual_attempts": 90,
+  "peak_concurrent_attempt_intervals": 8,
+  "first_started": "2026-10-13T17:32:53.894045+08:00",
+  "last_attempt_ended": "2026-10-13T18:39:49.761817+08:00",
+  "elapsed_wall_seconds": 4015.867772,
+  "selected_prompt_sha256": "df4e8fb406551f2d90e38bbe83838db181bda18e01d947b236ee10a05c633109",
+  "verified": [
+    "all source/input/request/prompt hashes",
+    "exact step IDs/order and schema for every accepted response",
+    "first valid output retained; invalid attempts preserved",
+    "no tool calls in accepted scoring turns",
+    "outcome and old label metadata excluded from judge input",
+    "selected scoring semantics identical to original English v6"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "purpose": "Exact-input repeat for the original v3 repeat pair plus partial-side-effect regression.",
+  "source_directory": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo/runs/step01_train90_rollouts",
+  "input_preparer_version": "v3",
+  "samples": [
+    {
+      "id": "302c169_2__02",
+      "trajectory_id": "base:302c169_2__02",
+      "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo/runs/step01_train90_rollouts/trajectories/302c169_2__02.json",
+      "source_sha256": "20dca0ceb0337615a5cd82e6f633eb8e97b8f1e5766e87ac8d94735d793346e2",
+      "policy_id": "base:4281d32de051a1965961c98ad89fba69ba5518961f19a61b788048f14e90c0e5",
+      "input": "inputs_v3/302c169_2__02.json",
+      "input_sha256": "b699d29d7b5b93f0b9448a5659a01f4345d26a5b07050d75b01cea799a1a4e82",
+      "steps": 11,
+      "input_characters": 15629,
+      "official_success_for_researcher_only": true,
+      "selection_reason": "成功；闹钟时间变换与多个对象操作",
+      "termination": "completion_api"
+    },
+    {
+      "id": "cf6abd2_2__01",
+      "trajectory_id": "base:cf6abd2_2__01",
+      "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo/runs/step01_train90_rollouts/trajectories/cf6abd2_2__01.json",
+      "source_sha256": "043ffffae1ca20327ab479af2072aa499638fca57052373edd13aa86357b358b",
+      "policy_id": "base:4281d32de051a1965961c98ad89fba69ba5518961f19a61b788048f14e90c0e5",
+      "input": "inputs_v3/cf6abd2_2__01.json",
+      "input_sha256": "7ef4aea9ad259c3b7c96a3e509ddc575df659dbd7fd6363bd2cda38cbc4818bf",
+      "steps": 17,
+      "input_characters": 26808,
+      "official_success_for_researcher_only": true,
+      "selection_reason": "成功；便签文本变换与错误恢复",
+      "termination": "completion_api"
+    },
+    {
+      "id": "7d7fbf6_1__00",
+      "trajectory_id": "base:7d7fbf6_1__00",
+      "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo/runs/step01_train90_rollouts/trajectories/7d7fbf6_1__00.json",
+      "source_sha256": "1671f5d29ffbaa58917944270c58ac40a83fef59f6f43fd0b56dd8e187bb40b2",
+      "policy_id": "base:4281d32de051a1965961c98ad89fba69ba5518961f19a61b788048f14e90c0e5",
+      "input": "inputs_v3/7d7fbf6_1__00.json",
+      "input_sha256": "4e1573ca4e2ac79d780f82231bf316487e620a24de8c36fcd5176fbdd8f6c905",
+      "steps": 17,
+      "input_characters": 28181,
+      "official_success_for_researcher_only": false,
+      "selection_reason": "失败；新文件系统任务，路径处理、部分副作用、错误后继续与错误交付",
+      "termination": "no_python_code"
+    }
+  ],
+  "scope": "Six complete base-policy trajectories, three success and three failure; no training or trajectory replay.",
+  "prompt_sha256": "90bdf0447b228d8699f11e9ec4fcea9e23474d591a778fa59a84c04a5f38756a",
+  "schema_sha256": "b6a3394c223c2a2d6b74528c1a2fc6de8508261f94d01a2d4c71c4fff88d9760",
+  "input_preparer_sha256": "dc14636a5e40fb43df96376e937e57570f965dbbda9df33c1bb7e2eb5f73c6ea",
+  "warning": "Do not include this manifest or official outcomes in judge requests."
+}

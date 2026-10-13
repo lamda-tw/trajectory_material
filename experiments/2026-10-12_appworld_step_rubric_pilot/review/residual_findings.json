@@ -1,0 +1,18 @@
+[
+  {
+    "id": "v2-regression-repeat-search",
+    "trajectory": "cf6abd2_2__01",
+    "step": 12,
+    "rubric": "R6",
+    "v1": "F",
+    "v2": "N",
+    "reviewer_expected": "F",
+    "evidence_steps": [
+      11,
+      12
+    ],
+    "finding": "先前结果已经出现Bucket List，本步仍按相同参数重复搜索；本会话复核认为v2漏掉对反馈与重复的处理。",
+    "status": "Unresolved in v2; do not silently edit v2 or label it stable.",
+    "causal_claim": "Cannot isolate prompt effect from one stochastic request per version; local-exploration clarification may be too permissive, but this is a hypothesis."
+  }
+]

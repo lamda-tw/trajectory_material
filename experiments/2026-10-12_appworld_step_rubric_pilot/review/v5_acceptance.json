@@ -1,0 +1,25 @@
+{
+  "frozen_at": "2026-10-12T22:40:44.943593+08:00",
+  "prompt_sha256": "bc6335bf245b1c0991970662bad230cd30d6ae04c0e7e8fb8af0e1d57c70de4b",
+  "objective": "A useful noisy offline annotation baseline; no requirement of perfect or 95% repeat equality.",
+  "design": {
+    "regression_trajectories": 8,
+    "fresh_families": 4,
+    "repeat_trajectories": 2,
+    "full_corpus_calls_authorized_in_this_run": false
+  },
+  "quality_review": {
+    "method": "Review complete selected trajectories against visible evidence; record clearly unsupported labels and reasons separately from defensible boundary disagreements. Review all rows, including N omissions; preserve original outputs.",
+    "target": "Aim for >=95% defensible individual rubric judgments on this reviewed sample; also report applicable judgments, affected steps and critical failure cases to expose N-label dilution.",
+    "limits": "Developer review is not independent human ground truth; selected checks, mechanical anchors, reasonable-label fraction and repeat agreement are distinct and none establish 95% population accuracy.",
+    "release": "Can recommend v5 for full offline exploratory annotation if review finds predominantly useful judgments with bounded documented errors. Recurrent severe task/effect hallucinations require fixing or narrowing intended use; isolated mistakes need not cause endless prompt revisions."
+  },
+  "invariants": [
+    "same input and judge settings",
+    "no official outcome in request",
+    "one complete trajectory per call",
+    "one output format",
+    "no reward or weights",
+    "do not choose best of repeats"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "issue": "v1 event validator misclassified disabled Code Mode notice as tool use",
+  "prompt_changed": false,
+  "original_run": "v1_audit",
+  "recovery_run": "v1_audit_recovered",
+  "first_valid_responses_reused": [
+    "302c169_2__02/attempt_1",
+    "302c169_3__03/attempt_1"
+  ],
+  "cancelled_retries": [
+    "302c169_2__02/attempt_2",
+    "302c169_3__03/attempt_2"
+  ],
+  "fix": "Allow only the exact known disabled Code Mode notice; still require completed turn and no unknown tool items; preserve original events and labels.",
+  "cancelled_usage": "No completed usage event; unknown, not treated as zero."
+}

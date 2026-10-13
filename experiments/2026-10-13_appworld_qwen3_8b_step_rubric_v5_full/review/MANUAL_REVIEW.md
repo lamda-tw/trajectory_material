@@ -1,0 +1,166 @@
+# 完整轨迹证据复核
+
+由本对话助手读取预先固定的12条完整轨迹，结合任务、初始协议、实际代码、全部步骤及相关观察逐维复核。可定位读取长文档和长列表，但不执行轨迹代码。评分标签对复核者可见；不是独立人工金标，也不代表总体准确率。
+
+本复核不修改原始评分。明确误判和有争议边界分开记录，不能将本表当独立人工金标。
+
+## 287e338_1__04
+
+逐步核对8步。v5捕捉到把播放列表所有者当艺术家、重复旧推断、只计首位艺术家等问题；又能在最终答案Ava Morgan确有可见支持时给R7=P，没有将方法瑕疵直接等同于答案必错。
+
+[完整输入](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/287e338_1__04/input.json) · [原始评分](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/287e338_1__04/judgement.json)
+
+| step | 维度 | 原标签 | 建议 | 类型 | 证据 |
+| --- | --- | --- | --- | --- | --- |
+| 3 | R3 | F | P | clear_error | 本步关于先前输出为用户本人姓名的事实有step2支持。列表作为song_id及虚构get_song属于接口/类型契约；v5明确规定纯类型和参数错误不自动触发R3。错误推荐依据已由R4=F捕捉。 |
+| 7 | R3 | F | P | debatable | artists中的姓名均忠实于各歌曲首位艺术家，遗漏合作艺术家明确影响R2覆盖和R4统计规则；是否同时构成R3数据保真违反存在维度重叠，不能把三次F当三项独立证据。 |
+
+## aa8502b_3__00
+
+完整复核20步。正确抓住虚构艺人名单、把follower_count当个人关注状态、忽略重复关注反馈，并识别step19成功恢复和最终完成。主要问题为step7协议漏评、step14错误API诊断漏评，以及step16把假设性诊断当保真错误。失败关注调用R5=P的口径也存在边界争议。
+
+[完整输入](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/aa8502b_3__00/input.json) · [原始评分](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/aa8502b_3__00/judgement.json)
+
+| step | 维度 | 原标签 | 建议 | 类型 | 证据 |
+| --- | --- | --- | --- | --- | --- |
+| 7 | R8 | P | F | clear_error | 除实际提取艺术家代码外，commentary还有独立Python代码块查询API列表；违反每步只允许一个代码块的明确协议。 |
+| 14 | R3 | N | F | clear_error | 声称show_artist_following不可用，但step4可见接口列表已明确列出该API；step13报错实际来自follow_artist的已关注响应。 |
+| 16 | R3 | F | P | clear_error | API可能异常只是明确带might的假设；实际使用的artist_ids有step10证据。重复错误行动应由R4/R6捕捉，不自动构成数据保真错误。 |
+| 13 | R6 | F | P | debatable | 已将follower_count错误代理改为正确的专用关注状态接口；后续字段读取/异常吞掉是新的问题。按v5修复旧错可与独立新错并存的口径，可记P；但重复关注仍未避免。 |
+| 11 | R5 | P | N | debatable | 实际关注调用首项即返回已关注，未产生新业务修改。目标对象及已有关注状态正确，支持P；若R5只衡量新产生的效果则更适合N。v5未彻底消除此边界，不据此认定业务效果错误。 |
+| 12 | R5 | P | N | debatable | 实际关注调用首项即返回已关注，未产生新业务修改。目标对象及已有关注状态正确，支持P；若R5只衡量新产生的效果则更适合N。v5未彻底消除此边界，不据此认定业务效果错误。 |
+| 13 | R5 | P | N | debatable | 实际关注调用首项即返回已关注，未产生新业务修改。目标对象及已有关注状态正确，支持P；若R5只衡量新产生的效果则更适合N。v5未彻底消除此边界，不据此认定业务效果错误。 |
+| 15 | R5 | P | N | debatable | 实际关注调用首项即返回已关注，未产生新业务修改。目标对象及已有关注状态正确，支持P；若R5只衡量新产生的效果则更适合N。v5未彻底消除此边界，不据此认定业务效果错误。 |
+| 16 | R5 | P | N | debatable | 实际关注调用首项即返回已关注，未产生新业务修改。目标对象及已有关注状态正确，支持P；若R5只衡量新产生的效果则更适合N。v5未彻底消除此边界，不据此认定业务效果错误。 |
+| 17 | R5 | P | N | debatable | 实际关注调用首项即返回已关注，未产生新业务修改。目标对象及已有关注状态正确，支持P；若R5只衡量新产生的效果则更适合N。v5未彻底消除此边界，不据此认定业务效果错误。 |
+| 18 | R5 | P | N | debatable | 实际关注调用首项即返回已关注，未产生新业务修改。目标对象及已有关注状态正确，支持P；若R5只衡量新产生的效果则更适合N。v5未彻底消除此边界，不据此认定业务效果错误。 |
+
+## e85d92a_1__00
+
+复核全部10步。v5识别猜测密码、API参数错误、第一位艺术家筛选缺陷，并在step9正确用U表达全局证据不足。但step10将同样未知的全局答案改判R7=F，没有已知反例支持。
+
+[完整输入](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/e85d92a_1__00/input.json) · [原始评分](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/e85d92a_1__00/judgement.json)
+
+| step | 维度 | 原标签 | 建议 | 类型 | 证据 |
+| --- | --- | --- | --- | --- | --- |
+| 10 | R7 | F | U | clear_error | 可见5首歌中883确为最高；被首位艺术家筛选遗漏的合作曲仅110。未遍历的其他页可能有更高值，但输入未证明答案错；按v5缺少完成证据应U。R2/R3本身也给U。 |
+
+短依据问题（step 6）：短依据称search_artists未遍历分页，但此前没有该API完整分页规格，不能仅凭5条返回断言分页义务；未查规格这一R8理由本身有充分依据。
+
+## 6ea6792_1__03
+
+复核11步。能识别缺少关系筛选、审批漏令牌、无效重复检查及后续修复；step10对实际审批效果用U，体现决策错误与效果未知的区分。但step8在401且未发生业务修改时误判R5=F，step11又把证据不足的完成结论记F。
+
+[完整输入](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/6ea6792_1__03/input.json) · [原始评分](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/6ea6792_1__03/judgement.json)
+
+| step | 维度 | 原标签 | 建议 | 类型 | 证据 |
+| --- | --- | --- | --- | --- | --- |
+| 8 | R5 | F | N | clear_error | 首个approve_payment_request即返回401，整个循环在任何业务审批前终止。未查关系属于选择依据问题，不能据此认定已经产生错误审批效果。 |
+| 11 | R7 | F | U | clear_error | 可见5笔请求均已成功审批；其联系人关系及后续分页未知，输入没有证明某笔属于非目标人员或尚有目标请求未批。R2/R3已记U，R7也应保留未知而非认定结果错误。 |
+
+## ce359b5_1__00
+
+完整复核18步及重复观察。v5准确识别错误容器结构、反馈循环、step17真正修复、step18虚假完成；所有R5=N正确反映删除代码只在未执行commentary中。主要明确错误集中在5个额外Python代码块的R8漏评。
+
+[完整输入](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/ce359b5_1__00/input.json) · [原始评分](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/ce359b5_1__00/judgement.json)
+
+| step | 维度 | 原标签 | 建议 | 类型 | 证据 |
+| --- | --- | --- | --- | --- | --- |
+| 8 | R8 | P | F | clear_error | 除实际提交的过滤代码外，commentary还包含独立Python删除代码块（部分步骤另含complete_task块），明确违反每步仅一个代码块。未执行不消除格式协议违规。 |
+| 10 | R8 | P | F | clear_error | 除实际提交的过滤代码外，commentary还包含独立Python删除代码块（部分步骤另含complete_task块），明确违反每步仅一个代码块。未执行不消除格式协议违规。 |
+| 12 | R8 | P | F | clear_error | 除实际提交的过滤代码外，commentary还包含独立Python删除代码块（部分步骤另含complete_task块），明确违反每步仅一个代码块。未执行不消除格式协议违规。 |
+| 14 | R8 | P | F | clear_error | 除实际提交的过滤代码外，commentary还包含独立Python删除代码块（部分步骤另含complete_task块），明确违反每步仅一个代码块。未执行不消除格式协议违规。 |
+| 16 | R8 | P | F | clear_error | 除实际提交的过滤代码外，commentary还包含独立Python删除代码块（部分步骤另含complete_task块），明确违反每步仅一个代码块。未执行不消除格式协议违规。 |
+
+## afc0fce_1__01
+
+逐步复核10步。准确捕捉五天含今日却减5天的边界错误、API恢复过程和未筛选同事的错误规则；step9的R5=U保留了对象条件未知。问题集中于中间取证过早要求全局覆盖，以及在未证实错误对象/遗漏时把完成断言记F。
+
+[完整输入](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/afc0fce_1__01/input.json) · [原始评分](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/afc0fce_1__01/judgement.json)
+
+| step | 维度 | 原标签 | 建议 | 类型 | 证据 |
+| --- | --- | --- | --- | --- | --- |
+| 8 | R2 | U | P | debatable | 本步只是获取首批交易，尚未声称覆盖全部，也可作为后续关系筛选的局部取证；v5规定中间取证不承担未作出的全局结论。但时间窗口过宽也使当前子目标范围存在解释余地。 |
+| 9 | R2 | F | U | debatable | 未读取联系人关系或后续分页，确实缺必要证据；但没有可见非同事交易或已知遗漏的目标交易。错误选择规则已由R4=F表达，覆盖/对象证据应U。 但若R2评价的是证据是否足够而非对象是否正确，已知没有关系证据也可支持F；因此列为规则边界而非明确误判。 |
+| 10 | R3 | F | U | clear_error | 声称完成所需的同事身份、完整分页及目标时间覆盖没有验证；可见5笔评论与点赞均执行成功，输入未证明其中有错误目标或确有遗漏。完成事实未知而非已证伪。 |
+| 10 | R7 | F | U | clear_error | 与R3同理：错误日期规则和未筛选同事不自动证明最终写入集合错误。缺少必要完成证据按v5记U，不能直接判结果必错。 |
+
+## 229360a_3__02
+
+复核全部10步。v5抓住相册保留规则缺陷、未执行删除却捏造结果的完成声明，并保持R5=N。主要问题为对初次局部读取过早要求整库覆盖，以及漏掉step9的额外代码块。
+
+[完整输入](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/229360a_3__02/input.json) · [原始评分](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/229360a_3__02/judgement.json)
+
+| step | 维度 | 原标签 | 建议 | 类型 | 证据 |
+| --- | --- | --- | --- | --- | --- |
+| 4 | R2 | U | P | clear_error | 当前仅进行首次歌曲库/点赞/下载列表读取，没有宣称全部或采用完整集合决定删除。按v5中间取证不承担未作出的全局结论，应评价为有效局部读取；后续采用不完整集合时再判覆盖。 |
+| 7 | R2 | U | P | clear_error | 当前仅进行首次歌曲库/点赞/下载列表读取，没有宣称全部或采用完整集合决定删除。按v5中间取证不承担未作出的全局结论，应评价为有效局部读取；后续采用不完整集合时再判覆盖。 |
+| 8 | R2 | U | P | clear_error | 当前仅进行首次歌曲库/点赞/下载列表读取，没有宣称全部或采用完整集合决定删除。按v5中间取证不承担未作出的全局结论，应评价为有效局部读取；后续采用不完整集合时再判覆盖。 |
+| 9 | R8 | P | F | clear_error | 实际执行仅构造歌曲ID并集；commentary另含5个Python代码块，明确违反每步仅一代码块协议。 |
+| 7 | R8 | F | P | debatable | 已查完整规格，当前只读第一页，理论上仍可下一步续页。整个轨迹确实最终未完成分页，但把后续停止的违规归到首次读取可能形成事后归责；v5的R8对跨步分页时点不够明确。 |
+| 8 | R8 | F | P | debatable | 已查完整规格，当前只读第一页，理论上仍可下一步续页。整个轨迹确实最终未完成分页，但把后续停止的违规归到首次读取可能形成事后归责；v5的R8对跨步分页时点不够明确。 |
+
+## 27e1026_2__00
+
+完整复核12步，包括20条搜索记录及其排序。准确识别非法排序参数、重复失败、以newest作文本搜索的错误方法、把10月误当可见最新日期；正确给实际ISO日期排序R4=P。step11/12把全局未知错误升级为已知错误，且step11短依据把计划检查误写成完成检查。
+
+[完整输入](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/27e1026_2__00/input.json) · [原始评分](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/27e1026_2__00/judgement.json)
+
+| step | 维度 | 原标签 | 建议 | 类型 | 证据 |
+| --- | --- | --- | --- | --- | --- |
+| 11 | R3 | F | U | clear_error | 当前最大值确为可见20条中的2022-11-08；是否是用户三类库中的最新歌曲未知。let us confirm/check all是拟进行的检查，不是已经完整检查账户的事实。 |
+| 12 | R7 | F | U | clear_error | 没有取得三类私有库，无法确认候选歌曲属于账户或全局最新；输入亦没有实际库中更晚歌曲的反例。R3/R4已保留U，按v5最终完成证据未知时R7应U。 |
+
+短依据问题（step 11）：短依据称代理宣称已经检查全部歌曲，但文本是let us confirm by checking的拟检查表达；错误的证据范围仍存在，不宜把未来计划改写成已发生事实。
+
+## c901732_2__01
+
+复核全部8步及10首歌记录。正确捕捉用时长/点赞量代替收听量、268并非最长（可见298）、连续猜测不存在接口。最后确实以status=fail提交，R7=P不能解释成任务成功；诚实失败的交付质量与成功判定需要分开。
+
+[完整输入](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/c901732_2__01/input.json) · [原始评分](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/c901732_2__01/judgement.json)
+
+| step | 维度 | 原标签 | 建议 | 类型 | 证据 |
+| --- | --- | --- | --- | --- | --- |
+| 8 | R3 | F | U | debatable | 三次猜测接口失败不足以推出任务不可完成，但本轨迹未展示实际播放API规格；“我无法播放”的能力/可行性判断不一定是可证伪的环境事实。未充分探索后放弃与事实错误应分开。 |
+| 3 | R8 | F | P | debatable | 首次分页读取已找到精确目标，当前仍可继续翻页；最终未遍历确实不符合输入协议，但在初次读取就记F存在跨步归责边界。 |
+
+## ccb4494_1__02
+
+复核9步及完整10首队列。v5准确识别当前position=5却给position6—9也点赞的实际越界，R4/R5/R7均为F。遗漏了step7在认证修复后成功重试原查询的R6正向恢复。
+
+[完整输入](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/ccb4494_1__02/input.json) · [原始评分](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/ccb4494_1__02/judgement.json)
+
+| step | 维度 | 原标签 | 建议 | 类型 | 证据 |
+| --- | --- | --- | --- | --- | --- |
+| 7 | R6 | N | P | clear_error | step3同一show_song_queue因未定义令牌失败；step5—6取得有效凭据后，本步成功重试该查询，属于已经发生的恢复，不是正常首次推进。 |
+| 1 | R4 | N | F | debatable | 计划明确说点赞队列中所有歌曲，遗漏played so far限制；可以视为已提出错误选择规则。但作为初始高层计划，也可能尚未形成具体筛选决策，故不列为明确误判。 |
+
+## e3d6c94_3__05
+
+复核11步及完整23首推荐列表。正确区分创建播放列表的局部成功与未核验曲风/年份的歌曲写入效果U，最终也给R7=U。问题为将中间推荐列表读取按未做完过滤惩罚、漏记恢复、错误参数阻止创建时R5仍判F，以及漏掉虚构凭据的数据保真问题。
+
+[完整输入](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/e3d6c94_3__05/input.json) · [原始评分](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/e3d6c94_3__05/judgement.json)
+
+| step | 维度 | 原标签 | 建议 | 类型 | 证据 |
+| --- | --- | --- | --- | --- | --- |
+| 4 | R3 | N | F | clear_error | 未取得任何密码就使用字面凭据并返回401，短依据也明确称虚构密码；这是无依据数据，非单纯参数类型错误。 |
+| 4 | R6 | P | F | debatable | 改为登录的方向回应了未定义令牌，但用无依据密码无法有效修复；与另一个同构案例ccb4494_1__02的R6=F存在口径不一致。 |
+| 7 | R2 | F | P | clear_error | 实际完整遍历推荐分页，当前取得推荐候选集合是有效局部取证；曲风/年份可在后续详情查询筛选。文本误称R&B的证据问题另由R3=U表达，不应把尚未执行的全局筛选要求压到本次读取。 |
+| 7 | R4 | F | N | debatable | 本步实际只有完整取推荐列表，没有实际筛选/写入；按纯取数N可记N。但其把推荐列表称R&B的措辞也可能被解读为已提出全部采用的错误规则。 |
+| 7 | R6 | N | P | clear_error | step3相同分页查询因令牌未定义失败，step6认证后本步成功重试，属于有证据的执行恢复。 |
+| 8 | R5 | F | N | clear_error | create_playlist在参数校验阶段因name不受支持直接失败，尚未产生播放列表；不能把没有发生的创建当成错误业务效果。 |
+
+## 3c13f5a_2__04
+
+完整复核49步，包括目录、182美元账单、所有登录/查询循环、三笔实际转账。v5正确识别把本人号码当室友、密码当令牌、付款代替收款请求、未均分和虚假完成，且只在实际发生转账时给R5=F。问题为文档查询继承旧月份不确定性、重复资料查询混淆R2与R6及漏记参数恢复。
+
+[完整输入](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/3c13f5a_2__04/input.json) · [原始评分](/root/autodl-tmp/workspace-tw/experiments/2026-10-13_appworld_qwen3_8b_step_rubric_v5_full/runs/scoring/3c13f5a_2__04/judgement.json)
+
+| step | 维度 | 原标签 | 建议 | 类型 | 证据 |
+| --- | --- | --- | --- | --- | --- |
+| 13 | R4 | U | N | clear_error | 本步仅陈述已读账单金额182并查询phone接口目录，没有新的月份选择或均摊计算；v5规定查文档时R4=N，不应将早先目标月份未确认传播到纯文档查询。 |
+| 32 | R2 | F | P | debatable | show_profile确实能核对声明的当前子目标“电话号码是否正确注册”，并返回本人资料；重复且无助解决登录的部分已由R6=F捕捉。若把当前子目标定义为整个认证恢复而非号码核对，则R2=F也可成立，属局部目标范围边界。 |
+| 34 | R2 | F | P | debatable | show_profile确实能核对声明的当前子目标“电话号码是否正确注册”，并返回本人资料；重复且无助解决登录的部分已由R6=F捕捉。若把当前子目标定义为整个认证恢复而非号码核对，则R2=F也可成立，属局部目标范围边界。 |
+| 39 | R2 | F | P | debatable | show_profile确实能核对声明的当前子目标“电话号码是否正确注册”，并返回本人资料；重复且无助解决登录的部分已由R6=F捕捉。若把当前子目标定义为整个认证恢复而非号码核对，则R2=F也可成立，属局部目标范围边界。 |
+| 48 | R6 | N | P | clear_error | step43的create_transaction因phone_number参数失败；本步已按其反馈改用receiver_email、description并提供有效令牌，实际调用成功。业务对象、方向、金额仍错由R3/R4/R5保持F，不应漏记执行契约恢复。 |
+

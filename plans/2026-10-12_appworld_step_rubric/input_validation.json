@@ -1,0 +1,58 @@
+{
+  "scope": "Local input preparation and schema checks only. No external judge calls, no trajectory execution, no model training.",
+  "source_directory": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/runs/step01_train90_rollouts/trajectories",
+  "stats": {
+    "trajectories": 540,
+    "steps": 9886,
+    "official_successes": 186,
+    "inputs_prepared_in_memory": 540,
+    "empty_code_steps": 4,
+    "unclosed_code_blocks": 5,
+    "trajectories_with_traceback": 382,
+    "successful_trajectories_with_traceback": 83
+  },
+  "groups": {
+    "tasks": 90,
+    "all_failed": 23,
+    "all_succeeded": 4,
+    "mixed": 63
+  },
+  "termination": {
+    "completion_api": 472,
+    "step_limit": 19,
+    "context_limit": 45,
+    "no_python_code": 4
+  },
+  "input_errors": [],
+  "examples": [
+    {
+      "file": "692c77d_2__03.json",
+      "source_sha256": "cef6cf399eee8512c6d84168f357fc2f1b58bffc636b29348cae59f27b03aa57",
+      "input_sha256": "340787a790dee8f8056c72c3a39c3967095619311bbb52cc2778cb67639dbdd8",
+      "steps": 17,
+      "prepared_chars": 46054
+    },
+    {
+      "file": "cf6abd2_2__01.json",
+      "source_sha256": "d5f072cfe3477f2e383bee8001ea41a575661843b4186843b819280305e488c0",
+      "input_sha256": "45bb77af78982769c95cfaa59f0937d944fe28f3acf7f0f95cb1d3e42e461e50",
+      "steps": 11,
+      "prepared_chars": 27936
+    }
+  ],
+  "prepared_payload_character_count": 31675929,
+  "prompt_characters": 4723,
+  "checks": {
+    "prompt_format_example_validates": true,
+    "reference_docs_include_bootstrap": true,
+    "manual_source_hashes_unchanged": true,
+    "manual_cases": 24,
+    "manual_source_trajectories": 13,
+    "audit_format_example_validates": true,
+    "batch_format_example_validates": true,
+    "batch_rejects_explanations": true,
+    "modes_preserve_identical_trajectory_evidence": true,
+    "credential_marker_semantics_documented": true
+  },
+  "official_results_usage": "Audit counts only; never placed in prepared judge input."
+}

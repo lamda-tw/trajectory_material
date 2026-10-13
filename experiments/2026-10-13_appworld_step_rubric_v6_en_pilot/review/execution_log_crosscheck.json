@@ -1,0 +1,166 @@
+{
+  "scope": "Local audit only; these extra logs were NOT provided to the judge. Continued execution to subsequent API calls establishes that preceding calls returned without exception.",
+  "evidence": [
+    {
+      "trajectory": "b7a9ee9_1__05",
+      "source_log": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo/runtime/appworld/experiments/outputs/step01_train90_rollouts__b7a9ee9_1__05/tasks/b7a9ee9_1/logs/api_calls.jsonl",
+      "source_sha256": "0c8c2c900368902a74b76d8f84146e4ba7b578381e436aa18dfe976c54d27b09",
+      "selected_calls_without_credentials": [
+        {
+          "log_line": 87,
+          "method": "post",
+          "url": "/spotify/following_artists/21",
+          "data": {}
+        },
+        {
+          "log_line": 89,
+          "method": "post",
+          "url": "/spotify/following_artists/21",
+          "data": {}
+        },
+        {
+          "log_line": 90,
+          "method": "post",
+          "url": "/spotify/following_artists/28",
+          "data": {}
+        },
+        {
+          "log_line": 91,
+          "method": "post",
+          "url": "/spotify/following_artists/10",
+          "data": {}
+        },
+        {
+          "log_line": 92,
+          "method": "post",
+          "url": "/spotify/following_artists/28",
+          "data": {}
+        },
+        {
+          "log_line": 93,
+          "method": "get",
+          "url": "/spotify/following_artists",
+          "data": {}
+        },
+        {
+          "log_line": 94,
+          "method": "get",
+          "url": "/spotify/following_artists",
+          "data": {}
+        },
+        {
+          "log_line": 95,
+          "method": "post",
+          "url": "/spotify/following_artists/12",
+          "data": {}
+        },
+        {
+          "log_line": 96,
+          "method": "post",
+          "url": "/spotify/following_artists/33",
+          "data": {}
+        },
+        {
+          "log_line": 97,
+          "method": "post",
+          "url": "/spotify/following_artists/12",
+          "data": {}
+        },
+        {
+          "log_line": 98,
+          "method": "get",
+          "url": "/spotify/following_artists",
+          "data": {}
+        }
+      ]
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "source_log": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo/runtime/appworld/experiments/outputs/step01_train90_rollouts__7d7fbf6_1__00/tasks/7d7fbf6_1/logs/api_calls.jsonl",
+      "source_sha256": "d00ee3b18f780db76f64f2053123f617adf923cf8718fc43020ea070b50e6359",
+      "selected_calls_without_credentials": [
+        {
+          "log_line": 10,
+          "method": "post",
+          "url": "/file_system/directory/compress",
+          "data": {
+            "directory_path": "/home/nicholas/photographs/vacations/athens/",
+            "compressed_file_path": "~/photographs/.zip",
+            "delete_directory": true
+          }
+        },
+        {
+          "log_line": 11,
+          "method": "post",
+          "url": "/file_system/directory/compress",
+          "data": {
+            "directory_path": "/home/nicholas/photographs/vacations/maui/",
+            "compressed_file_path": "~/photographs/.zip",
+            "delete_directory": true
+          }
+        },
+        {
+          "log_line": 12,
+          "method": "post",
+          "url": "/file_system/directory/compress",
+          "data": {
+            "directory_path": "/home/nicholas/photographs/vacations/athens/",
+            "compressed_file_path": "~/photographs/.zip",
+            "delete_directory": true,
+            "overwrite": true
+          }
+        },
+        {
+          "log_line": 20,
+          "method": "post",
+          "url": "/file_system/directory/compress",
+          "data": {
+            "directory_path": "/home/nicholas/photographs/vacations/maui/",
+            "compressed_file_path": "~/photographs/maui.zip",
+            "delete_directory": true,
+            "overwrite": true
+          }
+        },
+        {
+          "log_line": 21,
+          "method": "post",
+          "url": "/file_system/directory/compress",
+          "data": {
+            "directory_path": "/home/nicholas/photographs/vacations/stockholm/",
+            "compressed_file_path": "~/photographs/stockholm.zip",
+            "delete_directory": true,
+            "overwrite": true
+          }
+        },
+        {
+          "log_line": 22,
+          "method": "post",
+          "url": "/file_system/directory/compress",
+          "data": {
+            "directory_path": "/home/nicholas/photographs/vacations/tokyo/",
+            "compressed_file_path": "~/photographs/tokyo.zip",
+            "delete_directory": true,
+            "overwrite": true
+          }
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "trajectory": "b7a9ee9_1__05",
+      "step": 20,
+      "finding": "Three authenticated follow calls (21,28,10) precede duplicate28 failure. Confirms the partial-effect check."
+    },
+    {
+      "trajectory": "7d7fbf6_1__00",
+      "step": 12,
+      "finding": "Athens compression call precedes Maui compression call; later state shows Athens removed. Confirms partial wrong-path write."
+    },
+    {
+      "trajectory": "b7a9ee9_1__05",
+      "step": 25,
+      "finding": "Only a GET of following artists occurs; all POSTs are skipped. Strict actual-modification applicability therefore suggests R5=N, even though recovery R6=P."
+    }
+  ]
+}

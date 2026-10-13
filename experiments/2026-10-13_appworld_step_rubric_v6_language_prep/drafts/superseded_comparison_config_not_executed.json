@@ -1,0 +1,30 @@
+{
+  "status": "prepared_not_scored",
+  "execution_enabled": false,
+  "model": "gpt-5.6-sol",
+  "reasoning_effort": "high",
+  "initial_workers": 2,
+  "max_workers": 2,
+  "rubric_version": "appworld-step-v6",
+  "arms": {
+    "zh": {
+      "prompt": "assets/prompt_v6_zh.txt",
+      "sha256": "6e12ecb1afdf48b7e6bd6720becd3ed923a61d7043b061e5aab65015d19dec71"
+    },
+    "en": {
+      "prompt": "assets/prompt_v6_en.txt",
+      "sha256": "5b6244548154ae316d856c22ef76d6d8757407f6c19775122f2386ddbb1ba0cd"
+    }
+  },
+  "output_schema": "assets/output_schema_v6.json",
+  "pairing": "Identical frozen input bytes, independent calls and no shared conversation history; counterbalance zh/en order per pair.",
+  "replication": "One first-valid result per language for 36 trajectories; one additional independent call per language for 8 selected trajectories.",
+  "planned_initial_calls_before_retries": 88,
+  "stage_calls": {
+    "development_including_repeats": 32,
+    "holdout_including_repeats": 56
+  },
+  "retry_rule": "Only transport/schema failures; never choose best-of valid labels; retain every attempt.",
+  "model_snapshot_policy": "Record resolved model/version if available; an alias may change over time. Interleave arms in the same execution window.",
+  "source_payload_rule": "Pass only the pinned prepared input JSON; never include selection metadata, old judgments, official outcomes, or reference labels."
+}

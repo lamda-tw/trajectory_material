@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AppWorld step rubric v4 unified output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "trajectory_id",
+    "rubric_version",
+    "steps"
+  ],
+  "properties": {
+    "trajectory_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rubric_version": {
+      "const": "appworld-step-v4"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "type": "string",
+            "pattern": "^[PFUN]{8}$"
+          },
+          {
+            "type": "string",
+            "maxLength": 60
+          }
+        ],
+        "items": false,
+        "minItems": 3,
+        "maxItems": 3
+      }
+    }
+  },
+  "$comment": "Also validate input trajectory ID, exact step coverage/order, nonempty short reason for each F/U step, empty reason otherwise. Reasons summarize the main issue; there is no per-rubric explanation or output mode."
+}

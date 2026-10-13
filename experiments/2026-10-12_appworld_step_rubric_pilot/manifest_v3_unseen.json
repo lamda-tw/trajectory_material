@@ -1,0 +1,40 @@
+{
+  "purpose": "Two additional trajectories from task families not used to author v1/v2/v3; checks fixed before judging; purposive selection, not independent human ground truth.",
+  "source_directory": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo/runs/step01_train90_rollouts",
+  "input_preparer_version": "v3",
+  "samples": [
+    {
+      "id": "76f2c72_1__03",
+      "trajectory_id": "base:76f2c72_1__03",
+      "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo/runs/step01_train90_rollouts/trajectories/76f2c72_1__03.json",
+      "source_sha256": "faf16353c4fffd4bae1459b70adef21a219aca658386becb9cc33bdd0bdbb0fe",
+      "policy_id": "base:4281d32de051a1965961c98ad89fba69ba5518961f19a61b788048f14e90c0e5",
+      "input": "inputs_v3/76f2c72_1__03.json",
+      "input_sha256": "c114d5e0508a648160a8916991c3927ac316db6b75db7fa65955b8708785faa3",
+      "steps": 16,
+      "input_characters": 29873,
+      "official_success_for_researcher_only": true,
+      "selection_reason": "成功；新文件系统任务，日期依据、金额解析和恢复",
+      "termination": "completion_api"
+    },
+    {
+      "id": "7d7fbf6_1__00",
+      "trajectory_id": "base:7d7fbf6_1__00",
+      "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo/runs/step01_train90_rollouts/trajectories/7d7fbf6_1__00.json",
+      "source_sha256": "1671f5d29ffbaa58917944270c58ac40a83fef59f6f43fd0b56dd8e187bb40b2",
+      "policy_id": "base:4281d32de051a1965961c98ad89fba69ba5518961f19a61b788048f14e90c0e5",
+      "input": "inputs_v3/7d7fbf6_1__00.json",
+      "input_sha256": "4e1573ca4e2ac79d780f82231bf316487e620a24de8c36fcd5176fbdd8f6c905",
+      "steps": 17,
+      "input_characters": 28181,
+      "official_success_for_researcher_only": false,
+      "selection_reason": "失败；新文件系统任务，路径处理、部分副作用、错误后继续与错误交付",
+      "termination": "no_python_code"
+    }
+  ],
+  "scope": "One successful electricity-bill trajectory and one failed archive/delete trajectory; no replay or training.",
+  "prompt_sha256": "1743b4b6cd6082c809bbde4791c087ff00428233b914dd5e359f745e48e40151",
+  "schema_sha256": "f1781291b01c48777b911d94a6cb25f231c84b0184d31b13193d4cfcdedbf055",
+  "input_preparer_sha256": "dc14636a5e40fb43df96376e937e57570f965dbbda9df33c1bb7e2eb5f73c6ea",
+  "warning": "Do not include this manifest or official outcomes in judge requests."
+}

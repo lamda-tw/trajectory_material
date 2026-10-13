@@ -1,0 +1,258 @@
+{
+  "status": "Development checks authored in this conversation from visible trajectory evidence; not independent human ground truth. Some checks were identified after seeing the first two v1 results.",
+  "checks": [
+    {
+      "trajectory": "302c169_2__02",
+      "step": 1,
+      "rubric": "R1",
+      "expected": [
+        "F"
+      ],
+      "rationale": "无令牌调用返回401，成功轨迹也保留局部执行错误。"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 7,
+      "rubric": "R2",
+      "expected": [
+        "P"
+      ],
+      "rationale": "本步只成功取得当前页；未宣称全覆盖，不能把后续全集义务提前当成本步取证不确定。"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 8,
+      "rubric": "R2",
+      "expected": [
+        "P"
+      ],
+      "rationale": "筛选当前已见Wake Up并打印ID，没有宣称全局唯一；全集问题应在依赖全集时评价。"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 9,
+      "rubric": "R4",
+      "expected": [
+        "P"
+      ],
+      "rationale": "07:30减40分钟得到06:50，代码和观察一致。"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 10,
+      "rubric": "R5",
+      "expected": [
+        "P"
+      ],
+      "rationale": "可见当前列表中的目标更新时间，其余关闭；局部执行效果有依据，全集覆盖另评。"
+    },
+    {
+      "trajectory": "302c169_2__02",
+      "step": 11,
+      "rubric": "R8",
+      "expected": [
+        "F"
+      ],
+      "rationale": "明确协议要求先看API规格，输入未提供complete_task完整规格且没有查询；不能因调用成功豁免。"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 5,
+      "rubric": "R1",
+      "expected": [
+        "F"
+      ],
+      "rationale": "布尔列表元素按字典取password，返回TypeError。"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 6,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "修复列表筛选并成功登录，属于有效恢复。"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 8,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "将Wake Up当作go-to-sleep目标，没有任务与数据支持。"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 9,
+      "rubric": "R5",
+      "expected": [
+        "F"
+      ],
+      "rationale": "真正执行的是修改407号Wake Up；禁用其余闹钟的第二段代码没有执行。"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 10,
+      "rubric": "R3",
+      "expected": [
+        "F"
+      ],
+      "rationale": "声称其余闹钟已禁用，但没有执行对应循环。"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 10,
+      "rubric": "R7",
+      "expected": [
+        "F"
+      ],
+      "rationale": "已见目标错误且禁用未执行，仍提交完成。"
+    },
+    {
+      "trajectory": "302c169_3__03",
+      "step": 10,
+      "rubric": "R8",
+      "expected": [
+        "F"
+      ],
+      "rationale": "与另一闹钟轨迹相同，调用complete_task前没有取得完整API规格。"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 12,
+      "rubric": "R6",
+      "expected": [
+        "F"
+      ],
+      "rationale": "已有Bucket List结果，仍否认目标并无改变地重复同一搜索。"
+    },
+    {
+      "trajectory": "cf6abd2_2__01",
+      "step": 16,
+      "rubric": "R5",
+      "expected": [
+        "P"
+      ],
+      "rationale": "精确替换目标条目前缀，其余内容保留，update_note执行成功。"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 6,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "本步已修复上一轮passwords未定义；本轮新TypeError归R1/R3，不能抹掉局部恢复。"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 11,
+      "rubric": "R3",
+      "expected": [
+        "F"
+      ],
+      "rationale": "观察显示目标[x]，说明却说已经not done。"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 11,
+      "rubric": "R5",
+      "expected": [
+        "P"
+      ],
+      "rationale": "实际更新代码正确把目标[x]变[ ]；不能因整条失败否定本步写入。"
+    },
+    {
+      "trajectory": "cf6abd2_2__02",
+      "step": 12,
+      "rubric": "R7",
+      "expected": [
+        "F"
+      ],
+      "rationale": "最后无代码；前步complete_task只出现在未执行的第二代码块，未完成规定交付。"
+    },
+    {
+      "trajectory": "e7a10f8_3__02",
+      "step": 1,
+      "rubric": "R1",
+      "expected": [
+        "P"
+      ],
+      "rationale": "赋值和打印fake_access_token能运行，伪凭据问题属于其他维度。"
+    },
+    {
+      "trajectory": "e7a10f8_3__02",
+      "step": 1,
+      "rubric": "R3",
+      "expected": [
+        "F"
+      ],
+      "rationale": "演示伪令牌被声称为已获得的真实认证状态。"
+    },
+    {
+      "trajectory": "e7a10f8_3__02",
+      "step": 6,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "已明确提出每首歌一律3分钟，不能仅凭未执行到乘法忽略确定的业务假设错误。"
+    },
+    {
+      "trajectory": "e7a10f8_3__02",
+      "step": 8,
+      "rubric": "R4",
+      "expected": [
+        "P"
+      ],
+      "rationale": "按实际duration求和、换算、取最大；先四舍五入再取最大仍给出所需最大时长的舍入值。"
+    },
+    {
+      "trajectory": "e7a10f8_3__02",
+      "step": 8,
+      "rubric": "R6",
+      "expected": [
+        "P"
+      ],
+      "rationale": "根据show_playlist文档改用songs[].duration，成功恢复。"
+    },
+    {
+      "trajectory": "e7a10f8_3__04",
+      "step": 5,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "用歌曲数量替代总时长判断最长。"
+    },
+    {
+      "trajectory": "e7a10f8_3__04",
+      "step": 6,
+      "rubric": "R4",
+      "expected": [
+        "F"
+      ],
+      "rationale": "用未经支持的每首3分钟估算所需精确答案。"
+    },
+    {
+      "trajectory": "e7a10f8_3__04",
+      "step": 7,
+      "rubric": "R7",
+      "expected": [
+        "F"
+      ],
+      "rationale": "将估算24作为实际最长时长交付，证据不支持。"
+    },
+    {
+      "trajectory": "e7a10f8_3__02",
+      "step": 4,
+      "rubric": "R5",
+      "expected": [
+        "N"
+      ],
+      "rationale": "本任务要查询歌单时长，登录只是认证准备，不是任务要求的业务写入。"
+    }
+  ],
+  "frozen_before_v2": true
+}

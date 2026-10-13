@@ -1,0 +1,612 @@
+{
+  "methods": {
+    "bootstrap_unit": "task_family",
+    "bootstrap_replicates": 5000,
+    "seed": 20261013,
+    "PF": "P vs F only; U and N excluded",
+    "within_task": "trajectory P/(P+F+U); success minus failure means within each task, then equally average tasks with both outcomes and applicable rubric; CI resamples families",
+    "limitations": [
+      "descriptive associations, not causal training benefit",
+      "post-outcome full-trajectory judge can create hindsight dependence",
+      "family bootstrap intervals exploratory, not multiple-testing adjusted",
+      "P/F subset may have outcome-dependent U missingness"
+    ]
+  },
+  "dataset": {
+    "steps": 11254,
+    "trajectories": 540,
+    "tasks": 90,
+    "families": 30,
+    "success_trajectories": 39,
+    "success_steps": 501,
+    "success_tasks": 20,
+    "success_families": 12
+  },
+  "rubrics": [
+    {
+      "rubric": "R1",
+      "counts": {
+        "P": 6069,
+        "F": 5185
+      },
+      "applicable_steps": 11254,
+      "coverage": 1.0,
+      "applicable_trajectories": 540,
+      "applicable_tasks": 90,
+      "applicable_families": 30,
+      "success_applicable_steps": 501,
+      "success_applicable_trajectories": 39,
+      "pf_trajectories": 540,
+      "pf_cells_successP_failureP_successF_failureF": [
+        380,
+        5689,
+        121,
+        5064
+      ],
+      "success_pass_P_over_PF": 0.7584830339321357,
+      "failure_pass_P_over_PF": 0.5290616572119409,
+      "phi_PF": 0.09492587702351327,
+      "phi_family_bootstrap_ci": [
+        0.05939093217924935,
+        0.12906859181384395
+      ],
+      "phi_valid_bootstrap_replicates": 5000,
+      "pass_difference_PF": 0.2294213767201948,
+      "pass_difference_family_bootstrap_ci": [
+        0.16767863312423237,
+        0.28260293653413593
+      ],
+      "success_pass_P_over_PFU": 0.7584830339321357,
+      "failure_pass_P_over_PFU": 0.5290616572119409,
+      "trajectory_pass_fraction_corr": 0.13679763222345706,
+      "within_task_pass_difference": 0.0779185667198211,
+      "within_task_difference_ci": [
+        0.021634824777163695,
+        0.12659879438082217
+      ],
+      "within_task_valid_bootstrap_replicates": 5000,
+      "within_task_matched_tasks": 20
+    },
+    {
+      "rubric": "R2",
+      "counts": {
+        "P": 5197,
+        "U": 875,
+        "N": 4300,
+        "F": 882
+      },
+      "applicable_steps": 6954,
+      "coverage": 0.6179136307090812,
+      "applicable_trajectories": 535,
+      "applicable_tasks": 90,
+      "applicable_families": 30,
+      "success_applicable_steps": 388,
+      "success_applicable_trajectories": 39,
+      "pf_trajectories": 535,
+      "pf_cells_successP_failureP_successF_failureF": [
+        344,
+        4853,
+        15,
+        867
+      ],
+      "success_pass_P_over_PF": 0.958217270194986,
+      "failure_pass_P_over_PF": 0.8484265734265735,
+      "phi_PF": 0.07348524204274914,
+      "phi_family_bootstrap_ci": [
+        0.03350768034569528,
+        0.10831614124559372
+      ],
+      "phi_valid_bootstrap_replicates": 5000,
+      "pass_difference_PF": 0.10979069676841258,
+      "pass_difference_family_bootstrap_ci": [
+        0.057932711696885415,
+        0.1538540789107391
+      ],
+      "success_pass_P_over_PFU": 0.8865979381443299,
+      "failure_pass_P_over_PFU": 0.7391105696009748,
+      "trajectory_pass_fraction_corr": 0.1288552211854314,
+      "within_task_pass_difference": 0.15597284451835136,
+      "within_task_difference_ci": [
+        0.052616054861438714,
+        0.2520524858516801
+      ],
+      "within_task_valid_bootstrap_replicates": 5000,
+      "within_task_matched_tasks": 20
+    },
+    {
+      "rubric": "R3",
+      "counts": {
+        "P": 6166,
+        "U": 972,
+        "F": 2944,
+        "N": 1172
+      },
+      "applicable_steps": 10082,
+      "coverage": 0.8958592500444287,
+      "applicable_trajectories": 538,
+      "applicable_tasks": 90,
+      "applicable_families": 30,
+      "success_applicable_steps": 448,
+      "success_applicable_trajectories": 39,
+      "pf_trajectories": 538,
+      "pf_cells_successP_failureP_successF_failureF": [
+        348,
+        5818,
+        55,
+        2889
+      ],
+      "success_pass_P_over_PF": 0.8635235732009926,
+      "failure_pass_P_over_PF": 0.6681980016079017,
+      "phi_PF": 0.08587667800921973,
+      "phi_family_bootstrap_ci": [
+        0.03267579134146378,
+        0.13654291568308574
+      ],
+      "phi_valid_bootstrap_replicates": 5000,
+      "pass_difference_PF": 0.19532557159309094,
+      "pass_difference_family_bootstrap_ci": [
+        0.09336685000335256,
+        0.26549992610456286
+      ],
+      "success_pass_P_over_PFU": 0.7767857142857143,
+      "failure_pass_P_over_PFU": 0.6039028440938343,
+      "trajectory_pass_fraction_corr": 0.1371482395714033,
+      "within_task_pass_difference": 0.17101294510399084,
+      "within_task_difference_ci": [
+        0.06176553351510071,
+        0.2597437535539046
+      ],
+      "within_task_valid_bootstrap_replicates": 5000,
+      "within_task_matched_tasks": 20
+    },
+    {
+      "rubric": "R4",
+      "counts": {
+        "N": 8303,
+        "U": 217,
+        "F": 2363,
+        "P": 371
+      },
+      "applicable_steps": 2951,
+      "coverage": 0.262217878087791,
+      "applicable_trajectories": 485,
+      "applicable_tasks": 90,
+      "applicable_families": 30,
+      "success_applicable_steps": 131,
+      "success_applicable_trajectories": 39,
+      "pf_trajectories": 476,
+      "pf_cells_successP_failureP_successF_failureF": [
+        72,
+        299,
+        54,
+        2309
+      ],
+      "success_pass_P_over_PF": 0.5714285714285714,
+      "failure_pass_P_over_PF": 0.11464723926380369,
+      "phi_PF": 0.27965886918488314,
+      "phi_family_bootstrap_ci": [
+        0.15124096163017853,
+        0.4185722651284394
+      ],
+      "phi_valid_bootstrap_replicates": 5000,
+      "pass_difference_PF": 0.4567813321647677,
+      "pass_difference_family_bootstrap_ci": [
+        0.26184197840281387,
+        0.6674089721077496
+      ],
+      "success_pass_P_over_PFU": 0.549618320610687,
+      "failure_pass_P_over_PFU": 0.10602836879432624,
+      "trajectory_pass_fraction_corr": 0.3194758381434737,
+      "within_task_pass_difference": 0.4461186186186185,
+      "within_task_difference_ci": [
+        0.2638041174006086,
+        0.6289320613226862
+      ],
+      "within_task_valid_bootstrap_replicates": 5000,
+      "within_task_matched_tasks": 20
+    },
+    {
+      "rubric": "R5",
+      "counts": {
+        "N": 10976,
+        "U": 131,
+        "F": 56,
+        "P": 91
+      },
+      "applicable_steps": 278,
+      "coverage": 0.02470232806113382,
+      "applicable_trajectories": 219,
+      "applicable_tasks": 63,
+      "applicable_families": 25,
+      "success_applicable_steps": 18,
+      "success_applicable_trajectories": 17,
+      "pf_trajectories": 122,
+      "pf_cells_successP_failureP_successF_failureF": [
+        16,
+        75,
+        0,
+        56
+      ],
+      "success_pass_P_over_PF": 1.0,
+      "failure_pass_P_over_PF": 0.5725190839694656,
+      "phi_PF": 0.27415594055506515,
+      "phi_family_bootstrap_ci": [
+        0.12852238279620307,
+        0.45294475151525204
+      ],
+      "phi_valid_bootstrap_replicates": 4994,
+      "pass_difference_PF": 0.4274809160305344,
+      "pass_difference_family_bootstrap_ci": [
+        0.22537852419074136,
+        0.65
+      ],
+      "success_pass_P_over_PFU": 0.8888888888888888,
+      "failure_pass_P_over_PFU": 0.28846153846153844,
+      "trajectory_pass_fraction_corr": 0.3840407017848552,
+      "within_task_pass_difference": 0.3925925925925926,
+      "within_task_difference_ci": [
+        0.05714285714285713,
+        0.6555555555555554
+      ],
+      "within_task_valid_bootstrap_replicates": 4995,
+      "within_task_matched_tasks": 9
+    },
+    {
+      "rubric": "R6",
+      "counts": {
+        "N": 2859,
+        "P": 3270,
+        "F": 5110,
+        "U": 15
+      },
+      "applicable_steps": 8395,
+      "coverage": 0.745956993069131,
+      "applicable_trajectories": 500,
+      "applicable_tasks": 90,
+      "applicable_families": 30,
+      "success_applicable_steps": 282,
+      "success_applicable_trajectories": 36,
+      "pf_trajectories": 500,
+      "pf_cells_successP_failureP_successF_failureF": [
+        215,
+        3055,
+        67,
+        5043
+      ],
+      "success_pass_P_over_PF": 0.7624113475177305,
+      "failure_pass_P_over_PF": 0.3772536428747839,
+      "phi_PF": 0.14238613577184678,
+      "phi_family_bootstrap_ci": [
+        0.08423193307516028,
+        0.19773935584629257
+      ],
+      "phi_valid_bootstrap_replicates": 5000,
+      "pass_difference_PF": 0.38515770464294663,
+      "pass_difference_family_bootstrap_ci": [
+        0.26562156136013504,
+        0.5379166307138117
+      ],
+      "success_pass_P_over_PFU": 0.7624113475177305,
+      "failure_pass_P_over_PFU": 0.3765561444595094,
+      "trajectory_pass_fraction_corr": 0.1907164430415462,
+      "within_task_pass_difference": 0.17622821723335433,
+      "within_task_difference_ci": [
+        0.05441041465608893,
+        0.2812750375053577
+      ],
+      "within_task_valid_bootstrap_replicates": 5000,
+      "within_task_matched_tasks": 20
+    },
+    {
+      "rubric": "R7",
+      "counts": {
+        "N": 10649,
+        "U": 149,
+        "P": 43,
+        "F": 413
+      },
+      "applicable_steps": 605,
+      "coverage": 0.05375866358628043,
+      "applicable_trajectories": 430,
+      "applicable_tasks": 89,
+      "applicable_families": 30,
+      "success_applicable_steps": 42,
+      "success_applicable_trajectories": 39,
+      "pf_trajectories": 290,
+      "pf_cells_successP_failureP_successF_failureF": [
+        21,
+        22,
+        1,
+        412
+      ],
+      "success_pass_P_over_PF": 0.9545454545454546,
+      "failure_pass_P_over_PF": 0.05069124423963134,
+      "phi_PF": 0.6627432862663685,
+      "phi_family_bootstrap_ci": [
+        0.4304063962920451,
+        0.8192017079822365
+      ],
+      "phi_valid_bootstrap_replicates": 5000,
+      "pass_difference_PF": 0.9038542103058232,
+      "pass_difference_family_bootstrap_ci": [
+        0.7545924438197762,
+        0.9716818333611621
+      ],
+      "success_pass_P_over_PFU": 0.5,
+      "failure_pass_P_over_PFU": 0.03907637655417407,
+      "trajectory_pass_fraction_corr": 0.412474572545774,
+      "within_task_pass_difference": 0.4025,
+      "within_task_difference_ci": [
+        0.15,
+        0.695273809523809
+      ],
+      "within_task_valid_bootstrap_replicates": 5000,
+      "within_task_matched_tasks": 20
+    },
+    {
+      "rubric": "R8",
+      "counts": {
+        "F": 7544,
+        "P": 3671,
+        "N": 3,
+        "U": 36
+      },
+      "applicable_steps": 11251,
+      "coverage": 0.9997334281144482,
+      "applicable_trajectories": 540,
+      "applicable_tasks": 90,
+      "applicable_families": 30,
+      "success_applicable_steps": 501,
+      "success_applicable_trajectories": 39,
+      "pf_trajectories": 540,
+      "pf_cells_successP_failureP_successF_failureF": [
+        249,
+        3422,
+        252,
+        7292
+      ],
+      "success_pass_P_over_PF": 0.49700598802395207,
+      "failure_pass_P_over_PF": 0.3193951838715699,
+      "phi_PF": 0.0781935683305866,
+      "phi_family_bootstrap_ci": [
+        0.04476009944075647,
+        0.1078172998219682
+      ],
+      "phi_valid_bootstrap_replicates": 5000,
+      "pass_difference_PF": 0.17761080415238217,
+      "pass_difference_family_bootstrap_ci": [
+        0.11238762581848355,
+        0.23745340334233214
+      ],
+      "success_pass_P_over_PFU": 0.49700598802395207,
+      "failure_pass_P_over_PFU": 0.31832558139534883,
+      "trajectory_pass_fraction_corr": 0.13380709872733565,
+      "within_task_pass_difference": 0.09895198344686706,
+      "within_task_difference_ci": [
+        0.057218246369458214,
+        0.14649263954889985
+      ],
+      "within_task_valid_bootstrap_replicates": 5000,
+      "within_task_matched_tasks": 20
+    }
+  ],
+  "pairwise": [
+    {
+      "r1": "R1",
+      "r2": "R2",
+      "joint_PF_steps": 6079,
+      "phi": 0.11248964235906275
+    },
+    {
+      "r1": "R1",
+      "r2": "R3",
+      "joint_PF_steps": 9110,
+      "phi": 0.27995005380669813
+    },
+    {
+      "r1": "R1",
+      "r2": "R4",
+      "joint_PF_steps": 2734,
+      "phi": 0.18199987825793637
+    },
+    {
+      "r1": "R1",
+      "r2": "R5",
+      "joint_PF_steps": 147,
+      "phi": -0.1313908524822601
+    },
+    {
+      "r1": "R1",
+      "r2": "R6",
+      "joint_PF_steps": 8380,
+      "phi": 0.22988501434667888
+    },
+    {
+      "r1": "R1",
+      "r2": "R7",
+      "joint_PF_steps": 456,
+      "phi": 0.2250107679877074
+    },
+    {
+      "r1": "R1",
+      "r2": "R8",
+      "joint_PF_steps": 11215,
+      "phi": 0.4075075914394748
+    },
+    {
+      "r1": "R2",
+      "r2": "R3",
+      "joint_PF_steps": 5113,
+      "phi": 0.5468471129424007
+    },
+    {
+      "r1": "R2",
+      "r2": "R4",
+      "joint_PF_steps": 1575,
+      "phi": 0.3037027848898552
+    },
+    {
+      "r1": "R2",
+      "r2": "R5",
+      "joint_PF_steps": 98,
+      "phi": 0.41478067789216877
+    },
+    {
+      "r1": "R2",
+      "r2": "R6",
+      "joint_PF_steps": 4527,
+      "phi": 0.21920901384464417
+    },
+    {
+      "r1": "R2",
+      "r2": "R7",
+      "joint_PF_steps": 99,
+      "phi": 0.43713663238643147
+    },
+    {
+      "r1": "R2",
+      "r2": "R8",
+      "joint_PF_steps": 6049,
+      "phi": 0.16916651246359876
+    },
+    {
+      "r1": "R3",
+      "r2": "R4",
+      "joint_PF_steps": 2241,
+      "phi": 0.2978051332560597
+    },
+    {
+      "r1": "R3",
+      "r2": "R5",
+      "joint_PF_steps": 144,
+      "phi": 0.4295050829650323
+    },
+    {
+      "r1": "R3",
+      "r2": "R6",
+      "joint_PF_steps": 7289,
+      "phi": 0.3342612914029474
+    },
+    {
+      "r1": "R3",
+      "r2": "R7",
+      "joint_PF_steps": 327,
+      "phi": 0.5488253921719665
+    },
+    {
+      "r1": "R3",
+      "r2": "R8",
+      "joint_PF_steps": 9072,
+      "phi": 0.19891752091775428
+    },
+    {
+      "r1": "R4",
+      "r2": "R5",
+      "joint_PF_steps": 137,
+      "phi": 0.7231530271858649
+    },
+    {
+      "r1": "R4",
+      "r2": "R6",
+      "joint_PF_steps": 1963,
+      "phi": 0.29134901906132243
+    },
+    {
+      "r1": "R4",
+      "r2": "R7",
+      "joint_PF_steps": 121,
+      "phi": 0.3400705421927626
+    },
+    {
+      "r1": "R4",
+      "r2": "R8",
+      "joint_PF_steps": 2702,
+      "phi": 0.10988576271167133
+    },
+    {
+      "r1": "R5",
+      "r2": "R6",
+      "joint_PF_steps": 66,
+      "phi": -0.029880715233359764
+    },
+    {
+      "r1": "R5",
+      "r2": "R7",
+      "joint_PF_steps": 10,
+      "phi": 0.408248290463863
+    },
+    {
+      "r1": "R5",
+      "r2": "R8",
+      "joint_PF_steps": 147,
+      "phi": 0.025041771123531613
+    },
+    {
+      "r1": "R6",
+      "r2": "R7",
+      "joint_PF_steps": 193,
+      "phi": 0.2971176815720689
+    },
+    {
+      "r1": "R6",
+      "r2": "R8",
+      "joint_PF_steps": 8348,
+      "phi": 0.09611769855109789
+    },
+    {
+      "r1": "R7",
+      "r2": "R8",
+      "joint_PF_steps": 453,
+      "phi": -0.187657283056922
+    }
+  ],
+  "selection": {
+    "scope": "New labels on unchanged original common_pool eligibility; diagnostic only, not new training data.",
+    "steps": 2846,
+    "by_rubric": {
+      "R1": {
+        "P": 2846
+      },
+      "R2": {
+        "P": 2609,
+        "N": 237
+      },
+      "R3": {
+        "P": 2358,
+        "N": 488
+      },
+      "R4": {
+        "N": 2737,
+        "P": 109
+      },
+      "R5": {
+        "N": 2819,
+        "P": 27
+      },
+      "R6": {
+        "N": 1155,
+        "P": 1691
+      },
+      "R7": {
+        "N": 2846
+      },
+      "R8": {
+        "F": 1189,
+        "P": 1656,
+        "U": 1
+      }
+    },
+    "R5P_R8P": 3,
+    "pool_base": 2846,
+    "pool_without_one_gate": {
+      "R2": 2910,
+      "R3": 2938,
+      "R4": 2905,
+      "R5": 2846,
+      "R6": 3794
+    },
+    "pool_plus_R8P": 1656,
+    "pool_R5P": 27,
+    "pool_R5P_R8P": 3
+  }
+}
