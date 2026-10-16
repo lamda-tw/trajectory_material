@@ -1,0 +1,302 @@
+{
+  "created_at": "2026-10-16T09:59:50.504075+08:00",
+  "order": [
+    0,
+    1,
+    5,
+    10,
+    15
+  ],
+  "physical_gpu_indices": [
+    1
+  ],
+  "gpu_uuid": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501",
+  "historical_baseline": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_092504_appworld_qwen3-8b_react_lora_codex_rft_train90_dev57",
+  "adapters": [
+    {
+      "step": 0,
+      "source": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter",
+      "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/historical_protocol_trend/adapters/step_00000",
+      "sha256": "c8fdfd4f3bb198381b6f2e56d019589a3ed904241b0147b565ec540449a29938",
+      "source_config_sha256": "d6e98f010a344bdca5b4370efe278e1d7005985113844aad13ef96f0a95bf892"
+    },
+    {
+      "step": 1,
+      "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/smoke/full_pool_15/step_00001",
+      "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/historical_protocol_trend/adapters/step_00001",
+      "sha256": "1ac4416bf2a5491ae5b2a72da43048116e0aa00335ce588f7edf3344a67ed7d3",
+      "source_config_sha256": "0b3b897a6269a6f6a49d9bb0734108cfc4d8017771c659b18e0af77acb3cd3fb"
+    },
+    {
+      "step": 5,
+      "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/smoke/full_pool_15/step_00005",
+      "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/historical_protocol_trend/adapters/step_00005",
+      "sha256": "021f5d6d5dca4f035d3953ee979cab6ebddf37cd434ca04b29460c111ab467f7",
+      "source_config_sha256": "0b3b897a6269a6f6a49d9bb0734108cfc4d8017771c659b18e0af77acb3cd3fb"
+    },
+    {
+      "step": 10,
+      "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/smoke/full_pool_15/step_00010",
+      "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/historical_protocol_trend/adapters/step_00010",
+      "sha256": "b858e6499c896bcaa20bc369beaab8264a806616116fa91754419ecc96c0c2df",
+      "source_config_sha256": "0b3b897a6269a6f6a49d9bb0734108cfc4d8017771c659b18e0af77acb3cd3fb"
+    },
+    {
+      "step": 15,
+      "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/smoke/full_pool_15/step_00015",
+      "adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/historical_protocol_trend/adapters/step_00015",
+      "sha256": "c8f268b58dea9fc79ae53cfc362dede13edd965b604a4e702c2b6966ddf211d9",
+      "source_config_sha256": "0b3b897a6269a6f6a49d9bb0734108cfc4d8017771c659b18e0af77acb3cd3fb"
+    }
+  ],
+  "unchanged_historical_launcher": true,
+  "unchanged_historical_config": true,
+  "allowed_operational_changes": [
+    "GPU0 -> fixed GPU1 UUID",
+    "isolated output/cache paths",
+    "owned-process cleanup instead of broad pkill",
+    "vLLM NVML UUID-to-physical-index compatibility"
+  ],
+  "sources": [
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld/cli.py",
+      "sha256": "d2eb11ae16a6b11cd1cf84fc5573f791cb3a3ae1dc7b5bb9ce250cb2dd6931ab"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld/common/background_server.py",
+      "sha256": "982741f3da22aac811bc49aaf7469c0d530b218f7764ad772430c537b5f4f3cc"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld/environment.py",
+      "sha256": "f988f1e6f257041e73682725522662674d4d65e8a1673787614f54b89fe2baeb"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld/evaluator.py",
+      "sha256": "bde9deb3b1e6ac0fa9819013729c0e817a97c90f579108fa032a90bba0ca51cb"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/code/simplified/__init__.py",
+      "sha256": "7bc97747442b5cbc8a8651dfd1c4331e967a747a3148ad134c1951d625d5ec2c"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/code/simplified/agent.py",
+      "sha256": "e48934f66a23d00e32babbf8759343d21c277cc722e874b1d25e2a9bfc8fe017"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/code/simplified/api_predictor.py",
+      "sha256": "5dbb7a4e87e7636abbc4866e229efc4dc326a6c686266cd67aae46b80b007525"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/code/simplified/full_code_agent.py",
+      "sha256": "d8934c0c17b183915b1bce8fe242bd74b5ffb23efd9c8784e45439bcdfdfdaea"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/code/simplified/function_calling_agent.py",
+      "sha256": "dd9099bff129e8fbf97e77e6f8679c3395a8c82c9db0cdded31b9e2b3ac72b7f"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/code/simplified/language_model.py",
+      "sha256": "c205afa60ecc84ce55ec60547ee947d99882e1391c7730c1c574fa7435321969"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/code/simplified/react_code_agent.py",
+      "sha256": "4b80c27e61b5d04859c447fa47e525025f2c10044a8799ffad650f42fbfc5963"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/code/simplified/run.py",
+      "sha256": "bb792f70eb340ec25bb1cf7596bdb31962e8f0ac23406b6dd657ad07d8f91c61"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/agents/__init__.py",
+      "sha256": "71983b18c2570ed5dbafce1abf6e530c8fff44780bf33514ebba76597fd7faac"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/models/__init__.py",
+      "sha256": "eaa7ab3e4b22ffa476a8be298bb2f681643eb36cb1d84a53a8fa5aec7bdbc935"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/models/alibaba.py",
+      "sha256": "357a30bc9febad027db2d01f8dde1e80aa1b9e1b34587420762357f8c0babed7"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/models/anthropic.py",
+      "sha256": "a517037ab4b9c71f613b6b84585a83c1a81e687b394fd674a92e05130297c4e2"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/models/baidu.py",
+      "sha256": "6720b0f4eda3f4712b855194e76e97426e40ad52309ba51bb072ad7c7010fc44"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/models/cohere.py",
+      "sha256": "33883479998f848f469aed7b1496dd719a0ea9285c7877244c0515c79c357cb7"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/models/deepseek.py",
+      "sha256": "74a57ae73d05e142e4fb8c28ab357ab05114d30f8d968825d1fa4e871b616914"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/models/google.py",
+      "sha256": "a91200b4b81f8fba5909dab439a2fc4bf6814a41a442ded8a7fc9afc47cfffc5"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/models/longcat.py",
+      "sha256": "09901c856b0754f14b2cec4004e15dee95f2378dfcc5c775973746bc91018ebc"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/models/meta.py",
+      "sha256": "c02e0f28819debf47026cce53a86cf6902083094daf9f771fb19f42a06ef87cb"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/models/minimax.py",
+      "sha256": "fad97c0025d719462b39d2ba5bc7bc7c4a384aea8efbd7fab8ac025d295abac4"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/models/misc.py",
+      "sha256": "af99c29431011486192f12bbd6791afcead3848a7fbd72b1e11b6ec86fd07126"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/models/moonshot.py",
+      "sha256": "7d743f1b76ac786e7e7af0e092b6c74014d62d77e3c09e1d8217bc65b0b9f392"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/models/nous_research.py",
+      "sha256": "e919ea827355423df3738f57001857e8c90b60fadc11b6adc9282732743212c7"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/models/nvidia.py",
+      "sha256": "8f64d62b7254fdb94e5c984777f5992f940c648f610c23197b201cbb925fe4cc"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/models/openai.py",
+      "sha256": "fa4470bc86476504f3cb407b466d9439c5f0422feaab9a9e5dc0419b33697e31"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/models/salesforce.py",
+      "sha256": "0260e34a364fed12c5e201eba2709e3b69d236e4c92dcc6789a6afd4b1c6f87b"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/models/xai.py",
+      "sha256": "ab650c8ccf9944baa7a8509b34ff85a128e7b92ec89d9fcbb8a0cebd42a22ff0"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/models/zai.py",
+      "sha256": "5ae271a6e2d2269edb910e4718f5143c72cc108494fb35977e0172a2edf1b890"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/run.py",
+      "sha256": "416f337c72e14a3dd3016a16715a7ee0f063e212b65c8e65b88064f710fc7363"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/configs/_generator/templates/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld_agents/prompts/react_code_agent/instructions.txt",
+      "sha256": "c41f7852217d46586047a38f68e88b827cb9dcbe624e9651f9db8301547a534b"
+    },
+    {
+      "path": "/root/autodl-tmp/models/Qwen3-8B/config.json",
+      "sha256": "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30"
+    },
+    {
+      "path": "/root/autodl-tmp/models/Qwen3-8B/generation_config.json",
+      "sha256": "2325da0f15bb848e018c5ae071b7943332e9f871d6b60e2ed22ca97d4cb993d2"
+    },
+    {
+      "path": "/root/autodl-tmp/models/Qwen3-8B/model-00001-of-00005.safetensors",
+      "sha256": "31d6a825ae35f11fb85b195b4c42c146c051e446433125a215336abdf95cbf5f"
+    },
+    {
+      "path": "/root/autodl-tmp/models/Qwen3-8B/model-00002-of-00005.safetensors",
+      "sha256": "5991236cea6fe21f3d43cab0f0e84448734fbbe0789816202989f2ddc9d18282"
+    },
+    {
+      "path": "/root/autodl-tmp/models/Qwen3-8B/model-00003-of-00005.safetensors",
+      "sha256": "c5185c4794be2d8a9784d5753c9922db38df478ce11f9ed0b415b7304d896836"
+    },
+    {
+      "path": "/root/autodl-tmp/models/Qwen3-8B/model-00004-of-00005.safetensors",
+      "sha256": "b5ee7de71fbf17db3d5704e0c8f2bc7d005ca9e1d7ca2aeb19827b0cfcaa917a"
+    },
+    {
+      "path": "/root/autodl-tmp/models/Qwen3-8B/model-00005-of-00005.safetensors",
+      "sha256": "20c2d6366ab85c90786ccdd829cd2b9e7d30ef3b2ebbb998280e7e4014b542ff"
+    },
+    {
+      "path": "/root/autodl-tmp/models/Qwen3-8B/tokenizer.json",
+      "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+    },
+    {
+      "path": "/root/autodl-tmp/models/Qwen3-8B/tokenizer_config.json",
+      "sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter/README.md",
+      "sha256": "cc7b9ac08f5e6fdae98fb494d56472ac88932b10a1becd609efc22e6192f7cc9"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter/adapter_config.json",
+      "sha256": "d6e98f010a344bdca5b4370efe278e1d7005985113844aad13ef96f0a95bf892"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter/added_tokens.json",
+      "sha256": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter/chat_template.jinja",
+      "sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter/merges.txt",
+      "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter/special_tokens_map.json",
+      "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter/tokenizer.json",
+      "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter/tokenizer_config.json",
+      "sha256": "cd5c1909da4950a610a9e3a6cb6763cff0381d91c6f0838855db8d5ae83d6c9f"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_015238_appworld_qwen3-8b_lora_codex_rft_train90_epoch5/artifacts/adapter/vocab.json",
+      "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_092504_appworld_qwen3-8b_react_lora_codex_rft_train90_dev57/data/datasets/dev.txt",
+      "sha256": "9fa976589300ea8905708257144d801d1604b06d85fb0181e381df8a3ba85001"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_092504_appworld_qwen3-8b_react_lora_codex_rft_train90_dev57/summary.json",
+      "sha256": "cecc61a37f762a3d391a446ae84c82142d66c11c080665cad925c2ac3e29a01c"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/historical_protocol_trend/protocol_snapshot/appworld_run_isolated_lora_config.py",
+      "sha256": "48026731c38a0cf73c26c9ba5fd23f210cc0dea92cf650c2a6c076aea6965066"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/historical_protocol_trend/protocol_snapshot/dev.jsonnet",
+      "sha256": "6ba24e61c7447a08f8313918f9bbc47bec15f9f46a1c86ed23331cab52c4149a"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/scripts/evaluate_historical_trend.py",
+      "sha256": "9c3600c9469947be30d2ec5a4197be7bea8fde8851c4027c5b5d6c0cdeaa3eca"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/scripts/historical_vllm_gpu1.py",
+      "sha256": "c28720d0e9302908d8770ddf9885a644a81d23eb00d40a8f24a145ec0f46bd62"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/scripts/vllm_uuid_compat/sitecustomize.py",
+      "sha256": "6e42e25f3e83ec3ca792f7dfbce69a1aa6a06819aaaf2c9ff516e1d8186d83e5"
+    }
+  ]
+}

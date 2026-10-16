@@ -1,0 +1,40 @@
+{
+  "paths": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "vllm_python": "/root/autodl-tmp/envs/qwen3-vllm-py312/bin/python"
+  },
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8147,
+    "gpu": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501",
+    "model_name": "joint-qwen3-8b",
+    "adapter_name": "joint-round-policy",
+    "gpu_memory_utilization": 0.8,
+    "max_num_seqs": 6,
+    "minimum_free_gpu_gib": 70,
+    "startup_timeout_seconds": 900,
+    "request_timeout_seconds": 600
+  },
+  "agent": {
+    "prompt": "assets/agent_prompt.txt",
+    "max_steps": 2,
+    "max_model_len": 32000,
+    "max_new_tokens": 3000
+  },
+  "sampling": {
+    "temperature": 1.0,
+    "group_size": 2
+  },
+  "evaluation": {
+    "temperature": 0.0,
+    "tasks": "config/dev57.txt"
+  },
+  "training": {
+    "lora": {
+      "r": 8
+    }
+  },
+  "adapter_sha256": "c8fdfd4f3bb198381b6f2e56d019589a3ed904241b0147b565ec540449a29938",
+  "round": 1,
+  "mode": "smoke"
+}

@@ -1,0 +1,214 @@
+{
+  "status": "pool_strategy_authorized; implementation/smoke candidate, not frozen formal training",
+  "updated_date_beijing": "2026-10-14",
+  "experiment_directory_proposed": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft",
+  "selection": {
+    "status": "user_agreed",
+    "input": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_step_rubric_v6_gpt61_sol/analysis/step_labels.csv",
+    "label_weights": {
+      "P": 1,
+      "F": -1,
+      "U": 0,
+      "N": 0
+    },
+    "rule": "sum_R1_to_R8 >= 4",
+    "expected_steps": 2623,
+    "extra_quality_filters": [],
+    "content_deduplication": false,
+    "official_outcomes_used": false,
+    "keep_complete_original_target": true
+  },
+  "model": {
+    "base": "/root/autodl-tmp/models/Qwen3-8B",
+    "initial_adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/preparation/initial_adapter",
+    "adapter_weights_sha256": "c8fdfd4f3bb198381b6f2e56d019589a3ed904241b0147b565ec540449a29938",
+    "adapter_structure": "inherit initial adapter_config exactly; r=8 alpha=16",
+    "trainable": "existing LoRA copy only",
+    "reference": "frozen base + initial SFT adapter",
+    "pure_sft_warmup_updates": 0,
+    "continuation_lora_parameters": 21823488,
+    "additional_adapter": false,
+    "merge_initial_adapter_into_base": false,
+    "loading_plan": "PeftModel.from_pretrained(base, initial_adapter, is_trainable=True); same existing A/B tensors, base frozen"
+  },
+  "schedule_candidate": {
+    "seed": 20261014,
+    "online_rounds": 5,
+    "tasks_per_round": 90,
+    "tasks_per_batch": 6,
+    "rollouts_per_task": 6,
+    "rl_epochs_per_batch": 1,
+    "sft_epochs": 5,
+    "batches_per_round": 15,
+    "joint_optimizer_updates": 75,
+    "formal_online_trajectories": 2700,
+    "complete_sft_target_consumptions": 13115,
+    "sft_supervised_token_budget": 1026190,
+    "ordering": "independent seeded task and SFT permutations each round",
+    "joint_step": "one optimizer step after both loss gradients; no intermediate update",
+    "collection_unit": "one frozen policy for entire 90x6 pool; collect only between rounds",
+    "rollout_pool_size": 540,
+    "rl_passes_per_pool": 1,
+    "newly_collected_trajectories": 2160,
+    "reused_initial_trajectories": 540,
+    "updates_per_pool_candidate": 15
+  },
+  "optimizer_candidate": {
+    "type": "AdamW",
+    "learning_rate": 5e-06,
+    "minimum_learning_rate": 5e-07,
+    "betas": [
+      0.9,
+      0.999
+    ],
+    "epsilon": 1e-08,
+    "weight_decay": 0.0,
+    "warmup_updates": 4,
+    "scheduler": "linear warmup then cosine decay to minimum",
+    "max_grad_norm": 1.0,
+    "clip_once_after_combined_gradients": true,
+    "rationale": "Shared LoRA continuation LR candidate; pool minibatch count and drift require GPU1 smoke validation.",
+    "schedule_unit": "global joint optimizer update, continuous across all 5 rounds",
+    "reset_at_round_boundary": false,
+    "new_optimizer_at_joint_run_start": true,
+    "explicit_lr_convention": "For update u=1..75: max_lr*u/4 for u<=4; min_lr+0.5*(max_lr-min_lr)*(1+cos(pi*(u-4)/71)) otherwise. Actual scheduler implementation must match this and be frozen after smoke."
+  },
+  "loss_candidate": {
+    "clip_epsilon": 0.2,
+    "reward": "official full task success=1, model failure=0; infrastructure failure is not a reward",
+    "advantage_std_ddof": 0,
+    "advantage_epsilon": 1e-08,
+    "equal_reward_group_advantage": 0,
+    "retain_equal_groups_in_batch": true,
+    "rl_reduction": "mean over trajectories of mean over generated action tokens",
+    "kl_beta": 0.01,
+    "kl_estimator": "d=log_pi_ref-log_pi_current; exp(d)-d-1 on sampled tokens",
+    "kl_reduction": "same as RL",
+    "sft_lambda": 0.1,
+    "sft_reduction": "mean over original steps of mean target-token CE within each step; equal step weights",
+    "rubric_score_as_loss_weight": false,
+    "rationale": "Engineering candidate lambda=0.1, beta=0.01; inspect joint gradient and policy drift before formal freeze.",
+    "sft_reduction_required": true,
+    "sft_microbatch_reduction": "For update with M original steps, each segment contributes CE_sum/(M*T_s); T_s is full original target length including EOS, excluding context and padding. Use actual M, no mean of unequal microbatch means.",
+    "sft_reduction_implementation_status": "required by user; trainer and numerical gradient verification pending step 4; existing data and masks unchanged",
+    "kl_estimator_note": "sampled k3 regularizer evaluated on frozen behavior-policy actions; not exact KL under current-policy state/action distribution"
+  },
+  "online_sampling_candidate": {
+    "temperature": 1.0,
+    "top_p": 1.0,
+    "top_k": "disabled (translate to serving backend convention)",
+    "max_steps": 50,
+    "max_new_tokens_per_action": 3000,
+    "max_model_len": 32000,
+    "enable_thinking": false,
+    "behavior_logprobs": "actual sampling policy, token support and transformations matched to trainer; save before update",
+    "context_limit_behavior": "freeze explicit rollout termination/error semantics; no hidden history truncation"
+  },
+  "evaluation_candidate": {
+    "split": "DEV57",
+    "temperature": 0.0,
+    "seed": 100,
+    "trajectories_per_task": 1,
+    "max_steps": 50,
+    "max_new_tokens_per_action": 3000,
+    "max_model_len": 32000,
+    "enable_thinking": false,
+    "checkpoints": [
+      "initial",
+      "round_01",
+      "round_03",
+      "round_05"
+    ],
+    "primary_comparison": "round_05 versus initial; never best-of-checkpoints"
+  },
+  "compute_candidate": {
+    "dtype": "bfloat16 if supported",
+    "gradient_checkpointing": true,
+    "microbatch_sequences": 1,
+    "attention": "measure supported exact causal backend",
+    "resource_policy": "Physical GPU1 only; GPU0 reserved for colleague, never auto-select another GPU",
+    "serving_training_layout": "GPU1 only, sequential serving/training/reference stages; measure feasibility in step 6",
+    "sft_max_length": "must support every selected full prefix and target; no length rejection",
+    "ddp": "disabled; single GPU1, world_size=1"
+  },
+  "must_measure_before_freeze": [
+    "training/environment/serving Python paths and dependency versions",
+    "device IDs/world_size/attention backend and precision support",
+    "maximum supported full SFT context and target-span strategy",
+    "real serving versus training log-prob numerical tolerance",
+    "real rollout/model protocol and train90/DEV57 identities",
+    "smoke throughput/peak memory/disk and runtime estimate",
+    "exact per-update SFT schedule and all loss denominators",
+    "effective hyperparameters and explanations for any draft changes"
+  ],
+  "freeze_requirements": [
+    "No unresolved placeholder in actual config",
+    "All 2623 selected identities retained",
+    "No model/data inherited from smoke updates",
+    "Data/mask/math/logprob/resume checks pass",
+    "Actual budget recomputed after any B/G/K change",
+    "Data, scripts, plan and config hashes recorded before baseline and formal training"
+  ],
+  "scope": "Implement/test joint pool trainer and collection on physical GPU1; formal training not started; initial complete 540 pool is reused.",
+  "resource_constraints": {
+    "status": "user_required",
+    "physical_gpu_indices": [
+      1
+    ],
+    "forbidden_physical_gpu_indices": [
+      0
+    ],
+    "physical_gpu_uuid": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501",
+    "physical_gpu_pci_bus_id": "00000000:C8:00.0",
+    "cuda_visible_devices": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501",
+    "cuda_device_order": "PCI_BUS_ID",
+    "local_cuda_device": "cuda:0",
+    "world_size": 1,
+    "tensor_parallel_size": 1,
+    "ddp_enabled": false,
+    "reason": "GPU0 reserved for colleague by user instruction; GPU1 only even if GPU0 is idle.",
+    "scope": "All future model loading, serving, reference inference, smoke, training and evaluation for this experiment; CPU preparation makes no GPU allocations."
+  },
+  "preparation_actual": {
+    "completed_steps": [
+      1,
+      2,
+      3
+    ],
+    "experiment_directory": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft",
+    "selected_steps": 2623,
+    "selection_policy": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/config/selection_policy.json",
+    "preflight_report": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/checks/preflight.json",
+    "selection_report": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/checks/selection.json",
+    "training_samples_built": 2623,
+    "T_SFT": 205238,
+    "training_started": false,
+    "data_manifest": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/data/data_manifest.json",
+    "token_mask_report": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/checks/token_mask.json",
+    "maximum_complete_sample_tokens": 31814
+  },
+  "sft_step_batching_required": {
+    "priority": "balance original step counts across updates; token counts are accounting only",
+    "candidate_steps_per_round": 2623,
+    "candidate_updates_per_round": 15,
+    "candidate_batch_sizes": [
+      175,
+      175,
+      175,
+      175,
+      175,
+      175,
+      175,
+      175,
+      175,
+      175,
+      175,
+      175,
+      175,
+      174,
+      174
+    ],
+    "small_batch_positions": "rotate across rounds in step 5 schedule",
+    "microbatching": "may group by length within an update without changing weights"
+  }
+}

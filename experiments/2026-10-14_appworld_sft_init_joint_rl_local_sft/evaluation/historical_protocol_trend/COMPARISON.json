@@ -1,0 +1,1582 @@
+{
+  "at": "2026-10-16T12:29:59.620696+08:00",
+  "complete": true,
+  "points": [
+    {
+      "step": 0,
+      "successes": 25,
+      "tasks": 57,
+      "TGC_percent": 43.85964912280702,
+      "successful_scenarios": 4,
+      "scenarios": 19,
+      "SGC_percent": 21.05263157894737,
+      "passed_tests": 204,
+      "failed_tests": 87,
+      "total_tests": 291,
+      "evaluator_pass_percent": 70.10309278350516,
+      "task_mean_test_pass_percent": 72.69214703425229,
+      "zero_test_pass_tasks": 0,
+      "partial_test_pass_tasks": 32,
+      "gained_count": 0,
+      "lost_count": 0,
+      "gained_task_ids": [],
+      "lost_task_ids": [],
+      "gained_evaluator_conditions": 0,
+      "lost_evaluator_conditions": 0,
+      "gained_evaluator_details": [],
+      "lost_evaluator_details": []
+    },
+    {
+      "step": 1,
+      "successes": 18,
+      "tasks": 57,
+      "TGC_percent": 31.57894736842105,
+      "successful_scenarios": 3,
+      "scenarios": 19,
+      "SGC_percent": 15.789473684210526,
+      "passed_tests": 189,
+      "failed_tests": 102,
+      "total_tests": 291,
+      "evaluator_pass_percent": 64.94845360824742,
+      "task_mean_test_pass_percent": 65.71428571428572,
+      "zero_test_pass_tasks": 2,
+      "partial_test_pass_tasks": 37,
+      "gained_count": 4,
+      "lost_count": 11,
+      "gained_task_ids": [
+        "6171bbc_1",
+        "d4e9306_3",
+        "df61dc5_1",
+        "fac291d_3"
+      ],
+      "lost_task_ids": [
+        "23cf851_1",
+        "37a8675_2",
+        "3ab5b8b_3",
+        "4ec8de5_2",
+        "50e1ac9_2",
+        "57c3486_3",
+        "6171bbc_2",
+        "6bdbc26_2",
+        "6bdbc26_3",
+        "6c2c621_1",
+        "b119b1f_1"
+      ],
+      "gained_evaluator_conditions": 22,
+      "lost_evaluator_conditions": 37,
+      "gained_evaluator_details": [
+        {
+          "task_id": "4fab96f_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_3",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_3",
+          "requirement": "obtain added, updated, deleted phone.GlobalTextMessage using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_3",
+          "requirement": "assert the added global_text_message's receiver_id is to private_data.friend_phone_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_3",
+          "requirement": "assert the added global_text_message has message, public_data.message_text (ignore case).",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_1",
+          "requirement": "assert model changes match spotify.Playlist, spotify.PlaylistSong.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_1",
+          "requirement": "assert all song_ids of added playlist_songs match private_data.playlist_song_ids (ignore_order)",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_1",
+          "requirement": "assert the playlist_id of all added playlist_songs match added_playlist.id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_3",
+          "requirement": "assert model changes match spotify.Playlist, spotify.PlaylistSong.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_3",
+          "requirement": "assert the playlist_id of all added playlist_songs match added_playlist.id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "68ee2c9_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_2",
+          "requirement": "assert this music player record has updated only in the cursor_position\nusing models.changed_field_names",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "d4e9306_3",
+          "requirement": "assert model changes match spotify.UserArtistFollowing.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "d4e9306_3",
+          "requirement": "assert private_data.to_be_followed_artist_ids_by_songs artists have been newly followed.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "d4e9306_3",
+          "requirement": "assert private_data.to_be_followed_artist_ids_by_albums artists have been newly followed.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "d4e9306_3",
+          "requirement": "assert artist_ids from added artists match union of\nprivate_data.to_be_followed_artist_ids_by_songs and private_data.to_be_followed_artist_ids_by_albums.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_1",
+          "requirement": "assert set of updated transaction ids match exactly to\nprivate_data.to_like_transaction_ids (ignore order).",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_2",
+          "requirement": "assert model changes match venmo.Transaction, venmo.TransactionLike",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_2",
+          "requirement": "assert updated transactions have only changed in like_count field using models.changed_field_names.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_2",
+          "requirement": "assert all updated transactions were created after private_data.min_transaction_datetime",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_3",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "fac291d_3",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        }
+      ],
+      "lost_evaluator_details": [
+        {
+          "task_id": "23cf851_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "23cf851_1",
+          "requirement": "assert no model changes.",
+          "label": "no_op_pass"
+        },
+        {
+          "task_id": "37a8675_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_2",
+          "requirement": "assert model changes match venmo.Notification, venmo.Transaction ignoring venmo.User.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_2",
+          "requirement": "obtain added, updated, removed venmo.Transaction records using models.changed_records,\nand assert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_2",
+          "requirement": "assert the added transaction's receiver_id is private_data.person_venmo_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_2",
+          "requirement": "assert the added transaction has amount public_data.payment_amount.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_2",
+          "requirement": "assert the added transaction is private/public as per public_data.privacy.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "3ab5b8b_1",
+          "requirement": "assert all added downloaded song_ids are in private_data.liked_song_ids",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "3ab5b8b_3",
+          "requirement": "assert added downloaded song_ids match private_data.to_download_song_ids (ignore_order=True)",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "3ab5b8b_3",
+          "requirement": "assert all added downloaded song_ids are in private_data.liked_song_ids",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "4ec8de5_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "4fab96f_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "50e1ac9_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert model changes match venmo.Transaction, phone.GlobalTextMessage, phone.UserTextMessage,\nignoring venmo.User and venmo.Notification",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "obtain added, updated, deleted venmo.Transactions using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert the added transaction receiver_id is private_data.friend_venmo_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert the added transaction has description public_data.note.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "obtain added, updated, deleted phone.GlobalTextMessage using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert the added global_text_message's receiver_id is to private_data.friend_phone_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert the added global_text_message has message, public_data.message_text (ignore case).",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_2",
+          "requirement": "assert the added transaction has description public_data.note.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "57c3486_3",
+          "requirement": "assert all songs from artists main_user follows are liked now by using\nprivate_data.followed_artist_song_ids.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_2",
+          "requirement": "assert model changes match spotify.Playlist, spotify.PlaylistSong.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_2",
+          "requirement": "assert all song_ids of added playlist_songs match private_data.playlist_song_ids (ignore_order)",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_2",
+          "requirement": "assert the playlist_id of all added playlist_songs match added_playlist.id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "68ee2c9_2",
+          "requirement": "assert model changes match file_system.File, file_system.Directory.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "68ee2c9_3",
+          "requirement": "prepare start_file_path_to_content and end_file_path_to_content from start and end state of user.files,\nthen assert the files have been renamed (with proper content) as per private_data.before_this_year_start_to_end_file_path.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6bdbc26_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6bdbc26_3",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6c2c621_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_1",
+          "requirement": "assert the currently playing song has ID private_data.song_id in the end state.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_1",
+          "requirement": "assert music player's cursor is on the song by private_data.artist_id in the end state.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_2",
+          "requirement": "assert music player's cursor is on the song by private_data.artist_id in the end state.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_3",
+          "requirement": "assert model changes match venmo.Transaction, venmo.TransactionLike",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    {
+      "step": 5,
+      "successes": 18,
+      "tasks": 57,
+      "TGC_percent": 31.57894736842105,
+      "successful_scenarios": 2,
+      "scenarios": 19,
+      "SGC_percent": 10.526315789473685,
+      "passed_tests": 198,
+      "failed_tests": 93,
+      "total_tests": 291,
+      "evaluator_pass_percent": 68.04123711340206,
+      "task_mean_test_pass_percent": 67.92397660818713,
+      "zero_test_pass_tasks": 0,
+      "partial_test_pass_tasks": 39,
+      "gained_count": 3,
+      "lost_count": 10,
+      "gained_task_ids": [
+        "6171bbc_1",
+        "6bdbc26_1",
+        "fac291d_3"
+      ],
+      "lost_task_ids": [
+        "23cf851_1",
+        "37a8675_2",
+        "50e1ac9_2",
+        "57c3486_3",
+        "6171bbc_2",
+        "6bdbc26_2",
+        "b119b1f_1",
+        "b119b1f_3",
+        "fac291d_1",
+        "fac291d_2"
+      ],
+      "gained_evaluator_conditions": 28,
+      "lost_evaluator_conditions": 34,
+      "gained_evaluator_details": [
+        {
+          "task_id": "4fab96f_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_2",
+          "requirement": "assert model changes match venmo.Transaction, phone.GlobalTextMessage, phone.UserTextMessage,\nignoring venmo.User and venmo.Notification",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_2",
+          "requirement": "obtain added, updated, deleted venmo.Transactions using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_2",
+          "requirement": "assert the added transaction receiver_id is private_data.friend_venmo_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_2",
+          "requirement": "obtain added, updated, deleted phone.GlobalTextMessage using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_2",
+          "requirement": "assert the added global_text_message's receiver_id is to private_data.friend_phone_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_2",
+          "requirement": "assert the added global_text_message has message, public_data.message_text (ignore case).",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_3",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_3",
+          "requirement": "assert model changes match venmo.Transaction, phone.GlobalTextMessage, phone.UserTextMessage,\nignoring venmo.User and venmo.Notification",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_3",
+          "requirement": "obtain added, updated, deleted venmo.Transactions using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_3",
+          "requirement": "assert the added transaction receiver_id is private_data.friend_venmo_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_3",
+          "requirement": "assert the added transaction has description public_data.note.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_3",
+          "requirement": "obtain added, updated, deleted phone.GlobalTextMessage using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_3",
+          "requirement": "assert the added global_text_message's receiver_id is to private_data.friend_phone_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_3",
+          "requirement": "assert the added global_text_message has message, public_data.message_text (ignore case).",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_1",
+          "requirement": "assert model changes match spotify.Playlist, spotify.PlaylistSong.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_1",
+          "requirement": "assert all song_ids of added playlist_songs match private_data.playlist_song_ids (ignore_order)",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_1",
+          "requirement": "assert the playlist_id of all added playlist_songs match added_playlist.id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_3",
+          "requirement": "assert model changes match spotify.Playlist, spotify.PlaylistSong.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_3",
+          "requirement": "assert the playlist_id of all added playlist_songs match added_playlist.id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "68ee2c9_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6bdbc26_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_2",
+          "requirement": "assert this music player record has updated only in the cursor_position\nusing models.changed_field_names",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_2",
+          "requirement": "assert model changes match venmo.Transaction, venmo.TransactionLike",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_2",
+          "requirement": "assert updated transactions have only changed in like_count field using models.changed_field_names.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_2",
+          "requirement": "assert all updated transactions were created after private_data.min_transaction_datetime",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_3",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "fac291d_3",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        }
+      ],
+      "lost_evaluator_details": [
+        {
+          "task_id": "23cf851_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_2",
+          "requirement": "assert model changes match venmo.Notification, venmo.Transaction ignoring venmo.User.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_2",
+          "requirement": "obtain added, updated, removed venmo.Transaction records using models.changed_records,\nand assert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_2",
+          "requirement": "assert the added transaction's receiver_id is private_data.person_venmo_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_2",
+          "requirement": "assert the added transaction has amount public_data.payment_amount.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_2",
+          "requirement": "assert the added transaction is private/public as per public_data.privacy.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "3ab5b8b_1",
+          "requirement": "assert all added downloaded song_ids are in private_data.liked_song_ids",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "50e1ac9_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert model changes match venmo.Transaction, phone.GlobalTextMessage, phone.UserTextMessage,\nignoring venmo.User and venmo.Notification",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "obtain added, updated, deleted venmo.Transactions using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert the added transaction receiver_id is private_data.friend_venmo_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert the added transaction has description public_data.note.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "obtain added, updated, deleted phone.GlobalTextMessage using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert the added global_text_message's receiver_id is to private_data.friend_phone_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert the added global_text_message has message, public_data.message_text (ignore case).",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "57c3486_3",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_2",
+          "requirement": "assert model changes match spotify.Playlist, spotify.PlaylistSong.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_2",
+          "requirement": "assert all song_ids of added playlist_songs match private_data.playlist_song_ids (ignore_order)",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_2",
+          "requirement": "assert the playlist_id of all added playlist_songs match added_playlist.id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "68ee2c9_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "68ee2c9_2",
+          "requirement": "assert model changes match file_system.File, file_system.Directory.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "68ee2c9_3",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "68ee2c9_3",
+          "requirement": "prepare start_file_path_to_content and end_file_path_to_content from start and end state of user.files,\nthen assert the files have been renamed (with proper content) as per private_data.before_this_year_start_to_end_file_path.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6bdbc26_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_1",
+          "requirement": "assert the currently playing song has ID private_data.song_id in the end state.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_1",
+          "requirement": "assert music player's cursor is on the song by private_data.artist_id in the end state.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_3",
+          "requirement": "assert model changes match spotify.MusicPlayer.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_3",
+          "requirement": "assert spotify.MusicPlayer has 1 updated using models.changed_records",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_3",
+          "requirement": "assert this music player record has updated only in the cursor_position\nusing models.changed_field_names",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_3",
+          "requirement": "assert the currently playing song has ID private_data.song_id in the end state.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_3",
+          "requirement": "assert music player's cursor is on the song by private_data.artist_id in the end state.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "fac291d_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "fac291d_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    {
+      "step": 10,
+      "successes": 20,
+      "tasks": 57,
+      "TGC_percent": 35.08771929824562,
+      "successful_scenarios": 3,
+      "scenarios": 19,
+      "SGC_percent": 15.789473684210526,
+      "passed_tests": 201,
+      "failed_tests": 90,
+      "total_tests": 291,
+      "evaluator_pass_percent": 69.0721649484536,
+      "task_mean_test_pass_percent": 68.90142021720969,
+      "zero_test_pass_tasks": 1,
+      "partial_test_pass_tasks": 36,
+      "gained_count": 4,
+      "lost_count": 9,
+      "gained_task_ids": [
+        "37a8675_3",
+        "530b157_2",
+        "d4e9306_3",
+        "fac291d_3"
+      ],
+      "lost_task_ids": [
+        "4ec8de5_2",
+        "50e1ac9_2",
+        "57c3486_2",
+        "6bdbc26_2",
+        "6bdbc26_3",
+        "6c2c621_1",
+        "6c2c621_2",
+        "b119b1f_3",
+        "fac291d_2"
+      ],
+      "gained_evaluator_conditions": 32,
+      "lost_evaluator_conditions": 35,
+      "gained_evaluator_details": [
+        {
+          "task_id": "37a8675_3",
+          "requirement": "assert model changes match venmo.Notification, venmo.Transaction ignoring venmo.User.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_3",
+          "requirement": "obtain added, updated, removed venmo.Transaction records using models.changed_records,\nand assert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_3",
+          "requirement": "assert the added transaction's receiver_id is private_data.person_venmo_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_3",
+          "requirement": "assert the added transaction has amount public_data.payment_amount.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_3",
+          "requirement": "assert the added transaction is private/public as per public_data.privacy.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "3ab5b8b_2",
+          "requirement": "assert added downloaded song_ids match private_data.to_download_song_ids (ignore_order=True)",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "3ab5b8b_2",
+          "requirement": "assert all added downloaded song_ids are in private_data.library_song_ids",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "4fab96f_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_2",
+          "requirement": "assert model changes match venmo.Transaction, phone.GlobalTextMessage, phone.UserTextMessage,\nignoring venmo.User and venmo.Notification",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_2",
+          "requirement": "obtain added, updated, deleted venmo.Transactions using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_2",
+          "requirement": "assert the added transaction receiver_id is private_data.friend_venmo_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_2",
+          "requirement": "assert the added transaction has amount private_data.grocery_cost.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_2",
+          "requirement": "obtain added, updated, deleted phone.GlobalTextMessage using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_2",
+          "requirement": "assert the added global_text_message's receiver_id is to private_data.friend_phone_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_2",
+          "requirement": "assert the added global_text_message has message, public_data.message_text (ignore case).",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_3",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_3",
+          "requirement": "assert model changes match venmo.Transaction, phone.GlobalTextMessage, phone.UserTextMessage,\nignoring venmo.User and venmo.Notification",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_3",
+          "requirement": "obtain added, updated, deleted venmo.Transactions using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_3",
+          "requirement": "assert the added transaction receiver_id is private_data.friend_venmo_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_3",
+          "requirement": "assert the added transaction has description public_data.note.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_3",
+          "requirement": "assert the added global_text_message's receiver_id is to private_data.friend_phone_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_1",
+          "requirement": "assert model changes match spotify.Playlist, spotify.PlaylistSong.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_1",
+          "requirement": "assert the playlist_id of all added playlist_songs match added_playlist.id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_2",
+          "requirement": "assert this music player record has updated only in the cursor_position\nusing models.changed_field_names",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "d4e9306_3",
+          "requirement": "assert model changes match spotify.UserArtistFollowing.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "d4e9306_3",
+          "requirement": "assert private_data.to_be_followed_artist_ids_by_songs artists have been newly followed.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "d4e9306_3",
+          "requirement": "assert private_data.to_be_followed_artist_ids_by_albums artists have been newly followed.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "d4e9306_3",
+          "requirement": "assert artist_ids from added artists match union of\nprivate_data.to_be_followed_artist_ids_by_songs and private_data.to_be_followed_artist_ids_by_albums.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_2",
+          "requirement": "assert model changes match venmo.Transaction, venmo.TransactionLike",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_2",
+          "requirement": "assert updated transactions have only changed in like_count field using models.changed_field_names.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_2",
+          "requirement": "assert all updated transactions were created after private_data.min_transaction_datetime",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "fac291d_3",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        }
+      ],
+      "lost_evaluator_details": [
+        {
+          "task_id": "37a8675_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "3ab5b8b_1",
+          "requirement": "assert all added downloaded song_ids are in private_data.liked_song_ids",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "3ab5b8b_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "4ec8de5_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "50e1ac9_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert model changes match venmo.Transaction, phone.GlobalTextMessage, phone.UserTextMessage,\nignoring venmo.User and venmo.Notification",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "obtain added, updated, deleted venmo.Transactions using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert the added transaction receiver_id is private_data.friend_venmo_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert the added transaction has description public_data.note.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "obtain added, updated, deleted phone.GlobalTextMessage using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert the added global_text_message's receiver_id is to private_data.friend_phone_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert the added global_text_message has message, public_data.message_text (ignore case).",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "57c3486_2",
+          "requirement": "assert model changes match spotify.Song, spotify.SongLike.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "57c3486_2",
+          "requirement": "assert all newly song likes are from artists that main_user follows via models.changed_records",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "57c3486_2",
+          "requirement": "assert all songs from artists main_user follows are liked now by using\nprivate_data.followed_artist_song_ids.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "68ee2c9_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "68ee2c9_3",
+          "requirement": "prepare start_file_path_to_content and end_file_path_to_content from start and end state of user.files,\nthen assert the files have been renamed (with proper content) as per private_data.before_this_year_start_to_end_file_path.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6bdbc26_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6bdbc26_3",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6c2c621_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6c2c621_2",
+          "requirement": "assert all added files have tilde_path starting with public_data.backup_directory_path.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6c2c621_2",
+          "requirement": "assert all added file_system.File records' paths match keys of\nprivate_data.file_path_to_content. (ignore_case)",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6c2c621_2",
+          "requirement": "assert all added file_system.File records' path to content\nmapping match that of private_data.file_path_to_content\n(strip and ignore case).",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_2",
+          "requirement": "assert music player's cursor is on the song by private_data.artist_id in the end state.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_3",
+          "requirement": "assert the currently playing song has ID private_data.song_id in the end state.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_3",
+          "requirement": "assert music player's cursor is on the song by private_data.artist_id in the end state.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_1",
+          "requirement": "assert model changes match venmo.Transaction, venmo.TransactionLike",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_1",
+          "requirement": "assert updated transactions have only changed in like_count field using models.changed_field_names.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_1",
+          "requirement": "assert all updated transactions were created after private_data.min_transaction_datetime",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_3",
+          "requirement": "assert model changes match venmo.Transaction, venmo.TransactionLike",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_3",
+          "requirement": "assert updated transactions have only changed in like_count field using models.changed_field_names.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_3",
+          "requirement": "assert all updated transactions were created after private_data.min_transaction_datetime",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "fac291d_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        }
+      ]
+    },
+    {
+      "step": 15,
+      "successes": 23,
+      "tasks": 57,
+      "TGC_percent": 40.35087719298246,
+      "successful_scenarios": 3,
+      "scenarios": 19,
+      "SGC_percent": 15.789473684210526,
+      "passed_tests": 188,
+      "failed_tests": 103,
+      "total_tests": 291,
+      "evaluator_pass_percent": 64.60481099656357,
+      "task_mean_test_pass_percent": 65.09816207184628,
+      "zero_test_pass_tasks": 4,
+      "partial_test_pass_tasks": 30,
+      "gained_count": 8,
+      "lost_count": 10,
+      "gained_task_ids": [
+        "37a8675_3",
+        "4ec8de5_1",
+        "50e1ac9_1",
+        "50e1ac9_3",
+        "df61dc5_1",
+        "df61dc5_2",
+        "df61dc5_3",
+        "fac291d_3"
+      ],
+      "lost_task_ids": [
+        "23cf851_1",
+        "23cf851_3",
+        "37a8675_2",
+        "50e1ac9_2",
+        "57c3486_3",
+        "6171bbc_2",
+        "6bdbc26_2",
+        "6bdbc26_3",
+        "b119b1f_1",
+        "fac291d_2"
+      ],
+      "gained_evaluator_conditions": 24,
+      "lost_evaluator_conditions": 40,
+      "gained_evaluator_details": [
+        {
+          "task_id": "37a8675_3",
+          "requirement": "assert model changes match venmo.Notification, venmo.Transaction ignoring venmo.User.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_3",
+          "requirement": "obtain added, updated, removed venmo.Transaction records using models.changed_records,\nand assert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_3",
+          "requirement": "assert the added transaction's receiver_id is private_data.person_venmo_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_3",
+          "requirement": "assert the added transaction has amount public_data.payment_amount.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_3",
+          "requirement": "assert the added transaction is private/public as per public_data.privacy.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "3ab5b8b_2",
+          "requirement": "assert all added downloaded song_ids are in private_data.library_song_ids",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "4ec8de5_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "4fab96f_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "50e1ac9_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "50e1ac9_3",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_2",
+          "requirement": "assert model changes match venmo.Transaction, phone.GlobalTextMessage, phone.UserTextMessage,\nignoring venmo.User and venmo.Notification",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_2",
+          "requirement": "assert the added transaction receiver_id is private_data.friend_venmo_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_2",
+          "requirement": "obtain added, updated, deleted phone.GlobalTextMessage using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_2",
+          "requirement": "assert the added global_text_message has message, public_data.message_text (ignore case).",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "68ee2c9_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_2",
+          "requirement": "assert this music player record has updated only in the cursor_position\nusing models.changed_field_names",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_1",
+          "requirement": "assert set of updated transaction ids match exactly to\nprivate_data.to_like_transaction_ids (ignore order).",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_2",
+          "requirement": "assert model changes match venmo.Transaction, venmo.TransactionLike",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_2",
+          "requirement": "assert updated transactions have only changed in like_count field using models.changed_field_names.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_2",
+          "requirement": "assert set of updated transaction ids match exactly to\nprivate_data.to_like_transaction_ids (ignore order).",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_2",
+          "requirement": "assert all updated transactions were created after private_data.min_transaction_datetime",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_3",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "df61dc5_3",
+          "requirement": "assert set of updated transaction ids match exactly to\nprivate_data.to_like_transaction_ids (ignore order).",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "fac291d_3",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        }
+      ],
+      "lost_evaluator_details": [
+        {
+          "task_id": "0d8a4ee_3",
+          "requirement": "assert model changes match phone.GlobalTextMessage, phone.UserTextMessage",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "0d8a4ee_3",
+          "requirement": "assert all added global text messages have message public_data.message_text (normalize_text=True).",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "23cf851_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "23cf851_1",
+          "requirement": "assert no model changes.",
+          "label": "no_op_pass"
+        },
+        {
+          "task_id": "23cf851_3",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "23cf851_3",
+          "requirement": "assert no model changes.",
+          "label": "no_op_pass"
+        },
+        {
+          "task_id": "37a8675_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_2",
+          "requirement": "assert model changes match venmo.Notification, venmo.Transaction ignoring venmo.User.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_2",
+          "requirement": "obtain added, updated, removed venmo.Transaction records using models.changed_records,\nand assert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_2",
+          "requirement": "assert the added transaction's receiver_id is private_data.person_venmo_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_2",
+          "requirement": "assert the added transaction has amount public_data.payment_amount.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "37a8675_2",
+          "requirement": "assert the added transaction is private/public as per public_data.privacy.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "383cbac_2",
+          "requirement": "assert no model changes.",
+          "label": "no_op_pass"
+        },
+        {
+          "task_id": "3ab5b8b_1",
+          "requirement": "assert all added downloaded song_ids are in private_data.liked_song_ids",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "4fab96f_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "50e1ac9_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert model changes match venmo.Transaction, phone.GlobalTextMessage, phone.UserTextMessage,\nignoring venmo.User and venmo.Notification",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "obtain added, updated, deleted venmo.Transactions using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert the added transaction receiver_id is private_data.friend_venmo_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert the added transaction has description public_data.note.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "obtain added, updated, deleted phone.GlobalTextMessage using models.changed_records\nassert 1 is added, 0 is updated, and 0 is deleted.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert the added global_text_message's receiver_id is to private_data.friend_phone_user_id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "530b157_1",
+          "requirement": "assert the added global_text_message has message, public_data.message_text (ignore case).",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "57c3486_3",
+          "requirement": "assert all songs from artists main_user follows are liked now by using\nprivate_data.followed_artist_song_ids.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_2",
+          "requirement": "assert model changes match spotify.Playlist, spotify.PlaylistSong.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_2",
+          "requirement": "assert all song_ids of added playlist_songs match private_data.playlist_song_ids (ignore_order)",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6171bbc_2",
+          "requirement": "assert the playlist_id of all added playlist_songs match added_playlist.id.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "68ee2c9_1",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "68ee2c9_3",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "68ee2c9_3",
+          "requirement": "prepare start_file_path_to_content and end_file_path_to_content from start and end state of user.files,\nthen assert the files have been renamed (with proper content) as per private_data.before_this_year_start_to_end_file_path.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6bdbc26_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "6bdbc26_3",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_1",
+          "requirement": "assert model changes match spotify.MusicPlayer.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_1",
+          "requirement": "assert spotify.MusicPlayer has 1 updated using models.changed_records",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_1",
+          "requirement": "assert this music player record has updated only in the cursor_position\nusing models.changed_field_names",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_1",
+          "requirement": "assert the currently playing song has ID private_data.song_id in the end state.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "b119b1f_1",
+          "requirement": "assert music player's cursor is on the song by private_data.artist_id in the end state.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "d4e9306_3",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        },
+        {
+          "task_id": "fac291d_2",
+          "requirement": "assert answers match.",
+          "label": "no_op_fail"
+        }
+      ]
+    }
+  ],
+  "historical_baseline_comparison": {
+    "historical_TGC_successes": 23,
+    "current_TGC_successes": 25,
+    "historical_SGC_successes": 4,
+    "current_SGC_successes": 4,
+    "historical_evaluator_passed": 206,
+    "current_evaluator_passed": 204,
+    "gained_task_ids": [
+      "23cf851_2",
+      "37a8675_2",
+      "3ab5b8b_3",
+      "50e1ac9_2",
+      "6171bbc_2",
+      "6bdbc26_3",
+      "6c2c621_1",
+      "6c2c621_2",
+      "b119b1f_3"
+    ],
+    "lost_task_ids": [
+      "37a8675_1",
+      "50e1ac9_1",
+      "50e1ac9_3",
+      "b119b1f_2",
+      "d4e9306_3",
+      "df61dc5_3",
+      "fac291d_3"
+    ]
+  },
+  "baseline_reproduction": {
+    "at": "2026-10-16T10:28:53.415867+08:00",
+    "same_task_success": false,
+    "changed_task_success_ids": [
+      "23cf851_2",
+      "37a8675_1",
+      "37a8675_2",
+      "3ab5b8b_3",
+      "50e1ac9_1",
+      "50e1ac9_2",
+      "50e1ac9_3",
+      "6171bbc_2",
+      "6bdbc26_3",
+      "6c2c621_1",
+      "6c2c621_2",
+      "b119b1f_2",
+      "b119b1f_3",
+      "d4e9306_3",
+      "df61dc5_3",
+      "fac291d_3"
+    ],
+    "different_official_records": [
+      "0d8a4ee_1",
+      "0d8a4ee_2",
+      "0d8a4ee_3",
+      "23cf851_2",
+      "37a8675_1",
+      "37a8675_2",
+      "37a8675_3",
+      "383cbac_1",
+      "383cbac_2",
+      "3ab5b8b_1",
+      "3ab5b8b_2",
+      "3ab5b8b_3",
+      "4ec8de5_1",
+      "4ec8de5_3",
+      "4fab96f_1",
+      "4fab96f_2",
+      "4fab96f_3",
+      "50e1ac9_1",
+      "50e1ac9_2",
+      "50e1ac9_3",
+      "530b157_1",
+      "530b157_2",
+      "530b157_3",
+      "6171bbc_1",
+      "6171bbc_2",
+      "68ee2c9_1",
+      "68ee2c9_2",
+      "68ee2c9_3",
+      "6bdbc26_3",
+      "6c2c621_1",
+      "6c2c621_2",
+      "b119b1f_2",
+      "b119b1f_3",
+      "d4e9306_3",
+      "df61dc5_1",
+      "df61dc5_2",
+      "df61dc5_3",
+      "fac291d_3"
+    ],
+    "initial_messages_exact_match": 57,
+    "historical_scores": {
+      "task_goal_completion": 40.4,
+      "scenario_goal_completion": 21.1
+    },
+    "reproduced_scores": {
+      "task_goal_completion": 43.9,
+      "scenario_goal_completion": 21.1
+    }
+  },
+  "source_summaries": [
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/historical_protocol_trend/step_00000/SUMMARY.json",
+      "sha256": "2fcd85153c4c80a157fd6d9fc3eb6915b1326e61d3ec83a7cfade7ac03ab635e"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/historical_protocol_trend/step_00001/SUMMARY.json",
+      "sha256": "314bfb199b2bb778012ab588b684c176a8ef150a5c07d6c2ebada855cf182cba"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/historical_protocol_trend/step_00005/SUMMARY.json",
+      "sha256": "f6f5704743f510d38768cf0bfdfeff861f2b3dc73faa303150992013c10d2d05"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/historical_protocol_trend/step_00010/SUMMARY.json",
+      "sha256": "6a399b5c57648bc0f8ae1e07af2fe074c5479f9d01acf02a2ba885bd0824af69"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/historical_protocol_trend/step_00015/SUMMARY.json",
+      "sha256": "72d3dc974bea9c3f94e5b89390810105060ac45e73d5ec5b9b484c32f880d10a"
+    }
+  ]
+}

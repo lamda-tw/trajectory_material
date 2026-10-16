@@ -1,0 +1,215 @@
+{
+  "at_utc": "2026-10-16T01:46:17.874774+00:00",
+  "baseline_experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_092504_appworld_qwen3-8b_react_lora_codex_rft_train90_dev57",
+  "current_experiment": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft",
+  "baseline_adapter_matches_training_initialization": true,
+  "baseline_adapter_sha256": "c8fdfd4f3bb198381b6f2e56d019589a3ed904241b0147b565ec540449a29938",
+  "final_adapter_sha256": "c8f268b58dea9fc79ae53cfc362dede13edd965b604a4e702c2b6966ddf211d9",
+  "baseline": {
+    "successes": 23,
+    "tasks": 57,
+    "TGC": 0.40350877192982454,
+    "complete_scenarios": 4,
+    "scenarios": 19,
+    "SGC": 0.21052631578947367,
+    "passed_tests": 206,
+    "total_tests": 291,
+    "test_pass_fraction": 0.7079037800687286,
+    "official_rounded_percentages": {
+      "task_goal_completion": 40.4,
+      "scenario_goal_completion": 21.1
+    }
+  },
+  "current": {
+    "successes": 20,
+    "tasks": 57,
+    "TGC": 0.3508771929824561,
+    "complete_scenarios": 2,
+    "scenarios": 19,
+    "SGC": 0.10526315789473684,
+    "passed_tests": 184,
+    "total_tests": 291,
+    "test_pass_fraction": 0.6323024054982818,
+    "official_rounded_percentages": {
+      "task_goal_completion": 35.1,
+      "scenario_goal_completion": 10.5
+    }
+  },
+  "delta": {
+    "successes": -3,
+    "TGC_percentage_points": -5.263157894736842,
+    "complete_scenarios": -2,
+    "SGC_percentage_points": -10.526315789473683,
+    "passed_tests": -22,
+    "test_pass_percentage_points": -7.56013745704468
+  },
+  "transitions": {
+    "gained": [
+      "3ab5b8b_3",
+      "6171bbc_1",
+      "68ee2c9_1",
+      "6bdbc26_3",
+      "6c2c621_1",
+      "df61dc5_1"
+    ],
+    "lost": [
+      "23cf851_1",
+      "37a8675_1",
+      "4ec8de5_2",
+      "50e1ac9_1",
+      "57c3486_1",
+      "6bdbc26_2",
+      "b119b1f_2",
+      "d4e9306_2",
+      "df61dc5_3"
+    ],
+    "both_success": [
+      "23cf851_3",
+      "396c5a2_1",
+      "396c5a2_2",
+      "396c5a2_3",
+      "50e1ac9_3",
+      "57c3486_2",
+      "57c3486_3",
+      "6c2c621_3",
+      "b119b1f_1",
+      "d4e9306_1",
+      "d4e9306_3",
+      "fac291d_1",
+      "fac291d_2",
+      "fac291d_3"
+    ],
+    "both_failure": [
+      "0d8a4ee_1",
+      "0d8a4ee_2",
+      "0d8a4ee_3",
+      "23cf851_2",
+      "37a8675_2",
+      "37a8675_3",
+      "383cbac_1",
+      "383cbac_2",
+      "383cbac_3",
+      "3ab5b8b_1",
+      "3ab5b8b_2",
+      "4ec8de5_1",
+      "4ec8de5_3",
+      "4fab96f_1",
+      "4fab96f_2",
+      "4fab96f_3",
+      "50e1ac9_2",
+      "530b157_1",
+      "530b157_2",
+      "530b157_3",
+      "6171bbc_2",
+      "6171bbc_3",
+      "68ee2c9_2",
+      "68ee2c9_3",
+      "6bdbc26_1",
+      "6c2c621_2",
+      "b119b1f_3",
+      "df61dc5_2"
+    ]
+  },
+  "transition_counts": {
+    "gained": 6,
+    "lost": 9,
+    "both_success": 14,
+    "both_failure": 28
+  },
+  "protocol_audit": {
+    "same_57_tasks": true,
+    "same_per_task_test_counts": true,
+    "initial_message_objects_exact_match_tasks": 0,
+    "initial_role_content_match_after_strip_tasks": 57,
+    "old_request_seed_counts": {
+      "100": 1014
+    },
+    "old_request_temperature_counts": {
+      "0": 1014
+    },
+    "old_request_max_completion_tokens_counts": {
+      "3000": 1014
+    },
+    "old_requests_with_saved_prompt_ids": 0,
+    "old_explicit_thinking_flag": false,
+    "current_explicit_enable_thinking": false,
+    "current_seed": "100 + zero_based_turn",
+    "current_generation_cap": "min(3000, 32000 - len(prompt_ids))",
+    "historical_baseline_rerun_with_current_runner": false,
+    "controlled_training_effect_established": false,
+    "differences": [
+      "Old initial message contents retain trailing whitespace; current strips it. Old last user message also has cache_control metadata.",
+      "Old chat-completions requests do not explicitly disable thinking; current tokenize request sets enable_thinking=False and saved prompt IDs contain an empty think block. No old prompt IDs were saved to verify token-exact equivalence.",
+      "Old max_completion_tokens remains 3000 on every request; current caps to remaining context and explicitly stops when no room remains.",
+      "Old seed=100 on every request; current seed=100+turn. Both temperature=0.",
+      "Old AppWorld runner has one task process and server max_num_seqs=3; current has six workers and max_num_seqs=6, enforce-eager, explicit vLLM generation defaults."
+    ]
+  },
+  "current_terminations": {
+    "completion_api": 48,
+    "context_limit": 9
+  },
+  "interpretation": "Observed historical comparison regresses in TGC and SGC. Not a fully controlled pre/post comparison; training attribution requires the initial adapter evaluated through the same runner. No rerun or training started.",
+  "sources": [
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_092504_appworld_qwen3-8b_react_lora_codex_rft_train90_dev57/summary.json",
+      "sha256": "cecc61a37f762a3d391a446ae84c82142d66c11c080665cad925c2ac3e29a01c"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_092504_appworld_qwen3-8b_react_lora_codex_rft_train90_dev57/manifest.json",
+      "sha256": "8a7b2c094f98c2093c8836a3fafe87675a13aae234baad05aa74af7a4e49ae39"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_092504_appworld_qwen3-8b_react_lora_codex_rft_train90_dev57/task_status.jsonl",
+      "sha256": "31edc0b613395f53d8c57872e1e5a3570fb39d2d09992065487dc47b9b2b987f"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_092504_appworld_qwen3-8b_react_lora_codex_rft_train90_dev57/experiments/outputs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev/evaluations/dev.json",
+      "sha256": "32ab67d1bcac6e8b0fc9ed07b005cdefec251e8b56f02204ecdaacaa4b4d2a49"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/round_01_final/SUMMARY.json",
+      "sha256": "bf99df88dcaf514db5b30ebee7372211f7295958d26bf8cde818172311118670"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/round_01_final/task_results.json",
+      "sha256": "1471739a51c221210ea87e7012e5f99865cff99f106896a2c526f0e48933bbe5"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/round_01_final/evaluation_config.json",
+      "sha256": "99dda1472a476fc65264be443644933ae88f1d2454cb1f1a58bbdcebb5242023"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/round_01_final/INPUT_MANIFEST.json",
+      "sha256": "cd8b79cc2baa86f5d63708b6ac2428492466fbe6cbcf0892953d96b80d874291"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/scripts/collection_protocol.py",
+      "sha256": "de391aada33c09d5120bc3648ec70313c085a219200ec689de086e93d6e2c21b"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/scripts/policy_server.py",
+      "sha256": "db85d8bf95e9bcfa43eee6d2500d20287d90c5c47f2dcbf67175327352f3dff3"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/scripts/rollout_worker.py",
+      "sha256": "7c3011b4659b3df9674d8c90075331fe27f801c5d298194f1a71d5f67528018d"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_092504_appworld_qwen3-8b_react_lora_codex_rft_train90_dev57/scripts_snapshot/appworld_run_isolated_lora_config.py",
+      "sha256": "48026731c38a0cf73c26c9ba5fd23f210cc0dea92cf650c2a6c076aea6965066"
+    },
+    {
+      "path": "/root/autodl-tmp/workspace-tw/experiments/2026-09-21_092504_appworld_qwen3-8b_react_lora_codex_rft_train90_dev57/config/agent_configs/simplified_react_code_agent/alibaba/qwen3-8b-with-reasoning/dev.jsonnet",
+      "sha256": "6ba24e61c7447a08f8313918f9bbc47bec15f9f46a1c86ed23331cab52c4149a"
+    },
+    {
+      "path": "/root/autodl-tmp/models/Qwen3-8B/tokenizer_config.json",
+      "sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101"
+    },
+    {
+      "path": "/root/autodl-tmp/envs/appworld-0.2.0-py312/lib/python3.12/site-packages/appworld/evaluator.py",
+      "sha256": "bde9deb3b1e6ac0fa9819013729c0e817a97c90f579108fa032a90bba0ca51cb"
+    }
+  ]
+}

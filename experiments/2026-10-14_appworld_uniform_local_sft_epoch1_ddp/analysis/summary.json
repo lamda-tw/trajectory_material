@@ -1,0 +1,305 @@
+{
+  "checked_at": "2026-10-14T12:56:10.540775+08:00",
+  "all_checks_passed": true,
+  "training": {
+    "phase": "complete",
+    "arm": "uniform",
+    "epochs": 1,
+    "updates": 1220,
+    "supervised_tokens": 220081,
+    "initial_adapter_tensor_sha256": "705019e768c06e5e2364c3dc30ed73940a2009d1afe18042c20ac46701792b58",
+    "final_adapter_tensor_sha256": "6b890235b39770ebaeb6daed8d73c8aec96b8268cdd859c6cc8ebd5c0993013c",
+    "adapter_files": {
+      "README.md": "cc7b9ac08f5e6fdae98fb494d56472ac88932b10a1becd609efc22e6192f7cc9",
+      "adapter_model.safetensors": "e2e21b9a91be8e988d1e16d7d87de00f4fefd7b9e91c3a2cb0cd413733fa7573",
+      "adapter_config.json": "4c6dd2b8d1c72b4ea2f1ce561c8200a5fd76900e55c5130210f4d622683b319a"
+    },
+    "training_wall_seconds": 9526.725581809878,
+    "distributed_ranks": [
+      {
+        "rank": 0,
+        "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "peak_allocated_gib": 37.570945739746094,
+        "peak_reserved_gib": 38.7265625
+      },
+      {
+        "rank": 1,
+        "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "peak_allocated_gib": 37.57573175430298,
+        "peak_reserved_gib": 38.548828125
+      }
+    ],
+    "external_judge_calls": 0,
+    "new_training_actions": 0,
+    "probe": false
+  },
+  "epoch": {
+    "epoch": 1,
+    "updates": 1220,
+    "samples": 2440,
+    "supervised_tokens": 220081,
+    "mean_step_loss": 0.12917877546625506,
+    "token_weighted_loss": 0.1256014786830613,
+    "ranks_synchronized": true,
+    "adapter_tensor_sha256": "6b890235b39770ebaeb6daed8d73c8aec96b8268cdd859c6cc8ebd5c0993013c",
+    "elapsed_seconds": 9526.105518616736
+  },
+  "selection": {
+    "selection_seed": 20261014,
+    "training_seed": 20260921,
+    "selected_steps": 2440,
+    "tasks": 90,
+    "common_pool_steps": 5234,
+    "supervised_tokens": 220081,
+    "input_tokens": 18501155,
+    "full_responses": 2440,
+    "reference_supervised_tokens": 196608,
+    "reference_partial_responses": 88,
+    "shared_selected_steps": 1283,
+    "source_trajectories_represented": 514,
+    "max_sequence": 31902,
+    "per_task_counts_identical": true,
+    "per_update_task_pairs_identical": true,
+    "uniform_without_replacement_within_task": true,
+    "labels_used_for_selection": false,
+    "official_outcomes_used_for_selection": false,
+    "labels_post_selection_only": {
+      "R1": {
+        "P": 2439,
+        "F": 1
+      },
+      "R2": {
+        "P": 1678,
+        "U": 217,
+        "N": 165,
+        "F": 380
+      },
+      "R3": {
+        "P": 1237,
+        "N": 758,
+        "U": 114,
+        "F": 331
+      },
+      "R4": {
+        "N": 2011,
+        "F": 318,
+        "U": 57,
+        "P": 54
+      },
+      "R5": {
+        "N": 2371,
+        "F": 19,
+        "P": 19,
+        "U": 31
+      },
+      "R6": {
+        "F": 738,
+        "P": 951,
+        "N": 751
+      },
+      "R7": {
+        "N": 2429,
+        "F": 11
+      },
+      "R8": {
+        "F": 981,
+        "P": 1358,
+        "N": 101
+      }
+    }
+  },
+  "results": {
+    "random_epoch1": {
+      "phase": "complete",
+      "arm": "uniform",
+      "tasks": 57,
+      "successes": 5,
+      "TGC": 0.08771929824561403,
+      "mean_test_pass_fraction": 0.3550751879699248,
+      "steps": 1463,
+      "generated_tokens": 139552,
+      "elapsed_current_invocation_seconds": 1846.514067620039,
+      "policy_id": "e2e21b9a91be8e988d1e16d7d87de00f4fefd7b9e91c3a2cb0cd413733fa7573",
+      "config_sha256": "2566b4c6fb949b21494b83d96299bf4e2def53e020d9982e5f1c8e987a9b0200"
+    },
+    "rubric_epoch1": {
+      "phase": "complete",
+      "arm": "epoch1",
+      "tasks": 57,
+      "successes": 13,
+      "TGC": 0.22807017543859648,
+      "mean_test_pass_fraction": 0.5240601503759398,
+      "steps": 1532,
+      "generated_tokens": 160717,
+      "elapsed_current_invocation_seconds": 1932.9737255498767,
+      "policy_id": "4a9dd2df8a5c44cd47270d7876f31584c664af7794c75b1305ad4eea10ed8644",
+      "config_sha256": "e11a7ade1699de86fbcfd430869d4932f4333eb51b11c739c382ab4e03964dc8"
+    },
+    "base": {
+      "phase": "complete",
+      "arm": "base",
+      "tasks": 57,
+      "successes": 3,
+      "TGC": 0.05263157894736842,
+      "mean_test_pass_fraction": 0.43767752715121133,
+      "steps": 1332,
+      "generated_tokens": 170055,
+      "elapsed_current_invocation_seconds": 1211.3008473813534,
+      "policy_id": "base",
+      "config_sha256": "a974fe48927e126cdaec755213f81093253f0df5c7e6bf14f7d5c1c991896add"
+    }
+  },
+  "comparisons": {
+    "rubric_epoch1": {
+      "direction": "random minus reference",
+      "new_successes": [
+        "b119b1f_2"
+      ],
+      "regressions": [
+        "23cf851_1",
+        "23cf851_2",
+        "396c5a2_2",
+        "4fab96f_2",
+        "57c3486_3",
+        "d4e9306_1",
+        "d4e9306_2",
+        "d4e9306_3",
+        "df61dc5_3"
+      ],
+      "delta_tasks": -8,
+      "delta_TGC": -0.14035087719298245,
+      "descriptive_mcnemar_p": 0.021484375,
+      "task_family_bootstrap_95_interval": [
+        -0.2807017543859649,
+        -0.017543859649122806
+      ]
+    },
+    "base": {
+      "direction": "random minus reference",
+      "new_successes": [
+        "6bdbc26_1",
+        "6bdbc26_2",
+        "6bdbc26_3"
+      ],
+      "regressions": [
+        "23cf851_3"
+      ],
+      "delta_tasks": 2,
+      "delta_TGC": 0.03508771929824561,
+      "descriptive_mcnemar_p": 0.625,
+      "task_family_bootstrap_95_interval": [
+        -0.05263157894736842,
+        0.15789473684210525
+      ]
+    }
+  },
+  "diagnostics": {
+    "random_epoch1": {
+      "termination_counts": {
+        "context_limit": 27,
+        "step_limit": 12,
+        "completion_api": 16,
+        "no_python_code": 2
+      },
+      "completion_api_but_failed": 11,
+      "successful_tasks_by_family": {
+        "0d8a4ee": 0,
+        "23cf851": 0,
+        "37a8675": 0,
+        "383cbac": 0,
+        "396c5a2": 0,
+        "3ab5b8b": 0,
+        "4ec8de5": 0,
+        "4fab96f": 0,
+        "50e1ac9": 0,
+        "530b157": 0,
+        "57c3486": 0,
+        "6171bbc": 0,
+        "68ee2c9": 0,
+        "6bdbc26": 3,
+        "6c2c621": 0,
+        "b119b1f": 2,
+        "d4e9306": 0,
+        "df61dc5": 0,
+        "fac291d": 0
+      },
+      "families_with_any_success": 2
+    },
+    "rubric_epoch1": {
+      "termination_counts": {
+        "completion_api": 30,
+        "step_limit": 19,
+        "context_limit": 8
+      },
+      "completion_api_but_failed": 17,
+      "successful_tasks_by_family": {
+        "0d8a4ee": 0,
+        "23cf851": 2,
+        "37a8675": 0,
+        "383cbac": 0,
+        "396c5a2": 1,
+        "3ab5b8b": 0,
+        "4ec8de5": 0,
+        "4fab96f": 1,
+        "50e1ac9": 0,
+        "530b157": 0,
+        "57c3486": 1,
+        "6171bbc": 0,
+        "68ee2c9": 0,
+        "6bdbc26": 3,
+        "6c2c621": 0,
+        "b119b1f": 1,
+        "d4e9306": 3,
+        "df61dc5": 1,
+        "fac291d": 0
+      },
+      "families_with_any_success": 8
+    },
+    "base": {
+      "termination_counts": {
+        "completion_api": 27,
+        "no_python_code": 11,
+        "step_limit": 14,
+        "context_limit": 5
+      },
+      "completion_api_but_failed": 24,
+      "successful_tasks_by_family": {
+        "0d8a4ee": 0,
+        "23cf851": 1,
+        "37a8675": 0,
+        "383cbac": 0,
+        "396c5a2": 0,
+        "3ab5b8b": 0,
+        "4ec8de5": 0,
+        "4fab96f": 0,
+        "50e1ac9": 0,
+        "530b157": 0,
+        "57c3486": 0,
+        "6171bbc": 0,
+        "68ee2c9": 0,
+        "6bdbc26": 0,
+        "6c2c621": 0,
+        "b119b1f": 2,
+        "d4e9306": 0,
+        "df61dc5": 0,
+        "fac291d": 0
+      },
+      "families_with_any_success": 2
+    }
+  },
+  "control_checks": {
+    "identical_initial_LoRA": true,
+    "identical_per_update_task_pairs": true,
+    "identical_train_hyperparameters": true,
+    "identical_DEV_protocol": true,
+    "no_old_adapter_resume": true,
+    "one_pass_exactly": true
+  },
+  "limitations": [
+    "One sampling seed and one training seed",
+    "Epoch1 chosen after prior DEV inspection; exploratory comparison",
+    "Step/update matched, not token/context/mask matched; rubric includes 88 partial targets",
+    "Task quotas derived from rubric arm; conditional task-matched baseline",
+    "No isolation of individual rubric dimensions"
+  ]
+}

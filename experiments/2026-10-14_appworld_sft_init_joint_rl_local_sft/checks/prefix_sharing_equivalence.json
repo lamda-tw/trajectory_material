@@ -1,0 +1,80 @@
+{
+  "at": "2026-10-15T09:45:13.587513+08:00",
+  "status": "passed",
+  "scope": "CPU float32 tiny Qwen3 with all seven LoRA projections; not a full-model BF16 or GPU speed test",
+  "cases": [
+    {
+      "case": "wrapper_divergence",
+      "checkpointing": false,
+      "logprob_max_abs_error": 4.76837158203125e-07,
+      "loss_abs_error": 5.960464477539063e-08,
+      "gradient_max_abs_error": 2.2351741790771484e-08,
+      "gradient_relative_l2_error": 4.1331540501232666e-07,
+      "optimizer_parameter_max_abs_error": 4.547473508864641e-13,
+      "original_input_positions": 34,
+      "shared_input_positions": 24,
+      "chains": 5
+    },
+    {
+      "case": "wrapper_divergence",
+      "checkpointing": true,
+      "logprob_max_abs_error": 4.76837158203125e-07,
+      "loss_abs_error": 5.960464477539063e-08,
+      "gradient_max_abs_error": 2.2351741790771484e-08,
+      "gradient_relative_l2_error": 4.1331540501232666e-07,
+      "optimizer_parameter_max_abs_error": 4.547473508864641e-13,
+      "original_input_positions": 34,
+      "shared_input_positions": 24,
+      "chains": 5
+    },
+    {
+      "case": "duplicate_and_different_targets",
+      "checkpointing": false,
+      "logprob_max_abs_error": 0.0,
+      "loss_abs_error": 0.0,
+      "gradient_max_abs_error": 1.1175870895385742e-08,
+      "gradient_relative_l2_error": 5.049253672950726e-07,
+      "optimizer_parameter_max_abs_error": 9.313225746154785e-10,
+      "original_input_positions": 20,
+      "shared_input_positions": 7,
+      "chains": 1
+    },
+    {
+      "case": "duplicate_and_different_targets",
+      "checkpointing": true,
+      "logprob_max_abs_error": 0.0,
+      "loss_abs_error": 0.0,
+      "gradient_max_abs_error": 1.1175870895385742e-08,
+      "gradient_relative_l2_error": 5.049253672950726e-07,
+      "optimizer_parameter_max_abs_error": 9.313225746154785e-10,
+      "original_input_positions": 20,
+      "shared_input_positions": 7,
+      "chains": 1
+    },
+    {
+      "case": "separate_roots_and_short_targets",
+      "checkpointing": false,
+      "logprob_max_abs_error": 4.76837158203125e-07,
+      "loss_abs_error": 5.960464477539063e-08,
+      "gradient_max_abs_error": 5.21540641784668e-08,
+      "gradient_relative_l2_error": 5.589914167103416e-07,
+      "optimizer_parameter_max_abs_error": 3.637978807091713e-12,
+      "original_input_positions": 8,
+      "shared_input_positions": 7,
+      "chains": 2
+    },
+    {
+      "case": "separate_roots_and_short_targets",
+      "checkpointing": true,
+      "logprob_max_abs_error": 4.76837158203125e-07,
+      "loss_abs_error": 5.960464477539063e-08,
+      "gradient_max_abs_error": 5.21540641784668e-08,
+      "gradient_relative_l2_error": 5.589914167103416e-07,
+      "optimizer_parameter_max_abs_error": 3.637978807091713e-12,
+      "original_input_positions": 8,
+      "shared_input_positions": 7,
+      "chains": 2
+    }
+  ],
+  "cuda_initialized": false
+}

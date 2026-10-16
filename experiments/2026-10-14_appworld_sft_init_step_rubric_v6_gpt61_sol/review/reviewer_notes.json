@@ -1,0 +1,95 @@
+{
+  "7d7fbf6_1__05": {
+    "reviewed": true,
+    "scope": "Read all 16 labels, compact action/observation history, four frozen key checks.",
+    "finding": "All four pre-label checks match. Empty path-filter loop correctly receives R5=N; fabricated compression and completion claims flagged. No additional clear error identified in inspected material.",
+    "confirmed_errors": [],
+    "boundary_disagreements": []
+  },
+  "afc0fce_1__04": {
+    "reviewed": true,
+    "scope": "All 14 labels, compact history, full instructions, exact nine target timestamps, three pre-label checks.",
+    "finding": "Frozen checks match: rolling/calendar boundary logic flagged, real comments and likes assessed independently as locally correct. Missing credential specification correctly flagged.",
+    "confirmed_errors": [],
+    "boundary_disagreements": [
+      {
+        "id": "afc0fce_1__04",
+        "step_id": 14,
+        "rubric": "R7",
+        "observed": "U",
+        "alternative": "P",
+        "evidence": "Query lower bound May30 23:55 includes the whole May31–June4 target window up to actual now June4 23:55; all nine selected payments have dates within the requested five days. Judge reserves uncertainty for the unqueried final five minutes of today. Explicit full-calendar protocol supports caution, while present-time semantics supports P; retain as boundary, not a confirmed error."
+      }
+    ]
+  },
+  "e85d92a_3__02": {
+    "reviewed": true,
+    "scope": "All seven labels and compact raw history; three frozen checks.",
+    "finding": "Full artist and song pagination, exact-name artist selection, maximum play_count and supported answer. All frozen checks match; no clear label issue identified.",
+    "confirmed_errors": [],
+    "boundary_disagreements": []
+  },
+  "e3d6c94_3__05": {
+    "reviewed": true,
+    "scope": "All 16 labels, compact raw history and expanded steps 9–16; five frozen checks.",
+    "finding": "All five frozen checks match. Step12 fails before addition and is R5=N. Runtime year lookup and fromisoformat recover; step14 successful exact additions receive R5=P/R6=P. Unsupported early count receives R3=U.",
+    "confirmed_errors": [],
+    "boundary_disagreements": []
+  },
+  "692c77d_1__05": {
+    "reviewed": true,
+    "scope": "All 21 labels, compact raw history and expanded compound write at step19; five frozen checks.",
+    "finding": "All frozen checks match. Step19 recognizes partial correct writes before duplicate-review 409 (R1=F, R5=P); step20 retains locally correct updates despite the wrong decision to abandon unrated targets; final R7=F identifies four still-unrated targets.",
+    "confirmed_errors": [],
+    "boundary_disagreements": []
+  },
+  "302c169_2__00": {
+    "reviewed": true,
+    "scope": "All 12 labels, compact raw history and three frozen checks.",
+    "finding": "All three checks match: 07:30 minus 40 minutes, six successful appropriate updates, supported completion. No clear issue identified.",
+    "confirmed_errors": [],
+    "boundary_disagreements": []
+  },
+  "ce359b5_1__00": {
+    "reviewed": true,
+    "scope": "All five labels and compact raw history; four frozen checks.",
+    "finding": "All checks match. Extra commentary code is not treated as execution; real step3 is authentication/reads only, R5=N. Claimed deletions and final false completion flagged.",
+    "confirmed_errors": [],
+    "boundary_disagreements": []
+  },
+  "ce359b5_3__01": {
+    "reviewed": true,
+    "scope": "All 28 labels, compact history, expanded compound steps14/16/17/18 and seven frozen checks.",
+    "finding": "All seven checks match. Ten appropriate library removals before ownership failure remain R5=P; actual removal of 2022 song236 is R5=F. Later pre-write failures and already-absent rejections are R5=N. Stale membership and final incomplete cleanup flagged. Caught-API-error R1 boundary is not asserted as an error.",
+    "confirmed_errors": [],
+    "boundary_disagreements": []
+  },
+  "6ea6792_3__00": {
+    "reviewed": true,
+    "scope": "All 12 labels, compact raw history and four frozen checks.",
+    "finding": "All four checks match. Unsupported endpoint fails then discovery recovers. Approving all requests without relation filtering receives R4=F; unknown sender eligibility receives R5=U and final R7=U rather than claiming evidence of wrong recipients from absent contact data.",
+    "confirmed_errors": [],
+    "boundary_disagreements": []
+  },
+  "82e2fac_2__05": {
+    "reviewed": true,
+    "scope": "All nine labels, compact raw history and three frozen checks.",
+    "finding": "All checks match: full library pagination, direct song-detail retrieval and correct minimum play_count, supported exact-title completion. No clear label issue identified.",
+    "confirmed_errors": [],
+    "boundary_disagreements": []
+  },
+  "afc0fce_3__01": {
+    "reviewed": true,
+    "scope": "All 22 labels, compact raw history, complete step19 effects and four frozen checks.",
+    "finding": "All four frozen checks match. Nonexistent phone endpoint fails and discovery recovers. Eight payments actually received comments and likes; later claims of five and of no unrelated received transactions are correctly R3=F. Local effects remain R5=P independently of calendar-window coverage, with final R7=U. No additional clear issue identified in inspected material.",
+    "confirmed_errors": [],
+    "boundary_disagreements": []
+  },
+  "22cc237_3__00": {
+    "reviewed": true,
+    "scope": "All 50 labels, compact raw history, expanded middle steps 18-38 and eight frozen checks.",
+    "finding": "All eight frozen checks match. The unexecuted undefined helper in an empty comprehension is correctly R1=P. Repeated missing imports and fabricated email identities are flagged. Attempted payment requests consistently remain R5=N when execution fails before any request; final budget-interrupted ordinary action is R7=N. No additional clear issue identified in inspected material.",
+    "confirmed_errors": [],
+    "boundary_disagreements": []
+  }
+}

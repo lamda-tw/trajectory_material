@@ -1,0 +1,60 @@
+{
+  "exported_model_validated": true,
+  "config_and_source_checkpoint_hashes_verified": true,
+  "non_exported_adapter_rejected": true,
+  "model_failure_retained_and_partial_score_not_final": true,
+  "missing_official_tests_rejected": true,
+  "full_57_denominator_verified": true,
+  "at": "2026-10-16T09:12:02.608788+08:00",
+  "passed": true,
+  "cuda_allocations": 0,
+  "source": {
+    "training_completion_sha256": "53153e45fb8c74df109b5bc5bc22500e2b7c9c8c30426e7aff19fd8356673685",
+    "training_config_sha256": "ab12a61295ccecc4136871bd4c04bb7130776dca5368d46da04a489794b30786",
+    "source_checkpoint": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/smoke/full_pool_15/step_00015",
+    "source_mode": "smoke",
+    "training_optimizer_updates": 15,
+    "freeze_sha256": null
+  },
+  "evaluation_protocol": {
+    "paths": {
+      "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+      "vllm_python": "/root/autodl-tmp/envs/qwen3-vllm-py312/bin/python"
+    },
+    "server": {
+      "host": "127.0.0.1",
+      "port": 8147,
+      "gpu": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501",
+      "model_name": "joint-qwen3-8b",
+      "adapter_name": "joint-eval-policy",
+      "gpu_memory_utilization": 0.8,
+      "max_num_seqs": 6,
+      "minimum_free_gpu_gib": 70,
+      "startup_timeout_seconds": 900,
+      "request_timeout_seconds": 600
+    },
+    "agent": {
+      "prompt": "assets/agent_prompt.txt",
+      "max_steps": 50,
+      "max_model_len": 32000,
+      "max_new_tokens": 3000
+    },
+    "sampling": {
+      "temperature": 1.0,
+      "group_size": 1
+    },
+    "evaluation": {
+      "temperature": 0.0,
+      "tasks": "config/dev57.txt"
+    },
+    "training": {
+      "lora": {
+        "r": 8
+      }
+    },
+    "adapter_sha256": "c8f268b58dea9fc79ae53cfc362dede13edd965b604a4e702c2b6966ddf211d9",
+    "label": "round_01_final",
+    "mode": "completed_pool_evaluation"
+  },
+  "actual_input_manifest": "experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/round_01_final/INPUT_MANIFEST.json"
+}

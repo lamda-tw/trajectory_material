@@ -1,0 +1,46 @@
+{
+  "started_at": "2026-10-14T09:46:26.587055+08:00",
+  "training_and_dev_finished_at": "2026-10-14T12:56:06.051192+08:00",
+  "analysis_verified_at": "2026-10-14T12:56:10.622537+08:00",
+  "training_seconds": 9526.725581809878,
+  "evaluation_seconds": 1846.514067620039,
+  "total_training_and_dev_wall_seconds": 11379.464137,
+  "stages": [
+    {
+      "kind": "evaluate",
+      "attempt": 1,
+      "started_at": "2026-10-14T12:25:19.339302+08:00",
+      "command": [
+        "/root/autodl-tmp/envs/appworld-0.2.0-py312/bin/python",
+        "-u",
+        "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_uniform_local_sft_epoch1_ddp/scripts/evaluate.py",
+        "--arm",
+        "uniform",
+        "--execute"
+      ],
+      "status": "complete",
+      "pid": 623168,
+      "exit_code": 0,
+      "finished_at": "2026-10-14T12:56:06.050897+08:00"
+    },
+    {
+      "kind": "train",
+      "attempt": 1,
+      "started_at": "2026-10-14T09:46:26.588606+08:00",
+      "command": [
+        "/root/autodl-tmp/workspace-tw/.conda-training/bin/python",
+        "-m",
+        "torch.distributed.run",
+        "--standalone",
+        "--nproc_per_node=2",
+        "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_uniform_local_sft_epoch1_ddp/scripts/train_ddp.py",
+        "--execute"
+      ],
+      "status": "complete",
+      "pid": 600661,
+      "exit_code": 0,
+      "finished_at": "2026-10-14T12:25:19.338082+08:00"
+    }
+  ],
+  "preparation_probe_and_analysis_excluded_from_training": true
+}

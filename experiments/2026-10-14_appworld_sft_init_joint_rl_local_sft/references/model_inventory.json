@@ -1,0 +1,109 @@
+{
+  "adapter_path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/preparation/initial_adapter",
+  "adapter_weights_sha256": "c8fdfd4f3bb198381b6f2e56d019589a3ed904241b0147b565ec540449a29938",
+  "adapter_config": {
+    "alpha_pattern": {},
+    "auto_mapping": null,
+    "base_model_name_or_path": "/root/autodl-tmp/models/Qwen3-8B",
+    "bias": "none",
+    "corda_config": null,
+    "eva_config": null,
+    "exclude_modules": null,
+    "fan_in_fan_out": false,
+    "inference_mode": true,
+    "init_lora_weights": true,
+    "layer_replication": null,
+    "layers_pattern": null,
+    "layers_to_transform": null,
+    "loftq_config": {},
+    "lora_alpha": 16,
+    "lora_bias": false,
+    "lora_dropout": 0.0,
+    "megatron_config": null,
+    "megatron_core": "megatron.core",
+    "modules_to_save": null,
+    "peft_type": "LORA",
+    "qalora_group_size": 16,
+    "r": 8,
+    "rank_pattern": {},
+    "revision": null,
+    "target_modules": [
+      "gate_proj",
+      "o_proj",
+      "down_proj",
+      "up_proj",
+      "v_proj",
+      "q_proj",
+      "k_proj"
+    ],
+    "target_parameters": null,
+    "task_type": "CAUSAL_LM",
+    "trainable_token_indices": null,
+    "use_dora": false,
+    "use_qalora": false,
+    "use_rslora": false
+  },
+  "adapter_config_sha256": "d6e98f010a344bdca5b4370efe278e1d7005985113844aad13ef96f0a95bf892",
+  "base_metadata_hashes": {
+    "config.json": "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30",
+    "generation_config.json": "2325da0f15bb848e018c5ae071b7943332e9f871d6b60e2ed22ca97d4cb993d2",
+    "model.safetensors.index.json": "f9fdbcb91c23971c13ec5d5f2573d2349e8f61f2f049371ec699281748fdb1bc",
+    "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "tokenizer_config.json": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+    "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+    "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+  },
+  "base_shards": [
+    {
+      "path": "/root/autodl-tmp/models/Qwen3-8B/model-00001-of-00005.safetensors",
+      "bytes": 3996250744
+    },
+    {
+      "path": "/root/autodl-tmp/models/Qwen3-8B/model-00002-of-00005.safetensors",
+      "bytes": 3993160032
+    },
+    {
+      "path": "/root/autodl-tmp/models/Qwen3-8B/model-00003-of-00005.safetensors",
+      "bytes": 3959604768
+    },
+    {
+      "path": "/root/autodl-tmp/models/Qwen3-8B/model-00004-of-00005.safetensors",
+      "bytes": 3187841392
+    },
+    {
+      "path": "/root/autodl-tmp/models/Qwen3-8B/model-00005-of-00005.safetensors",
+      "bytes": 1244659840
+    }
+  ],
+  "base_shard_verification": "existence and size; full weight-shard hash not computed",
+  "base_config": {
+    "architectures": [
+      "Qwen3ForCausalLM"
+    ],
+    "attention_bias": false,
+    "attention_dropout": 0.0,
+    "bos_token_id": 151643,
+    "eos_token_id": 151645,
+    "head_dim": 128,
+    "hidden_act": "silu",
+    "hidden_size": 4096,
+    "initializer_range": 0.02,
+    "intermediate_size": 12288,
+    "max_position_embeddings": 40960,
+    "max_window_layers": 36,
+    "model_type": "qwen3",
+    "num_attention_heads": 32,
+    "num_hidden_layers": 36,
+    "num_key_value_heads": 8,
+    "rms_norm_eps": 1e-06,
+    "rope_scaling": null,
+    "rope_theta": 1000000,
+    "sliding_window": null,
+    "tie_word_embeddings": false,
+    "torch_dtype": "bfloat16",
+    "transformers_version": "4.51.0",
+    "use_cache": true,
+    "use_sliding_window": false,
+    "vocab_size": 151936
+  }
+}

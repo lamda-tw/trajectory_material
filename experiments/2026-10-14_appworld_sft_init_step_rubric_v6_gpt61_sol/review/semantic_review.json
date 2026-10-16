@@ -1,0 +1,718 @@
+{
+  "complete": true,
+  "completed_at": "2026-10-14T03:09:34.308327+08:00",
+  "method": "Primary agent inspected compact raw histories, expanded critical evidence, all sample labels and 53 targeted checks frozen before corresponding scores arrived. No independent gold-standard judge or semantic rerolls.",
+  "sample_trajectories": 12,
+  "sample_steps": 212,
+  "pilot_trajectories": 8,
+  "pilot_review": "review/pilot_review.json",
+  "sample_plan": "review/semantic_sample_plan.json",
+  "frozen_checks_sha256": "d95a97c348e7833a6a8a2900b6d86ccd826504e4bf9a858681ba4714ec3bb396",
+  "targeted_checks": 53,
+  "targeted_checks_matched": 53,
+  "check_results": [
+    {
+      "id": "e85d92a_3__02",
+      "step_id": 7,
+      "rubric": "R7",
+      "expected": "P",
+      "evidence": "Full paginated candidate set, exact max/min computation and supported title submission.",
+      "boundary": false,
+      "observed": "P",
+      "matched": true,
+      "judge_reason": ""
+    },
+    {
+      "id": "e85d92a_3__02",
+      "step_id": 7,
+      "rubric": "R5",
+      "expected": "N",
+      "evidence": "complete_task alone makes no task-related business modification.",
+      "boundary": false,
+      "observed": "N",
+      "matched": true,
+      "judge_reason": ""
+    },
+    {
+      "id": "82e2fac_2__05",
+      "step_id": 9,
+      "rubric": "R7",
+      "expected": "P",
+      "evidence": "Full paginated candidate set, exact max/min computation and supported title submission.",
+      "boundary": false,
+      "observed": "P",
+      "matched": true,
+      "judge_reason": ""
+    },
+    {
+      "id": "82e2fac_2__05",
+      "step_id": 9,
+      "rubric": "R5",
+      "expected": "N",
+      "evidence": "complete_task alone makes no task-related business modification.",
+      "boundary": false,
+      "observed": "N",
+      "matched": true,
+      "judge_reason": ""
+    },
+    {
+      "id": "e85d92a_3__02",
+      "step_id": 5,
+      "rubric": "R4",
+      "expected": "P",
+      "evidence": "Exact artist_id selected by name; max of all matching paginated songs.",
+      "boundary": false,
+      "observed": "P",
+      "matched": true,
+      "judge_reason": ""
+    },
+    {
+      "id": "82e2fac_2__05",
+      "step_id": 7,
+      "rubric": "R4",
+      "expected": "P",
+      "evidence": "min over full library song detail play_count values.",
+      "boundary": false,
+      "observed": "P",
+      "matched": true,
+      "judge_reason": ""
+    },
+    {
+      "id": "302c169_2__00",
+      "step_id": 9,
+      "rubric": "R4",
+      "expected": "P",
+      "evidence": "07:30 minus 40 minutes equals 06:50.",
+      "boundary": false,
+      "observed": "P",
+      "matched": true,
+      "judge_reason": ""
+    },
+    {
+      "id": "302c169_2__00",
+      "step_id": 10,
+      "rubric": "R5",
+      "expected": "P",
+      "evidence": "Six successful alarm updates; wake-up set to 06:50, five others disabled.",
+      "boundary": false,
+      "observed": "P",
+      "matched": true,
+      "judge_reason": ""
+    },
+    {
+      "id": "302c169_2__00",
+      "step_id": 12,
+      "rubric": "R7",
+      "expected": "P",
+      "evidence": "All requested alarm changes observed successful, completion without answer.",
+      "boundary": false,
+      "observed": "P",
+      "matched": true,
+      "judge_reason": ""
+    },
+    {
+      "id": "afc0fce_1__04",
+      "step_id": 6,
+      "rubric": "R4",
+      "expected": "F",
+      "evidence": "Five calendar days including today is not now minus five days at the current clock time; code starts May 30 23:55 for June 4.",
+      "boundary": true,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "Uses rolling days instead of calendar days."
+    },
+    {
+      "id": "afc0fce_1__04",
+      "step_id": 11,
+      "rubric": "R5",
+      "expected": "P",
+      "evidence": "Nine correctly addressed Thank you! comments; printed target dates within May 31–June 4, despite overly broad initial date bound.",
+      "boundary": false,
+      "observed": "P",
+      "matched": true,
+      "judge_reason": ""
+    },
+    {
+      "id": "afc0fce_1__04",
+      "step_id": 12,
+      "rubric": "R5",
+      "expected": "P",
+      "evidence": "Nine matching target transactions explicitly liked successfully.",
+      "boundary": false,
+      "observed": "P",
+      "matched": true,
+      "judge_reason": ""
+    },
+    {
+      "id": "e3d6c94_3__05",
+      "step_id": 12,
+      "rubric": "R1",
+      "expected": "F",
+      "evidence": "String release_date formatted with %Y raises before the write list is evaluated.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "Formatting a string date caused ValueError."
+    },
+    {
+      "id": "e3d6c94_3__05",
+      "step_id": 12,
+      "rubric": "R5",
+      "expected": "N",
+      "evidence": "Formatting error precedes all song additions.",
+      "boundary": false,
+      "observed": "N",
+      "matched": true,
+      "judge_reason": "Formatting a string date caused ValueError."
+    },
+    {
+      "id": "e3d6c94_3__05",
+      "step_id": 14,
+      "rubric": "R6",
+      "expected": "P",
+      "evidence": "Replaces invalid string formatting with datetime.fromisoformat and completes adds.",
+      "boundary": false,
+      "observed": "P",
+      "matched": true,
+      "judge_reason": ""
+    },
+    {
+      "id": "e3d6c94_3__05",
+      "step_id": 14,
+      "rubric": "R5",
+      "expected": "P",
+      "evidence": "Exact R&B and current-year filter; successful additions of songs 87 and 184.",
+      "boundary": false,
+      "observed": "P",
+      "matched": true,
+      "judge_reason": ""
+    },
+    {
+      "id": "e3d6c94_3__05",
+      "step_id": 16,
+      "rubric": "R7",
+      "expected": "P",
+      "evidence": "Playlist created and both qualifying songs added.",
+      "boundary": false,
+      "observed": "P",
+      "matched": true,
+      "judge_reason": ""
+    },
+    {
+      "id": "afc0fce_3__01",
+      "step_id": 7,
+      "rubric": "R1",
+      "expected": "F",
+      "evidence": "No phone.search_users API; documentation request fails.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "Phone API lookup used a nonexistent name."
+    },
+    {
+      "id": "afc0fce_3__01",
+      "step_id": 8,
+      "rubric": "R6",
+      "expected": "P",
+      "evidence": "Discovers valid phone API names after nonexistent search_users error.",
+      "boundary": false,
+      "observed": "P",
+      "matched": true,
+      "judge_reason": ""
+    },
+    {
+      "id": "afc0fce_3__01",
+      "step_id": 20,
+      "rubric": "R3",
+      "expected": "F",
+      "evidence": "Claims five targeted comments/likes; previous output contains eight distinct payments.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "Claims five successes; eight were observed."
+    },
+    {
+      "id": "afc0fce_3__01",
+      "step_id": 21,
+      "rubric": "R3",
+      "expected": "F",
+      "evidence": "Claims only five received payments; observations contain non-roommate transactions and eight targets.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "Eight targets and other payments are visible."
+    },
+    {
+      "id": "ce359b5_1__00",
+      "step_id": 1,
+      "rubric": "R8",
+      "expected": "F",
+      "evidence": "Many nonempty extra code blocks in commentary; only first block executed.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "Unexecuted deletions are claimed complete."
+    },
+    {
+      "id": "ce359b5_1__00",
+      "step_id": 2,
+      "rubric": "R1",
+      "expected": "F",
+      "evidence": "Undefined spotify_access_token; previous authentication only in unexecuted commentary.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "Undefined token caused a NameError."
+    },
+    {
+      "id": "ce359b5_1__00",
+      "step_id": 3,
+      "rubric": "R5",
+      "expected": "N",
+      "evidence": "Only credentials, login and reads actually execute, not commentary deletions.",
+      "boundary": false,
+      "observed": "N",
+      "matched": true,
+      "judge_reason": "Only reads ran; claimed deletions did not."
+    },
+    {
+      "id": "ce359b5_1__00",
+      "step_id": 5,
+      "rubric": "R7",
+      "expected": "F",
+      "evidence": "No deletion API ever executed; completion claim is false.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "Task marked successful without any deletions."
+    },
+    {
+      "id": "6ea6792_3__00",
+      "step_id": 5,
+      "rubric": "R1",
+      "expected": "F",
+      "evidence": "Nonexistent pending_requests documentation request.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "The requested API name does not exist."
+    },
+    {
+      "id": "6ea6792_3__00",
+      "step_id": 6,
+      "rubric": "R6",
+      "expected": "P",
+      "evidence": "API discovery responds to nonexistent endpoint error.",
+      "boundary": false,
+      "observed": "P",
+      "matched": true,
+      "judge_reason": ""
+    },
+    {
+      "id": "6ea6792_3__00",
+      "step_id": 10,
+      "rubric": "R4",
+      "expected": "F",
+      "evidence": "Approves all 26 requests without resolving the coworker/friend filter.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "Approved all senders without relation checks."
+    },
+    {
+      "id": "6ea6792_3__00",
+      "step_id": 10,
+      "rubric": "R5",
+      "expected": "U",
+      "evidence": "Actual approvals succeeded; supplied evidence does not identify which senders are coworkers/friends. Do not infer wrong effects solely from wrong selection rationale.",
+      "boundary": true,
+      "observed": "U",
+      "matched": true,
+      "judge_reason": "Approved all senders without relation checks."
+    },
+    {
+      "id": "7d7fbf6_1__05",
+      "step_id": 9,
+      "rubric": "R4",
+      "expected": "F",
+      "evidence": "Filters absolute /home/... paths by ~/..., producing empty loop.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "The filter rejects every returned path."
+    },
+    {
+      "id": "7d7fbf6_1__05",
+      "step_id": 9,
+      "rubric": "R5",
+      "expected": "N",
+      "evidence": "Empty vacation_directories means no compression call occurred.",
+      "boundary": false,
+      "observed": "N",
+      "matched": true,
+      "judge_reason": "The filter rejects every returned path."
+    },
+    {
+      "id": "7d7fbf6_1__05",
+      "step_id": 10,
+      "rubric": "R3",
+      "expected": "F",
+      "evidence": "Claims three compression calls and empty dictionaries, but prior output is an empty list from zero calls.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "No compression calls actually occurred."
+    },
+    {
+      "id": "7d7fbf6_1__05",
+      "step_id": 16,
+      "rubric": "R7",
+      "expected": "F",
+      "evidence": "Claims four ZIPs and source removal, neither operation executed.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "No archives or directory deletions occurred."
+    },
+    {
+      "id": "692c77d_1__05",
+      "step_id": 18,
+      "rubric": "R5",
+      "expected": "N",
+      "evidence": "IndexError while evaluating argument occurs before update request.",
+      "boundary": false,
+      "observed": "N",
+      "matched": true,
+      "judge_reason": "Unrated targets were wrongly excluded."
+    },
+    {
+      "id": "692c77d_1__05",
+      "step_id": 19,
+      "rubric": "R1",
+      "expected": "F",
+      "evidence": "Duplicate review 409 after earlier sorted target writes may already have succeeded.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "Tried to create an already existing review."
+    },
+    {
+      "id": "692c77d_1__05",
+      "step_id": 19,
+      "rubric": "R5",
+      "expected": "P",
+      "evidence": "Sorted targets [28,40,95,122,159,...]; existing reviews only 159/211/254. First four creates succeed before duplicate 159; do not erase partial effects.",
+      "boundary": true,
+      "observed": "P",
+      "matched": true,
+      "judge_reason": "Tried to create an already existing review."
+    },
+    {
+      "id": "692c77d_1__05",
+      "step_id": 20,
+      "rubric": "R5",
+      "expected": "P",
+      "evidence": "Three existing lower ratings updated successfully; incomplete other targets are separate from local effects.",
+      "boundary": false,
+      "observed": "P",
+      "matched": true,
+      "judge_reason": "Unrated targets were abandoned."
+    },
+    {
+      "id": "692c77d_1__05",
+      "step_id": 21,
+      "rubric": "R7",
+      "expected": "F",
+      "evidence": "Unrated targets after duplicate point remain unprocessed; false complete declaration.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "Completion claimed with four targets unrated."
+    },
+    {
+      "id": "ce359b5_3__01",
+      "step_id": 14,
+      "rubric": "R1",
+      "expected": "F",
+      "evidence": "Ownership error on playlist 1 after library-removal loop.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "Guessed playlist ID causes partial failure."
+    },
+    {
+      "id": "ce359b5_3__01",
+      "step_id": 14,
+      "rubric": "R5",
+      "expected": "P",
+      "evidence": "Ten appropriate library removals really occurred before failing playlist access, corroborated by step16 stored results.",
+      "boundary": false,
+      "observed": "P",
+      "matched": true,
+      "judge_reason": "Guessed playlist ID causes partial failure."
+    },
+    {
+      "id": "ce359b5_3__01",
+      "step_id": 16,
+      "rubric": "R5",
+      "expected": "F",
+      "evidence": "Actually removes song236 (release 2022-08-20) from playlist10, outside before-or-in-2021 scope.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "Removes a song released in 2022."
+    },
+    {
+      "id": "ce359b5_3__01",
+      "step_id": 17,
+      "rubric": "R5",
+      "expected": "N",
+      "evidence": "int subscript error before removal call.",
+      "boundary": false,
+      "observed": "N",
+      "matched": true,
+      "judge_reason": "Treats integer song IDs as dictionaries."
+    },
+    {
+      "id": "ce359b5_3__01",
+      "step_id": 18,
+      "rubric": "R5",
+      "expected": "N",
+      "evidence": "All actual deletion attempts rejected as already absent; printed library successes are old results.",
+      "boundary": false,
+      "observed": "N",
+      "matched": true,
+      "judge_reason": "Retries completed writes using stale state."
+    },
+    {
+      "id": "ce359b5_3__01",
+      "step_id": 23,
+      "rubric": "R3",
+      "expected": "F",
+      "evidence": "Claims remaining current IDs from stale original playlist_library, not refreshed state.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "Cached playlists cannot verify remaining songs."
+    },
+    {
+      "id": "ce359b5_3__01",
+      "step_id": 28,
+      "rubric": "R7",
+      "expected": "F",
+      "evidence": "Final completion after wrong 2022 deletion and incomplete eligible playlist cleanup.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "Eligible playlist songs remain."
+    },
+    {
+      "id": "22cc237_3__00",
+      "step_id": 10,
+      "rubric": "R1",
+      "expected": "P",
+      "evidence": "Undefined api_call_exists is in a comprehension over an empty filtered list, so it is never evaluated; observation is successful.",
+      "boundary": false,
+      "observed": "P",
+      "matched": true,
+      "judge_reason": "Reuses filters already found empty."
+    },
+    {
+      "id": "22cc237_3__00",
+      "step_id": 12,
+      "rubric": "R5",
+      "expected": "N",
+      "evidence": "Undefined dinner_note stops before any payment request.",
+      "boundary": false,
+      "observed": "N",
+      "matched": true,
+      "judge_reason": "Undefined note; dinner total is invented."
+    },
+    {
+      "id": "22cc237_3__00",
+      "step_id": 21,
+      "rubric": "R1",
+      "expected": "F",
+      "evidence": "timedelta not imported.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "Pagination claim unsupported; timedelta absent."
+    },
+    {
+      "id": "22cc237_3__00",
+      "step_id": 22,
+      "rubric": "R6",
+      "expected": "F",
+      "evidence": "Repeats exact missing timedelta import after prior NameError.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "Repeats the missing timedelta import."
+    },
+    {
+      "id": "22cc237_3__00",
+      "step_id": 34,
+      "rubric": "R3",
+      "expected": "F",
+      "evidence": "Invents name.lower()+@example.com identities from first names.",
+      "boundary": false,
+      "observed": "F",
+      "matched": true,
+      "judge_reason": "Invented emails; dictionaries unpacked wrongly."
+    },
+    {
+      "id": "22cc237_3__00",
+      "step_id": 46,
+      "rubric": "R5",
+      "expected": "N",
+      "evidence": "authorized_unpaid is None; .items fails before any request.",
+      "boundary": false,
+      "observed": "N",
+      "matched": true,
+      "judge_reason": "Repeats use of None and invented recipients."
+    },
+    {
+      "id": "22cc237_3__00",
+      "step_id": 50,
+      "rubric": "R5",
+      "expected": "N",
+      "evidence": "Same pre-write NoneType error; no actual requests.",
+      "boundary": false,
+      "observed": "N",
+      "matched": true,
+      "judge_reason": "Repeats use of None and invented recipients."
+    },
+    {
+      "id": "22cc237_3__00",
+      "step_id": 50,
+      "rubric": "R7",
+      "expected": "N",
+      "evidence": "Step limit terminates an ordinary attempted action; it does not actually call complete_task or assert completed effects.",
+      "boundary": true,
+      "observed": "N",
+      "matched": true,
+      "judge_reason": "Repeats use of None and invented recipients."
+    }
+  ],
+  "case_notes": {
+    "7d7fbf6_1__05": {
+      "reviewed": true,
+      "scope": "Read all 16 labels, compact action/observation history, four frozen key checks.",
+      "finding": "All four pre-label checks match. Empty path-filter loop correctly receives R5=N; fabricated compression and completion claims flagged. No additional clear error identified in inspected material.",
+      "confirmed_errors": [],
+      "boundary_disagreements": []
+    },
+    "afc0fce_1__04": {
+      "reviewed": true,
+      "scope": "All 14 labels, compact history, full instructions, exact nine target timestamps, three pre-label checks.",
+      "finding": "Frozen checks match: rolling/calendar boundary logic flagged, real comments and likes assessed independently as locally correct. Missing credential specification correctly flagged.",
+      "confirmed_errors": [],
+      "boundary_disagreements": [
+        {
+          "id": "afc0fce_1__04",
+          "step_id": 14,
+          "rubric": "R7",
+          "observed": "U",
+          "alternative": "P",
+          "evidence": "Query lower bound May30 23:55 includes the whole May31–June4 target window up to actual now June4 23:55; all nine selected payments have dates within the requested five days. Judge reserves uncertainty for the unqueried final five minutes of today. Explicit full-calendar protocol supports caution, while present-time semantics supports P; retain as boundary, not a confirmed error."
+        }
+      ]
+    },
+    "e85d92a_3__02": {
+      "reviewed": true,
+      "scope": "All seven labels and compact raw history; three frozen checks.",
+      "finding": "Full artist and song pagination, exact-name artist selection, maximum play_count and supported answer. All frozen checks match; no clear label issue identified.",
+      "confirmed_errors": [],
+      "boundary_disagreements": []
+    },
+    "e3d6c94_3__05": {
+      "reviewed": true,
+      "scope": "All 16 labels, compact raw history and expanded steps 9–16; five frozen checks.",
+      "finding": "All five frozen checks match. Step12 fails before addition and is R5=N. Runtime year lookup and fromisoformat recover; step14 successful exact additions receive R5=P/R6=P. Unsupported early count receives R3=U.",
+      "confirmed_errors": [],
+      "boundary_disagreements": []
+    },
+    "692c77d_1__05": {
+      "reviewed": true,
+      "scope": "All 21 labels, compact raw history and expanded compound write at step19; five frozen checks.",
+      "finding": "All frozen checks match. Step19 recognizes partial correct writes before duplicate-review 409 (R1=F, R5=P); step20 retains locally correct updates despite the wrong decision to abandon unrated targets; final R7=F identifies four still-unrated targets.",
+      "confirmed_errors": [],
+      "boundary_disagreements": []
+    },
+    "302c169_2__00": {
+      "reviewed": true,
+      "scope": "All 12 labels, compact raw history and three frozen checks.",
+      "finding": "All three checks match: 07:30 minus 40 minutes, six successful appropriate updates, supported completion. No clear issue identified.",
+      "confirmed_errors": [],
+      "boundary_disagreements": []
+    },
+    "ce359b5_1__00": {
+      "reviewed": true,
+      "scope": "All five labels and compact raw history; four frozen checks.",
+      "finding": "All checks match. Extra commentary code is not treated as execution; real step3 is authentication/reads only, R5=N. Claimed deletions and final false completion flagged.",
+      "confirmed_errors": [],
+      "boundary_disagreements": []
+    },
+    "ce359b5_3__01": {
+      "reviewed": true,
+      "scope": "All 28 labels, compact history, expanded compound steps14/16/17/18 and seven frozen checks.",
+      "finding": "All seven checks match. Ten appropriate library removals before ownership failure remain R5=P; actual removal of 2022 song236 is R5=F. Later pre-write failures and already-absent rejections are R5=N. Stale membership and final incomplete cleanup flagged. Caught-API-error R1 boundary is not asserted as an error.",
+      "confirmed_errors": [],
+      "boundary_disagreements": []
+    },
+    "6ea6792_3__00": {
+      "reviewed": true,
+      "scope": "All 12 labels, compact raw history and four frozen checks.",
+      "finding": "All four checks match. Unsupported endpoint fails then discovery recovers. Approving all requests without relation filtering receives R4=F; unknown sender eligibility receives R5=U and final R7=U rather than claiming evidence of wrong recipients from absent contact data.",
+      "confirmed_errors": [],
+      "boundary_disagreements": []
+    },
+    "82e2fac_2__05": {
+      "reviewed": true,
+      "scope": "All nine labels, compact raw history and three frozen checks.",
+      "finding": "All checks match: full library pagination, direct song-detail retrieval and correct minimum play_count, supported exact-title completion. No clear label issue identified.",
+      "confirmed_errors": [],
+      "boundary_disagreements": []
+    },
+    "afc0fce_3__01": {
+      "reviewed": true,
+      "scope": "All 22 labels, compact raw history, complete step19 effects and four frozen checks.",
+      "finding": "All four frozen checks match. Nonexistent phone endpoint fails and discovery recovers. Eight payments actually received comments and likes; later claims of five and of no unrelated received transactions are correctly R3=F. Local effects remain R5=P independently of calendar-window coverage, with final R7=U. No additional clear issue identified in inspected material.",
+      "confirmed_errors": [],
+      "boundary_disagreements": []
+    },
+    "22cc237_3__00": {
+      "reviewed": true,
+      "scope": "All 50 labels, compact raw history, expanded middle steps 18-38 and eight frozen checks.",
+      "finding": "All eight frozen checks match. The unexecuted undefined helper in an empty comprehension is correctly R1=P. Repeated missing imports and fabricated email identities are flagged. Attempted payment requests consistently remain R5=N when execution fails before any request; final budget-interrupted ordinary action is R7=N. No additional clear issue identified in inspected material.",
+      "confirmed_errors": [],
+      "boundary_disagreements": []
+    }
+  },
+  "mechanical_scan": {
+    "trajectories": 540,
+    "steps": 9886,
+    "flags": [],
+    "review_notes": [],
+    "scope": "Conservative direct non-business API calls with R5!=N; explicit execution failures with R1!=F. This is not complete program analysis."
+  },
+  "confirmed_errors": [],
+  "boundary_disagreements": [
+    {
+      "id": "afc0fce_1__04",
+      "step_id": 14,
+      "rubric": "R7",
+      "observed": "U",
+      "alternative": "P",
+      "evidence": "Query lower bound May30 23:55 includes the whole May31–June4 target window up to actual now June4 23:55; all nine selected payments have dates within the requested five days. Judge reserves uncertainty for the unqueried final five minutes of today. Explicit full-calendar protocol supports caution, while present-time semantics supports P; retain as boundary, not a confirmed error."
+    }
+  ],
+  "accepted_labels_edited": false,
+  "semantic_rerolls": 0,
+  "limitations": [
+    "Purposive checks do not estimate overall label accuracy.",
+    "Only selected critical evidence is reviewed, not every cell against an independent gold standard.",
+    "Boundary disagreements remain in original scores and must be considered explicitly by downstream filtering."
+  ]
+}

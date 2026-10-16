@@ -2,7 +2,7 @@
 
 本工作区主要研究 Qwen3-8B 在 AppWorld 上的轨迹学习，包括成功轨迹 SFT、单步修复训练、rubric 评分和策略优化；另保留早期高 O2 数据及 SWE-bench 实验。
 
-以下按时间从早到晚记录已完成的主要实验，说明**我们做了什么、结果如何、详细报告在哪里**。实验记录截至 **2026-10-13**。
+以下按时间从早到晚记录已完成的主要实验，说明**我们做了什么、结果如何、详细报告在哪里**。实验记录截至 **2026-10-16**。
 
 ## 2026-09-08—09：高 O2 轨迹数据整理与 LoRA 训练
 
@@ -309,3 +309,93 @@ rubric 相对 uniform 新成功 1 题、退化 3 题，净少 2 题。进一步�
 本次同时改变语言、规则版本和裁判模型，不能单独归因于英文。v6 标签未替换前述局部 SFT 使用的 v5 数据，评分质量改善能否转化为训练收益仍待验证。
 
 [英文 pilot](experiments/2026-10-13_appworld_step_rubric_v6_en_pilot/REPORT.md) · [v6 全量报告](experiments/2026-10-13_appworld_step_rubric_v6_language_prep/full_gpt61_sol/REPORT.md)
+
+## 2026-10-14：SFT LoRA 初始模型的英文 v6 步骤评分
+
+将步骤评分从原始 Qwen3-8B 扩展到较强的 train90 SFT LoRA，给后续从 SFT 模型继续训练准备独立标签。
+
+- 唯一来源是 10 月 8—9 日采集的 SFT LoRA 轨迹：**90 题 × 6 条 = 540 条、9,886 步、79,088 个 R1–R8 标签**，官方成功 186 条、失败 354 条。没有复用原始模型那批 11,254 步的标签。
+- 使用冻结英文 v6 format prompt、`gpt-6.1-sol / high`，并发上限 8；先做 8 条试评，再扩展全量，同配置试评计入最终 540 条。每条只接受首个格式有效结果，不根据标签好坏重评。
+- 共 **543 次尝试、3 次无效重试**，全部 540 条完成。评分阶段耗时 **151.21 分钟**，包含试评、复核等待、排队、重试及落盘；源文件与输入哈希、步骤覆盖和格式验收通过。
+- 完成最初 8 条和预选 12 条样本的关键证据复核，其中 53 项检查在对应评分到达前冻结。记录到 0 项明确标签问题、1 项边界争议；这是定向复核，不能解释为全量标签准确率。
+- 保存逐步标签、逐轨迹评分、官方结果关联分析和来源清单；官方成功标记仅用于研究者事后分析，不提供给裁判。此阶段只评分，没有训练或更改源模型。
+
+[评分报告](experiments/2026-10-14_appworld_sft_init_step_rubric_v6_gpt61_sol/REPORT.md) · [数据字段说明](experiments/2026-10-14_appworld_sft_init_step_rubric_v6_gpt61_sol/analysis/DATA_DICTIONARY.md) · [来源与结构验收](experiments/2026-10-14_appworld_sft_init_step_rubric_v6_gpt61_sol/analysis/validation.json)
+
+## 2026-10-14：匹配步骤数的一轮 Random / Rubric SFT 对照
+
+补充 10 月 13 日新配方下的随机对照：比较相同初始化、每题步骤数、更新次数及任务配对时，rubric 选择与随机选择的效果。这与此前匹配监督 token、只更新 48 次的对照是两项实验。
+
+**数据与训练**
+
+- 从同一批原始 Qwen3-8B 轨迹的 **5,234 步公共候选池**内，按每题配额无放回均匀随机抽取 **2,440 步**；不使用 rubric 标签或官方成败选样。随机组覆盖 514 条轨迹，与 rubric 组重合 1,283 步，不刻意排除高分步骤。
+- 复用 rubric 第一轮的样本任务位置与打乱顺序，**1,220 次更新的任务配对逐一匹配**；两组从相同 LoRA 初始张量出发。原有 rubric 模型不重训，作为历史同协议参考。
+- 使用 r8 / alpha16、AdamW 固定学习率 2e-4、双卡 DDP、全局每次两个步骤；先在每步目标 token 内平均，再对步骤平均，每个目标只训练一次。
+
+| 预算 | Rubric 第 1 轮参考 | Random 本次 |
+| --- | ---: | ---: |
+| 步骤 / 更新次数 | 2,440 / 1,220 | 2,440 / 1,220 |
+| 监督 token | 196,608 | 220,081 |
+| 训练输入 token | 13,734,737 | 18,501,155 |
+| 部分监督响应 | 88 | 0 |
+
+因此本次匹配的是步骤和更新预算，监督 token、上下文计算量和部分响应 mask 没有完全匹配。Random 保留完整原始响应，不为凑 token 预算截断动作。
+
+**Dev57 结果**
+
+沿用关闭 thinking、temperature 0、seed 100、50 步 / 3,000 生成 token / 32,000 上下文的评测协议：
+
+| 模型 | 成功数 / TGC |
+| --- | ---: |
+| 原始模型（已有同协议） | 3/57，5.26% |
+| Rubric 新配方第 1 轮（已有） | 13/57，22.81% |
+| Random 第 1 轮（本次） | 5/57，8.77% |
+
+Random 相对 Rubric 新成功 1 题、退化 9 题，净少 8 题；上下文上限终止为 27 题，对照为 8 题。正式训练耗时 **2 小时 38 分 47 秒**，Dev57 耗时 **30 分 47 秒**。本次观察支持现有 rubric 数据管线在该步骤预算下优于随机抽样，但只有一次抽样和训练，且 token 与 mask 未完全对齐，不能将差异单独归因于 rubric 标签。
+
+[完整报告](experiments/2026-10-14_appworld_uniform_local_sft_epoch1_ddp/REPORT.md) · [逐题对照](experiments/2026-10-14_appworld_uniform_local_sft_epoch1_ddp/analysis/task_comparison.csv) · [训练配置](experiments/2026-10-14_appworld_uniform_local_sft_epoch1_ddp/config/training.json)
+
+## 2026-10-14—16：从 SFT LoRA 出发的单池 RL + 局部 SFT 联合训练
+
+使用 SFT LoRA 自己生成的轨迹和 v6 步骤标签，将官方任务结果的 RL 信号与固定局部动作的 SFT 联合起来，检查能否在已有成功轨迹训练基础上继续改善策略。
+
+**数据选择与联合目标**
+
+- 在 SFT LoRA 的 **9,886 步**上计算净分 `P−F`：P=1、F=−1、U/N=0。唯一入选条件为 **净分 ≥ 4**，选中 **2,623 步**；不额外做质量过滤或内容去重，也不按官方成败筛选 SFT 数据。
+- 保留完整行动前历史和原始完整响应，仅监督目标动作；单遍共 **205,238 个目标 token**，最长完整样本 **31,814 token**。没有沿用原始模型分支的 2,440 步，也没有生成教师替代动作。
+- RL 使用 SFT LoRA 原有的完整 **540 条轨迹**，每题六条成组，以官方整题成功/失败的 1/0 计算组内标准化优势；同奖励组优势为零但仍保留，不用 rubric 净分筛选 RL 轨迹。
+- 继续训练已有 r8 / alpha16 LoRA，基座冻结，参考策略固定为初始 SFT 模型。RL 对每条轨迹生成 token 求平均再对轨迹平均；SFT 在每个原始步骤目标内平均再对步骤平均。两部分梯度合并后做一次更新。
+
+**实际完成的训练范围**
+
+- 仅使用物理 GPU1，以一个固定轨迹池单遍分成 **15 批**；每批 6 题、36 条 RL 轨迹，配合 174 或 175 个 SFT 步骤，完成 **15 次联合 optimizer 更新**。整池累计使用 540 条 RL 轨迹、1,785,724 个生成 token，以及全部 2,623 个 SFT 目标一次。
+- 沿用本轮配置：PPO clip 0.2、SFT 系数 0.1、采样 token 上的 KL 正则系数 0.01；AdamW 峰值学习率 5e-6，4 次 warmup，再 cosine 衰减。停止时保留原 **75 次更新调度的前 15 次**，没有事后重排学习率。
+- 完成联合 loss/梯度、数据 mask、参考概率、分片预算、恢复和权重保存检查。最终采用 `full_pool_15` 整池试跑中真实更新得到的模型，并于 **10 月 16 日 03:55** 完成最终导出与验收；没有从初始模型重复再训一轮。
+- 原计划的后续四轮新轨迹采集与训练未执行，因此本次结果属于**复用固定池的一轮联合训练**，不能称为已经完成五轮在线 RL。训练过程中调查过前缀共享优化，但没有切换到优化实现或据此重跑。
+
+模型保存后的任务能力由下一节的完整 Dev57 评测判断；预算和权重验收通过本身不代表性能提升。
+
+[实验总览](experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/README.md) · [选样与数据构建记录](plans/2026-10-13_appworld_sft_init_local_sft_online_rl/STEP_03_RESULTS.md) · [本轮实际使用配置](experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/config/round1_trial_15.json) · [单池完成验收](experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/ROUND_01_COMPLETE.json)
+
+## 2026-10-16：联合训练的同历史协议 Dev57 五点对照
+
+在联合训练结束后，对初始模型以及第 1、5、10、15 次更新后的检查点分别完成 Dev57，用同一入口观察训练过程中的能力变化。
+
+- 逐字节复用历史 train90 LoRA 的 AppWorld launcher 与配置，保持原始 ReAct 提示、Chat Completions、代码提取和上下文处理；temperature 0、seed 100、50 步 / 3,000 生成 token / 32,000 上下文，无 reasoning parser，也不额外设置 `enable_thinking=False`。
+- 五个点使用同一基座、tokenizer、数据和软件环境，仅替换 LoRA 权重；在 GPU1 串行完成 **5 × 57 = 285 次任务运行**，于 **12:29** 完成五点评测与汇总。这里的 step 指优化器更新次数，不是环境行动步数。
+- 初始模型 step 0 本次复测为 **25/57**，历史为 23/57；协议检查后保留实测差异，后续收益/退化均相对本次 step 0 计算，不把基线波动计为训练收益。
+
+| 优化器更新次数 | Dev57 成功数 / TGC | SGC | 官方条件通过 | 相对本次 step 0 新增 / 退化 |
+| --- | ---: | ---: | ---: | ---: |
+| 0 | 25/57，43.86% | 4/19，21.05% | 204/291 | — |
+| 1 | 18/57，31.58% | 3/19，15.79% | 189/291 | 4 / 11 |
+| 5 | 18/57，31.58% | 2/19，10.53% | 198/291 | 3 / 10 |
+| 10 | 20/57，35.09% | 3/19，15.79% | 201/291 | 4 / 9 |
+| 15 | 23/57，40.35% | 3/19，15.79% | 188/291 | 8 / 10 |
+
+最终 step 15 相对 step 0 **净少成功 2 题、少 1 个完整 scenario、少通过 16 个官方条件**。早期更新先下降，后续部分恢复，但本次最高 TGC/SGC 均出现在初始模型，未观察到联合训练的净收益。每个检查点只评测一次，尚不能隔离 RL、SFT 或 KL 的独立贡献，也不据此声称统计显著。
+
+此前最终模型还用另一评测入口得到 **20/57**；该入口与历史协议存在提示空白、thinking 和上下文预算差异，保留为单独记录，**不混入上述曲线**。最新五点结果以本节同协议对照为准。
+
+[五点趋势与逐题对照](experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/historical_protocol_trend/COMPARISON.md) · [完整评测协议](experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/HISTORICAL_DEV57_RUN.md) · [最终验收](experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/historical_protocol_trend/FINAL_AUDIT.json) · [另一入口的结果与协议比较](experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/round_01_final/BASELINE_COMPARISON.md)
+

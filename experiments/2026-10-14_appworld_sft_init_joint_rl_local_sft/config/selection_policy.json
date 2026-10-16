@@ -1,0 +1,39 @@
+{
+  "frozen_at": "2026-10-14T14:40:53.962576+08:00",
+  "policy_id": "sft-init-v6-net-score-ge4-v1",
+  "input": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_step_rubric_v6_gpt61_sol/analysis/step_labels.csv",
+  "input_sha256": "ea18dcc06dc1d6691f64eeb2cc03ad53287c85cf9223095964675e13fc29631f",
+  "score_manifest_sha256": "d2440f4291d9943c6840ab30afd9469686ad22f8b25e7922dc76bba6465458d7",
+  "dimension_weights": {
+    "R1": 1,
+    "R2": 1,
+    "R3": 1,
+    "R4": 1,
+    "R5": 1,
+    "R6": 1,
+    "R7": 1,
+    "R8": 1
+  },
+  "label_values": {
+    "P": 1,
+    "F": -1,
+    "U": 0,
+    "N": 0
+  },
+  "formula": "count(P) - count(F)",
+  "inclusive_threshold": 4,
+  "only_selection_predicate": "score >= 4",
+  "extra_quality_filters": [],
+  "content_deduplication": false,
+  "official_outcomes_used": false,
+  "task_or_action_quotas": false,
+  "tie_breaking": "none; retain all steps at threshold",
+  "F_U_veto": false,
+  "negative_loss": false,
+  "score_as_CE_weight": false,
+  "full_original_response_required_in_step_3": true,
+  "selected_steps": 2623,
+  "expected_full_steps": 9886,
+  "scope": "Frozen selection only, not training configuration or tokenized dataset",
+  "script_sha256": "fbfed370c0c615d05cb203928a1ecabf72a7881707462dbc7074bf5ccbfb5885"
+}

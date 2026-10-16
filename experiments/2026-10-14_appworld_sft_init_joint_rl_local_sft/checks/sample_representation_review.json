@@ -1,0 +1,31 @@
+{
+  "reviewed_at": "2026-10-14T15:12:45.271077+08:00",
+  "scope": "Original response/prefix representation review only, not label reassessment or filtering",
+  "cases": [
+    {
+      "sample_id": "29caf6f_3__04:1",
+      "check": "First-step original context and complete response retained."
+    },
+    {
+      "sample_id": "692c77d_2__03:10",
+      "check": "R1=F target retained verbatim, including failed compound operation and trailing newlines."
+    },
+    {
+      "sample_id": "692c77d_3__01:12",
+      "check": "U-bearing target retained with original whitespace."
+    },
+    {
+      "sample_id": "e7a10f8_3__05:15",
+      "check": "Completion action and both code blocks preserved; no first-code-block extraction."
+    },
+    {
+      "sample_id": "3c13f5a_3__02:28",
+      "check": "Longest sample preserves 31,764 prompt tokens and 50 target tokens, total 31,814; no context truncation."
+    }
+  ],
+  "non_eos_cases": 0,
+  "non_eos_note": "All 2623 selected original responses actually end with the original EOS; this was observed, not a selection condition.",
+  "changes_to_targets": 0,
+  "excluded_samples": 0,
+  "automated_full_coverage_validation": "checks/token_mask.json"
+}

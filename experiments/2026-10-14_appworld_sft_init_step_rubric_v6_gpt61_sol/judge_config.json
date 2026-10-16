@@ -1,0 +1,25 @@
+{
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "max_workers": 8,
+  "timeout_seconds": 900,
+  "max_attempts": 6,
+  "structured_output_transport": "plain final JSON; full Draft 2020-12 schema validated locally",
+  "prompt_version": "appworld-step-v6",
+  "input_preparer_version": "v3",
+  "tools_enabled": false,
+  "source": "Fresh SFT-initial-policy inputs; frozen English v6 format prompt; no prior labels reused.",
+  "retry_delays_seconds": [
+    15,
+    45,
+    120,
+    300,
+    900
+  ],
+  "sample_order_seed": 20261014,
+  "initial_workers": 8,
+  "ramp_after_valid": 12,
+  "concurrency_policy": "Start with 8 workers; temporarily halve only on explicit service capacity/rate-limit errors, restore after 12 valid calls; log every change.",
+  "pilot_size": 8,
+  "retry_policy": "First schema-valid result; bounded technical/format retries only; semantic flags never trigger best-of replacement."
+}

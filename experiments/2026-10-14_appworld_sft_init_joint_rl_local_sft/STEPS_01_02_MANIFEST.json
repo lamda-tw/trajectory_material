@@ -1,0 +1,51 @@
+{
+  "completed_at": "2026-10-14T14:44:29.166046+08:00",
+  "completed_steps": [
+    1,
+    2
+  ],
+  "next_step": 3,
+  "physical_gpu_indices": [
+    1
+  ],
+  "all_steps": 9886,
+  "selected_steps": 2623,
+  "excluded_steps": 7263,
+  "training_samples_built": 0,
+  "training_started": false,
+  "files": {
+    "IDENTITY.json": "e9e5ee13fae6b32c53ff1a9a7e2a9431fd7b7ed0a81777647343e42e26e05ac7",
+    "STATUS.json": "f9fc8bb2958f7c8e0fb194b93b24048d70aef9eece9ec6029f9d0df61f8c428c",
+    "config/draft.json": "60582dea3e9ff118167dc8dda8ac14038ab6896176f4ccaa5714f6df82e1bb65",
+    "config/resource_policy.json": "95e5f05ec1932e8e01250d463dcb17d644fbe58e394cc448002e16d7b90b8069",
+    "config/selection_policy.json": "074213758c5c4b4786e28e5f689441fb50b904f30bd67a87de41cf0c00dd7147",
+    "config/train90.txt": "3aad17d37dd9946e4a8a76fb30a736d435fc09a086caaef2c6354436d576ffd2",
+    "config/dev57.txt": "b3a6059ce361c3b3ccc78b1cf54e39d437bf07e04eadd23f2cece7cde77df3c3",
+    "data/selection_decisions.jsonl": "1564d9778b0f9b00802382d4c08bfb9a8f1592845d99333e0ee17d1fd809a47b",
+    "data/selected_steps.jsonl": "75c455f3a4f859e728f74f3093760512d441e546a6bd0489f50fad374294b2de",
+    "checks/preflight.json": "d8dc897f6f9cbba3903948606b817dd1c5a1ce3215e8db8809283a4fff4fdd39",
+    "checks/selection.json": "d4222403e2672f9aa12e5bdb7465e3e1f3ed9f3ad93a3d29c3be46bfe9b923d6",
+    "checks/gpu_policy.json": "88e1e8b86e5f87b520e90d9288a8cf0cb2c122dea30e7653b856f56703077f2d",
+    "references/input_inventory.json": "54f33a3a271e52ceb1341e7cb660a18a5fde61d8381e7647d996cdf45940a081",
+    "references/model_inventory.json": "f2934b612e5e42a43df78740da9dd638191378a9b49329b96f886883b0f7abef",
+    "references/environment.json": "b10900e2730843a6bcd27277c733251af2631c13c4fef2968c4d7278920402d9",
+    "references/resources.json": "7eea768629a58c04a6dab6c37fb197457b88c57463c451704e088df4f4aceb15",
+    "scripts/01_preflight.py": "326f8b8384c8e1323c8d34c527170cfc22ecb0de705fc393d4c71ef850821af1",
+    "scripts/02_select_steps.py": "fbfed370c0c615d05cb203928a1ecabf72a7881707462dbc7074bf5ccbfb5885",
+    "scripts/common.py": "6466ed39001375296ef7c38e4c96bf1b4a903e4fa0a874c6285864bd7928a9d1",
+    "scripts/env_probe.py": "b875c2186424b619bcd1cdaf2168a3037fd001f4faf185088aae2c793dbede2b",
+    "scripts/gpu1_run.py": "3a3f7ee37f7305446897b37a3b60e385443254992eca613aee3b7246ff5128cd"
+  },
+  "current_plan_hashes": {
+    "PLAN.md": "d5618bf5cabfa510ea58b425786b68b454581fd7a50a7c52b4373656e956c37b",
+    "EXECUTION_STEPS.md": "bd60e93b7be0f99ce31a1ae5e708c93d84715cfaa2554c587ad4772106fc9b38",
+    "TRAINING_CONFIG_DRAFT.json": "50c103f9b4c513dfa96544936ee4194a493cb4f0c32e1f649210b8fae365b2f4",
+    "README.md": "d947972ab1bba42066a3af06902fd01550964cbfbd740d81e9d0626241b3020a",
+    "STEP_01_02_RESULTS.md": "38aaf1e0b0ec241015c641f7a390830440922a2e37c22c7c3bbb674a2c8bf262"
+  },
+  "limitations": [
+    "GPU model execution untested",
+    "T_SFT and full training VRAM/storage budgets unmeasured",
+    "Base weight shards checked for existence/size; hashes cover configuration/tokenizer and initial adapter"
+  ]
+}

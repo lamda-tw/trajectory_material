@@ -1,0 +1,38 @@
+{
+  "frozen_at": "2026-10-14T09:46:26.585899+08:00",
+  "files": {
+    "PLAN.md": "8ad3164099368c886f55bd98fe21ea8d3255f8eca6a37d926711bee799972d74",
+    "data/DATA_MANIFEST.json": "9560d386dfe4b79f42cb0ff9ca25b203ae353845791bf665e334eadf574e1838",
+    "data/VALIDATION.json": "a8e90b10c53487c98601adc1199225e03d67a9986857363c4406e3e5f37b98e8",
+    "probe/COMPLETE.json": "9585babc5064e1eed2cf65ce671173e23c9012ab5aaf827950ec65a99df084c6",
+    "config/agent_prompt.txt": "c41f7852217d46586047a38f68e88b827cb9dcbe624e9651f9db8301547a534b",
+    "config/dev.txt": "b3a6059ce361c3b3ccc78b1cf54e39d437bf07e04eadd23f2cece7cde77df3c3",
+    "config/train_all.txt": "3aad17d37dd9946e4a8a76fb30a736d435fc09a086caaef2c6354436d576ffd2",
+    "config/scoring_prompt_v5.txt": "bc6335bf245b1c0991970662bad230cd30d6ae04c0e7e8fb8af0e1d57c70de4b",
+    "config/training.json": "7548b2ce573c83016d7c8f7886a6a50ee0803a9aef49e748007a39be4320577d",
+    "config/eval_uniform.json": "2566b4c6fb949b21494b83d96299bf4e2def53e020d9982e5f1c8e987a9b0200",
+    "config/PREFLIGHT.json": "27e49c1209c5febe7fd4466a143b3aafe201a2130e56435e6f1752ce98a4c69b",
+    "runtime_code/common.py": "018ea1e22671ec8cf0451ed124bb9d7cf8e000b46e111495a0b22c38a6ac2451",
+    "runtime_code/policy_server.py": "7ec7303c39bc0837e468a5a6731e03d46defd0cf222ac24b43240e72ed1e6afb",
+    "runtime_code/resources.py": "42c99a8190fd28775eb3a57cbc038a6e4b22a67da9fa6934b2c3cf369580c359",
+    "runtime_code/rollout_worker.py": "65c2e0563b56b9e712c1709c190c7fe98166343ff53cdd514aaa4a6e7f860ee5",
+    "scripts/train_ddp.py": "80059c05edcd33b3630b8523703511ee457f8084ed3a6f7d4521b2d844055256",
+    "scripts/evaluate.py": "6323cf4148af25980574d5b920f917e1668f8533f84c666399da2ddb6b172ff7",
+    "scripts/prepare_data.py": "8cc9bfc149d55130c7efca47fc4b336dc80215233826218648af516345bebfba",
+    "scripts/validate_data.py": "5e80e755dbf39950ce4ce8c914d5cbd75e135e1eb74b5dddc0ec70de8137f84d",
+    "scripts/test_ddp_loss.py": "41b56adc216c61c58120f12996b124b02bfa233c5ea719a7f9f4caac95835c85",
+    "scripts/run_experiment.py": "5c0ce2661d77edd64ffd5754fe96d95c8afc6a54f3befc288a6972f2de12543c",
+    "scripts/verify_adapter.py": "f0861e5a511b8d80fff4668ed0b0918243d4150231e2842b5d528199d7db6eb2"
+  },
+  "initialization": "fresh_base_and_LoRA",
+  "constraints": [
+    "uniform_only",
+    "1_epoch",
+    "2440_steps",
+    "1220_updates",
+    "task_pairs_matched",
+    "no_old_adapter",
+    "no_teacher_actions",
+    "DEV57_only_after_epoch1"
+  ]
+}

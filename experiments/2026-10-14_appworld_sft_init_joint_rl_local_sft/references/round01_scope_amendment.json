@@ -1,0 +1,90 @@
+{
+  "at": "2026-10-15T09:06:48.603504+08:00",
+  "control": {
+    "at": "2026-10-15T09:06:48.603504+08:00",
+    "instruction": "Finish current full_pool_15 once, retain final updated round1 LoRA, then stop. No fresh formal pass, fallback, DEV57 or future rounds.",
+    "trainer_pid": 684724,
+    "trainer_start_ticks": "3187350561",
+    "launcher_argv": [
+      "/root/autodl-tmp/workspace-tw/.conda-training/bin/python",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/scripts/gpu1_run.py",
+      "--",
+      "/root/autodl-tmp/workspace-tw/.conda-training/bin/python",
+      "-u",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/scripts/joint_trainer.py",
+      "--config",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/config/round1_trial_15.json",
+      "--pool",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/rollout/round_01/pool.json",
+      "--output",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/smoke/full_pool_15",
+      "--reference-dir",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/cache/round_01_A0_reference",
+      "--mode",
+      "smoke",
+      "--execute"
+    ],
+    "config": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/config/round1_trial_15.json",
+    "config_sha256": "ab12a61295ccecc4136871bd4c04bb7130776dca5368d46da04a489794b30786",
+    "pool": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/rollout/round_01/pool.json",
+    "pool_sha256": "6c064f30f64a05ff0bd7c3f69085b15e430ca3030b0cbbd564f863b5045fc64b",
+    "output": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/smoke/full_pool_15",
+    "final_adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/artifacts/round_01_final_adapter",
+    "training_log": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/logs/full_pool_trial_15.log",
+    "training_code_sha256": {
+      "scripts/joint_core.py": "dc63f43a1e11004ec46d0be6bd1deb3c2ee493034c128bab00accea942eda33c",
+      "scripts/joint_trainer.py": "3cdceb03868c6f49347080dc82dc6cef6ef41939ff5928366d279d639e80e5b0",
+      "scripts/run_checks.py": "66877fd49e0619ac9e7a19a8394a8b401af79449c0d86c2c6e7b61ad8c8c28c9",
+      "scripts/round_data.py": "d65e7933641acc92a36f855581c33fc4181251c09393c2180c49146bb7dae1d4",
+      "scripts/sft_dataset.py": "692be8e5d22c112d4eede86bbb9168e76d55bdab93fe00befdf2a29c77fa95f8",
+      "scripts/common.py": "6466ed39001375296ef7c38e4c96bf1b4a903e4fa0a874c6285864bd7928a9d1",
+      "scripts/gpu1_run.py": "3f92ed4a0a8b5710db9474ebf922cda68f3c51809d21feb95ef909f17d2e5af5"
+    },
+    "original_supervisor_pid": 684723,
+    "original_supervisor_start_ticks": "3187350557",
+    "physical_gpu_indices": [
+      1
+    ],
+    "reinitialize_model": false,
+    "change_optimizer_or_schedule": false,
+    "resume_uncommitted_batch_only_on_failure": true
+  },
+  "previous_supervisor": {
+    "at": "2026-10-14T17:19:17.369284+08:00",
+    "pid": 684723,
+    "scope": "through round 1 evaluation; not rounds 2-5"
+  },
+  "previous_child": {
+    "at": "2026-10-14T17:19:17.372793+08:00",
+    "pid": 684724,
+    "stage": "full_pool_trial_15",
+    "argv": [
+      "/root/autodl-tmp/workspace-tw/.conda-training/bin/python",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/scripts/gpu1_run.py",
+      "--",
+      "/root/autodl-tmp/workspace-tw/.conda-training/bin/python",
+      "-u",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/scripts/joint_trainer.py",
+      "--config",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/config/round1_trial_15.json",
+      "--pool",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/rollout/round_01/pool.json",
+      "--output",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/smoke/full_pool_15",
+      "--reference-dir",
+      "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/cache/round_01_A0_reference",
+      "--mode",
+      "smoke",
+      "--execute"
+    ]
+  },
+  "progress_before": {
+    "at": "2026-10-15T09:06:36.717024+08:00",
+    "round": 1,
+    "batch": 6,
+    "branch": "rl",
+    "item": 35,
+    "action": 17,
+    "elapsed": 6902.72658534348
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "status": "review_draft_not_executable_frozen_config",
+  "updated_date_beijing": "2026-10-14",
+  "experiment_directory_proposed": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft",
+  "selection": {
+    "status": "user_agreed",
+    "input": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_step_rubric_v6_gpt61_sol/analysis/step_labels.csv",
+    "label_weights": {
+      "P": 1,
+      "F": -1,
+      "U": 0,
+      "N": 0
+    },
+    "rule": "sum_R1_to_R8 >= 4",
+    "expected_steps": 2623,
+    "extra_quality_filters": [],
+    "content_deduplication": false,
+    "official_outcomes_used": false,
+    "keep_complete_original_target": true
+  },
+  "model": {
+    "base": "/root/autodl-tmp/models/Qwen3-8B",
+    "initial_adapter": "/root/autodl-tmp/workspace-tw/experiments/2026-10-08_static_rubric_grpo_lora_init/preparation/initial_adapter",
+    "adapter_weights_sha256": "c8fdfd4f3bb198381b6f2e56d019589a3ed904241b0147b565ec540449a29938",
+    "adapter_structure": "inherit initial adapter_config exactly; r=8 alpha=16",
+    "trainable": "existing LoRA copy only",
+    "reference": "frozen base + initial SFT adapter",
+    "pure_sft_warmup_updates": 0
+  },
+  "schedule_candidate": {
+    "seed": 20261014,
+    "online_rounds": 5,
+    "tasks_per_round": 90,
+    "tasks_per_batch": 6,
+    "rollouts_per_task": 6,
+    "rl_epochs_per_batch": 1,
+    "sft_epochs": 5,
+    "batches_per_round": 15,
+    "joint_optimizer_updates": 75,
+    "formal_online_trajectories": 2700,
+    "complete_sft_target_consumptions": 13115,
+    "sft_supervised_token_budget": "5 * measured_T_SFT",
+    "ordering": "independent seeded task and SFT permutations each round",
+    "joint_step": "one optimizer step after both loss gradients; no intermediate update"
+  },
+  "optimizer_candidate": {
+    "type": "AdamW",
+    "learning_rate": 5e-06,
+    "minimum_learning_rate": 5e-07,
+    "betas": [
+      0.9,
+      0.999
+    ],
+    "epsilon": 1e-08,
+    "weight_decay": 0.0,
+    "warmup_updates": 4,
+    "scheduler": "linear warmup then cosine decay to minimum",
+    "max_grad_norm": 1.0,
+    "clip_once_after_combined_gradients": true,
+    "rationale": "Conservative continuation candidate for the existing SFT adapter; numerical/gradient smoke check before freezing, not a DEV-tuned optimum."
+  },
+  "loss_candidate": {
+    "clip_epsilon": 0.2,
+    "reward": "official full task success=1, model failure=0; infrastructure failure is not a reward",
+    "advantage_std_ddof": 0,
+    "advantage_epsilon": 1e-08,
+    "equal_reward_group_advantage": 0,
+    "retain_equal_groups_in_batch": true,
+    "rl_reduction": "mean over trajectories of mean over generated action tokens",
+    "kl_beta": 0.01,
+    "kl_estimator": "d=log_pi_ref-log_pi_current; exp(d)-d-1 on sampled tokens",
+    "kl_reduction": "same as RL",
+    "sft_lambda": 1.0,
+    "sft_reduction": "sum target token CE / global target token count in this update",
+    "rubric_score_as_loss_weight": false,
+    "rationale": "lambda=1 and beta=0.01 are explicit starting candidates, not evidence of optimal balance; inspect each branch gradients and implementation before freezing."
+  },
+  "online_sampling_candidate": {
+    "temperature": 1.0,
+    "top_p": 1.0,
+    "top_k": "disabled (translate to serving backend convention)",
+    "max_steps": 50,
+    "max_new_tokens_per_action": 3000,
+    "max_model_len": 32000,
+    "enable_thinking": false,
+    "behavior_logprobs": "actual sampling policy, token support and transformations matched to trainer; save before update",
+    "context_limit_behavior": "freeze explicit rollout termination/error semantics; no hidden history truncation"
+  },
+  "evaluation_candidate": {
+    "split": "DEV57",
+    "temperature": 0.0,
+    "seed": 100,
+    "trajectories_per_task": 1,
+    "max_steps": 50,
+    "max_new_tokens_per_action": 3000,
+    "max_model_len": 32000,
+    "enable_thinking": false,
+    "checkpoints": [
+      "initial",
+      "round_01",
+      "round_03",
+      "round_05"
+    ],
+    "primary_comparison": "round_05 versus initial; never best-of-checkpoints"
+  },
+  "compute_candidate": {
+    "dtype": "bfloat16 if supported",
+    "gradient_checkpointing": true,
+    "microbatch_sequences": 1,
+    "attention": "measure supported exact causal backend",
+    "resource_policy": "Physical GPU1 only; GPU0 reserved for colleague, never auto-select another GPU",
+    "serving_training_layout": "GPU1 only, sequential serving/training/reference stages; measure feasibility in step 6",
+    "sft_max_length": "must support every selected full prefix and target; no length rejection",
+    "ddp": "disabled; single GPU1, world_size=1"
+  },
+  "must_measure_before_freeze": [
+    "T_SFT and every sample prompt/target length",
+    "exact tokenizer/chat template and source message mapping",
+    "training/environment/serving Python paths and dependency versions",
+    "device IDs/world_size/attention backend and precision support",
+    "maximum supported full SFT context and target-span strategy",
+    "real serving versus training log-prob numerical tolerance",
+    "real rollout/model protocol and train90/DEV57 identities",
+    "smoke throughput/peak memory/disk and runtime estimate",
+    "exact per-update SFT schedule and all loss denominators",
+    "effective hyperparameters and explanations for any draft changes"
+  ],
+  "freeze_requirements": [
+    "No unresolved placeholder in actual config",
+    "All 2623 selected identities retained",
+    "No model/data inherited from smoke updates",
+    "Data/mask/math/logprob/resume checks pass",
+    "Actual budget recomputed after any B/G/K change",
+    "Data, scripts, plan and config hashes recorded before baseline and formal training"
+  ],
+  "scope": "Steps 1 and 2 completed on 2026-10-14. Step 3 onward not executed. Selection and GPU1-only policy fixed; training hyperparameters remain draft.",
+  "resource_constraints": {
+    "status": "user_required",
+    "physical_gpu_indices": [
+      1
+    ],
+    "forbidden_physical_gpu_indices": [
+      0
+    ],
+    "physical_gpu_uuid": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501",
+    "physical_gpu_pci_bus_id": "00000000:C8:00.0",
+    "cuda_visible_devices": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501",
+    "cuda_device_order": "PCI_BUS_ID",
+    "local_cuda_device": "cuda:0",
+    "world_size": 1,
+    "tensor_parallel_size": 1,
+    "ddp_enabled": false,
+    "reason": "GPU0 reserved for colleague by user instruction; GPU1 only even if GPU0 is idle.",
+    "scope": "All future model loading, serving, reference inference, smoke, training and evaluation for this experiment; CPU preparation makes no GPU allocations."
+  },
+  "preparation_actual": {
+    "completed_steps": [
+      1,
+      2
+    ],
+    "experiment_directory": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft",
+    "selected_steps": 2623,
+    "selection_policy": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/config/selection_policy.json",
+    "preflight_report": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/checks/preflight.json",
+    "selection_report": "/root/autodl-tmp/workspace-tw/experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/checks/selection.json",
+    "training_samples_built": 0,
+    "T_SFT": null,
+    "training_started": false
+  }
+}
