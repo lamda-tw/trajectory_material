@@ -1,0 +1,48 @@
+{
+  "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+  "learning_rate": 0.0002,
+  "weight_decay": 0.0,
+  "lora": {
+    "r": 8,
+    "lora_alpha": 16,
+    "lora_dropout": 0.0,
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ],
+    "bias": "none",
+    "task_type": "CAUSAL_LM"
+  },
+  "training_python": "/root/autodl-tmp/workspace-tw/.conda-training/bin/python",
+  "head_chunk_size": 128,
+  "max_length": 40960,
+  "checkpoint_interval": 25,
+  "epochs": 1,
+  "seeds": [
+    20261015,
+    20261016,
+    20261017
+  ],
+  "arms": [
+    "random",
+    "net3",
+    "pass4",
+    "zerofail3",
+    "highfail3"
+  ],
+  "samples_per_epoch": 1710,
+  "updates_per_epoch": 855,
+  "world_size": 1,
+  "gradient_accumulation_steps": 2,
+  "eval_epochs": [
+    1
+  ],
+  "gpu_uuid": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501",
+  "loss_reduction": "mean of per-step mean target CE",
+  "selection": "ZeroFail3 task quotas where possible; shortfall filled uniformly without replacement from remaining eligible pool; no content deduplication"
+}

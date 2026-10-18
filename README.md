@@ -2,7 +2,7 @@
 
 本工作区主要研究 Qwen3-8B 在 AppWorld 上的轨迹学习，包括成功轨迹 SFT、单步修复训练、rubric 评分和策略优化；另保留早期高 O2 数据及 SWE-bench 实验。
 
-以下按时间从早到晚记录已完成的主要实验，说明**我们做了什么、结果如何、详细报告在哪里**。实验记录截至 **2026-10-16**。
+以下按时间从早到晚记录已完成的主要实验，说明**我们做了什么、结果如何、详细报告在哪里**。实验记录截至 **2026-10-18**。
 
 ## 2026-09-08—09：高 O2 轨迹数据整理与 LoRA 训练
 
@@ -399,3 +399,29 @@ Random 相对 Rubric 新成功 1 题、退化 9 题，净少 8 题；上下文�
 
 [五点趋势与逐题对照](experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/historical_protocol_trend/COMPARISON.md) · [完整评测协议](experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/HISTORICAL_DEV57_RUN.md) · [最终验收](experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/historical_protocol_trend/FINAL_AUDIT.json) · [另一入口的结果与协议比较](experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/evaluation/round_01_final/BASELINE_COMPARISON.md)
 
+
+## 2026-10-16—18：纯 Rubric 选样的五组单轮 SFT 消融
+
+本轮研究 rubric 的选择效果、选择机制与学习机制。使用原始 Qwen3-8B 的 540 条轨迹、11,254 个步骤和英文 v6 format 评分；五组分别从各自候选池全局等概率、无放回选择 1,710 步，无任务配额、执行/语法过滤、内容去重或最终成功门槛。ZeroFail3 使用全部 1,710 步。
+
+- 五组各三个 seed，从原始模型建立全新 LoRA，固定学习率 2e-4、r8/alpha16、逐步骤 token 平均 loss，GPU1 单卡累积两步；每次仅 1 epoch、855 次更新。
+- 15 次训练和 DEV57 全部完成。DEV 使用同一提示词、关闭 thinking、temperature 0、seed 100、50 步、32,000 上下文和官方测试。重新评测的原始模型基线为 **1/57**。
+- 最初加入逐题配额的试验已经停止并归档，旧权重不纳入下表；正式运行均按全池均匀抽样重建并重新初始化。
+
+| 策略 | 三个 seed 的 DEV57 成功题数 | 平均成功率 | 相对 Random |
+| --- | --- | ---: | ---: |
+| Random | 8、4、2 | 8.19% | — |
+| Net3：P−F≥3 | 2、4、8 | 8.19% | 0 pp |
+| Pass4：P≥4 | 6、3、9 | 10.53% | +2.34 pp |
+| ZeroFail3：F=0 且 P≥3 | 10、8、12 | **17.54%** | **+9.36 pp** |
+| HighFail3：F≥3 | 3、3、3 | 5.26% | −2.92 pp |
+
+**选择效果**：ZeroFail3 三次均胜过 Random，但 Net3 无平均收益、Pass4 增益不稳定，不能概括为所有 rubric 选样均有效。HighFail3 平均弱于 Random，却没有低于原始模型基线；相同分数也不代表三次成功的是相同任务。
+
+**选择机制**：ZeroFail3 将训练文档查询占比从 Random 的 14.4% 提高至 62.2%，偏向更早、更短的步骤；业务修改与终止覆盖很少。选样同时改变行为类型和历史长度，不只是改变抽象质量分数。
+
+**学习机制证据**：ZeroFail3 的评测执行错误率从 Random 的 37.1% 降至 18.8%，重复代码率从 65.2% 降至 54.0%。但 Net3 错误率更低而任务成功率无净收益，说明局部执行正确并不充分。现有证据为行为关联与案例，尚不能确认独立因果机制。
+
+ZeroFail3 的跨 seed 净收益中一半来自同一任务家族，且 DEV57 已用于探索；后续应比较相同历史状态下的动作偏好，并消融 rubric 分项。训练仍是等步骤/更新预算，不是等 token 或等算力。
+
+[最终分析报告](experiments/2026-10-16_appworld_rubric_selection_ablation/REPORT.md) · [运行与进度](experiments/2026-10-16_appworld_rubric_selection_ablation/README.md) · [逐运行结果](experiments/2026-10-16_appworld_rubric_selection_ablation/analysis/results.csv) · [选样统计](experiments/2026-10-16_appworld_rubric_selection_ablation/analysis/final_selection.json) · [行为统计](experiments/2026-10-16_appworld_rubric_selection_ablation/analysis/final_behavior.json)

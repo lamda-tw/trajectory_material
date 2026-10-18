@@ -1,0 +1,117 @@
+from pathlib import Path
+import json,statistics as st,shutil
+R=Path(__file__).resolve().parents[1];O=R/'analysis'
+def read(n):return json.loads((O/n).read_text())
+s=read('final_selection.json');b=read('final_behavior.json');arms=list(s);names={'random':'Random','net3':'Net3','pass4':'Pass4','zerofail3':'ZeroFail3','highfail3':'HighFail3'}
+def mean(a,k):return st.mean(r[k] for r in a)
+def ratio(a,k):return sum(r[k] for r in a)/sum(r['steps'] for r in a)
+lines=['''# Rubric 选样对训练结果与模型行为的影响
+
+2026-10-18 最终分析。15 次正式训练及 DEV57 均已完成；每组 3 个 seed，每次 1 epoch、1,710 个步骤、855 次更新。只分析全池均匀抽样的正式运行，排除 archive/rejected_task_quota_20261016 中的旧配额试验。
+
+## 核心结论
+
+本次证据支持 F=0 且 P≥3 的 ZeroFail3 策略在当前设置下改善任务成功率：三个 seed 均超过随机组，平均 17.54% 对 8.19%，差 9.36 个百分点。不是所有 rubric 聚合方式都有效：Net3 与随机组均值相同，Pass4 仅有较小且不稳定的增益。
+
+选样机制可以直接回答：规则显著改变了含错误标签的比例、文档查询、恢复相关标签、轨迹位置、上下文长度和业务动作覆盖。它不是单纯选出“同一种动作的更好版本”。
+
+学习机制目前有行为证据与具体案例，但尚无因果闭环。ZeroFail3 减少了执行错误和重复代码、增加了成功任务；然而 Net3/Pass4 的执行错误率更低，任务表现却不如 ZeroFail3，说明局部可执行性不足以解释最终收益。HighFail3 的错误与重复明显恶化，但任务成功率未低于本次原始模型基线。
+
+## 1 选择效果
+
+| 组别 | 评分条件 | seed 20261015 | seed 20261016 | seed 20261017 | 平均成功率 | 相对 Random |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |''']
+rules={'random':'不使用评分','net3':'P−F≥3','pass4':'P≥4','zerofail3':'F=0 且 P≥3','highfail3':'F≥3'}
+baseavg=mean(b['random'],'successes')/57
+for arm in arms:
+ scores=[r['successes'] for r in b[arm]];avg=st.mean(scores)/57;lines.append(f"| {names[arm]} | {rules[arm]} | {scores[0]}/57 | {scores[1]}/57 | {scores[2]}/57 | {avg:.2%} | {(avg-baseavg)*100:+.2f} pp |")
+lines+=['''
+本次重新评测的原始模型基线为 1/57（1.75%），不能混用历史 3/57。所有微调运行的分数均高于这一个基线；这是本次观察，不证明所有选样都稳定提升能力。
+
+ZeroFail3 相对 Random 的同 seed 净增分别为 2、4、10 题。新增成功分别为 6、6、12 题，同时也退化了 4、2、2 题，说明它没有逐题支配随机组。三个 seed 共净增 16 个任务结果，其中 d4e9306 家族贡献 8 个，收益有明显家族集中性。
+
+先对同题三个 seed 的配对差值取平均，再以 19 个任务家族进行 5,000 次 bootstrap，ZeroFail3 对 Random 的描述性 95% 区间为 +1.75 至 +20.47 pp。该区间条件于本次三个 seed，并未完整估计训练随机性；不是经多重比较校正的显著性结论。Net3 为 −3.51 至 +2.92 pp；Pass4 为 −1.75 至 +6.43 pp；HighFail3 为 −6.43 至 0 pp。
+
+HighFail3 三次均为 3/57，但成功题目并不相同；不能据相同分数称其行为稳定。它对 Random 的逐 seed 差值为 −5、−1、+1 题，只有平均值较差，不能声称每次都较差，更不能声称相对原始模型发生了任务成功率的绝对退化。
+
+三个 seed 同时改变初始化、训练顺序及多数策略的子集抽样；ZeroFail3 使用固定全集，只改变初始化/顺序。因此当前重复不能分别估计“选样随机性”和“优化随机性”。DEV57 曾用于历史探索，未提供独立保留测试集上的确认。
+
+## 2 选择机制
+
+以下每行是三次所选 1,710 步的均值；比例分母为所选步骤。原始候选池分别为 11,254、3,042、2,733、1,710、4,728。各组从自身候选池全局等概率无放回抽样，不使用任务配额或其他质量门槛。
+
+| 组别 | 含 F 步骤 | 原动作执行错误 | 含文档查询步骤 | 平均输入历史 token | 平均目标 token | 平均相对轨迹位置 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |''']
+for arm in arms:
+ x=s[arm];lines.append(f"| {names[arm]} | {mean(x,'with_F')/1710:.1%} | {mean(x,'execution_error_steps')/1710:.1%} | {mean(x,'doc_steps')/1710:.1%} | {mean(x,'prompt_tokens_mean'):,.0f} | {mean(x,'target_tokens_mean'):.1f} | {mean(x,'relative_position_mean'):.2f} |")
+lines+=['''
+相对轨迹位置定义为 step_id / 原轨迹长度。执行错误按原始 observation 以 `Execution failed.` 开头识别；这是事后分析，不用于筛选。文档查询按实际代码包含 `apis.api_docs.` 识别，一步可同时包含其他动作。
+
+ZeroFail3 将文档查询占比从 Random 的 14.4% 提高到 62.2%，更偏向早期、较短上下文及较短目标步骤。它的每遍监督目标为 131,957 token，Random 平均约 206,965 token；因此收益不是因为 ZeroFail3 接受了更多监督 token。但这也不是等 token、等上下文或等算力实验，长度和内容分布均是策略变化的一部分。
+
+ZeroFail3 中 R6=P 有 945 步，R4=P 有 98 步，R5=P 只有 4 步，R7=P 只有 1 步；实际直接调用 `apis.supervisor.complete_task(` 的步骤为 0。R6=P 不是专门的动作类型：它可表示修复、补充信息或有效重复，不能把全部 945 步等同于高质量错误恢复。R5/R7 标签同样不是实际写入/提交的完整计数。
+
+这意味着 ZeroFail3 获得较高任务成功率，并不要求它的训练目标覆盖大量终止或业务修改步骤。该现象与“改善前置查询与局部推进，帮助原有能力完成后续动作”的解释相容，但也暴露了业务执行/交付覆盖狭窄的问题。
+
+Net3 和 Pass4 仍分别包含约 43.6% 和 53.3% 的含 F 步骤；净分抵消以及只看 P 都允许局部明确错误被保留。HighFail3 则几乎不选文档查询，且更偏向后期、更长历史和更长响应。P/F 规则因而同时改变行为类型与上下文分布，不能解释成一个纯粹的抽象“质量分数”。
+
+## 3 学习机制与评测行为
+
+执行错误率和重复代码率按每组三次全部评测步骤合并计算。重复代码定义为同一轨迹中非空代码去除首尾空白后再次出现；它包含可能合理的复查，不能直接等同于无效循环。耗尽上限为每次 DEV57 的平均任务数。
+
+| 组别 | 执行错误率 | 重复代码率 | 文档查询占比 | 50 步上限任务 | 上下文上限任务 | 调用完成 API 后官方失败 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |''']
+for arm in arms:
+ x=b[arm];lines.append(f"| {names[arm]} | {ratio(x,'execution_error_steps'):.1%} | {ratio(x,'repeated_code_steps'):.1%} | {ratio(x,'doc_steps'):.1%} | {st.mean(r['termination'].get('step_limit',0) for r in x):.2f} | {st.mean(r['termination'].get('context_limit',0) for r in x):.2f} | {mean(x,'completion_failed'):.2f} |")
+lines+=['''
+三个重要发现：
+
+1. ZeroFail3 对 Random：执行错误率从约 37.1% 降到 18.8%，重复代码率从 65.2% 降到 54.0%，步数和上下文耗尽任务均减少。这与更有效地推进任务的解释相容，但这些是闭环运行结果，各模型访问的状态也已不同。
+2. Net3 的错误率约 14.8%、Pass4 约 17.3%，都低于 ZeroFail3，却没有相同的成功率收益。Net3 约 59.9% 的评测步骤包含文档查询，重复代码率约 69.3%，上下文超限也较多。“更少执行错误”和“更多查文档”均不是充分条件。
+3. HighFail3 执行错误率约 60.0%、重复代码率约 72.6%，平均 30.67/57 题耗尽 50 步。相对原始模型约 37.5% 的执行错误率、54.0% 的重复代码率，行为层面已有退化证据；任务成功数仍从 1 到 3，因此必须区分行为恶化和最终成功率下降。
+
+ZeroFail3 仍平均有 19.33/57 题调用完成 API 后未通过官方测试，较 Random 的 16 题更多；它到达提交阶段的任务也更多，不能只根据失败数量判定它更会或更不会终止。长链条覆盖和最终状态正确性仍未解决。
+
+### 同任务轨迹案例
+
+seed 20261015 的 d4e9306_2 要求关注 Spotify 所有曾点赞歌曲与专辑的艺术家。
+
+- [Random](evaluation/random/seed_20261015/epoch_01/trajectories/d4e9306_2.json)：第 4 步获取 liked songs/albums 时未显式遍历分页，随后收集艺术家并提交，第 6 步结束；官方 3/6 测试通过。
+- [ZeroFail3](evaluation/zerofail3/seed_20261015/epoch_01/trajectories/d4e9306_2.json)：先查询接口文档，第 8、10 步分别按 page_index 循环获取歌曲和专辑，第 13 步合并艺术家，第 14 步执行关注，第 15 步提交；官方 6/6 通过。
+- [HighFail3](evaluation/highfail3/seed_20261015/epoch_01/trajectories/d4e9306_2.json)：出现未定义变量、错误登录及把 liked songs/albums 任务转成 playlist 查询，随后反复处理错误字段，最终达到 50 步上限；官方 1/6 通过。
+
+该案例支持“信息获取与覆盖不同，对后续任务结果产生影响”的具体解释；它属于结果后选取的说明案例，不能证明整体收益由文档查询或分页这一单一因素造成。该家族贡献了总体净收益的一半，也要求避免把此案例泛化成所有任务的机制。
+
+## 4 本周三个问题回答到什么程度
+
+| 问题 | 当前可回答 | 尚不能回答 |
+| --- | --- | --- |
+| 选择效果 | ZeroFail3 在此数据、训练配方和 DEV57 上三次均优于 Random；其他聚合规则未显示同等收益 | 所有 rubrics 都有效、零 F 普遍最优、独立测试上的稳定收益 |
+| 选择机制 | 具体改变了错误标签、文档查询、恢复相关标签、长度、位置和业务覆盖 | 哪个分项的筛选独立贡献最大，或哪种覆盖组合最优 |
+| 学习机制 | 观察到执行错误、重复、预算耗尽与成功覆盖变化；存在任务级动作链案例 | 参数如何改变动作偏好、哪个行为变化因果地解释了收益 |
+
+## 5 最值得继续补的证据
+
+先对同一批冻结的行动前状态比较各模型下一步动作或候选动作概率，检验文档查询、分页、错误恢复、核验与提交的偏好。这能减少闭环轨迹访问不同状态带来的解释混淆；本次尚未做该诊断。
+
+再预先选择一个机制假设做评分规则消融，例如零 F 规则分别允许 R8 的 F 与其他维度的 F，对比是否损失文档协议行为和成功率。仍只使用 rubric 分项决定候选资格，不偷偷加入代码或任务配额过滤；预算与采样协议在看结果前冻结。
+
+如需区分行为覆盖与长度/训练暴露量的作用，可另立明确的诊断实验，而不是修改本次已完成的全池均匀抽样结果。新增实验应保持独立记录，最后使用未参与调参的任务家族做验证。
+
+## 方法与证据文件
+
+核心训练配方为固定 LR=2e-4、AdamW、LoRA r8/alpha16/dropout0、单 GPU1 累积两步、逐步骤 token 平均 CE。五组每次均 1,710 步、855 次更新、1 epoch，原始基座加全新 LoRA。DEV57 使用同一 agent prompt、thinking 关闭、temperature0、seed100、50 步、32,000 上下文、每步最多3,000生成 token和官方终态测试。评分为英文 v6 format；未额外施加语法、执行、去重或最终成功门槛。
+
+训练 loss 的组间高低不能直接解释为质量：各组训练目标不同，HighFail3 更低的训练 loss 不代表更强能力。
+
+- [逐运行结果](analysis/results.csv) 与 [家族配对区间](analysis/comparisons.json)
+- [选样分布](analysis/final_selection.json) 与 [评测行为](analysis/final_behavior.json)
+- [逐题行为指标](analysis/final_task_metrics.json) 与 [ZeroFail3 对 Random 的得失题](analysis/zerofail_random_pairs.json)
+- [全量分析脚本](scripts/analyze_final.py) 与 [报告生成脚本](scripts/write_final_report.py)
+
+全部统计为本地 CPU 事后分析；未修改训练数据、评分、模型或评测结果，未启动新增训练。
+''']
+p=R/'REPORT.md';backup=R/'references/automatic_report_before_final_analysis.md'
+if not backup.exists():shutil.copy2(p,backup)
+p.write_text('\n'.join(lines))
+print('Wrote',p)

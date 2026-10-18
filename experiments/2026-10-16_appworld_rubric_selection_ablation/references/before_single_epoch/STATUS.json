@@ -1,0 +1,20 @@
+{
+  "phase": "error",
+  "pid": 10877,
+  "started_at": "2026-10-16T14:43:31.474108+08:00",
+  "physical_gpu": 1,
+  "arms": [
+    "random",
+    "net3",
+    "pass4",
+    "zerofail3",
+    "highfail3"
+  ],
+  "runs": 15,
+  "stage": "eval_base_20261015_e0",
+  "stage_started_at": "2026-10-16T14:45:18.979320+08:00",
+  "active_log": "/root/autodl-tmp/workspace-tw/experiments/2026-10-16_appworld_rubric_selection_ablation/logs/eval_base_20261015_e0.log",
+  "error": "RuntimeError('eval_base_20261015_e0 exited 1; inspect /root/autodl-tmp/workspace-tw/experiments/2026-10-16_appworld_rubric_selection_ablation/logs/eval_base_20261015_e0.log. No automatic data/recipe change.')",
+  "traceback": "Traceback (most recent call last):\n  File \"/root/autodl-tmp/workspace-tw/experiments/2026-10-16_appworld_rubric_selection_ablation/scripts/run_pipeline.py\", line 49, in main\n    evaluate('base')\n  File \"/root/autodl-tmp/workspace-tw/experiments/2026-10-16_appworld_rubric_selection_ablation/scripts/run_pipeline.py\", line 43, in evaluate\n    if not (R/'evaluation'/run/'SUMMARY.json').exists():stage(f'eval_{arm}_{seed}_e{epoch}',[ec['paths']['appworld_python'],'-u',str(R/'scripts/evaluate.py'),'--arm',arm,'--seed',str(seed),'--epoch',str(epoch),'--execute'])\n                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/autodl-tmp/workspace-tw/experiments/2026-10-16_appworld_rubric_selection_ablation/scripts/run_pipeline.py\", line 40, in stage\n    if code:raise RuntimeError(f'{name} exited {code}; inspect {log}. No automatic data/recipe change.')\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: eval_base_20261015_e0 exited 1; inspect /root/autodl-tmp/workspace-tw/experiments/2026-10-16_appworld_rubric_selection_ablation/logs/eval_base_20261015_e0.log. No automatic data/recipe change.\n",
+  "finished_at": "2026-10-16T14:45:29.214983+08:00"
+}

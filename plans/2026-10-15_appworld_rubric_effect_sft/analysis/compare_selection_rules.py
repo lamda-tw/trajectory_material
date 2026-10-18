@@ -10,6 +10,7 @@ for r in rows:
         r[c] = r['labels'].count(c)
 rules = {
     'all': lambda r: True,
+    'P_minus_F_ge3': lambda r: r['P'] - r['F'] >= 3,
     'P_minus_F_ge4': lambda r: r['P'] - r['F'] >= 4,
     'P_ge4': lambda r: r['P'] >= 4,
     'F0_P_ge4': lambda r: r['F'] == 0 and r['P'] >= 4,
