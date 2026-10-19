@@ -2,7 +2,7 @@
 
 本工作区主要研究 Qwen3-8B 在 AppWorld 上的轨迹学习，包括成功轨迹 SFT、单步修复训练、rubric 评分和策略优化；另保留早期高 O2 数据及 SWE-bench 实验。
 
-以下按时间从早到晚记录已完成的主要实验，说明**我们做了什么、结果如何、详细报告在哪里**。实验记录截至 **2026-10-18**。
+以下按时间从早到晚记录已完成的主要实验，说明**我们做了什么、结果如何、详细报告在哪里**。实验记录截至 **2026-10-19**；尚未执行的诊断与评分候选版本单独注明。
 
 ## 2026-09-08—09：高 O2 轨迹数据整理与 LoRA 训练
 
@@ -425,3 +425,42 @@ Random 相对 Rubric 新成功 1 题、退化 9 题，净少 8 题；上下文�
 ZeroFail3 的跨 seed 净收益中一半来自同一任务家族，且 DEV57 已用于探索；后续应比较相同历史状态下的动作偏好，并消融 rubric 分项。训练仍是等步骤/更新预算，不是等 token 或等算力。
 
 [最终分析报告](experiments/2026-10-16_appworld_rubric_selection_ablation/REPORT.md) · [运行与进度](experiments/2026-10-16_appworld_rubric_selection_ablation/README.md) · [逐运行结果](experiments/2026-10-16_appworld_rubric_selection_ablation/analysis/results.csv) · [选样统计](experiments/2026-10-16_appworld_rubric_selection_ablation/analysis/final_selection.json) · [行为统计](experiments/2026-10-16_appworld_rubric_selection_ablation/analysis/final_behavior.json)
+
+## 2026-10-18—19：R1–R8 逐项完整删除，三个 seed 的单轮 SFT
+
+在同一批原始 Qwen3-8B 轨迹及冻结英文 v6 format 标签上，逐项忽略 Ri 的 PASS 计分与 FAIL 排除，其余七项仍要求 **P≥3、F=0**，允许 N/U。每组从各自候选池全局均匀无放回抽取 **1,358 个步骤**，没有任务配额、语法或执行成功过滤、最终成功门槛及额外补足。
+
+- 每次从原始基座新建 LoRA，固定学习率 2e-4、r8/alpha16、逐步骤平均 loss，单卡累积两步，**1 epoch、679 次更新**。GPU1 完成 seed 20261015/16，GPU0 完成新增 seed 20261017。
+- **21 次实际训练和 21 次 DEV57 全部完成**。DropR7 与同 seed DropR5 复用相同数据、模型及评测，不计额外训练或独立证据；两组候选池均与完整八项 ZeroFail3 的 1,710 步池相同。
+- 已核对 **1,197 份官方 evaluator 报告、6,111 条检查结果**，并保留逐题、逐检查项、八类要求、19 个任务家族及实际选样的对照。
+
+| 条件 | 三个 seed 的 DEV57 成功题数 | 平均成功题数/57 | evaluator Macro | 检查通过数/873 |
+| --- | --- | ---: | ---: | ---: |
+| DropR1 | 10、10、16 | **12.00** | **57.14%** | **473** |
+| DropR2 | 9、10、10 | **9.67** | **53.49%** | **426** |
+| DropR3 | 6、8、4 | 6.00 | 44.92% | 343 |
+| DropR4 | 5、4、9 | 6.00 | 41.56% | 314 |
+| DropR5：全规则 SFT-1358 对照 | 6、7、2 | 5.00 | 41.57% | 320 |
+| DropR6 | 2、6、9 | 5.67 | 45.28% | 353 |
+| DropR7：复用 DropR5 | 同 DropR5 | 5.00 | 41.57% | 320 |
+| DropR8 | 6、7、7 | 6.67 | 46.60% | 364 |
+
+Macro 先计算每题检查通过比例，再对题目和 seed 等权平均；不等同于整题成功率。每组三个 seed 共 873 条检查，但不是 873 个独立样本。
+
+**选择效果与限制。** DropR1/R2 的整题成功数及 Macro 在三个 seed 都高于同预算全规则对照，收益涉及多个家族。DropR4 整题均值略高，检查通过总数却少 6 条，不能据整题指标判断普遍改善。R6/R8 有明显 seed 依赖；本轮没有同预算 Random，也未独立估计设备差异。
+
+**不能混淆不同训练预算。** 旧 ZeroFail3 使用全部 1,710 步、855 次更新，平均 **10/57、Macro 51.05%**；本轮 DropR5 每次只抽 1,358 步、679 次更新，平均 **5/57、Macro 41.57%**。两者选样规则池相同，模型与训练暴露不同。核验确认核心训练及评测配方一致，但子集、顺序、更新次数及第三 seed 的设备发生变化，尚不能把下降归给其中一个因素。
+
+**联合样本分析。** DropR1/R2 共同移除 359 条恰好只有 R1/R2/R8 为 PASS 的候选，其中 350 条含文档调用、359 条全部 R6=N。两组实际同 seed 训练集约 **92% 相同**；相对全规则对照，R3=PASS 暴露从平均 1,022.7 增至 1,310.3/1,300.3，R6=PASS 从 756.7 增至 1,018.7/946.0。DropR2 新增候选仅 8 条、其中 R6=PASS 仅 2 条，主要通过预算重分配增加原有正例的覆盖。当前不能将共同收益单独归因于 R6，也不能把 N 标签当成负例。
+
+**学习机制仍待验证。** 两组自然 rollout 的文档调用和相同代码重复比例下降，在 14/19 个家族共同改善 Macro；但访问的历史状态不同，相同状态的动作比较尚未执行。R5/R7 在旧 ZeroFail3 池仍有 4/1 条 PASS 正例，只是它们不决定入选门槛；候选池等价不能证明对应行为没有价值。
+
+[三 seed 最终报告](experiments/2026-10-18_appworld_rubric_dimension_ablation/REPORT_THREE_SEEDS.md) · [R1/R2 联合样本分析](experiments/2026-10-18_appworld_rubric_dimension_ablation/REPORT_THREE_SEEDS.md#r1-r2-joint-analysis) · [evaluator 分项比较](experiments/2026-10-18_appworld_rubric_dimension_ablation/REPORT_THREE_SEEDS.md#evaluator-type-details) · [跨预算核验](experiments/2026-10-18_appworld_rubric_dimension_ablation/REPORT_THREE_SEEDS.md#baseline-and-budget) · [进度与入口](experiments/2026-10-18_appworld_rubric_dimension_ablation/README.md)
+
+## 2026-10-19：评分 v7 候选与后续机制研究准备
+
+已保存中英文 v7 候选 prompt、输出 schema、校验脚本及版本来源，调整 R2/R4/R5/R6/R7 的部分边界。**目前仅完成本地结构检查，未进行新的裁判调用、语义验证或重评分**；上述已完成实验全部沿用冻结 v6，未自动切换评分版本。
+
+下一步关注两件事：在相同历史和可恢复环境中比较全规则、DropR1、DropR2 的动作；用同预算训练对照检验共同移除的三 PASS 样本是否影响效果。报告中的新实验均为建议，**尚未启动追加训练或同状态诊断**。仅移除共同 359 条后剩余 1,351 个候选，可用每组 1,350 步、1 epoch 的新对照；不能直接拿旧 1,358 步模型代替新预算基准。
+
+[机制研究计划](plans/2026-10-18_appworld_rubric_learning_mechanism/PLAN.md) · [联合分析后的补充实验建议](experiments/2026-10-18_appworld_rubric_dimension_ablation/REPORT_THREE_SEEDS.md#r1-r2-joint-analysis) · [Rubric 版本记录](plans/2026-10-12_appworld_step_rubric/VERSIONS.md) · [v7 候选来源与验证状态](plans/2026-10-12_appworld_step_rubric/v7_provenance.json)
