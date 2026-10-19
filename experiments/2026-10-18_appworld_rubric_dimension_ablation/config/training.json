@@ -1,0 +1,50 @@
+{
+  "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+  "learning_rate": 0.0002,
+  "weight_decay": 0.0,
+  "lora": {
+    "r": 8,
+    "lora_alpha": 16,
+    "lora_dropout": 0.0,
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ],
+    "bias": "none",
+    "task_type": "CAUSAL_LM"
+  },
+  "training_python": "/root/autodl-tmp/workspace-tw/.conda-training/bin/python",
+  "head_chunk_size": 128,
+  "max_length": 40960,
+  "checkpoint_interval": 25,
+  "epochs": 1,
+  "seeds": [
+    20261015,
+    20261016
+  ],
+  "arms": [
+    "drop_r1",
+    "drop_r2",
+    "drop_r3",
+    "drop_r4",
+    "drop_r5",
+    "drop_r6",
+    "drop_r8"
+  ],
+  "samples_per_epoch": 1358,
+  "updates_per_epoch": 679,
+  "world_size": 1,
+  "gradient_accumulation_steps": 2,
+  "eval_epochs": [
+    1
+  ],
+  "gpu_uuid": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501",
+  "loss_reduction": "mean of per-step mean target CE",
+  "selection": "P>=3 and F=0 over remaining seven rubric dimensions only; global uniform without replacement; no extra filters or quotas",
+  "protocol_revision": "complete_dimension_removal_1358_two_seeds_v1"
+}

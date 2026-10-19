@@ -1,0 +1,171 @@
+{
+  "status": "authorized",
+  "execution_authorized": true,
+  "user_instruction": "用户授权开始：先检查 GPU1 空闲，按最新计划跑 DropR1–R8，每组 1358 步、1 轮、2 seed，DropR7 复用 DropR5；只按评分选样、只用 GPU1，每到节点更新 README。",
+  "plan_path": "plans/2026-10-18_appworld_rubric_learning_mechanism/PLAN.md",
+  "experiment": "2026-10-18_appworld_rubric_dimension_ablation",
+  "excluded_training_arms": [
+    "random",
+    "zerofail3"
+  ],
+  "deferred_seeds": [
+    20261017
+  ],
+  "report_arms": [
+    "drop_r1",
+    "drop_r2",
+    "drop_r3",
+    "drop_r4",
+    "drop_r5",
+    "drop_r6",
+    "drop_r7",
+    "drop_r8"
+  ],
+  "training_arms": [
+    "drop_r1",
+    "drop_r2",
+    "drop_r3",
+    "drop_r4",
+    "drop_r5",
+    "drop_r6",
+    "drop_r8"
+  ],
+  "aliases": {
+    "drop_r7": "drop_r5"
+  },
+  "alias_policy": "Reuse same-seed NEW drop_r5 selection, order, initialization, adapter and evaluation; record hashes; not an independent replicate.",
+  "score_predicate": "For DropRi: ignore Ri; among the remaining seven dimensions require at least 3 P and no F; allow U/N.",
+  "source_labels": "experiments/2026-10-16_appworld_rubric_selection_ablation/references/step_labels.csv",
+  "source_labels_sha256": "e6e8611704ff2bf75b3d0f0f28ebe04c1995883a8db211a69e4cdcbf3a8b5463",
+  "scoring_prompt_sha256": "df4e8fb406551f2d90e38bbe83838db181bda18e01d947b236ee10a05c633109",
+  "candidate_pools": {
+    "drop_r1": {
+      "candidate_count": 1385,
+      "candidate_id_set_sha256": "04f104a047e6494b3f535e7ae9525f238d6e1edd6a726c1b05e5e7c6f7042321",
+      "alias_of": null,
+      "new_training_runs": 2
+    },
+    "drop_r2": {
+      "candidate_count": 1359,
+      "candidate_id_set_sha256": "860ba865519ac568627ec6a4739d5b6ffdd808de824cadaa62cd3537822c75b8",
+      "alias_of": null,
+      "new_training_runs": 2
+    },
+    "drop_r3": {
+      "candidate_count": 1671,
+      "candidate_id_set_sha256": "b542da36c532b2c7dc2d0be290b36559f6cad66caafa84b6a8cc156178e1a5f7",
+      "alias_of": null,
+      "new_training_runs": 2
+    },
+    "drop_r4": {
+      "candidate_count": 1758,
+      "candidate_id_set_sha256": "2c09abb365b2a7bdf7267e7129fc0d730bcd8144af4b6dd71751beca9d019879",
+      "alias_of": null,
+      "new_training_runs": 2
+    },
+    "drop_r5": {
+      "candidate_count": 1710,
+      "candidate_id_set_sha256": "715c06eed920c203b3169a2e7a92f29447a315aea8c9940a030e9ec7bf995ff9",
+      "alias_of": null,
+      "new_training_runs": 2
+    },
+    "drop_r6": {
+      "candidate_count": 2378,
+      "candidate_id_set_sha256": "505a7926241b84b871afc7659ae083a1d3ace0d1ec2330fb2b9bc522b74d5e90",
+      "alias_of": null,
+      "new_training_runs": 2
+    },
+    "drop_r7": {
+      "candidate_count": 1710,
+      "candidate_id_set_sha256": "715c06eed920c203b3169a2e7a92f29447a315aea8c9940a030e9ec7bf995ff9",
+      "alias_of": "drop_r5",
+      "new_training_runs": 0
+    },
+    "drop_r8": {
+      "candidate_count": 2546,
+      "candidate_id_set_sha256": "967447c57381411157a92bbf8a4eb1efc5e073a5313933ffc995c0bb93368892",
+      "alias_of": null,
+      "new_training_runs": 2
+    }
+  },
+  "training": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "learning_rate": 0.0002,
+    "weight_decay": 0.0,
+    "lora": {
+      "r": 8,
+      "lora_alpha": 16,
+      "lora_dropout": 0.0,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ],
+      "bias": "none",
+      "task_type": "CAUSAL_LM"
+    },
+    "training_python": "/root/autodl-tmp/workspace-tw/.conda-training/bin/python",
+    "head_chunk_size": 128,
+    "max_length": 40960,
+    "checkpoint_interval": 25,
+    "epochs": 1,
+    "seeds": [
+      20261015,
+      20261016
+    ],
+    "arms": [
+      "drop_r1",
+      "drop_r2",
+      "drop_r3",
+      "drop_r4",
+      "drop_r5",
+      "drop_r6",
+      "drop_r8"
+    ],
+    "samples_per_epoch": 1358,
+    "updates_per_epoch": 679,
+    "world_size": 1,
+    "gradient_accumulation_steps": 2,
+    "eval_epochs": [
+      1
+    ],
+    "gpu_uuid": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501",
+    "loss_reduction": "mean of per-step mean target CE",
+    "selection": "P>=3 and F=0 over remaining seven rubric dimensions only; global uniform without replacement; no extra filters or quotas",
+    "protocol_revision": "complete_dimension_removal_1358_two_seeds_v1"
+  },
+  "evaluation": {
+    "tasks": "experiments/2026-10-16_appworld_rubric_selection_ablation/config/dev.txt",
+    "agent_prompt": "experiments/2026-10-16_appworld_rubric_selection_ablation/config/agent_prompt.txt",
+    "enable_thinking": false,
+    "temperature": 0.0,
+    "seed": 100,
+    "max_steps": 50,
+    "max_model_len": 32000,
+    "max_new_tokens": 3000,
+    "workers": 3,
+    "primary_metric": "official_task_goal_completion"
+  },
+  "resources": {
+    "gpu_uuid": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501",
+    "physical_gpu": 1,
+    "world_size": 1,
+    "allow_gpu0": false,
+    "lock_path": "experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/runtime/gpu1.lock"
+  },
+  "budgets": {
+    "actual_training_runs": 14,
+    "report_condition_seed_records": 16,
+    "total_updates": 9506,
+    "dev57_task_rollouts": 798,
+    "same_state_models_including_raw_base": 15,
+    "same_state_states": 256,
+    "same_state_generation_calls": 3840
+  },
+  "comparison_reference": "drop_r5; its current candidate IDs equal the full eight-rule pool. No Random comparison in this experiment.",
+  "authorized_at_beijing": "2026-10-18T18:00:16+08:00"
+}

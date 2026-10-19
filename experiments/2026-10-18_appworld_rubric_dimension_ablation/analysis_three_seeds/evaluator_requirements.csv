@@ -1,0 +1,98 @@
+family,requirement,category,drop_r1_passes,drop_r1_tests,drop_r2_passes,drop_r2_tests,drop_r3_passes,drop_r3_tests,drop_r4_passes,drop_r4_tests,drop_r5_passes,drop_r5_tests,drop_r6_passes,drop_r6_tests,drop_r8_passes,drop_r8_tests
+0d8a4ee,assert 0 phone.UserTextMessage records were removed.,preservation,9,9,9,9,9,9,9,9,9,9,9,9,9,9
+0d8a4ee,assert all added global text messages have message public_data.message_text (normalize_text=True).,local_content_identity,6,9,7,9,2,9,3,9,3,9,4,9,3,9
+0d8a4ee,assert answers match.,answer,4,9,5,9,1,9,3,9,1,9,3,9,2,9
+0d8a4ee,"assert model changes match phone.GlobalTextMessage, phone.UserTextMessage",model_scope,6,9,7,9,2,9,3,9,3,9,4,9,3,9
+0d8a4ee,assert receiver_ids of added global text messages match exactly to private_data.no_account_phone_user_ids (ignore order).,target_set_mapping,0,9,0,9,0,9,0,9,0,9,0,9,1,9
+23cf851,assert answers match.,answer,6,9,7,9,3,9,3,9,4,9,6,9,4,9
+23cf851,assert no model changes.,preservation,9,9,9,9,9,9,9,9,9,9,9,9,9,9
+37a8675,assert answers match.,answer,0,9,0,9,0,9,0,9,0,9,0,9,1,9
+37a8675,"assert model changes match venmo.Notification, venmo.Transaction ignoring venmo.User.",model_scope,2,9,1,9,2,9,0,9,0,9,2,9,0,9
+37a8675,assert the added transaction has amount public_data.payment_amount.,local_content_identity,4,9,2,9,4,9,0,9,2,9,5,9,3,9
+37a8675,assert the added transaction is private/public as per public_data.privacy.,local_content_identity,3,9,2,9,4,9,0,9,1,9,2,9,3,9
+37a8675,assert the added transaction's receiver_id is private_data.person_venmo_user_id.,local_content_identity,2,9,2,9,3,9,0,9,2,9,4,9,0,9
+37a8675,"obtain added, updated, removed venmo.Transaction records using models.changed_records, and assert 1 is added, 0 is updated, and 0 is deleted.",record_counts,4,9,2,9,4,9,0,9,2,9,5,9,3,9
+383cbac,assert answers match.,answer,0,9,0,9,0,9,0,9,0,9,0,9,0,9
+383cbac,assert no model changes.,preservation,9,9,9,9,9,9,9,9,9,9,9,9,9,9
+396c5a2,assert 1 spotify.MusicPlayer has been updated using models.changed_records.,record_counts,4,9,4,9,3,9,1,9,3,9,4,9,1,9
+396c5a2,assert all private_data.to_be_added_queue_song_ids are in the end state queue_song_ids,target_set_mapping,4,9,4,9,2,9,1,9,3,9,4,9,1,9
+396c5a2,assert answers match.,answer,4,9,1,9,1,9,2,9,1,9,0,9,4,9
+396c5a2,assert model changes match spotify.MusicPlayer.,model_scope,4,9,4,9,3,9,1,9,3,9,4,9,1,9
+396c5a2,assert union of private_data.to_be_added_queue_song_ids and private_data.existing_queue_song_ids match the end-state queue_song_ids.,target_set_mapping,3,9,4,9,1,9,1,9,3,9,3,9,1,9
+396c5a2,get the end-state queue_song_ids and assert all private_data.existing_queue_song_ids are in end-state queue_song_ids.,preservation,4,9,4,9,3,9,1,9,3,9,4,9,1,9
+3ab5b8b,assert added downloaded song_ids match private_data.to_download_song_ids (ignore_order=True),target_set_mapping,0,9,0,9,0,9,0,9,0,9,0,9,0,9
+3ab5b8b,assert all added downloaded song_ids are in private_data.library_song_ids,selection_constraints,2,9,2,9,0,9,1,9,1,9,1,9,2,9
+3ab5b8b,assert all added downloaded song_ids are in private_data.liked_song_ids,selection_constraints,2,9,2,9,4,9,2,9,2,9,3,9,5,9
+3ab5b8b,assert answers match.,answer,4,9,3,9,4,9,1,9,3,9,2,9,5,9
+3ab5b8b,assert model changes match spotify.UserDownloadedSong.,model_scope,7,9,8,9,6,9,4,9,6,9,8,9,7,9
+3ab5b8b,"obtain added, updated, removed spotify.UserDownloadedSong records using models.changed_records, and assert 0 have been removed.",preservation,9,9,9,9,9,9,9,9,9,9,9,9,9,9
+4ec8de5,assert answers match.,answer,0,9,0,9,0,9,0,9,0,9,0,9,0,9
+4ec8de5,assert no model changes.,preservation,9,9,9,9,9,9,9,9,9,9,9,9,9,9
+4fab96f,assert all receiver ids of added notifications match keys of private_data.venmo_user_id_to_notification_messages ignoring order.,target_set_mapping,0,9,0,9,0,9,0,9,0,9,0,9,0,9
+4fab96f,assert answers match.,answer,7,9,4,9,4,9,0,9,3,9,5,9,3,9
+4fab96f,assert model changes match venmo.Notification,model_scope,8,9,4,9,3,9,0,9,1,9,4,9,3,9
+4fab96f,assert set of added notfications messages match flattened values of private_data.venmo_user_id_to_notification_messages.,target_set_mapping,0,9,0,9,0,9,0,9,0,9,0,9,0,9
+4fab96f,assert set of added notfications payment_request_ids match flattened values of private_data.venmo_user_id_to_notification_payment_request_ids.,target_set_mapping,0,9,0,9,0,9,0,9,0,9,0,9,0,9
+4fab96f,assert user_id to message mapping from notifications match private_data.venmo_user_id_to_notification_messages [code: venmo_user_id_to_notification_messages],target_set_mapping,0,9,0,9,0,9,0,9,0,9,0,9,0,9
+4fab96f,assert user_id to message mapping from notifications match private_data.venmo_user_id_to_notification_messages [code: venmo_user_id_to_notification_payment_request_ids],target_set_mapping,0,9,0,9,0,9,0,9,0,9,0,9,0,9
+4fab96f,"obtain added, removed venmo.Notification records using models.changed_records, and assert 0 notifications were removed.",preservation,9,9,9,9,9,9,9,9,9,9,9,9,9,9
+50e1ac9,Assert no model changes,preservation,9,9,9,9,9,9,9,9,9,9,9,9,9,9
+50e1ac9,assert answers match.,answer,0,9,1,9,0,9,0,9,0,9,0,9,0,9
+530b157,assert answers match.,answer,3,9,1,9,0,9,1,9,3,9,0,9,2,9
+530b157,"assert model changes match venmo.Transaction, phone.GlobalTextMessage, phone.UserTextMessage, ignoring venmo.User and venmo.Notification",model_scope,4,9,5,9,1,9,1,9,3,9,3,9,2,9
+530b157,assert none of the records from phone.UserTextMessage have been deleted,preservation,9,9,9,9,9,9,9,9,9,9,9,9,9,9
+530b157,"assert the added global_text_message has message, public_data.message_text (ignore case).",local_content_identity,4,9,5,9,1,9,1,9,3,9,3,9,2,9
+530b157,assert the added global_text_message's receiver_id is to private_data.friend_phone_user_id.,local_content_identity,5,9,4,9,1,9,1,9,3,9,3,9,2,9
+530b157,assert the added transaction has amount private_data.grocery_cost.,local_content_identity,0,9,0,9,0,9,1,9,0,9,0,9,0,9
+530b157,assert the added transaction has description public_data.note.,local_content_identity,4,9,6,9,1,9,4,9,4,9,4,9,3,9
+530b157,assert the added transaction receiver_id is private_data.friend_venmo_user_id.,local_content_identity,4,9,6,9,1,9,4,9,4,9,4,9,3,9
+530b157,"obtain added, updated, deleted phone.GlobalTextMessage using models.changed_records assert 1 is added, 0 is updated, and 0 is deleted.",record_counts,5,9,5,9,1,9,1,9,3,9,3,9,2,9
+530b157,"obtain added, updated, deleted venmo.Transactions using models.changed_records assert 1 is added, 0 is updated, and 0 is deleted.",record_counts,4,9,6,9,1,9,4,9,4,9,4,9,3,9
+57c3486,assert all newly song likes are from artists that main_user follows via models.changed_records,selection_constraints,8,9,6,9,7,9,2,9,7,9,5,9,6,9
+57c3486,assert all songs from artists main_user follows are liked now by using private_data.followed_artist_song_ids.,target_set_mapping,0,9,1,9,0,9,0,9,0,9,1,9,0,9
+57c3486,assert answers match.,answer,7,9,4,9,4,9,3,9,5,9,2,9,5,9
+57c3486,"assert model changes match spotify.Song, spotify.SongLike.",model_scope,8,9,6,9,7,9,2,9,7,9,5,9,7,9
+57c3486,"assert none of the updated or removed song likes are from artists that main_user follows, using private_data.followed_artist_song_ids.",preservation,9,9,9,9,9,9,9,9,9,9,9,9,9,9
+6171bbc,assert all song_ids of added playlist_songs match private_data.playlist_song_ids (ignore_order),target_set_mapping,4,9,1,9,4,9,1,9,0,9,0,9,2,9
+6171bbc,assert answers match.,answer,6,9,2,9,1,9,1,9,2,9,2,9,4,9
+6171bbc,"assert model changes match spotify.Playlist, spotify.PlaylistSong.",model_scope,6,9,4,9,5,9,2,9,0,9,4,9,4,9
+6171bbc,assert the added playlist is named public_data.playlist_title.,local_content_identity,7,9,6,9,5,9,2,9,2,9,4,9,7,9
+6171bbc,assert the playlist_id of all added playlist_songs match added_playlist.id.,local_content_identity,6,9,4,9,5,9,2,9,0,9,4,9,4,9
+6171bbc,"obtain added, removed spotify.PlaylistSong records using models.changed_records, and assert 0 have been removed.",preservation,9,9,9,9,9,9,9,9,9,9,9,9,9,9
+6171bbc,"obtain added, updated, removed spotify.Playlist records using models.changed_records, and assert 1 has been added, and 0 have been updated or removed.",record_counts,7,9,6,9,5,9,2,9,1,9,4,9,7,9
+68ee2c9,assert answers match.,answer,3,9,5,9,2,9,3,9,1,9,3,9,2,9
+68ee2c9,"assert model changes match file_system.File, file_system.Directory.",model_scope,6,9,6,9,5,9,4,9,4,9,5,9,3,9
+68ee2c9,assert the files have been renamed (with proper content) as per private_data.this_year_start_to_end_file_path.,target_set_mapping,1,9,2,9,1,9,0,9,0,9,2,9,0,9
+68ee2c9,obtain all the file paths from start_file_path_to_content's keys that are neither in private_data.this_year_start_to_end_file_path nor in private_data.before_this_year_start_to_end_file_path. These are the file_paths that should not have been renamed. Assert their paths and contents are identical in the start and the end state.,preservation,9,9,9,9,9,9,9,9,8,9,9,9,9,9
+68ee2c9,"prepare start_file_path_to_content and end_file_path_to_content from start and end state of user.files, then assert the files have been renamed (with proper content) as per private_data.before_this_year_start_to_end_file_path.",target_set_mapping,0,9,2,9,0,9,1,9,0,9,0,9,0,9
+6bdbc26,assert answers match.,answer,9,9,9,9,7,9,8,9,3,9,6,9,8,9
+6bdbc26,assert no model changes.,preservation,9,9,9,9,9,9,9,9,9,9,9,9,9,9
+6c2c621,assert all added file_system.File records' contents match values of private_data.file_path_to_content (strip).,target_set_mapping,4,9,3,9,1,9,4,9,0,9,2,9,1,9
+6c2c621,assert all added file_system.File records' path to content mapping match that of private_data.file_path_to_content (strip and ignore case).,target_set_mapping,4,9,3,9,1,9,4,9,0,9,2,9,1,9
+6c2c621,assert all added file_system.File records' paths match keys of private_data.file_path_to_content. (ignore_case),target_set_mapping,5,9,3,9,1,9,4,9,0,9,2,9,2,9
+6c2c621,"assert all added files have path ending with "".md"".",selection_constraints,5,9,4,9,1,9,5,9,2,9,2,9,2,9
+6c2c621,assert all added files have tilde_path starting with public_data.backup_directory_path.,selection_constraints,5,9,4,9,1,9,5,9,2,9,2,9,2,9
+6c2c621,assert answers match.,answer,4,9,4,9,0,9,4,9,1,9,2,9,0,9
+6c2c621,"assert model changes match file_system.File, file_system.Directory.",model_scope,5,9,4,9,1,9,5,9,2,9,2,9,2,9
+6c2c621,"obtain added, updated, removed file_system.File records using models.changed_records, and assert 0 were updated or removed.",preservation,9,9,9,9,9,9,9,9,9,9,9,9,9,9
+b119b1f,assert answers match.,answer,9,9,7,9,6,9,7,9,4,9,2,9,7,9
+b119b1f,assert model changes match spotify.MusicPlayer.,model_scope,9,9,7,9,7,9,7,9,4,9,3,9,6,9
+b119b1f,assert music player's cursor is on the song by private_data.artist_id in the end state.,local_content_identity,8,9,5,9,7,9,3,9,4,9,2,9,6,9
+b119b1f,assert spotify.MusicPlayer has 1 updated using models.changed_records,record_counts,9,9,7,9,7,9,7,9,4,9,3,9,6,9
+b119b1f,assert the currently playing song has ID private_data.song_id in the end state.,local_content_identity,8,9,5,9,7,9,3,9,4,9,2,9,6,9
+b119b1f,assert this music player record has updated only in the cursor_position using models.changed_field_names,preservation,8,9,7,9,7,9,6,9,4,9,3,9,5,9
+d4e9306,assert answers match.,answer,8,9,4,9,1,9,2,9,2,9,1,9,7,9
+d4e9306,assert artist_ids from added artists match union of private_data.to_be_followed_artist_ids_by_songs and private_data.to_be_followed_artist_ids_by_albums.,target_set_mapping,2,9,0,9,0,9,1,9,1,9,0,9,0,9
+d4e9306,assert model changes match spotify.UserArtistFollowing.,model_scope,6,9,6,9,1,9,2,9,3,9,2,9,8,9
+d4e9306,assert private_data.to_be_followed_artist_ids_by_albums artists have been newly followed.,target_set_mapping,3,9,0,9,0,9,2,9,1,9,1,9,0,9
+d4e9306,assert private_data.to_be_followed_artist_ids_by_songs artists have been newly followed.,target_set_mapping,2,9,0,9,1,9,1,9,1,9,0,9,0,9
+d4e9306,"obtain added, updated, removed spotify.UserArtistFollowing records using models.changed_records, and assert 0 have been removed.",preservation,9,9,9,9,9,9,9,9,9,9,9,9,9,9
+df61dc5,assert all updated transactions were created after private_data.min_transaction_datetime,selection_constraints,3,9,4,9,4,9,3,9,5,9,6,9,4,9
+df61dc5,assert answers match.,answer,1,9,2,9,1,9,1,9,3,9,0,9,3,9
+df61dc5,"assert model changes match venmo.Transaction, venmo.TransactionLike",model_scope,4,9,4,9,4,9,3,9,5,9,6,9,4,9
+df61dc5,assert set of updated transaction ids match exactly to private_data.to_like_transaction_ids (ignore order).,target_set_mapping,1,9,1,9,2,9,0,9,1,9,1,9,0,9
+df61dc5,assert updated transactions have only changed in like_count field using models.changed_field_names.,preservation,4,9,4,9,4,9,3,9,5,9,6,9,4,9
+df61dc5,"obtain added, updated, removed venmo.Transaction records using models.changed_records, and assert 0 transactions were added or removed.",preservation,9,9,9,9,9,9,9,9,9,9,9,9,9,9
+df61dc5,"obtain added, updated, removed venmo.TransactionLike records using models.changed_records, and assert 0 transaction likes were removed.",preservation,9,9,9,9,9,9,9,9,9,9,9,9,9,9
+fac291d,assert answers match.,answer,2,9,3,9,1,9,1,9,1,9,0,9,0,9
+fac291d,assert no model changes.,preservation,9,9,9,9,9,9,9,9,9,9,9,9,9,9

@@ -1,0 +1,57 @@
+{
+  "at_beijing": "2026-10-18T18:37:03+08:00",
+  "user_authorized": true,
+  "files": {
+    "scripts/train.py": "48f15c5a04304a5b07fd165d1cb630cbe4384c07eac3cca80345ff0bc1f09ede",
+    "scripts/test_loss.py": "a162f9321e7e2bd9cf730dd3b6e69c8c97181de84ec84992d7de662c32a06000",
+    "scripts/validate_data.py": "6dc03b3907f937d995735a67b9c07058351f11b1e47408f4a4fb39daf719de41",
+    "scripts/evaluate.py": "82813f2f469c6f86c55e7a2ceb5fe15479fd6c20990b1c4564d3b429a668cfd0",
+    "scripts/show_progress.py": "7842b9c16d07cacbb9a9bd4f178d88986498845ff21aa0fbb2f284047c62c040",
+    "scripts/experiment_utils.py": "36335ec574a7480874b15579cfd8c88c33abe6b542122805aecd3bd6b2569a83",
+    "scripts/prepare_data.py": "a6fa00d57a2b4fae0eee1caf2c2b1004a14e330ea22fcc4ebf2794d030918305",
+    "scripts/check_sampling.py": "cab4b409d7e1baf30736224dbdd8f87b2616ce1245c203d55ac71df8c3307749",
+    "scripts/update_readme_progress.py": "d1047b0c9a3d11d89371feae0dd6c2d72ee6644d7cea87a13a67989a94ca7777",
+    "scripts/summarize.py": "ee4f44515c88c6b237388e6ab336e61d0ec506869268792e109e09ec11584b11",
+    "scripts/preflight_serving.py": "ac36a7de046119031238ffa7fbf9814361e386283c912669ded8e6fab722c816",
+    "scripts/run_pipeline.py": "ccbb903cb12f79defedbfc44d053f6f2730f820eda1b145eacacc8334b4caf3e",
+    "runtime_code/common.py": "018ea1e22671ec8cf0451ed124bb9d7cf8e000b46e111495a0b22c38a6ac2451",
+    "runtime_code/policy_server.py": "a8d797a3b8071869c2fce09987f5568ed1526d597452cf5516bb7f37743b5283",
+    "runtime_code/resources.py": "82aa5247b46ce9fbbc49acb3f869ecabb9d135f46904a2e28d679d2bb2e2a81b",
+    "runtime_code/rollout_worker.py": "65c2e0563b56b9e712c1709c190c7fe98166343ff53cdd514aaa4a6e7f860ee5",
+    "runtime_code/vllm_uuid_compat/sitecustomize.py": "cbbcc5af61321ae7e98302407802eec4cf93666873bef370e0bef3e440fda3a0",
+    "config/experiment_plan.json": "58fd031c06d65dec1e6724ebd92d8cd88abbe83bd74604cb42d9d435579f9a92",
+    "config/agent_prompt.txt": "c41f7852217d46586047a38f68e88b827cb9dcbe624e9651f9db8301547a534b",
+    "config/dev.txt": "b3a6059ce361c3b3ccc78b1cf54e39d437bf07e04eadd23f2cece7cde77df3c3",
+    "config/train_all.txt": "3aad17d37dd9946e4a8a76fb30a736d435fc09a086caaef2c6354436d576ffd2",
+    "config/scoring_prompt_v6_en_format.txt": "df4e8fb406551f2d90e38bbe83838db181bda18e01d947b236ee10a05c633109",
+    "config/training.json": "c4e0c8359892a6a556c9166b1a1138c2e29366ba9452576e596f53a8af28f31f",
+    "config/evaluation.json": "bcb5f62d6a0abf4b81890315630ae384ee784ef1c809d5d1acc5da44cb4b0fab",
+    "checks/global_sampling.json": "71e12ec86e8e3a57d42b336217fbe153e38c09145594d839ee793691fb4a2c8e",
+    "checks/loss_math.json": "bcdd899703aaf6e621ec2d38c78719d5be7f652d516b9bc645475cfda8de0351",
+    "checks/data_validation.json": "f10eb97f3f0da7edba645227f12e6460034557b0c020065f7de4d7e6810aa69d",
+    "data/DATA_MANIFEST.json": "efc176d43dce13a2562c16821259d244d7c7146467bbef81a7d265d95571cab5",
+    "runtime/execution_scope.json": "d87533fc2f56884add0d721c5b66ea54579f6f04e3c5c8647e5da5fe3d3be94a",
+    "references/approved_plan_snapshot.md": "ac4fb619497f71dfaa87f83e39af19e7568eb087f8394ce08608b8119df8ea23"
+  },
+  "training_arms": [
+    "drop_r1",
+    "drop_r2",
+    "drop_r3",
+    "drop_r4",
+    "drop_r5",
+    "drop_r6",
+    "drop_r8"
+  ],
+  "seeds": [
+    20261017
+  ],
+  "aliases": {
+    "drop_r7": "drop_r5"
+  },
+  "steps_per_run": 1358,
+  "updates_per_run": 679,
+  "epochs": 1,
+  "score_only": true,
+  "no_quality_filters": true,
+  "single_gpu": "GPU-2044de33-9504-3cdf-451a-e9196cbdb21a"
+}

@@ -1,0 +1,386 @@
+{
+  "at_beijing": "2026-10-19T20:14:09+08:00",
+  "old_reports_revalidated": 171,
+  "old_checks_revalidated": 873,
+  "equal_file_hashes": {
+    "scripts/train.py": "48f15c5a04304a5b07fd165d1cb630cbe4384c07eac3cca80345ff0bc1f09ede",
+    "runtime_code/rollout_worker.py": "65c2e0563b56b9e712c1709c190c7fe98166343ff53cdd514aaa4a6e7f860ee5",
+    "runtime_code/policy_server.py": "8cf241e3cea0647087d7e1613a8b7ca6849a7b856e58c2ee1589b82edb417b8d",
+    "config/agent_prompt.txt": "c41f7852217d46586047a38f68e88b827cb9dcbe624e9651f9db8301547a534b",
+    "config/dev.txt": "b3a6059ce361c3b3ccc78b1cf54e39d437bf07e04eadd23f2cece7cde77df3c3",
+    "config/scoring_prompt_v6_en_format.txt": "df4e8fb406551f2d90e38bbe83838db181bda18e01d947b236ee10a05c633109",
+    "references/step_labels.csv": "e6e8611704ff2bf75b3d0f0f28ebe04c1995883a8db211a69e4cdcbf3a8b5463"
+  },
+  "same_training_recipe_except_scope_and_budget": true,
+  "same_agent_and_evaluation_settings": true,
+  "eval_runner_difference": "arm/seed validation and 855->config update count; evaluation seed remains 100",
+  "device_difference": "old all seeds on GPU1; current third seed on GPU0",
+  "per_seed": [
+    {
+      "seed": 20261015,
+      "old_samples": 1710,
+      "new_samples": 1358,
+      "omitted": 352,
+      "old_updates": 855,
+      "new_updates": 679,
+      "same_initial_adapter": true,
+      "subset_metadata_identical": true,
+      "old_successes": 10,
+      "old_macro": 0.5190685045948203,
+      "old_supervised_tokens": 131957,
+      "new_supervised_tokens": 104788,
+      "omitted_R5_P": 1,
+      "omitted_R7_P": 1
+    },
+    {
+      "seed": 20261016,
+      "old_samples": 1710,
+      "new_samples": 1358,
+      "omitted": 352,
+      "old_updates": 855,
+      "new_updates": 679,
+      "same_initial_adapter": true,
+      "subset_metadata_identical": true,
+      "old_successes": 8,
+      "old_macro": 0.473266499582289,
+      "old_supervised_tokens": 131957,
+      "new_supervised_tokens": 104935,
+      "omitted_R5_P": 2,
+      "omitted_R7_P": 0
+    },
+    {
+      "seed": 20261017,
+      "old_samples": 1710,
+      "new_samples": 1358,
+      "omitted": 352,
+      "old_updates": 855,
+      "new_updates": 679,
+      "same_initial_adapter": true,
+      "subset_metadata_identical": true,
+      "old_successes": 12,
+      "old_macro": 0.5390559732664996,
+      "old_supervised_tokens": 131957,
+      "new_supervised_tokens": 104386,
+      "omitted_R5_P": 2,
+      "omitted_R7_P": 0
+    }
+  ],
+  "new_vs_old_gains": 105,
+  "new_vs_old_losses": 191,
+  "new_vs_old_net_checks": -86,
+  "categories": [
+    {
+      "category": "target_set_mapping",
+      "name": "完整名单与对应关系",
+      "checks": 180,
+      "old_passes": 42,
+      "new_passes": 10,
+      "gains": 5,
+      "losses": 37,
+      "net": -32,
+      "seed_net": [
+        -9,
+        -10,
+        -13
+      ]
+    },
+    {
+      "category": "local_content_identity",
+      "name": "具体内容与对象",
+      "checks": 117,
+      "old_passes": 40,
+      "new_passes": 32,
+      "gains": 27,
+      "losses": 35,
+      "net": -8,
+      "seed_net": [
+        -7,
+        11,
+        -12
+      ]
+    },
+    {
+      "category": "model_scope",
+      "name": "改动的数据类型",
+      "checks": 117,
+      "old_passes": 54,
+      "new_passes": 41,
+      "gains": 24,
+      "losses": 37,
+      "net": -13,
+      "seed_net": [
+        -3,
+        -2,
+        -8
+      ]
+    },
+    {
+      "category": "record_counts",
+      "name": "新增、修改、删除的数量",
+      "checks": 54,
+      "old_passes": 21,
+      "new_passes": 17,
+      "gains": 12,
+      "losses": 16,
+      "net": -4,
+      "seed_net": [
+        -4,
+        5,
+        -5
+      ]
+    },
+    {
+      "category": "selection_constraints",
+      "name": "操作对象是否符合条件",
+      "checks": 54,
+      "old_passes": 18,
+      "new_passes": 19,
+      "gains": 12,
+      "losses": 11,
+      "net": 1,
+      "seed_net": [
+        2,
+        -3,
+        2
+      ]
+    },
+    {
+      "category": "preservation",
+      "name": "不该改的内容是否保留",
+      "checks": 180,
+      "old_passes": 166,
+      "new_passes": 164,
+      "gains": 7,
+      "losses": 9,
+      "net": -2,
+      "seed_net": [
+        1,
+        0,
+        -3
+      ]
+    },
+    {
+      "category": "answer_null",
+      "name": "按要求提交空答案",
+      "checks": 117,
+      "old_passes": 51,
+      "new_passes": 29,
+      "gains": 15,
+      "losses": 37,
+      "net": -22,
+      "seed_net": [
+        -5,
+        -5,
+        -12
+      ]
+    },
+    {
+      "category": "answer_value",
+      "name": "实际答案是否正确",
+      "checks": 54,
+      "old_passes": 14,
+      "new_passes": 8,
+      "gains": 3,
+      "losses": 9,
+      "net": -6,
+      "seed_net": [
+        -3,
+        1,
+        -4
+      ]
+    }
+  ],
+  "families": [
+    {
+      "family": "0d8a4ee",
+      "old_macro": 0.5777777777777778,
+      "new_macro": 0.35555555555555557,
+      "old_successes": 0,
+      "new_successes": 0,
+      "old_passes": 26,
+      "new_passes": 16,
+      "net_checks": -10
+    },
+    {
+      "family": "23cf851",
+      "old_macro": 0.8333333333333334,
+      "new_macro": 0.7222222222222222,
+      "old_successes": 6,
+      "new_successes": 4,
+      "old_passes": 15,
+      "new_passes": 13,
+      "net_checks": -2
+    },
+    {
+      "family": "37a8675",
+      "old_macro": 0.12962962962962962,
+      "new_macro": 0.12962962962962962,
+      "old_successes": 0,
+      "new_successes": 0,
+      "old_passes": 7,
+      "new_passes": 7,
+      "net_checks": 0
+    },
+    {
+      "family": "383cbac",
+      "old_macro": 0.5,
+      "new_macro": 0.5,
+      "old_successes": 0,
+      "new_successes": 0,
+      "old_passes": 9,
+      "new_passes": 9,
+      "net_checks": 0
+    },
+    {
+      "family": "396c5a2",
+      "old_macro": 0.20370370370370372,
+      "new_macro": 0.2962962962962963,
+      "old_successes": 1,
+      "new_successes": 1,
+      "old_passes": 11,
+      "new_passes": 16,
+      "net_checks": 5
+    },
+    {
+      "family": "3ab5b8b",
+      "old_macro": 0.4074074074074074,
+      "new_macro": 0.3888888888888889,
+      "old_successes": 0,
+      "new_successes": 0,
+      "old_passes": 22,
+      "new_passes": 21,
+      "net_checks": -1
+    },
+    {
+      "family": "4ec8de5",
+      "old_macro": 0.5,
+      "new_macro": 0.5,
+      "old_successes": 0,
+      "new_successes": 0,
+      "old_passes": 9,
+      "new_passes": 9,
+      "net_checks": 0
+    },
+    {
+      "family": "4fab96f",
+      "old_macro": 0.2222222222222222,
+      "new_macro": 0.18055555555555555,
+      "old_successes": 0,
+      "new_successes": 0,
+      "old_passes": 16,
+      "new_passes": 13,
+      "net_checks": -3
+    },
+    {
+      "family": "50e1ac9",
+      "old_macro": 0.5,
+      "new_macro": 0.5,
+      "old_successes": 0,
+      "new_successes": 0,
+      "old_passes": 9,
+      "new_passes": 9,
+      "net_checks": 0
+    },
+    {
+      "family": "530b157",
+      "old_macro": 0.3,
+      "new_macro": 0.4,
+      "old_successes": 0,
+      "new_successes": 0,
+      "old_passes": 27,
+      "new_passes": 36,
+      "net_checks": 9
+    },
+    {
+      "family": "57c3486",
+      "old_macro": 0.5111111111111112,
+      "new_macro": 0.6222222222222222,
+      "old_successes": 0,
+      "new_successes": 0,
+      "old_passes": 23,
+      "new_passes": 28,
+      "net_checks": 5
+    },
+    {
+      "family": "6171bbc",
+      "old_macro": 0.5238095238095238,
+      "new_macro": 0.2222222222222222,
+      "old_successes": 0,
+      "new_successes": 0,
+      "old_passes": 33,
+      "new_passes": 14,
+      "net_checks": -19
+    },
+    {
+      "family": "68ee2c9",
+      "old_macro": 0.4666666666666667,
+      "new_macro": 0.2888888888888889,
+      "old_successes": 0,
+      "new_successes": 0,
+      "old_passes": 21,
+      "new_passes": 13,
+      "net_checks": -8
+    },
+    {
+      "family": "6bdbc26",
+      "old_macro": 0.7777777777777778,
+      "new_macro": 0.6666666666666666,
+      "old_successes": 5,
+      "new_successes": 3,
+      "old_passes": 14,
+      "new_passes": 12,
+      "net_checks": -2
+    },
+    {
+      "family": "6c2c621",
+      "old_macro": 0.4305555555555556,
+      "new_macro": 0.2222222222222222,
+      "old_successes": 2,
+      "new_successes": 0,
+      "old_passes": 31,
+      "new_passes": 16,
+      "net_checks": -15
+    },
+    {
+      "family": "b119b1f",
+      "old_macro": 0.6851851851851852,
+      "new_macro": 0.4444444444444444,
+      "old_successes": 4,
+      "new_successes": 4,
+      "old_passes": 37,
+      "new_passes": 24,
+      "net_checks": -13
+    },
+    {
+      "family": "d4e9306",
+      "old_macro": 0.9074074074074074,
+      "new_macro": 0.3148148148148148,
+      "old_successes": 8,
+      "new_successes": 1,
+      "old_passes": 49,
+      "new_passes": 17,
+      "net_checks": -32
+    },
+    {
+      "family": "df61dc5",
+      "old_macro": 0.5555555555555556,
+      "new_macro": 0.5873015873015873,
+      "old_successes": 1,
+      "new_successes": 1,
+      "old_passes": 35,
+      "new_passes": 37,
+      "net_checks": 2
+    },
+    {
+      "family": "fac291d",
+      "old_macro": 0.6666666666666666,
+      "new_macro": 0.5555555555555556,
+      "old_successes": 3,
+      "new_successes": 1,
+      "old_passes": 12,
+      "new_passes": 10,
+      "net_checks": -2
+    }
+  ],
+  "causal_limit": "Cross-budget observation jointly changes unique samples, optimizer updates, ordering, and third-seed device; not an isolated rule-deletion comparison."
+}

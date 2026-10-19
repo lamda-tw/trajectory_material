@@ -1,0 +1,716 @@
+{
+  "status": "planning_only_cpu_audit_no_training_or_sampling",
+  "source": "experiments/2026-10-16_appworld_rubric_selection_ablation/references/step_labels.csv",
+  "source_sha256": "e6e8611704ff2bf75b3d0f0f28ebe04c1995883a8db211a69e4cdcbf3a8b5463",
+  "scoring_prompt_sha256": "df4e8fb406551f2d90e38bbe83838db181bda18e01d947b236ee10a05c633109",
+  "source_rows": 11254,
+  "source_trajectories": 540,
+  "source_tasks": 90,
+  "predicates": {
+    "baseline": "P over all 8 dimensions >= 3; no F in any dimension",
+    "complete_removal_primary": "P over remaining 7 dimensions >= 3; no F in remaining 7 dimensions",
+    "relax_F_only_extension": "original P >= 3; F veto retained outside omitted dimensions",
+    "remove_P_only_extension": "P over remaining 7 dimensions >= 3; no F in any dimension",
+    "random": "all source steps, no score predicate",
+    "U_and_N": "unchanged; neither contributes P nor F"
+  },
+  "primary_experiment": {
+    "status": "plan_only_do_not_execute",
+    "training_started": false,
+    "gpu": "physical GPU1 only",
+    "seeds": [
+      20261015,
+      20261016
+    ],
+    "samples_per_run": 1358,
+    "epochs": 1,
+    "gradient_accumulation_steps": 2,
+    "updates_per_run": 679,
+    "sampling": "global uniform without replacement; only score predicates; no extra filters",
+    "excluded_training_arms": [
+      "zerofail3",
+      "random"
+    ],
+    "comparison_reference": "drop_r5: its candidate ID set equals the full eight-rubric pool; no extra baseline run",
+    "reuse_policy": "drop_r7 reuses same-seed NEW drop_r5 selection/order/model/evaluation; never old 1710-step adapters",
+    "report_groups": 8,
+    "condition_seed_records": 16,
+    "distinct_recipes": 7,
+    "actual_training_runs": 14,
+    "total_updates": 9506,
+    "dev57_task_rollouts": 798,
+    "same_state_models_including_raw_base": 15,
+    "same_state_generation_calls_at_256_states": 3840,
+    "arms": {
+      "drop_r1": {
+        "candidate_count": 1385,
+        "candidate_id_set_sha256": "04f104a047e6494b3f535e7ae9525f238d6e1edd6a726c1b05e5e7c6f7042321",
+        "alias_of": null,
+        "new_training_runs": 2
+      },
+      "drop_r2": {
+        "candidate_count": 1359,
+        "candidate_id_set_sha256": "860ba865519ac568627ec6a4739d5b6ffdd808de824cadaa62cd3537822c75b8",
+        "alias_of": null,
+        "new_training_runs": 2
+      },
+      "drop_r3": {
+        "candidate_count": 1671,
+        "candidate_id_set_sha256": "b542da36c532b2c7dc2d0be290b36559f6cad66caafa84b6a8cc156178e1a5f7",
+        "alias_of": null,
+        "new_training_runs": 2
+      },
+      "drop_r4": {
+        "candidate_count": 1758,
+        "candidate_id_set_sha256": "2c09abb365b2a7bdf7267e7129fc0d730bcd8144af4b6dd71751beca9d019879",
+        "alias_of": null,
+        "new_training_runs": 2
+      },
+      "drop_r5": {
+        "candidate_count": 1710,
+        "candidate_id_set_sha256": "715c06eed920c203b3169a2e7a92f29447a315aea8c9940a030e9ec7bf995ff9",
+        "alias_of": null,
+        "new_training_runs": 2
+      },
+      "drop_r6": {
+        "candidate_count": 2378,
+        "candidate_id_set_sha256": "505a7926241b84b871afc7659ae083a1d3ace0d1ec2330fb2b9bc522b74d5e90",
+        "alias_of": null,
+        "new_training_runs": 2
+      },
+      "drop_r7": {
+        "candidate_count": 1710,
+        "candidate_id_set_sha256": "715c06eed920c203b3169a2e7a92f29447a315aea8c9940a030e9ec7bf995ff9",
+        "alias_of": "drop_r5",
+        "new_training_runs": 0
+      },
+      "drop_r8": {
+        "candidate_count": 2546,
+        "candidate_id_set_sha256": "967447c57381411157a92bbf8a4eb1efc5e073a5313933ffc995c0bb93368892",
+        "alias_of": null,
+        "new_training_runs": 2
+      }
+    }
+  },
+  "baseline": {
+    "candidate_count": 1710,
+    "baseline_retained": 1710,
+    "added_vs_baseline": 0,
+    "removed_vs_baseline": 0,
+    "same_ids_as_baseline": true,
+    "step_id_set_sha256": "715c06eed920c203b3169a2e7a92f29447a315aea8c9940a030e9ec7bf995ff9",
+    "expected_added_at_1358_uniform_draw": 0.0,
+    "feasible_at_1358_without_replacement": true,
+    "expected_added_at_1710_uniform_draw": 0.0,
+    "feasible_at_1710_without_replacement": true
+  },
+  "baseline_P_count_distribution": {
+    "3": 434,
+    "4": 390,
+    "5": 853,
+    "6": 31,
+    "7": 2
+  },
+  "baseline_steps_with_U": 46,
+  "baseline_P_combinations": [
+    {
+      "P_dimensions": [
+        "R1",
+        "R2",
+        "R3",
+        "R6",
+        "R8"
+      ],
+      "steps": 805
+    },
+    {
+      "P_dimensions": [
+        "R1",
+        "R2",
+        "R8"
+      ],
+      "steps": 359
+    },
+    {
+      "P_dimensions": [
+        "R1",
+        "R2",
+        "R3",
+        "R8"
+      ],
+      "steps": 276
+    },
+    {
+      "P_dimensions": [
+        "R1",
+        "R3",
+        "R8"
+      ],
+      "steps": 66
+    },
+    {
+      "P_dimensions": [
+        "R1",
+        "R3",
+        "R6",
+        "R8"
+      ],
+      "steps": 51
+    },
+    {
+      "P_dimensions": [
+        "R1",
+        "R2",
+        "R6",
+        "R8"
+      ],
+      "steps": 47
+    },
+    {
+      "P_dimensions": [
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "R8"
+      ],
+      "steps": 46
+    },
+    {
+      "P_dimensions": [
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "R6",
+        "R8"
+      ],
+      "steps": 28
+    },
+    {
+      "P_dimensions": [
+        "R1",
+        "R3",
+        "R4",
+        "R8"
+      ],
+      "steps": 13
+    },
+    {
+      "P_dimensions": [
+        "R1",
+        "R6",
+        "R8"
+      ],
+      "steps": 5
+    },
+    {
+      "P_dimensions": [
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "R5",
+        "R8"
+      ],
+      "steps": 2
+    },
+    {
+      "P_dimensions": [
+        "R1",
+        "R3",
+        "R6"
+      ],
+      "steps": 2
+    },
+    {
+      "P_dimensions": [
+        "R1",
+        "R4",
+        "R8"
+      ],
+      "steps": 2
+    },
+    {
+      "P_dimensions": [
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "R5",
+        "R6",
+        "R8"
+      ],
+      "steps": 1
+    },
+    {
+      "P_dimensions": [
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "R6",
+        "R7",
+        "R8"
+      ],
+      "steps": 1
+    },
+    {
+      "P_dimensions": [
+        "R1",
+        "R2",
+        "R3",
+        "R6"
+      ],
+      "steps": 1
+    },
+    {
+      "P_dimensions": [
+        "R1",
+        "R2",
+        "R4",
+        "R6",
+        "R8"
+      ],
+      "steps": 1
+    },
+    {
+      "P_dimensions": [
+        "R1",
+        "R2",
+        "R4",
+        "R8"
+      ],
+      "steps": 1
+    },
+    {
+      "P_dimensions": [
+        "R1",
+        "R3",
+        "R4",
+        "R5",
+        "R6",
+        "R8"
+      ],
+      "steps": 1
+    },
+    {
+      "P_dimensions": [
+        "R1",
+        "R3",
+        "R4",
+        "R6",
+        "R8"
+      ],
+      "steps": 1
+    },
+    {
+      "P_dimensions": [
+        "R1",
+        "R4",
+        "R6",
+        "R8"
+      ],
+      "steps": 1
+    }
+  ],
+  "per_dimension": [
+    {
+      "dimension": "R1",
+      "baseline_labels": {
+        "P": 1710,
+        "F": 0,
+        "U": 0,
+        "N": 0
+      },
+      "baseline_pass_percent": 100.0,
+      "P_decisive_for_baseline_eligibility": 434,
+      "remove_P_only_keep_all_F_vetoes": {
+        "candidate_count": 1276,
+        "baseline_retained": 1276,
+        "added_vs_baseline": 0,
+        "removed_vs_baseline": 434,
+        "same_ids_as_baseline": false,
+        "step_id_set_sha256": "4fb4a699310eae0f738a961e2b8005cfa2d97863cf4b704fee1dc36b0ee9f558",
+        "expected_added_at_1358_uniform_draw": null,
+        "feasible_at_1358_without_replacement": false,
+        "expected_added_at_1710_uniform_draw": null,
+        "feasible_at_1710_without_replacement": false
+      },
+      "relax_F_only": {
+        "candidate_count": 1819,
+        "baseline_retained": 1710,
+        "added_vs_baseline": 109,
+        "removed_vs_baseline": 0,
+        "same_ids_as_baseline": false,
+        "step_id_set_sha256": "82df61c651b6126c6a3fe81238f5ce18052d2a0a042e496c3ea601b7f3b1c84b",
+        "expected_added_at_1358_uniform_draw": 81.37548103353491,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": 102.46838922484882,
+        "feasible_at_1710_without_replacement": true
+      },
+      "remove_dimension_from_P_and_F": {
+        "candidate_count": 1385,
+        "baseline_retained": 1276,
+        "added_vs_baseline": 109,
+        "removed_vs_baseline": 434,
+        "same_ids_as_baseline": false,
+        "step_id_set_sha256": "04f104a047e6494b3f535e7ae9525f238d6e1edd6a726c1b05e5e7c6f7042321",
+        "expected_added_at_1358_uniform_draw": 106.87509025270758,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": null,
+        "feasible_at_1710_without_replacement": false
+      },
+      "standalone_P_candidate_count": 6069
+    },
+    {
+      "dimension": "R2",
+      "baseline_labels": {
+        "P": 1568,
+        "F": 0,
+        "U": 23,
+        "N": 119
+      },
+      "baseline_pass_percent": 91.69590643274854,
+      "P_decisive_for_baseline_eligibility": 359,
+      "remove_P_only_keep_all_F_vetoes": {
+        "candidate_count": 1351,
+        "baseline_retained": 1351,
+        "added_vs_baseline": 0,
+        "removed_vs_baseline": 359,
+        "same_ids_as_baseline": false,
+        "step_id_set_sha256": "438cdd30b2cbac4a27af3a7bd60471e3293f987f0003e095bbdbd626c7fe849b",
+        "expected_added_at_1358_uniform_draw": null,
+        "feasible_at_1358_without_replacement": false,
+        "expected_added_at_1710_uniform_draw": null,
+        "feasible_at_1710_without_replacement": false
+      },
+      "relax_F_only": {
+        "candidate_count": 1718,
+        "baseline_retained": 1710,
+        "added_vs_baseline": 8,
+        "removed_vs_baseline": 0,
+        "same_ids_as_baseline": false,
+        "step_id_set_sha256": "46134e010370b2eaf720800413ac7ce9df7d8a04ea31e714d052e11bfb0f7e34",
+        "expected_added_at_1358_uniform_draw": 6.323632130384167,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": 7.962747380675204,
+        "feasible_at_1710_without_replacement": true
+      },
+      "remove_dimension_from_P_and_F": {
+        "candidate_count": 1359,
+        "baseline_retained": 1351,
+        "added_vs_baseline": 8,
+        "removed_vs_baseline": 359,
+        "same_ids_as_baseline": false,
+        "step_id_set_sha256": "860ba865519ac568627ec6a4739d5b6ffdd808de824cadaa62cd3537822c75b8",
+        "expected_added_at_1358_uniform_draw": 7.9941133186166295,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": null,
+        "feasible_at_1710_without_replacement": false
+      },
+      "standalone_P_candidate_count": 5197
+    },
+    {
+      "dimension": "R3",
+      "baseline_labels": {
+        "P": 1294,
+        "F": 0,
+        "U": 29,
+        "N": 387
+      },
+      "baseline_pass_percent": 75.67251461988305,
+      "P_decisive_for_baseline_eligibility": 68,
+      "remove_P_only_keep_all_F_vetoes": {
+        "candidate_count": 1642,
+        "baseline_retained": 1642,
+        "added_vs_baseline": 0,
+        "removed_vs_baseline": 68,
+        "same_ids_as_baseline": false,
+        "step_id_set_sha256": "179fb893e80be903a001472cbe6f4cf8752f42bb7756bc23b2e066bdc36a2eb2",
+        "expected_added_at_1358_uniform_draw": 0.0,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": null,
+        "feasible_at_1710_without_replacement": false
+      },
+      "relax_F_only": {
+        "candidate_count": 1739,
+        "baseline_retained": 1710,
+        "added_vs_baseline": 29,
+        "removed_vs_baseline": 0,
+        "same_ids_as_baseline": false,
+        "step_id_set_sha256": "5b0024c1231216d9bf49c68c68a24e3d51cbde979dbe904ec5b03d829662f6bb",
+        "expected_added_at_1358_uniform_draw": 22.64634847613571,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": 28.516388729154688,
+        "feasible_at_1710_without_replacement": true
+      },
+      "remove_dimension_from_P_and_F": {
+        "candidate_count": 1671,
+        "baseline_retained": 1642,
+        "added_vs_baseline": 29,
+        "removed_vs_baseline": 68,
+        "same_ids_as_baseline": false,
+        "step_id_set_sha256": "b542da36c532b2c7dc2d0be290b36559f6cad66caafa84b6a8cc156178e1a5f7",
+        "expected_added_at_1358_uniform_draw": 23.56792339916218,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": null,
+        "feasible_at_1710_without_replacement": false
+      },
+      "standalone_P_candidate_count": 6166
+    },
+    {
+      "dimension": "R4",
+      "baseline_labels": {
+        "P": 98,
+        "F": 0,
+        "U": 7,
+        "N": 1605
+      },
+      "baseline_pass_percent": 5.730994152046784,
+      "P_decisive_for_baseline_eligibility": 2,
+      "remove_P_only_keep_all_F_vetoes": {
+        "candidate_count": 1708,
+        "baseline_retained": 1708,
+        "added_vs_baseline": 0,
+        "removed_vs_baseline": 2,
+        "same_ids_as_baseline": false,
+        "step_id_set_sha256": "4e9be6d8ea15eeeb09c3a492fa8f73c7fe51112df7fd37e7023302b3ae7d43a7",
+        "expected_added_at_1358_uniform_draw": 0.0,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": null,
+        "feasible_at_1710_without_replacement": false
+      },
+      "relax_F_only": {
+        "candidate_count": 1760,
+        "baseline_retained": 1710,
+        "added_vs_baseline": 50,
+        "removed_vs_baseline": 0,
+        "same_ids_as_baseline": false,
+        "step_id_set_sha256": "3eb16081bc5106adaf04e7880e6dda41c3f7ef504c31af608e66de3d825d7cc5",
+        "expected_added_at_1358_uniform_draw": 38.57954545454545,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": 48.57954545454545,
+        "feasible_at_1710_without_replacement": true
+      },
+      "remove_dimension_from_P_and_F": {
+        "candidate_count": 1758,
+        "baseline_retained": 1708,
+        "added_vs_baseline": 50,
+        "removed_vs_baseline": 2,
+        "same_ids_as_baseline": false,
+        "step_id_set_sha256": "2c09abb365b2a7bdf7267e7129fc0d730bcd8144af4b6dd71751beca9d019879",
+        "expected_added_at_1358_uniform_draw": 38.623435722411834,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": 48.63481228668942,
+        "feasible_at_1710_without_replacement": true
+      },
+      "standalone_P_candidate_count": 371
+    },
+    {
+      "dimension": "R5",
+      "baseline_labels": {
+        "P": 4,
+        "F": 0,
+        "U": 0,
+        "N": 1706
+      },
+      "baseline_pass_percent": 0.23391812865497075,
+      "P_decisive_for_baseline_eligibility": 0,
+      "remove_P_only_keep_all_F_vetoes": {
+        "candidate_count": 1710,
+        "baseline_retained": 1710,
+        "added_vs_baseline": 0,
+        "removed_vs_baseline": 0,
+        "same_ids_as_baseline": true,
+        "step_id_set_sha256": "715c06eed920c203b3169a2e7a92f29447a315aea8c9940a030e9ec7bf995ff9",
+        "expected_added_at_1358_uniform_draw": 0.0,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": 0.0,
+        "feasible_at_1710_without_replacement": true
+      },
+      "relax_F_only": {
+        "candidate_count": 1710,
+        "baseline_retained": 1710,
+        "added_vs_baseline": 0,
+        "removed_vs_baseline": 0,
+        "same_ids_as_baseline": true,
+        "step_id_set_sha256": "715c06eed920c203b3169a2e7a92f29447a315aea8c9940a030e9ec7bf995ff9",
+        "expected_added_at_1358_uniform_draw": 0.0,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": 0.0,
+        "feasible_at_1710_without_replacement": true
+      },
+      "remove_dimension_from_P_and_F": {
+        "candidate_count": 1710,
+        "baseline_retained": 1710,
+        "added_vs_baseline": 0,
+        "removed_vs_baseline": 0,
+        "same_ids_as_baseline": true,
+        "step_id_set_sha256": "715c06eed920c203b3169a2e7a92f29447a315aea8c9940a030e9ec7bf995ff9",
+        "expected_added_at_1358_uniform_draw": 0.0,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": 0.0,
+        "feasible_at_1710_without_replacement": true
+      },
+      "standalone_P_candidate_count": 91
+    },
+    {
+      "dimension": "R6",
+      "baseline_labels": {
+        "P": 945,
+        "F": 0,
+        "U": 0,
+        "N": 765
+      },
+      "baseline_pass_percent": 55.26315789473684,
+      "P_decisive_for_baseline_eligibility": 7,
+      "remove_P_only_keep_all_F_vetoes": {
+        "candidate_count": 1703,
+        "baseline_retained": 1703,
+        "added_vs_baseline": 0,
+        "removed_vs_baseline": 7,
+        "same_ids_as_baseline": false,
+        "step_id_set_sha256": "d2996e23849e12cc8f238ff10e32c646cced16bfa81fad3846b822a4c937581b",
+        "expected_added_at_1358_uniform_draw": 0.0,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": null,
+        "feasible_at_1710_without_replacement": false
+      },
+      "relax_F_only": {
+        "candidate_count": 2385,
+        "baseline_retained": 1710,
+        "added_vs_baseline": 675,
+        "removed_vs_baseline": 0,
+        "same_ids_as_baseline": false,
+        "step_id_set_sha256": "31096e71d8677c44d017797ed1d715d44d1de16f0f62f7e3e060888716fe5170",
+        "expected_added_at_1358_uniform_draw": 384.33962264150944,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": 483.9622641509434,
+        "feasible_at_1710_without_replacement": true
+      },
+      "remove_dimension_from_P_and_F": {
+        "candidate_count": 2378,
+        "baseline_retained": 1703,
+        "added_vs_baseline": 675,
+        "removed_vs_baseline": 7,
+        "same_ids_as_baseline": false,
+        "step_id_set_sha256": "505a7926241b84b871afc7659ae083a1d3ace0d1ec2330fb2b9bc522b74d5e90",
+        "expected_added_at_1358_uniform_draw": 385.470984020185,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": 485.38687973086627,
+        "feasible_at_1710_without_replacement": true
+      },
+      "standalone_P_candidate_count": 3270
+    },
+    {
+      "dimension": "R7",
+      "baseline_labels": {
+        "P": 1,
+        "F": 0,
+        "U": 0,
+        "N": 1709
+      },
+      "baseline_pass_percent": 0.05847953216374269,
+      "P_decisive_for_baseline_eligibility": 0,
+      "remove_P_only_keep_all_F_vetoes": {
+        "candidate_count": 1710,
+        "baseline_retained": 1710,
+        "added_vs_baseline": 0,
+        "removed_vs_baseline": 0,
+        "same_ids_as_baseline": true,
+        "step_id_set_sha256": "715c06eed920c203b3169a2e7a92f29447a315aea8c9940a030e9ec7bf995ff9",
+        "expected_added_at_1358_uniform_draw": 0.0,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": 0.0,
+        "feasible_at_1710_without_replacement": true
+      },
+      "relax_F_only": {
+        "candidate_count": 1710,
+        "baseline_retained": 1710,
+        "added_vs_baseline": 0,
+        "removed_vs_baseline": 0,
+        "same_ids_as_baseline": true,
+        "step_id_set_sha256": "715c06eed920c203b3169a2e7a92f29447a315aea8c9940a030e9ec7bf995ff9",
+        "expected_added_at_1358_uniform_draw": 0.0,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": 0.0,
+        "feasible_at_1710_without_replacement": true
+      },
+      "remove_dimension_from_P_and_F": {
+        "candidate_count": 1710,
+        "baseline_retained": 1710,
+        "added_vs_baseline": 0,
+        "removed_vs_baseline": 0,
+        "same_ids_as_baseline": true,
+        "step_id_set_sha256": "715c06eed920c203b3169a2e7a92f29447a315aea8c9940a030e9ec7bf995ff9",
+        "expected_added_at_1358_uniform_draw": 0.0,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": 0.0,
+        "feasible_at_1710_without_replacement": true
+      },
+      "standalone_P_candidate_count": 43
+    },
+    {
+      "dimension": "R8",
+      "baseline_labels": {
+        "P": 1707,
+        "F": 0,
+        "U": 3,
+        "N": 0
+      },
+      "baseline_pass_percent": 99.82456140350877,
+      "P_decisive_for_baseline_eligibility": 432,
+      "remove_P_only_keep_all_F_vetoes": {
+        "candidate_count": 1278,
+        "baseline_retained": 1278,
+        "added_vs_baseline": 0,
+        "removed_vs_baseline": 432,
+        "same_ids_as_baseline": false,
+        "step_id_set_sha256": "cda5b67c4e2a9dba95abc6a0510e4efe38e0f1f77adc134318d2c38f9b6a2194",
+        "expected_added_at_1358_uniform_draw": null,
+        "feasible_at_1358_without_replacement": false,
+        "expected_added_at_1710_uniform_draw": null,
+        "feasible_at_1710_without_replacement": false
+      },
+      "relax_F_only": {
+        "candidate_count": 2978,
+        "baseline_retained": 1710,
+        "added_vs_baseline": 1268,
+        "removed_vs_baseline": 0,
+        "same_ids_as_baseline": false,
+        "step_id_set_sha256": "d70bfb830da2811568883668f86a2a6feaf9b0475eaa0fe30c8752e339341a06",
+        "expected_added_at_1358_uniform_draw": 578.2216252518468,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": 728.099395567495,
+        "feasible_at_1710_without_replacement": true
+      },
+      "remove_dimension_from_P_and_F": {
+        "candidate_count": 2546,
+        "baseline_retained": 1278,
+        "added_vs_baseline": 1268,
+        "removed_vs_baseline": 432,
+        "same_ids_as_baseline": false,
+        "step_id_set_sha256": "967447c57381411157a92bbf8a4eb1efc5e073a5313933ffc995c0bb93368892",
+        "expected_added_at_1358_uniform_draw": 676.3330714846819,
+        "feasible_at_1358_without_replacement": true,
+        "expected_added_at_1710_uniform_draw": 851.6417910447761,
+        "feasible_at_1710_without_replacement": true
+      },
+      "standalone_P_candidate_count": 3671
+    }
+  ],
+  "relax_R6_R8": {
+    "candidate_count": 3949,
+    "baseline_retained": 1710,
+    "added_vs_baseline": 2239,
+    "removed_vs_baseline": 0,
+    "same_ids_as_baseline": false,
+    "step_id_set_sha256": "a0774b07616ccb8c0b04699fbe2aed88f327c643b301048d03783f54b464b634",
+    "expected_added_at_1358_uniform_draw": 769.9574575841986,
+    "feasible_at_1358_without_replacement": true,
+    "expected_added_at_1710_uniform_draw": 969.5340592555077,
+    "feasible_at_1710_without_replacement": true
+  },
+  "additional_only_when_both_relaxed": 296
+}

@@ -1,0 +1,64 @@
+{
+  "version": "appworld-step-v7",
+  "date": "2026-10-19",
+  "status": "candidate_not_semantically_validated",
+  "source_prompts": {
+    "prompt_v6.txt": "6e12ecb1afdf48b7e6bd6720becd3ed923a61d7043b061e5aab65015d19dec71",
+    "prompt_v6_en.txt": "35cff3b00166965ff039cbd0c9a5a57613071fd150d4793321c19ec6fc2ecd4c",
+    "prompt_v6_en_format.txt": "df4e8fb406551f2d90e38bbe83838db181bda18e01d947b236ee10a05c633109"
+  },
+  "artifacts": {
+    "prompt_v7.txt": "9f118519e5736de20481e89568b5b22a9b5a3d7c1fece2a125673722227b67cc",
+    "prompt_v7_en.txt": "2eb29f25a4cc9a3bcf33c120e5f3c0bba092be42e06ad7b44b08a64157d91502",
+    "output_schema_v7.json": "cd58ac0772895c6df273b7c63dce8cfc3a0825aecf47dd1a55496df25d5a6f8e",
+    "validate_output_v7.py": "6893ce87ed123f0a3a501e6f4225d5c9a0fdddfdcb6d39fcf281f2c35fefa9de"
+  },
+  "basis": "Post-hoc ZeroFail3 evaluator/trajectory review in experiments/2026-10-16_appworld_rubric_selection_ablation/REPORT.md; not independent evidence or a causal result from the running dimension ablation.",
+  "changed_rubrics": [
+    "R2",
+    "R4",
+    "R5",
+    "R6",
+    "R7"
+  ],
+  "unchanged_rubrics": [
+    "R1",
+    "R3",
+    "R8"
+  ],
+  "output_contract": "Same ordered [step_id, eight PFUN labels, reason] rows. Version v7; both languages aim for <=45 reason characters including spaces, hard cap 60. No separate format prompt.",
+  "input_adapter": "prepare_input_v3.py unchanged",
+  "new_judge_calls": 0,
+  "semantic_validation": "not_run",
+  "new_training_runs": 0,
+  "new_evaluation_runs": 0,
+  "length_checks": [
+    {
+      "source": "prompt_v6.txt",
+      "candidate": "prompt_v7.txt",
+      "source_characters": 2342,
+      "candidate_characters": 2328,
+      "source_sha256": "6e12ecb1afdf48b7e6bd6720becd3ed923a61d7043b061e5aab65015d19dec71",
+      "candidate_sha256": "9f118519e5736de20481e89568b5b22a9b5a3d7c1fece2a125673722227b67cc",
+      "source_reference_tokens": 1379,
+      "candidate_reference_tokens": 1377
+    },
+    {
+      "source": "prompt_v6_en.txt",
+      "candidate": "prompt_v7_en.txt",
+      "source_characters": 9222,
+      "candidate_characters": 9044,
+      "source_sha256": "35cff3b00166965ff039cbd0c9a5a57613071fd150d4793321c19ec6fc2ecd4c",
+      "candidate_sha256": "2eb29f25a4cc9a3bcf33c120e5f3c0bba092be42e06ad7b44b08a64157d91502",
+      "source_reference_tokens": 1689,
+      "candidate_reference_tokens": 1662
+    }
+  ],
+  "tokenizer_reference": {
+    "path": "/root/autodl-tmp/models/Qwen3-8B/tokenizer.json",
+    "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "add_special_tokens": false,
+    "scope": "Fixed prompt only, before trajectory substitution; not the judge model tokenizer."
+  },
+  "scope": "New candidate only. Existing prompts, schemas, labels, experiment configuration and GPU1 jobs are unchanged. No automatic switch to v7."
+}

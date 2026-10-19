@@ -7,7 +7,7 @@ def mean(a,k):return st.mean(r[k] for r in a)
 def ratio(a,k):return sum(r[k] for r in a)/sum(r['steps'] for r in a)
 lines=['''# Rubric 选样对训练结果与模型行为的影响
 
-2026-10-18 最终分析。15 次正式训练及 DEV57 均已完成；每组 3 个 seed，每次 1 epoch、1,710 个步骤、855 次更新。只分析全池均匀抽样的正式运行，排除 archive/rejected_task_quota_20261016 中的旧配额试验。
+2026-10-18 最终分析；2026-10-19 补充官方 evaluator 逐检查项对比。15 次正式训练及 DEV57 均已完成；每组 3 个 seed，每次 1 epoch、1,710 个步骤、855 次更新。只分析全池均匀抽样的正式运行，排除 archive/rejected_task_quota_20261016 中的旧配额试验。
 
 ## 核心结论
 
@@ -15,7 +15,9 @@ lines=['''# Rubric 选样对训练结果与模型行为的影响
 
 选样机制可以直接回答：规则显著改变了含错误标签的比例、文档查询、恢复相关标签、轨迹位置、上下文长度和业务动作覆盖。它不是单纯选出“同一种动作的更好版本”。
 
-学习机制目前有行为证据与具体案例，但尚无因果闭环。ZeroFail3 减少了执行错误和重复代码、增加了成功任务；然而 Net3/Pass4 的执行错误率更低，任务表现却不如 ZeroFail3，说明局部可执行性不足以解释最终收益。HighFail3 的错误与重复明显恶化，但任务成功率未低于本次原始模型基线。
+学习机制目前有行为证据与具体案例，但尚无因果闭环。ZeroFail3 减少了执行错误和重复代码、增加了成功任务；然而 Net3/Pass4 的执行错误率更低，任务表现却不如 ZeroFail3，说明局部可执行性不足以解释最终收益。HighFail3 的错误与重复明显恶化，任务成功率未低于本次原始模型基线，但细粒度检查通过率低于原始模型。
+
+新增 evaluator 对比：ZeroFail3 的逐题平均检查通过率为 51.05%，Random 为 40.75%（+10.29 pp）；两组都未完成整题的 133 个题次中仍净增 36 条通过检查。Net3 虽然整题成功率与 Random 相同，检查通过率却低 1.99 pp。具体 requirement 的改善和退化见第 1.1 节。进一步分类显示，完整名单与对应关系净增 31 条（其中 24 条集中于 d4e9306），具体内容与对象净增 21 条，“操作对象是否符合条件”检查反而净减 4 条。选样上 R6/R8 违规是零 F 门槛的主要排除来源，但尚不能归因于某一个 rubric 分项；详见第 1.2 节。
 
 ## 1 选择效果
 
@@ -113,5 +115,8 @@ seed 20261015 的 d4e9306_2 要求关注 Spotify 所有曾点赞歌曲与专辑�
 ''']
 p=R/'REPORT.md';backup=R/'references/automatic_report_before_final_analysis.md'
 if not backup.exists():shutil.copy2(p,backup)
-p.write_text('\n'.join(lines))
+section = (O/'evaluator_report_section.md').read_text()
+section += '\n' + (O/'evaluator_rubric_report_section.md').read_text()
+report = '\n'.join(lines).replace('## 2 选择机制', section + '\n## 2 选择机制')
+p.write_text(report)
 print('Wrote',p)

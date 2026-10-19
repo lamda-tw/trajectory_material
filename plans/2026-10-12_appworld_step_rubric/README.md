@@ -1,5 +1,7 @@
 # AppWorld 逐步 rubric 评价
 
+2026-10-19 新增 **v7 候选**：[中文 prompt](prompt_v7.txt)、[英文 prompt](prompt_v7_en.txt)。两份均不比对应 v6 更长，输出约束直接写在 prompt 内，不单设 format 版。配套 [schema](output_schema_v7.json) 与 [本地校验器](validate_output_v7.py)，继续使用 v3 输入适配器。仅完成本地格式和长度校验，尚未进行 judge 评分验证；既有实验不自动切换。变更、长度和限制见 [v7 版本记录](VERSIONS.md#v72026-10-19分项边界澄清候选) 与 [验证记录](v7_local_validation.json)。下文保留历史版本说明。
+
 既有540条评分的冻结版本为 **v5**。已完成原始 Qwen3-8B 的全部 540 条训练集轨迹、11,254 步评分，纯评分用时 1 小时 52 分 51 秒；可作为离线诊断与候选 step 筛选基线。没有证明总体准确率超过 95%，不直接视为精确 reward 或训练真值。历史 pilot 为 12 条、201 步及两次重复调用。
 
 一条完整轨迹调用一次，成功和失败轨迹均逐步评价R1—R8；保留P/F/U/N与一句短依据，不计算总分、reward或固定权重，不设audit/batch模式。v5共2,111字符，适用边界直接写在唯一Evaluation Rubrics模块中。

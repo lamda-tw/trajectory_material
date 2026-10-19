@@ -1,0 +1,58 @@
+{
+  "at_beijing": "2026-10-18T18:13:05+08:00",
+  "user_authorized": true,
+  "files": {
+    "scripts/train.py": "48f15c5a04304a5b07fd165d1cb630cbe4384c07eac3cca80345ff0bc1f09ede",
+    "scripts/test_loss.py": "a162f9321e7e2bd9cf730dd3b6e69c8c97181de84ec84992d7de662c32a06000",
+    "scripts/validate_data.py": "6dc03b3907f937d995735a67b9c07058351f11b1e47408f4a4fb39daf719de41",
+    "scripts/evaluate.py": "82813f2f469c6f86c55e7a2ceb5fe15479fd6c20990b1c4564d3b429a668cfd0",
+    "scripts/show_progress.py": "7842b9c16d07cacbb9a9bd4f178d88986498845ff21aa0fbb2f284047c62c040",
+    "scripts/experiment_utils.py": "1f2cc63401862f75192b947ba77c2c587bc9bdd25dfd15ad8d1f3435d0a77b50",
+    "scripts/prepare_data.py": "b2559c807590e178fc86002148aef06a44ffd6906eb502f870745a3715d40a49",
+    "scripts/check_sampling.py": "68e92b70dee61edb97f3be76b7e8200eda1598a56338b8523e1572217422a440",
+    "scripts/update_readme_progress.py": "2fe5319f929ebbb98699d9ff7383aec6c2cd25931e820737934520d95ff81ee2",
+    "scripts/summarize.py": "e97d2ca26ce0f8f51ffbeaa5df0153b08131160dbbe20302cc03b23b795dece7",
+    "scripts/preflight_serving.py": "ad1b6ca5960dc1ab2e79eaaa8ee859bb946fc0d3154b4b7ec60d2a21cfc7e076",
+    "scripts/run_pipeline.py": "ea9d5591657e05783c70bb721ce978cb0e4015a949613aa2f1463e5181561888",
+    "runtime_code/common.py": "018ea1e22671ec8cf0451ed124bb9d7cf8e000b46e111495a0b22c38a6ac2451",
+    "runtime_code/policy_server.py": "8cf241e3cea0647087d7e1613a8b7ca6849a7b856e58c2ee1589b82edb417b8d",
+    "runtime_code/resources.py": "82aa5247b46ce9fbbc49acb3f869ecabb9d135f46904a2e28d679d2bb2e2a81b",
+    "runtime_code/rollout_worker.py": "65c2e0563b56b9e712c1709c190c7fe98166343ff53cdd514aaa4a6e7f860ee5",
+    "runtime_code/vllm_uuid_compat/sitecustomize.py": "6e42e25f3e83ec3ca792f7dfbce69a1aa6a06819aaaf2c9ff516e1d8186d83e5",
+    "config/experiment_plan.json": "b2f53edd620fa1cbbaaf43adb1c591a1c1c20e9438afb3d447bb74193a3e4d5c",
+    "config/agent_prompt.txt": "c41f7852217d46586047a38f68e88b827cb9dcbe624e9651f9db8301547a534b",
+    "config/dev.txt": "b3a6059ce361c3b3ccc78b1cf54e39d437bf07e04eadd23f2cece7cde77df3c3",
+    "config/train_all.txt": "3aad17d37dd9946e4a8a76fb30a736d435fc09a086caaef2c6354436d576ffd2",
+    "config/scoring_prompt_v6_en_format.txt": "df4e8fb406551f2d90e38bbe83838db181bda18e01d947b236ee10a05c633109",
+    "config/training.json": "be95336fc87bac81f6595a4ed352a4005f14cfdb8a54c7caa7e38a3beb4ef596",
+    "config/evaluation.json": "1c1132896b36e54293ec66ec564491561d32cd3d600005b3dc37af63aed2cfba",
+    "checks/global_sampling.json": "4e128e79ff781cfa34259d8dd6498c113b17394a97019881355357e404628269",
+    "checks/loss_math.json": "bcdd899703aaf6e621ec2d38c78719d5be7f652d516b9bc645475cfda8de0351",
+    "checks/data_validation.json": "109d259620432d54b144a1cc1a0a91ba6aba8af568751d9ffb63c3be6b569702",
+    "data/DATA_MANIFEST.json": "2726453911078f5d76bdc6fb51ea1fadd35007dade6324699d3e6335e1934217",
+    "runtime/execution_scope.json": "aa97ef48e384da11c85752981d9fcd15037e84cd9ac8ac1f3ae28b7bc6cc5e67",
+    "references/approved_plan_snapshot.md": "3e39322789a2406699297ce079b2842d04ec95ef27692e2f32470a6193ab87fa"
+  },
+  "training_arms": [
+    "drop_r1",
+    "drop_r2",
+    "drop_r3",
+    "drop_r4",
+    "drop_r5",
+    "drop_r6",
+    "drop_r8"
+  ],
+  "seeds": [
+    20261015,
+    20261016
+  ],
+  "aliases": {
+    "drop_r7": "drop_r5"
+  },
+  "steps_per_run": 1358,
+  "updates_per_run": 679,
+  "epochs": 1,
+  "score_only": true,
+  "no_quality_filters": true,
+  "single_gpu": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501"
+}

@@ -1,0 +1,45 @@
+{
+  "authorized_at_beijing": "2026-10-18T18:34:46+08:00",
+  "user_instruction": "另外GPU0我确认无人使用，可以在GPU0上加一轮实验，用一个不同的seed？你可以做到吗？",
+  "all_seeds": [
+    20261015,
+    20261016,
+    20261017
+  ],
+  "lanes": [
+    {
+      "root": ".",
+      "physical_gpu": 1,
+      "seeds": [
+        20261015,
+        20261016
+      ],
+      "port": 8178,
+      "actual_runs": 14
+    },
+    {
+      "root": "gpu0_seed_20261017",
+      "physical_gpu": 0,
+      "seeds": [
+        20261017
+      ],
+      "port": 8180,
+      "actual_runs": 7
+    }
+  ],
+  "actual_training_runs": 21,
+  "report_condition_seed_records": 24,
+  "total_updates": 14259,
+  "dev57_task_rollouts": 1197,
+  "same_state_models_including_raw_base": 22,
+  "same_state_generation_calls_if_run": 5632,
+  "same_state_diagnostics": "not_started",
+  "samples_per_run": 1358,
+  "epochs": 1,
+  "score_only": true,
+  "aliases": {
+    "drop_r7": "drop_r5"
+  },
+  "gpu1_frozen_manifest_sha256": "7caee4deac2c1fc22ce2518af9d7d5cf2b3d552f7ab0958824c33c2bfd18b1b3",
+  "configuration_authority": "GPU1 config remains frozen for the running two-seed lane; this extension plus isolated GPU0 config define the current three-seed scope."
+}
