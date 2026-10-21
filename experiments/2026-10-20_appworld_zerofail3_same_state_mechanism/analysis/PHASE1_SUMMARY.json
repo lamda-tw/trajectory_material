@@ -1,0 +1,290 @@
+{
+  "phase1_complete": true,
+  "formal_states": 129,
+  "common_states": 128,
+  "generated_first_actions": 1161,
+  "judged_model_state_rows": 1152,
+  "unique_judged_evidence": 671,
+  "coverage_gates": [
+    {
+      "panel": "focus_A",
+      "metric": "relevant_gap_reduced",
+      "yes_states": 24,
+      "families": 19,
+      "random_states": 8,
+      "net3_states": 8,
+      "zerofail3_states": 8,
+      "prespecified_coverage_gate": true,
+      "interpretation": "eligible exploratory comparison"
+    },
+    {
+      "panel": "focus_B",
+      "metric": "grounded_application",
+      "yes_states": 16,
+      "families": 13,
+      "random_states": 6,
+      "net3_states": 4,
+      "zerofail3_states": 6,
+      "prespecified_coverage_gate": true,
+      "interpretation": "eligible exploratory comparison"
+    },
+    {
+      "panel": "focus_C",
+      "metric": "coverage_progress",
+      "yes_states": 17,
+      "families": 11,
+      "random_states": 7,
+      "net3_states": 5,
+      "zerofail3_states": 5,
+      "prespecified_coverage_gate": true,
+      "interpretation": "eligible exploratory comparison"
+    }
+  ],
+  "repeat_agreement": [
+    {
+      "field": "R1",
+      "n": 53,
+      "agreement": 1.0,
+      "primary_measurement_gate": "auxiliary",
+      "confusion": {
+        "P -> P": 44,
+        "F -> F": 9
+      }
+    },
+    {
+      "field": "R2",
+      "n": 53,
+      "agreement": 0.8867924528301887,
+      "primary_measurement_gate": "auxiliary",
+      "confusion": {
+        "P -> P": 34,
+        "N -> N": 11,
+        "U -> U": 2,
+        "P -> N": 2,
+        "P -> F": 1,
+        "N -> P": 3
+      }
+    },
+    {
+      "field": "R3",
+      "n": 53,
+      "agreement": 0.9245283018867925,
+      "primary_measurement_gate": "auxiliary",
+      "confusion": {
+        "P -> P": 33,
+        "U -> U": 3,
+        "P -> F": 1,
+        "P -> N": 2,
+        "P -> U": 1,
+        "N -> N": 9,
+        "F -> F": 4
+      }
+    },
+    {
+      "field": "R4",
+      "n": 53,
+      "agreement": 1.0,
+      "primary_measurement_gate": "auxiliary",
+      "confusion": {
+        "N -> N": 45,
+        "F -> F": 4,
+        "P -> P": 4
+      }
+    },
+    {
+      "field": "R5",
+      "n": 53,
+      "agreement": 1.0,
+      "primary_measurement_gate": "auxiliary",
+      "confusion": {
+        "N -> N": 50,
+        "F -> F": 1,
+        "U -> U": 2
+      }
+    },
+    {
+      "field": "R6",
+      "n": 53,
+      "agreement": 0.9622641509433962,
+      "primary_measurement_gate": "auxiliary",
+      "confusion": {
+        "N -> N": 20,
+        "F -> F": 27,
+        "P -> P": 4,
+        "F -> P": 1,
+        "U -> F": 1
+      }
+    },
+    {
+      "field": "R7",
+      "n": 53,
+      "agreement": 1.0,
+      "primary_measurement_gate": "auxiliary",
+      "confusion": {
+        "N -> N": 52,
+        "F -> F": 1
+      }
+    },
+    {
+      "field": "R8",
+      "n": 53,
+      "agreement": 0.8867924528301887,
+      "primary_measurement_gate": "auxiliary",
+      "confusion": {
+        "P -> P": 35,
+        "F -> F": 12,
+        "P -> F": 2,
+        "F -> P": 4
+      }
+    },
+    {
+      "field": "coverage_progress",
+      "n": 23,
+      "agreement": 1.0,
+      "primary_measurement_gate": "passed",
+      "confusion": {
+        "no -> no": 20,
+        "yes -> yes": 3
+      }
+    },
+    {
+      "field": "documentation",
+      "n": 53,
+      "agreement": 1.0,
+      "primary_measurement_gate": "auxiliary",
+      "confusion": {
+        "necessary -> necessary": 9,
+        "not_applicable -> not_applicable": 11,
+        "unnecessary_given_known_specs -> unnecessary_given_known_specs": 22,
+        "missing_required_spec -> missing_required_spec": 11
+      }
+    },
+    {
+      "field": "feedback_response",
+      "n": 53,
+      "agreement": 0.9622641509433962,
+      "primary_measurement_gate": "auxiliary",
+      "confusion": {
+        "not_applicable -> not_applicable": 20,
+        "ignored_or_repeated -> ignored_or_repeated": 26,
+        "necessary_new_evidence -> necessary_new_evidence": 3,
+        "attempted_unresolved -> resolved": 1,
+        "attempted_unresolved -> attempted_unresolved": 1,
+        "ignored_or_repeated -> not_applicable": 1,
+        "resolved -> resolved": 1
+      }
+    },
+    {
+      "field": "grounded_application",
+      "n": 32,
+      "agreement": 1.0,
+      "primary_measurement_gate": "passed",
+      "confusion": {
+        "yes -> yes": 10,
+        "no -> no": 22
+      }
+    },
+    {
+      "field": "premature_scope_claim",
+      "n": 53,
+      "agreement": 0.9811320754716981,
+      "primary_measurement_gate": "auxiliary",
+      "confusion": {
+        "no -> no": 51,
+        "uncertain -> yes": 1,
+        "yes -> yes": 1
+      }
+    },
+    {
+      "field": "redundant_known_information",
+      "n": 53,
+      "agreement": 0.9622641509433962,
+      "primary_measurement_gate": "auxiliary",
+      "confusion": {
+        "no -> no": 24,
+        "yes -> no": 2,
+        "yes -> yes": 27
+      }
+    },
+    {
+      "field": "relevant_gap_reduced",
+      "n": 52,
+      "agreement": 1.0,
+      "primary_measurement_gate": "passed",
+      "confusion": {
+        "yes -> yes": 9,
+        "no -> no": 43
+      }
+    },
+    {
+      "field": "repetition",
+      "n": 53,
+      "agreement": 0.9433962264150944,
+      "primary_measurement_gate": "auxiliary",
+      "confusion": {
+        "not_repeated -> not_repeated": 23,
+        "no_information_gain -> not_repeated": 2,
+        "no_information_gain -> no_information_gain": 27,
+        "justified_refresh -> not_repeated": 1
+      }
+    },
+    {
+      "field": "state_contradiction",
+      "n": 53,
+      "agreement": 0.9811320754716981,
+      "primary_measurement_gate": "auxiliary",
+      "confusion": {
+        "no -> no": 45,
+        "uncertain -> uncertain": 3,
+        "no -> yes": 1,
+        "yes -> yes": 4
+      }
+    },
+    {
+      "field": "state_use",
+      "n": 53,
+      "agreement": 0.9245283018867925,
+      "primary_measurement_gate": "auxiliary",
+      "confusion": {
+        "supported -> supported": 32,
+        "unresolved -> unresolved": 3,
+        "supported -> contradicted": 1,
+        "no_relevant_use -> no_relevant_use": 10,
+        "no_relevant_use -> supported": 3,
+        "contradicted -> contradicted": 4
+      }
+    },
+    {
+      "field": "termination",
+      "n": 53,
+      "agreement": 1.0,
+      "primary_measurement_gate": "auxiliary",
+      "confusion": {
+        "no_completion_claim -> no_completion_claim": 52,
+        "premature_or_wrong -> premature_or_wrong": 1
+      }
+    },
+    {
+      "field": "unsupported_execution",
+      "n": 53,
+      "agreement": 1.0,
+      "primary_measurement_gate": "auxiliary",
+      "confusion": {
+        "no -> no": 41,
+        "yes -> yes": 12
+      }
+    },
+    {
+      "field": "wrong_scope_action",
+      "n": 53,
+      "agreement": 1.0,
+      "primary_measurement_gate": "auxiliary",
+      "confusion": {
+        "no -> no": 50,
+        "yes -> yes": 1,
+        "uncertain -> uncertain": 2
+      }
+    }
+  ],
+  "local_gpu": 1
+}

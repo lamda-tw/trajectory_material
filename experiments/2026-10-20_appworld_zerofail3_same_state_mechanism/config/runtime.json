@@ -1,0 +1,100 @@
+{
+  "experiment": "2026-10-20_appworld_zerofail3_same_state_mechanism",
+  "paths": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "appworld_python": "/root/autodl-tmp/envs/appworld-0.2.0-py312/bin/python",
+    "training_python": "/root/autodl-tmp/workspace-tw/.conda-training/bin/python",
+    "vllm_python": "/root/autodl-tmp/envs/qwen3-vllm-py312/bin/python",
+    "appworld_data": "/root/autodl-tmp/data/benchmarks/appworld/runtime/data",
+    "appworld_test_cache": "/root/autodl-tmp/workspace-tw/experiments/2026-09-10_173848_appworld_qwen3-8b_react_oneshot_smoke/cache/tests"
+  },
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8190,
+    "gpu": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501",
+    "model_name": "qwen3-8b",
+    "adapter_name": "zerofail-same-state-adapter",
+    "gpu_memory_utilization": 0.8,
+    "startup_timeout_seconds": 900,
+    "request_timeout_seconds": 600,
+    "max_num_seqs": 3,
+    "minimum_free_gpu_gib": 80
+  },
+  "agent": {
+    "prompt": "config/agent_prompt.txt",
+    "enable_thinking": false,
+    "max_steps": 50,
+    "max_model_len": 32000,
+    "max_new_tokens": 3000,
+    "context_overflow": "terminate_without_truncation",
+    "parser": "first_python_fence_with_partial_fence_recovery"
+  },
+  "sampling": {
+    "group_size": 6,
+    "temperature": 1.0,
+    "top_p": 1.0,
+    "top_k": -1,
+    "repetition_penalty": 1.0,
+    "seed": 20261008,
+    "pilot_seed": 20261108
+  },
+  "training": {
+    "lora": {
+      "r": 8,
+      "lora_alpha": 16,
+      "lora_dropout": 0.0,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ],
+      "bias": "none",
+      "task_type": "CAUSAL_LM"
+    },
+    "updates": 855,
+    "train_tasks": "config/train_all.txt"
+  },
+  "evaluation": {
+    "tasks": "config/dev.txt",
+    "temperature": 0.0,
+    "seed": 100,
+    "checkpoints": [
+      855
+    ],
+    "primary_metric": "official_task_goal_completion",
+    "rubric_on_dev": false
+  },
+  "collection": {
+    "tasks": "assets/splits/train_all.txt",
+    "workers": 6,
+    "rollouts_per_task": 6,
+    "initial_sequential_rollouts": 1,
+    "official_terminal_evaluation": true,
+    "report": "../2026-10-08_static_rubric_grpo_lora_init/RUBRIC_GRPO_EXPERIMENT_REPORT.md"
+  },
+  "experiment_arm": "dynamic",
+  "worker_count": 3,
+  "scope": {
+    "groups": [
+      "random",
+      "net3",
+      "zerofail3"
+    ],
+    "training_seeds": [
+      20261015,
+      20261016,
+      20261017
+    ],
+    "new_training": false,
+    "formal_states": 129,
+    "calibration_states": 9,
+    "continuation": true,
+    "continuation_states": 20,
+    "continuation_max_steps": 12
+  },
+  "cpu_workers": 4
+}

@@ -1,13 +1,22 @@
-# AppWorld Rubric 学习机制实验计划
+> 执行更新：2026-10-19 用户已授权第一阶段：先重放/评分校准，再比较全规则1358、DropR1、DropR2的三个seed，仅GPU1。旧ZeroFail3与可选续跑仍暂缓。执行进度见 [新实验README](../../experiments/2026-10-19_appworld_same_state_r1_r2/README.md)。以下设计正文保留启动前状态说明；当前授权以本条及新实验记录为准。
 
-> 最新执行范围（2026-10-18T18:34:46+08:00，北京时间）：用户授权在空闲 GPU0 增加 seed **20261017**。GPU1 继续 **20261015、20261016**；每组 **1,358 步、1 epoch、679 更新**；DropR7 复用同 seed DropR5。共 **21 次实际训练、24 个条件记录**，仅按评分选样。GPU1 已运行；GPU0 预检通过并开始 DropR1 正式训练。同状态诊断尚未开始。
+# AppWorld Rubric 学习机制计划
 
-[完整计划](PLAN.md) 的当前主实验为逐项完整删除 R1–R8。忽略 Ri 的所有标签，仅要求其余七项 P≥3 且 F=0，允许 N/U；候选资格只由评分决定，然后全池等概率无放回抽取 1,358 步。没有语法、执行成功、最终成功、长度过滤，也没有任务配额或补足。
+**最新状态：2026-10-19，仅更新设计，未开始实验。后续仅用GPU1。**
 
-GPU1 跑 seed 20261015/20261016；GPU0 跑新增 seed 20261017。每个真实运行从原始 Qwen3-8B 新建 LoRA，1 epoch、679 更新。DropR7 使用同 seed 新 DropR5 的相同选样、顺序、模型与评测，因此是 7 种配方 × 3 seed = 21 次训练、14,259 次更新、1,197 个 DEV57 任务 rollout。不是复用旧 1,710 步模型，也不新增 Random/ZeroFail3 训练项目。
+当前顺序为：先比较本轮全规则 SFT-1358（DropR5）、DropR1、DropR2的同状态动作；再把旧ZeroFail3-1710接入同一套状态与评价方法。三组各三个seed，共9个已有模型，不追加训练。旧22模型方案已被收敛；1350步共同移除训练暂缓。
 
-DropR5 的当前候选集合恰好等于完整八规则集合，可作等价参照；没有同预算 Random，本轮不直接证明优于随机选样。三个 seed 仍只提供有限的随机性证据。同状态动作诊断尚未运行，完整后续规模更新为原始模型加 21 个新模型、256 个状态、5,632 次单步生成。
+- [当前计划入口](PLAN.md)
+- [完整同状态设计：状态、恢复、评价、解释与预算](SAME_STATE_PLAN.md)
+- [怎样判断动作好坏](STATE_JUDGING.md)
+- [状态选择与实际覆盖](STATE_SELECTION.md)
+- [299个正式状态的逐条ID与替换步号](states_selected.csv)
+- [1428个来源状态索引](state_inventory.csv)
+- [9个已有模型的路径与哈希](same_state_models.json)
+- [CPU审计、校准ID和可选续跑ID](same_state_audit.json)
 
-[实验总进度](../../experiments/2026-10-18_appworld_rubric_dimension_ablation/README.md) · [三 seed 结果](../../experiments/2026-10-18_appworld_rubric_dimension_ablation/REPORT_THREE_SEEDS.md) · [候选池与集合哈希](candidate_counts.json) · [P 组成分析](PASS_ANALYSIS.md)
+正式状态包括171个主状态（57题×早中晚各一个）和四类各32个补充状态；共2691次计划单步生成。可选固定策略续跑提前选定16个状态，尚未执行。所有后续模型推理、重放相关本地GPU服务和续跑仅使用GPU1；历史路径中的gpu0只是已有权重位置。
 
-最小池为 DropR2 的 1,359 步，统一取 1,358 步保证两步累积完整。统一训练量不等于统一 token 数或算力；见完整计划 B5。上一阶段已推送节点为 `60db9d25`。
+已完成的工作仅是读取已有轨迹、核验来源/权重哈希、冻结状态索引和编写设计。**未运行环境、未生成新动作、未调用评委、未启动训练。** 状态token重建和可重放性要在实验正式开始后验证。
+
+[已完成的三seed消融报告](../../experiments/2026-10-18_appworld_rubric_dimension_ablation/REPORT_THREE_SEEDS.md) · [旧计划归档](archive/PLAN_before_same_state_2026-10-19.md)

@@ -1,0 +1,52 @@
+{
+  "state_id": "0d8a4ee_1:before_step_20",
+  "phase": "before",
+  "source_replay": "/root/autodl-tmp/workspace-tw/experiments/2026-10-19_appworld_same_state_r1_r2/calibration/snapshot_fix/0d8a4ee_1__before_step_20/replay.json",
+  "source_snapshot_sha256": "a4115a8a4349ea33a826840314734aaea75f843de462ce1f348592ddc63c2e2f",
+  "loaded_db_matches_live_branch": true,
+  "source_unmodified": true,
+  "report": "/root/autodl-tmp/workspace-tw/experiments/2026-10-19_appworld_same_state_r1_r2/calibration/snapshot_fix/0d8a4ee_1__before_step_20/runtime/eval_before/experiments/outputs/branch/tasks/0d8a4ee_1/evaluation/report.md",
+  "checks": {
+    "assert 0 phone.UserTextMessage records were removed.": true,
+    "assert answers match.": false,
+    "assert model changes match phone.GlobalTextMessage, phone.UserTextMessage": false,
+    "assert receiver_ids of added global text messages match exactly to private_data.no_account_phone_user_ids (ignore order).": false,
+    "assert all added global text messages have message public_data.message_text (normalize_text=True).": false
+  },
+  "tracker": {
+    "success": false,
+    "difficulty": 2,
+    "num_tests": 5,
+    "passes": [
+      {
+        "requirement": "assert 0 phone.UserTextMessage records were removed.",
+        "label": "no_op_pass"
+      }
+    ],
+    "failures": [
+      {
+        "requirement": "assert answers match.",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert answers match.\n    \"\"\"\n):\n    test.answer(predicted_answer, ground_truth_answer)\n```\n----------\nAssertionError:  '<<not_given>>' == 'null'",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert model changes match phone.GlobalTextMessage, phone.UserTextMessage",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert model changes match phone.GlobalTextMessage, phone.UserTextMessage\n    \"\"\"\n):\n    changed_model_names = models.changed_model_names()\n    test.case(\n        changed_model_names,\n```\n----------\nAssertionError:\n{'phone.User', 'phone.UserTextMessage', 'phone.GlobalTextMessage'}\n==\n{'phone.UserTextMessage', 'phone.GlobalTextMessage'}\n\nIn left but not right:\n['phone.User']",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert receiver_ids of added global text messages match exactly to\nprivate_data.no_account_phone_user_ids (ignore order).",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert receiver_ids of added global text messages match exactly to\n    private_data.no_account_phone_user_ids (ignore order).\n    \"\"\"\n):\n    added_global_text_messages, _, _ = models.changed_records(\"phone.GlobalTextMessage\")\n    added_receiver_ids = list_of(added_global_text_messages, \"receiver_id\")\n```\n----------\nAssertionError:  [82] == [79, 83]\n\nIn left but not right:\n[82]\n\nIn right but not left:\n[79, 83]",
+        "label": "no_op_fail"
+      },
+      {
+        "requirement": "assert all added global text messages have message public_data.message_text (normalize_text=True).",
+        "trace": "```python\nwith test(\n    \"\"\"\n    assert all added global text messages have message public_data.message_text (normalize_text=True).\n    \"\"\"\n):\n    added_messages = list_of(added_global_text_messages, \"message\")\n```\n----------\nAssertionError:\n'hi erika blackburn, someone requested to reset your account password on our platform. the password reset code is: f3a3c57 this code will expire in 60 minutes. if you did not make this request, please ignore this email. thanks, phone team'\n==\n'please get on venmo.'\n\nOriginal values:\n'\\nHi Erika Blackburn,\\n\\nSomeone requested to reset your account password on our platform.\\nThe password reset code is: f3a3c57\\nThis code will expire in 60 minutes.\\nIf you did not make this request, please ignore this email.\\n\\nThanks,\\nPhone Team\\n'\n==\n'Please get on venmo.'",
+        "label": "no_op_fail"
+      }
+    ]
+  },
+  "num_tests": 5,
+  "num_passes": 1,
+  "success": false
+}

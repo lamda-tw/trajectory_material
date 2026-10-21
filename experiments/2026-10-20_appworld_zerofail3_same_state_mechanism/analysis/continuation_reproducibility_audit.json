@@ -1,0 +1,690 @@
+{
+  "definition": "Same receiver identity and adapter SHA256, exact prompt token IDs, sampling seed, frozen temperature=0 and generation configuration. Observational duplicate-context audit, not a new repeat experiment.",
+  "all_calls": 5145,
+  "unique_contexts": 2920,
+  "duplicate_context_clusters": 423,
+  "divergent_response_clusters": 16,
+  "divergent_text_clusters": 16,
+  "divergent_code_clusters": 9,
+  "first_followup_duplicate_clusters": 45,
+  "first_followup_divergent_clusters": 4,
+  "affected_states": [
+    "net3:seed_20261015:b119b1f_1:before_step_04",
+    "random:seed_20261017:530b157_3:before_step_07",
+    "random:seed_20261017:fac291d_1:before_step_02",
+    "zerofail3:seed_20261015:d4e9306_1:before_step_02",
+    "zerofail3:seed_20261015:d4e9306_1:before_step_08",
+    "zerofail3:seed_20261017:68ee2c9_3:before_step_02"
+  ],
+  "affected_branches": 40,
+  "divergent_clusters": [
+    {
+      "receiver": "random__seed_20261015",
+      "receiver_sha256": "df15244730936f10a0a5d4ae16ed4eaeda3ba2ee192ac2c070dc1f3a53389941",
+      "prompt_ids_sha256": "1ab80fe2b5039f888634758c7009bb28245f847fa7b1390ccd7806403384e213",
+      "sampling_seed": 102,
+      "members": [
+        {
+          "state_id": "random:seed_20261017:fac291d_1:before_step_02",
+          "first_model": "random__seed_20261015",
+          "followup_step": 1,
+          "sampling_context_sha256": "d88dc6c8df7119ac0fc8e5238a2edd239a51773985b653a2e577ac3e3a0f1be1",
+          "response_sha256": "b8b7eaf0a58db3d63eb1f844373af7785c9ff0be8b7ae8e51bda44725d8a63a5",
+          "text_sha256": "73df18e915b8e218a948137b5f1b04ca6876416d52113c2ace8000d385e80a3b",
+          "code_sha256": "202ffbec9d2be33a3bc96ba7bf1880134dce797184a594f497ed19ffc9932ae3",
+          "h12_pass_fraction": 0.5,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/random__seed_20261015/random__seed_20261015/random__seed_20261017__fac291d_1__before_step_02.json"
+        },
+        {
+          "state_id": "random:seed_20261017:fac291d_1:before_step_02",
+          "first_model": "random__seed_20261016",
+          "followup_step": 1,
+          "sampling_context_sha256": "d88dc6c8df7119ac0fc8e5238a2edd239a51773985b653a2e577ac3e3a0f1be1",
+          "response_sha256": "dbe2e56568e371d955bd70bfd231f690c21b4b32be6231075e769744cdbd2486",
+          "text_sha256": "17ee9ecae4cdeceb5709186a85b5ac837a6ddb071b2aa3995018106582194c2d",
+          "code_sha256": "d9cbe30c0b2b11002e4d0ae5e78d8e228a6ab03fe19770bc608320d737c7a994",
+          "h12_pass_fraction": 0.5,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/random__seed_20261015/random__seed_20261016/random__seed_20261017__fac291d_1__before_step_02.json"
+        },
+        {
+          "state_id": "random:seed_20261017:fac291d_1:before_step_02",
+          "first_model": "net3__seed_20261015",
+          "followup_step": 1,
+          "sampling_context_sha256": "d88dc6c8df7119ac0fc8e5238a2edd239a51773985b653a2e577ac3e3a0f1be1",
+          "response_sha256": "6c0777fef5c2207e4f301e9d4f285ac8b38db25ba6cef00a262dfb2a3a53eab3",
+          "text_sha256": "0b5dd01b86dfa82c8ec06766c53112c41f1dd6745042a3d7c25f1f6c9ab9ead4",
+          "code_sha256": "d9cbe30c0b2b11002e4d0ae5e78d8e228a6ab03fe19770bc608320d737c7a994",
+          "h12_pass_fraction": 0.5,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/random__seed_20261015/net3__seed_20261015/random__seed_20261017__fac291d_1__before_step_02.json"
+        },
+        {
+          "state_id": "random:seed_20261017:fac291d_1:before_step_02",
+          "first_model": "zerofail3__seed_20261015",
+          "followup_step": 1,
+          "sampling_context_sha256": "d88dc6c8df7119ac0fc8e5238a2edd239a51773985b653a2e577ac3e3a0f1be1",
+          "response_sha256": "b8b7eaf0a58db3d63eb1f844373af7785c9ff0be8b7ae8e51bda44725d8a63a5",
+          "text_sha256": "73df18e915b8e218a948137b5f1b04ca6876416d52113c2ace8000d385e80a3b",
+          "code_sha256": "202ffbec9d2be33a3bc96ba7bf1880134dce797184a594f497ed19ffc9932ae3",
+          "h12_pass_fraction": 0.5,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/random__seed_20261015/zerofail3__seed_20261015/random__seed_20261017__fac291d_1__before_step_02.json"
+        }
+      ]
+    },
+    {
+      "receiver": "random__seed_20261015",
+      "receiver_sha256": "df15244730936f10a0a5d4ae16ed4eaeda3ba2ee192ac2c070dc1f3a53389941",
+      "prompt_ids_sha256": "57f68fd46361b41a8c3109c09c6c84040d8607cdebb7fd5f5e4e329471f63b1c",
+      "sampling_seed": 103,
+      "members": [
+        {
+          "state_id": "random:seed_20261017:fac291d_1:before_step_02",
+          "first_model": "random__seed_20261015",
+          "followup_step": 2,
+          "sampling_context_sha256": "a08a603b4e27b4289e4c484a6cb16de334cceea4dc360483df9174e741d5c254",
+          "response_sha256": "3948046ca52d4dbbafca7d741e328a57cef3f9dd20b09bb2b0810ef352b0a921",
+          "text_sha256": "1479eda0fcfcf7fb88fa94c15e21cdf9c150e4baddef078effa3de3170637c9b",
+          "code_sha256": "e164ebe6cc911c027c4edad6984c2c760ce88e874cab0fd3f5653a882a887cfa",
+          "h12_pass_fraction": 0.5,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/random__seed_20261015/random__seed_20261015/random__seed_20261017__fac291d_1__before_step_02.json"
+        },
+        {
+          "state_id": "random:seed_20261017:fac291d_1:before_step_02",
+          "first_model": "zerofail3__seed_20261015",
+          "followup_step": 2,
+          "sampling_context_sha256": "a08a603b4e27b4289e4c484a6cb16de334cceea4dc360483df9174e741d5c254",
+          "response_sha256": "45560b15775ea9700be77d27c155f7c125d9b24152892b36dd1b7500b2adc2f4",
+          "text_sha256": "8418069bff195c6c2dc9cc587a79df18c7e39308a6f3bf1b3dcda980d2d6df0a",
+          "code_sha256": "e164ebe6cc911c027c4edad6984c2c760ce88e874cab0fd3f5653a882a887cfa",
+          "h12_pass_fraction": 0.5,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/random__seed_20261015/zerofail3__seed_20261015/random__seed_20261017__fac291d_1__before_step_02.json"
+        }
+      ]
+    },
+    {
+      "receiver": "random__seed_20261015",
+      "receiver_sha256": "df15244730936f10a0a5d4ae16ed4eaeda3ba2ee192ac2c070dc1f3a53389941",
+      "prompt_ids_sha256": "d4ec3d17016a64b793a79fb00cc16f4008ad3678b737016d2bd9195e5af60333",
+      "sampling_seed": 110,
+      "members": [
+        {
+          "state_id": "zerofail3:seed_20261017:68ee2c9_3:before_step_02",
+          "first_model": "random__seed_20261016",
+          "followup_step": 9,
+          "sampling_context_sha256": "2c031a2380442ab5bb2faa36b376d423eeb94d1d2fa8166fd4800bc705fc45f4",
+          "response_sha256": "2fb46038c70b2cfc7eaf43032841988efb0051d2cdb010d66fbaa0f3d40df3e2",
+          "text_sha256": "b3b55022f34efc0d1e175f727141747b7f52b0da0f814e8ba66d897eb35b7107",
+          "code_sha256": "715c666130ac342a3d2dfa0a9c0bfc1ad8c502542b7fffca54c7ec42495e71ae",
+          "h12_pass_fraction": 0.2,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/random__seed_20261015/random__seed_20261016/zerofail3__seed_20261017__68ee2c9_3__before_step_02.json"
+        },
+        {
+          "state_id": "zerofail3:seed_20261017:68ee2c9_3:before_step_02",
+          "first_model": "random__seed_20261017",
+          "followup_step": 9,
+          "sampling_context_sha256": "2c031a2380442ab5bb2faa36b376d423eeb94d1d2fa8166fd4800bc705fc45f4",
+          "response_sha256": "968af8525a943a9301828dd26480f49e7049f6b9f026cef032ec8e118b7e3339",
+          "text_sha256": "46a9b68eca81d7189ae6fc481e38c27b6c8a148444e4da81decdb289b55b4f78",
+          "code_sha256": "715c666130ac342a3d2dfa0a9c0bfc1ad8c502542b7fffca54c7ec42495e71ae",
+          "h12_pass_fraction": 0.2,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/random__seed_20261015/random__seed_20261017/zerofail3__seed_20261017__68ee2c9_3__before_step_02.json"
+        },
+        {
+          "state_id": "zerofail3:seed_20261017:68ee2c9_3:before_step_02",
+          "first_model": "net3__seed_20261017",
+          "followup_step": 9,
+          "sampling_context_sha256": "2c031a2380442ab5bb2faa36b376d423eeb94d1d2fa8166fd4800bc705fc45f4",
+          "response_sha256": "2fb46038c70b2cfc7eaf43032841988efb0051d2cdb010d66fbaa0f3d40df3e2",
+          "text_sha256": "b3b55022f34efc0d1e175f727141747b7f52b0da0f814e8ba66d897eb35b7107",
+          "code_sha256": "715c666130ac342a3d2dfa0a9c0bfc1ad8c502542b7fffca54c7ec42495e71ae",
+          "h12_pass_fraction": 0.2,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/random__seed_20261015/net3__seed_20261017/zerofail3__seed_20261017__68ee2c9_3__before_step_02.json"
+        }
+      ]
+    },
+    {
+      "receiver": "random__seed_20261015",
+      "receiver_sha256": "df15244730936f10a0a5d4ae16ed4eaeda3ba2ee192ac2c070dc1f3a53389941",
+      "prompt_ids_sha256": "40ac3f1f927b08bfe28d3d62a4721f95a092d04603852232592d7cc1ab6856ea",
+      "sampling_seed": 111,
+      "members": [
+        {
+          "state_id": "zerofail3:seed_20261017:68ee2c9_3:before_step_02",
+          "first_model": "random__seed_20261016",
+          "followup_step": 10,
+          "sampling_context_sha256": "29321d6cc26657d0b49cd1b4a54c65f803d5e5c87b2dfa92c1529c00aff261ae",
+          "response_sha256": "47ace24c060119ed2ede7726ff5a0f6dc56947259952a394901d36f4c82b2950",
+          "text_sha256": "7b1ab1663abb88d3399be171838c38943f43766878187c3a3913ae65dde5d6a4",
+          "code_sha256": "50497ffdd1799d7f9acf9b2206d77457970589a67b1f1566add207118c21a78b",
+          "h12_pass_fraction": 0.2,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/random__seed_20261015/random__seed_20261016/zerofail3__seed_20261017__68ee2c9_3__before_step_02.json"
+        },
+        {
+          "state_id": "zerofail3:seed_20261017:68ee2c9_3:before_step_02",
+          "first_model": "net3__seed_20261017",
+          "followup_step": 10,
+          "sampling_context_sha256": "29321d6cc26657d0b49cd1b4a54c65f803d5e5c87b2dfa92c1529c00aff261ae",
+          "response_sha256": "579de3062a370d6ac08d43ca1352cda9f494586ec7d58c64829440a6717d02d9",
+          "text_sha256": "f454a3a1ee9abdba59f41ab57bb38e20dc2e6d292d3c0dfe6fdb7430da07a5b4",
+          "code_sha256": "50497ffdd1799d7f9acf9b2206d77457970589a67b1f1566add207118c21a78b",
+          "h12_pass_fraction": 0.2,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/random__seed_20261015/net3__seed_20261017/zerofail3__seed_20261017__68ee2c9_3__before_step_02.json"
+        }
+      ]
+    },
+    {
+      "receiver": "random__seed_20261015",
+      "receiver_sha256": "df15244730936f10a0a5d4ae16ed4eaeda3ba2ee192ac2c070dc1f3a53389941",
+      "prompt_ids_sha256": "f09f65ddfdbda7884aaa44641399c5103ad00e7f0280e7d41087098d949b9faa",
+      "sampling_seed": 102,
+      "members": [
+        {
+          "state_id": "zerofail3:seed_20261015:d4e9306_1:before_step_02",
+          "first_model": "random__seed_20261017",
+          "followup_step": 1,
+          "sampling_context_sha256": "b3b27dc1072df7561b8fc752f03356cb141aaa0447d8273c5263edb365b490f3",
+          "response_sha256": "a39263db9075d5572e254db0cdf0daf6edb2f765f3377256b0d69a54336d2225",
+          "text_sha256": "2e9e18ec06e8f45a0bcc8a48a4ee647e07595e0a9fbe90889abff21808e6ace9",
+          "code_sha256": "14ac6978665e41e9195593657fb168b801557f934f862d32e7f6db2eb0698381",
+          "h12_pass_fraction": 0.16666666666666666,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/random__seed_20261015/random__seed_20261017/zerofail3__seed_20261015__d4e9306_1__before_step_02.json"
+        },
+        {
+          "state_id": "zerofail3:seed_20261015:d4e9306_1:before_step_02",
+          "first_model": "net3__seed_20261016",
+          "followup_step": 1,
+          "sampling_context_sha256": "b3b27dc1072df7561b8fc752f03356cb141aaa0447d8273c5263edb365b490f3",
+          "response_sha256": "f44c5dcbc6c5493adee48a2e13e18a8185b98f41a97f34b3e35a2b58afc739a9",
+          "text_sha256": "5804448f0e258b271aaaa8c4d2bf3c6ed6c7a90edb6ecf052e1d80d3bca1b33e",
+          "code_sha256": "f0b0bfd780904dc6aabea4435d71c46f5230a9b805c1894bf74bdf61825f0ffd",
+          "h12_pass_fraction": 0.16666666666666666,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/random__seed_20261015/net3__seed_20261016/zerofail3__seed_20261015__d4e9306_1__before_step_02.json"
+        }
+      ]
+    },
+    {
+      "receiver": "random__seed_20261015",
+      "receiver_sha256": "df15244730936f10a0a5d4ae16ed4eaeda3ba2ee192ac2c070dc1f3a53389941",
+      "prompt_ids_sha256": "5d39b4d2220abd6fb8bac3f713eaa704f7e18482a7b3e657a67d8cd954441b33",
+      "sampling_seed": 112,
+      "members": [
+        {
+          "state_id": "random:seed_20261017:530b157_3:before_step_07",
+          "first_model": "net3__seed_20261016",
+          "followup_step": 6,
+          "sampling_context_sha256": "e3472265d96462c2bdf324b943874edaed399b234747743875280eee44f7b85a",
+          "response_sha256": "90737d7249b6b8efe028cddaa74e369c594e4607da7074f5707ba4dfa131abec",
+          "text_sha256": "08fec1d829eec522fb2c458e7edf02ab7c9f0405010b65dadc1e090f74467e4c",
+          "code_sha256": "4a07f2e48471441a00e1dfb13ebba318822d02367e0c9859d60bdd407fb5b78d",
+          "h12_pass_fraction": 0.1,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/random__seed_20261015/net3__seed_20261016/random__seed_20261017__530b157_3__before_step_07.json"
+        },
+        {
+          "state_id": "random:seed_20261017:530b157_3:before_step_07",
+          "first_model": "zerofail3__seed_20261017",
+          "followup_step": 6,
+          "sampling_context_sha256": "e3472265d96462c2bdf324b943874edaed399b234747743875280eee44f7b85a",
+          "response_sha256": "e58b5270bbda2aadce567921d7fdde11da8aa2364616ca8e0b2289737d95d6ad",
+          "text_sha256": "554c9786a71f0c30221b2109a0b7cd37bc31016a3fb558376c1e39317e40511b",
+          "code_sha256": "978cafe8045749a2bd6f9c9d18f61ad0384ab64436c2135c27caf3915fdd40f3",
+          "h12_pass_fraction": 0.1,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/random__seed_20261015/zerofail3__seed_20261017/random__seed_20261017__530b157_3__before_step_07.json"
+        }
+      ]
+    },
+    {
+      "receiver": "net3__seed_20261015",
+      "receiver_sha256": "7b66d09748eaddf9b916a712641cfef0553a7ea871625df3f0d57bf18c139e68",
+      "prompt_ids_sha256": "3295b2afb8fc6f3b329db29dcc382996402f837466b7bbb2e1720217e0ea2290",
+      "sampling_seed": 104,
+      "members": [
+        {
+          "state_id": "net3:seed_20261015:b119b1f_1:before_step_04",
+          "first_model": "random__seed_20261015",
+          "followup_step": 1,
+          "sampling_context_sha256": "35aeb3e63b7909b948c10b2a273488f873ba49529dfbcff4b5b768707e5126af",
+          "response_sha256": "ce37ef9dd8ee52e5a13c312f861185c569b378eb1a0c65952342ce84a2b356ce",
+          "text_sha256": "d2566693131bf18c82eb37c8d67ed68a13bcb805f3247a38ab166d15a44c9f2e",
+          "code_sha256": "e47085970ddc1604feb92bc6e83b53a675781746075b3b02a25f3d814a620fe7",
+          "h12_pass_fraction": 0.0,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/net3__seed_20261015/random__seed_20261015/net3__seed_20261015__b119b1f_1__before_step_04.json"
+        },
+        {
+          "state_id": "net3:seed_20261015:b119b1f_1:before_step_04",
+          "first_model": "random__seed_20261016",
+          "followup_step": 1,
+          "sampling_context_sha256": "35aeb3e63b7909b948c10b2a273488f873ba49529dfbcff4b5b768707e5126af",
+          "response_sha256": "ce37ef9dd8ee52e5a13c312f861185c569b378eb1a0c65952342ce84a2b356ce",
+          "text_sha256": "d2566693131bf18c82eb37c8d67ed68a13bcb805f3247a38ab166d15a44c9f2e",
+          "code_sha256": "e47085970ddc1604feb92bc6e83b53a675781746075b3b02a25f3d814a620fe7",
+          "h12_pass_fraction": 0.0,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/net3__seed_20261015/random__seed_20261016/net3__seed_20261015__b119b1f_1__before_step_04.json"
+        },
+        {
+          "state_id": "net3:seed_20261015:b119b1f_1:before_step_04",
+          "first_model": "net3__seed_20261015",
+          "followup_step": 1,
+          "sampling_context_sha256": "35aeb3e63b7909b948c10b2a273488f873ba49529dfbcff4b5b768707e5126af",
+          "response_sha256": "ce37ef9dd8ee52e5a13c312f861185c569b378eb1a0c65952342ce84a2b356ce",
+          "text_sha256": "d2566693131bf18c82eb37c8d67ed68a13bcb805f3247a38ab166d15a44c9f2e",
+          "code_sha256": "e47085970ddc1604feb92bc6e83b53a675781746075b3b02a25f3d814a620fe7",
+          "h12_pass_fraction": 0.0,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/net3__seed_20261015/net3__seed_20261015/net3__seed_20261015__b119b1f_1__before_step_04.json"
+        },
+        {
+          "state_id": "net3:seed_20261015:b119b1f_1:before_step_04",
+          "first_model": "net3__seed_20261016",
+          "followup_step": 1,
+          "sampling_context_sha256": "35aeb3e63b7909b948c10b2a273488f873ba49529dfbcff4b5b768707e5126af",
+          "response_sha256": "ce37ef9dd8ee52e5a13c312f861185c569b378eb1a0c65952342ce84a2b356ce",
+          "text_sha256": "d2566693131bf18c82eb37c8d67ed68a13bcb805f3247a38ab166d15a44c9f2e",
+          "code_sha256": "e47085970ddc1604feb92bc6e83b53a675781746075b3b02a25f3d814a620fe7",
+          "h12_pass_fraction": 0.0,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/net3__seed_20261015/net3__seed_20261016/net3__seed_20261015__b119b1f_1__before_step_04.json"
+        },
+        {
+          "state_id": "net3:seed_20261015:b119b1f_1:before_step_04",
+          "first_model": "net3__seed_20261017",
+          "followup_step": 1,
+          "sampling_context_sha256": "35aeb3e63b7909b948c10b2a273488f873ba49529dfbcff4b5b768707e5126af",
+          "response_sha256": "ca69cc36eb5c312ef22e226fd9295002668b621edbf16e1b2e5a1eaaffe05fe3",
+          "text_sha256": "c487a82668298c8094dcef072bdde9f90b1ad3a190efc5966c4f2f7278983bdc",
+          "code_sha256": "e2ff3061eb9152573618731cfc12ade7a64463658c224f3142593dc674ad4c96",
+          "h12_pass_fraction": 0.0,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/net3__seed_20261015/net3__seed_20261017/net3__seed_20261015__b119b1f_1__before_step_04.json"
+        },
+        {
+          "state_id": "net3:seed_20261015:b119b1f_1:before_step_04",
+          "first_model": "zerofail3__seed_20261015",
+          "followup_step": 1,
+          "sampling_context_sha256": "35aeb3e63b7909b948c10b2a273488f873ba49529dfbcff4b5b768707e5126af",
+          "response_sha256": "ca69cc36eb5c312ef22e226fd9295002668b621edbf16e1b2e5a1eaaffe05fe3",
+          "text_sha256": "c487a82668298c8094dcef072bdde9f90b1ad3a190efc5966c4f2f7278983bdc",
+          "code_sha256": "e2ff3061eb9152573618731cfc12ade7a64463658c224f3142593dc674ad4c96",
+          "h12_pass_fraction": 0.0,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/net3__seed_20261015/zerofail3__seed_20261015/net3__seed_20261015__b119b1f_1__before_step_04.json"
+        },
+        {
+          "state_id": "net3:seed_20261015:b119b1f_1:before_step_04",
+          "first_model": "zerofail3__seed_20261017",
+          "followup_step": 1,
+          "sampling_context_sha256": "35aeb3e63b7909b948c10b2a273488f873ba49529dfbcff4b5b768707e5126af",
+          "response_sha256": "ca69cc36eb5c312ef22e226fd9295002668b621edbf16e1b2e5a1eaaffe05fe3",
+          "text_sha256": "c487a82668298c8094dcef072bdde9f90b1ad3a190efc5966c4f2f7278983bdc",
+          "code_sha256": "e2ff3061eb9152573618731cfc12ade7a64463658c224f3142593dc674ad4c96",
+          "h12_pass_fraction": 0.0,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/net3__seed_20261015/zerofail3__seed_20261017/net3__seed_20261015__b119b1f_1__before_step_04.json"
+        }
+      ]
+    },
+    {
+      "receiver": "net3__seed_20261015",
+      "receiver_sha256": "7b66d09748eaddf9b916a712641cfef0553a7ea871625df3f0d57bf18c139e68",
+      "prompt_ids_sha256": "f09f65ddfdbda7884aaa44641399c5103ad00e7f0280e7d41087098d949b9faa",
+      "sampling_seed": 102,
+      "members": [
+        {
+          "state_id": "zerofail3:seed_20261015:d4e9306_1:before_step_02",
+          "first_model": "random__seed_20261017",
+          "followup_step": 1,
+          "sampling_context_sha256": "e467374064c006938ca55cb9e5c9619bb9b902a97d269c312bbf3a8eda956587",
+          "response_sha256": "22823f08d3cb72191310c8bffc30baeb64077a03192a23c0fa6282298ddf3459",
+          "text_sha256": "4be170c8bd08b2d6255ac02e5ae69d0a400b6287f5e89d2a276aeca475de3ff8",
+          "code_sha256": "e47085970ddc1604feb92bc6e83b53a675781746075b3b02a25f3d814a620fe7",
+          "h12_pass_fraction": 0.16666666666666666,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/net3__seed_20261015/random__seed_20261017/zerofail3__seed_20261015__d4e9306_1__before_step_02.json"
+        },
+        {
+          "state_id": "zerofail3:seed_20261015:d4e9306_1:before_step_02",
+          "first_model": "net3__seed_20261016",
+          "followup_step": 1,
+          "sampling_context_sha256": "e467374064c006938ca55cb9e5c9619bb9b902a97d269c312bbf3a8eda956587",
+          "response_sha256": "bf05bc50b8169e831e40230fecfb60f4c79e539e6a9e40cf3a37863ea90a04cc",
+          "text_sha256": "46ad29e987462eaf19d7cbf7767b6df598479c45a32cb186c731f4aa70c3ec44",
+          "code_sha256": "e47085970ddc1604feb92bc6e83b53a675781746075b3b02a25f3d814a620fe7",
+          "h12_pass_fraction": 0.16666666666666666,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/net3__seed_20261015/net3__seed_20261016/zerofail3__seed_20261015__d4e9306_1__before_step_02.json"
+        }
+      ]
+    },
+    {
+      "receiver": "net3__seed_20261015",
+      "receiver_sha256": "7b66d09748eaddf9b916a712641cfef0553a7ea871625df3f0d57bf18c139e68",
+      "prompt_ids_sha256": "884f85fdbd8f5ee09590729461177c7833513cc2b8b1ac580739aabb21b6c627",
+      "sampling_seed": 111,
+      "members": [
+        {
+          "state_id": "random:seed_20261017:530b157_3:before_step_07",
+          "first_model": "net3__seed_20261016",
+          "followup_step": 5,
+          "sampling_context_sha256": "7f7a5870dd9c0bbab2710293e38884a516a1cdbb66a98fcacfba015994e5a316",
+          "response_sha256": "ae5d8e6d0b39157e68e91e3ee1fe8b1c59b03bc9f730e18591ee8543dbec97ee",
+          "text_sha256": "c1af4175b46b26fd49ccec858dae4393fb23e2aa06ef87f93268cd0f66600f27",
+          "code_sha256": "cb882fccb7859b70c506e861dbe7a37c7d377be2c02667186c64099f8f5aa8a4",
+          "h12_pass_fraction": 0.1,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/net3__seed_20261015/net3__seed_20261016/random__seed_20261017__530b157_3__before_step_07.json"
+        },
+        {
+          "state_id": "random:seed_20261017:530b157_3:before_step_07",
+          "first_model": "zerofail3__seed_20261017",
+          "followup_step": 5,
+          "sampling_context_sha256": "7f7a5870dd9c0bbab2710293e38884a516a1cdbb66a98fcacfba015994e5a316",
+          "response_sha256": "ebe08f5092a7b8b3ad86a9feeb482685be08b8416ab5d64a107be8d065f89c47",
+          "text_sha256": "1ae6acc5f53cd3fce3d9b06f0d17287533b9eeb647ec584fd6f87bdd116d2dc9",
+          "code_sha256": "d40cf05f209d562a280e3b8558ecf154b3f8aad92588bc50c1d7eaa4f64afbf0",
+          "h12_pass_fraction": 0.1,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/net3__seed_20261015/zerofail3__seed_20261017/random__seed_20261017__530b157_3__before_step_07.json"
+        }
+      ]
+    },
+    {
+      "receiver": "net3__seed_20261015",
+      "receiver_sha256": "7b66d09748eaddf9b916a712641cfef0553a7ea871625df3f0d57bf18c139e68",
+      "prompt_ids_sha256": "b48fac5725c10d28d4d4df0ae7afe524d9dfc0f400cb123bca032c8360e599c2",
+      "sampling_seed": 109,
+      "members": [
+        {
+          "state_id": "net3:seed_20261015:b119b1f_1:before_step_04",
+          "first_model": "net3__seed_20261017",
+          "followup_step": 6,
+          "sampling_context_sha256": "d7cbbaa93547469e4f6d1c2a880d69b38c85a342523d7234293bb006bc71ce6c",
+          "response_sha256": "ca69cc36eb5c312ef22e226fd9295002668b621edbf16e1b2e5a1eaaffe05fe3",
+          "text_sha256": "c487a82668298c8094dcef072bdde9f90b1ad3a190efc5966c4f2f7278983bdc",
+          "code_sha256": "e2ff3061eb9152573618731cfc12ade7a64463658c224f3142593dc674ad4c96",
+          "h12_pass_fraction": 0.0,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/net3__seed_20261015/net3__seed_20261017/net3__seed_20261015__b119b1f_1__before_step_04.json"
+        },
+        {
+          "state_id": "net3:seed_20261015:b119b1f_1:before_step_04",
+          "first_model": "zerofail3__seed_20261015",
+          "followup_step": 6,
+          "sampling_context_sha256": "d7cbbaa93547469e4f6d1c2a880d69b38c85a342523d7234293bb006bc71ce6c",
+          "response_sha256": "ce37ef9dd8ee52e5a13c312f861185c569b378eb1a0c65952342ce84a2b356ce",
+          "text_sha256": "d2566693131bf18c82eb37c8d67ed68a13bcb805f3247a38ab166d15a44c9f2e",
+          "code_sha256": "e47085970ddc1604feb92bc6e83b53a675781746075b3b02a25f3d814a620fe7",
+          "h12_pass_fraction": 0.0,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/net3__seed_20261015/zerofail3__seed_20261015/net3__seed_20261015__b119b1f_1__before_step_04.json"
+        },
+        {
+          "state_id": "net3:seed_20261015:b119b1f_1:before_step_04",
+          "first_model": "zerofail3__seed_20261017",
+          "followup_step": 6,
+          "sampling_context_sha256": "d7cbbaa93547469e4f6d1c2a880d69b38c85a342523d7234293bb006bc71ce6c",
+          "response_sha256": "ce37ef9dd8ee52e5a13c312f861185c569b378eb1a0c65952342ce84a2b356ce",
+          "text_sha256": "d2566693131bf18c82eb37c8d67ed68a13bcb805f3247a38ab166d15a44c9f2e",
+          "code_sha256": "e47085970ddc1604feb92bc6e83b53a675781746075b3b02a25f3d814a620fe7",
+          "h12_pass_fraction": 0.0,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/net3__seed_20261015/zerofail3__seed_20261017/net3__seed_20261015__b119b1f_1__before_step_04.json"
+        }
+      ]
+    },
+    {
+      "receiver": "zerofail3__seed_20261015",
+      "receiver_sha256": "b12cf3139cbf916683106a9a1292959c1b9bc94168e9285c1c28df563a7f8613",
+      "prompt_ids_sha256": "938bd5ada8795549cf26aecabd73804d1b3e53a376d0206835cc6dc5661b2258",
+      "sampling_seed": 104,
+      "members": [
+        {
+          "state_id": "random:seed_20261017:fac291d_1:before_step_02",
+          "first_model": "random__seed_20261015",
+          "followup_step": 3,
+          "sampling_context_sha256": "65e53af15716af7d43d5ef70d8c09b073d8f8178229de8d7ad2b38f6da2ac3d6",
+          "response_sha256": "debbf26150bd5089fecb7a88119eb3027706d0d39b55856898d342f7bb448f0d",
+          "text_sha256": "e2ec800af5d87a463f6e0a666e459564113b21cdda6c63aa4f8296f6c7325956",
+          "code_sha256": "00184ed8d4c2ba0b7516ba92e8d0ec316e163123907f60e22e0858f26f772659",
+          "h12_pass_fraction": 1.0,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/zerofail3__seed_20261015/random__seed_20261015/random__seed_20261017__fac291d_1__before_step_02.json"
+        },
+        {
+          "state_id": "random:seed_20261017:fac291d_1:before_step_02",
+          "first_model": "random__seed_20261016",
+          "followup_step": 3,
+          "sampling_context_sha256": "65e53af15716af7d43d5ef70d8c09b073d8f8178229de8d7ad2b38f6da2ac3d6",
+          "response_sha256": "db13305473e5da865018e7ec812e4c25cd7f6a2df960fe2a4362bd42d6010e01",
+          "text_sha256": "7882b71c144d5562de53c60d12bb95ee0fbb4449e4717e6e75f8af0915569afc",
+          "code_sha256": "94c69cd01c6685139d8febdb6767ca7fca1e3399269057486ebf7d810a9b97e7",
+          "h12_pass_fraction": 1.0,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/zerofail3__seed_20261015/random__seed_20261016/random__seed_20261017__fac291d_1__before_step_02.json"
+        },
+        {
+          "state_id": "random:seed_20261017:fac291d_1:before_step_02",
+          "first_model": "net3__seed_20261015",
+          "followup_step": 3,
+          "sampling_context_sha256": "65e53af15716af7d43d5ef70d8c09b073d8f8178229de8d7ad2b38f6da2ac3d6",
+          "response_sha256": "db13305473e5da865018e7ec812e4c25cd7f6a2df960fe2a4362bd42d6010e01",
+          "text_sha256": "7882b71c144d5562de53c60d12bb95ee0fbb4449e4717e6e75f8af0915569afc",
+          "code_sha256": "94c69cd01c6685139d8febdb6767ca7fca1e3399269057486ebf7d810a9b97e7",
+          "h12_pass_fraction": 1.0,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/zerofail3__seed_20261015/net3__seed_20261015/random__seed_20261017__fac291d_1__before_step_02.json"
+        },
+        {
+          "state_id": "random:seed_20261017:fac291d_1:before_step_02",
+          "first_model": "zerofail3__seed_20261015",
+          "followup_step": 3,
+          "sampling_context_sha256": "65e53af15716af7d43d5ef70d8c09b073d8f8178229de8d7ad2b38f6da2ac3d6",
+          "response_sha256": "db13305473e5da865018e7ec812e4c25cd7f6a2df960fe2a4362bd42d6010e01",
+          "text_sha256": "7882b71c144d5562de53c60d12bb95ee0fbb4449e4717e6e75f8af0915569afc",
+          "code_sha256": "94c69cd01c6685139d8febdb6767ca7fca1e3399269057486ebf7d810a9b97e7",
+          "h12_pass_fraction": 1.0,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/zerofail3__seed_20261015/zerofail3__seed_20261015/random__seed_20261017__fac291d_1__before_step_02.json"
+        }
+      ]
+    },
+    {
+      "receiver": "zerofail3__seed_20261015",
+      "receiver_sha256": "b12cf3139cbf916683106a9a1292959c1b9bc94168e9285c1c28df563a7f8613",
+      "prompt_ids_sha256": "94f4a01006b66690814e6e66c24468d4a64bb92fb170063690d4797190d3c1b6",
+      "sampling_seed": 110,
+      "members": [
+        {
+          "state_id": "net3:seed_20261015:b119b1f_1:before_step_04",
+          "first_model": "random__seed_20261015",
+          "followup_step": 7,
+          "sampling_context_sha256": "22a1c1d1a2bff3ae3fb1bb5878504e502d644dae939619d59c32cc1fb724ddf4",
+          "response_sha256": "a82b092f9362b4acad5d7c756d90fd67b3015997bda80ba5dc320c1b633a07ad",
+          "text_sha256": "2b5987828852ab0fe3c4fa764e958a472ccab70a7d53059cbc1e8e949d954db9",
+          "code_sha256": "184fa440fa3268d5e812f5914d3ff5bc1d33e075419c9580f1400559d8e4b9e3",
+          "h12_pass_fraction": 0.6666666666666666,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/zerofail3__seed_20261015/random__seed_20261015/net3__seed_20261015__b119b1f_1__before_step_04.json"
+        },
+        {
+          "state_id": "net3:seed_20261015:b119b1f_1:before_step_04",
+          "first_model": "random__seed_20261016",
+          "followup_step": 7,
+          "sampling_context_sha256": "22a1c1d1a2bff3ae3fb1bb5878504e502d644dae939619d59c32cc1fb724ddf4",
+          "response_sha256": "1946b4dbbf9351723cb11e28a801230f6d55a83b79b0d116b37dc2ce3a3be468",
+          "text_sha256": "add369d04534f562ef1036135eef4a51692188b14f9085a800501adfc969b5ef",
+          "code_sha256": "ecc943a6a40f6563028b87ee682140c2be3dd6937957837f16d0dac1122e6d76",
+          "h12_pass_fraction": 0.6666666666666666,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/zerofail3__seed_20261015/random__seed_20261016/net3__seed_20261015__b119b1f_1__before_step_04.json"
+        },
+        {
+          "state_id": "net3:seed_20261015:b119b1f_1:before_step_04",
+          "first_model": "net3__seed_20261015",
+          "followup_step": 7,
+          "sampling_context_sha256": "22a1c1d1a2bff3ae3fb1bb5878504e502d644dae939619d59c32cc1fb724ddf4",
+          "response_sha256": "a6d9f1d098ed32f7140ee91bdc9f3561010222512ec0ca4b6e1c945f19b106cc",
+          "text_sha256": "6426c13d4e43cb0895c38089f8bf70ed3ede8074498e3efa2e4dd0782812ad30",
+          "code_sha256": "4fa971a07d92541c094f1779f83ed382a71390325edcb69fba4b7cdbd206dfa9",
+          "h12_pass_fraction": 0.6666666666666666,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/zerofail3__seed_20261015/net3__seed_20261015/net3__seed_20261015__b119b1f_1__before_step_04.json"
+        },
+        {
+          "state_id": "net3:seed_20261015:b119b1f_1:before_step_04",
+          "first_model": "net3__seed_20261016",
+          "followup_step": 7,
+          "sampling_context_sha256": "22a1c1d1a2bff3ae3fb1bb5878504e502d644dae939619d59c32cc1fb724ddf4",
+          "response_sha256": "1946b4dbbf9351723cb11e28a801230f6d55a83b79b0d116b37dc2ce3a3be468",
+          "text_sha256": "add369d04534f562ef1036135eef4a51692188b14f9085a800501adfc969b5ef",
+          "code_sha256": "ecc943a6a40f6563028b87ee682140c2be3dd6937957837f16d0dac1122e6d76",
+          "h12_pass_fraction": 0.6666666666666666,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/zerofail3__seed_20261015/net3__seed_20261016/net3__seed_20261015__b119b1f_1__before_step_04.json"
+        },
+        {
+          "state_id": "net3:seed_20261015:b119b1f_1:before_step_04",
+          "first_model": "net3__seed_20261017",
+          "followup_step": 7,
+          "sampling_context_sha256": "22a1c1d1a2bff3ae3fb1bb5878504e502d644dae939619d59c32cc1fb724ddf4",
+          "response_sha256": "a82b092f9362b4acad5d7c756d90fd67b3015997bda80ba5dc320c1b633a07ad",
+          "text_sha256": "2b5987828852ab0fe3c4fa764e958a472ccab70a7d53059cbc1e8e949d954db9",
+          "code_sha256": "184fa440fa3268d5e812f5914d3ff5bc1d33e075419c9580f1400559d8e4b9e3",
+          "h12_pass_fraction": 0.6666666666666666,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/zerofail3__seed_20261015/net3__seed_20261017/net3__seed_20261015__b119b1f_1__before_step_04.json"
+        },
+        {
+          "state_id": "net3:seed_20261015:b119b1f_1:before_step_04",
+          "first_model": "zerofail3__seed_20261015",
+          "followup_step": 7,
+          "sampling_context_sha256": "22a1c1d1a2bff3ae3fb1bb5878504e502d644dae939619d59c32cc1fb724ddf4",
+          "response_sha256": "a82b092f9362b4acad5d7c756d90fd67b3015997bda80ba5dc320c1b633a07ad",
+          "text_sha256": "2b5987828852ab0fe3c4fa764e958a472ccab70a7d53059cbc1e8e949d954db9",
+          "code_sha256": "184fa440fa3268d5e812f5914d3ff5bc1d33e075419c9580f1400559d8e4b9e3",
+          "h12_pass_fraction": 0.6666666666666666,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/zerofail3__seed_20261015/zerofail3__seed_20261015/net3__seed_20261015__b119b1f_1__before_step_04.json"
+        },
+        {
+          "state_id": "net3:seed_20261015:b119b1f_1:before_step_04",
+          "first_model": "zerofail3__seed_20261017",
+          "followup_step": 7,
+          "sampling_context_sha256": "22a1c1d1a2bff3ae3fb1bb5878504e502d644dae939619d59c32cc1fb724ddf4",
+          "response_sha256": "a82b092f9362b4acad5d7c756d90fd67b3015997bda80ba5dc320c1b633a07ad",
+          "text_sha256": "2b5987828852ab0fe3c4fa764e958a472ccab70a7d53059cbc1e8e949d954db9",
+          "code_sha256": "184fa440fa3268d5e812f5914d3ff5bc1d33e075419c9580f1400559d8e4b9e3",
+          "h12_pass_fraction": 0.6666666666666666,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/zerofail3__seed_20261015/zerofail3__seed_20261017/net3__seed_20261015__b119b1f_1__before_step_04.json"
+        }
+      ]
+    },
+    {
+      "receiver": "zerofail3__seed_20261015",
+      "receiver_sha256": "b12cf3139cbf916683106a9a1292959c1b9bc94168e9285c1c28df563a7f8613",
+      "prompt_ids_sha256": "c9cebf96bb2387ef12457aa4c6f744d993f2a72ad8be84f42671fee5701d6b85",
+      "sampling_seed": 111,
+      "members": [
+        {
+          "state_id": "net3:seed_20261015:b119b1f_1:before_step_04",
+          "first_model": "random__seed_20261016",
+          "followup_step": 8,
+          "sampling_context_sha256": "97dc9feff2bbff7c754efca5a80f1d9cdddcbd19735af9b702ede6cf241f137e",
+          "response_sha256": "d4c7697e19afbc4d6dc0f077ae429c8ed8ae54655515eb6aa190b9d63900e2be",
+          "text_sha256": "7d635992ffca54a1c73b7c8c52e32a00b0d070dddca63f853acbaa51023cd9e3",
+          "code_sha256": "f27e448053f8bc1e16a17528400f76fc4170de512c338d8027126757f341914e",
+          "h12_pass_fraction": 0.6666666666666666,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/zerofail3__seed_20261015/random__seed_20261016/net3__seed_20261015__b119b1f_1__before_step_04.json"
+        },
+        {
+          "state_id": "net3:seed_20261015:b119b1f_1:before_step_04",
+          "first_model": "net3__seed_20261016",
+          "followup_step": 8,
+          "sampling_context_sha256": "97dc9feff2bbff7c754efca5a80f1d9cdddcbd19735af9b702ede6cf241f137e",
+          "response_sha256": "5dbb33e3bbba466cbc2f8aa0e160f3dfbf6024e0fa0726d60e7eb5ad9fe50d7f",
+          "text_sha256": "3a78cf89e810bc23fa761480effb1e39874a4d60ed43217bc0c27b7bc946d0a9",
+          "code_sha256": "f27e448053f8bc1e16a17528400f76fc4170de512c338d8027126757f341914e",
+          "h12_pass_fraction": 0.6666666666666666,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/zerofail3__seed_20261015/net3__seed_20261016/net3__seed_20261015__b119b1f_1__before_step_04.json"
+        }
+      ]
+    },
+    {
+      "receiver": "zerofail3__seed_20261015",
+      "receiver_sha256": "b12cf3139cbf916683106a9a1292959c1b9bc94168e9285c1c28df563a7f8613",
+      "prompt_ids_sha256": "fa836db17fe5c0ba5cbd0e1a3ff8884dda222cdef48258f46f2d928c164ae077",
+      "sampling_seed": 106,
+      "members": [
+        {
+          "state_id": "zerofail3:seed_20261017:68ee2c9_3:before_step_02",
+          "first_model": "random__seed_20261016",
+          "followup_step": 5,
+          "sampling_context_sha256": "e909ef7fea07d2050758745e8baefc83a362e1394a8ffc9c6913aa47fa684709",
+          "response_sha256": "0a5b159c6be6b2c6ce0321ac115943c66c9b4518267bea7c8ab2af7c77363897",
+          "text_sha256": "46d5ba24703aea978e062f25d31592c23a55301230d2c5693fb5cb014bfb0be6",
+          "code_sha256": "e164ebe6cc911c027c4edad6984c2c760ce88e874cab0fd3f5653a882a887cfa",
+          "h12_pass_fraction": 0.4,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/zerofail3__seed_20261015/random__seed_20261016/zerofail3__seed_20261017__68ee2c9_3__before_step_02.json"
+        },
+        {
+          "state_id": "zerofail3:seed_20261017:68ee2c9_3:before_step_02",
+          "first_model": "random__seed_20261017",
+          "followup_step": 5,
+          "sampling_context_sha256": "e909ef7fea07d2050758745e8baefc83a362e1394a8ffc9c6913aa47fa684709",
+          "response_sha256": "f357106a790ec72019094752e7ea814a2f4cf244b08192b91d55c81c9f39452c",
+          "text_sha256": "1480a612303ae1c4c59222d27095d1b3bd70c442b57cf2179156a1f5cde68c09",
+          "code_sha256": "e164ebe6cc911c027c4edad6984c2c760ce88e874cab0fd3f5653a882a887cfa",
+          "h12_pass_fraction": 0.2,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/zerofail3__seed_20261015/random__seed_20261017/zerofail3__seed_20261017__68ee2c9_3__before_step_02.json"
+        },
+        {
+          "state_id": "zerofail3:seed_20261017:68ee2c9_3:before_step_02",
+          "first_model": "net3__seed_20261017",
+          "followup_step": 5,
+          "sampling_context_sha256": "e909ef7fea07d2050758745e8baefc83a362e1394a8ffc9c6913aa47fa684709",
+          "response_sha256": "f357106a790ec72019094752e7ea814a2f4cf244b08192b91d55c81c9f39452c",
+          "text_sha256": "1480a612303ae1c4c59222d27095d1b3bd70c442b57cf2179156a1f5cde68c09",
+          "code_sha256": "e164ebe6cc911c027c4edad6984c2c760ce88e874cab0fd3f5653a882a887cfa",
+          "h12_pass_fraction": 0.2,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/zerofail3__seed_20261015/net3__seed_20261017/zerofail3__seed_20261017__68ee2c9_3__before_step_02.json"
+        }
+      ]
+    },
+    {
+      "receiver": "zerofail3__seed_20261015",
+      "receiver_sha256": "b12cf3139cbf916683106a9a1292959c1b9bc94168e9285c1c28df563a7f8613",
+      "prompt_ids_sha256": "c0a23bba9c976532ad067c56cf94f7ab6e1277925b4c0a218eaa679978857932",
+      "sampling_seed": 109,
+      "members": [
+        {
+          "state_id": "random:seed_20261017:530b157_3:before_step_07",
+          "first_model": "net3__seed_20261016",
+          "followup_step": 3,
+          "sampling_context_sha256": "39987032a7d2925c37a559bf375599f45cb10fa0028cc493576b992d65f1c130",
+          "response_sha256": "a007d88e72e5cb76f7b31e29df0d7837661b2cd0e727a44bcc438c32742e3374",
+          "text_sha256": "1600b58cd9f990202dbcfffa7fe1adff4de26370223041f9e6f1ef8590c4cc9b",
+          "code_sha256": "ee232761b5f53c5450785d5844f5b63ce2f9590900e83e924786621fb5c37ac7",
+          "h12_pass_fraction": 0.1,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/zerofail3__seed_20261015/net3__seed_20261016/random__seed_20261017__530b157_3__before_step_07.json"
+        },
+        {
+          "state_id": "random:seed_20261017:530b157_3:before_step_07",
+          "first_model": "zerofail3__seed_20261017",
+          "followup_step": 3,
+          "sampling_context_sha256": "39987032a7d2925c37a559bf375599f45cb10fa0028cc493576b992d65f1c130",
+          "response_sha256": "4c471481243a3ac200475f410dffc48f570ce3f66cbcf5ae50f994ff0ef6886c",
+          "text_sha256": "6d6a0375296a12393164888fee2b5bbfdf50183afe32a34ed4f6611d01f62a76",
+          "code_sha256": "ee232761b5f53c5450785d5844f5b63ce2f9590900e83e924786621fb5c37ac7",
+          "h12_pass_fraction": 0.1,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/zerofail3__seed_20261015/zerofail3__seed_20261017/random__seed_20261017__530b157_3__before_step_07.json"
+        }
+      ]
+    },
+    {
+      "receiver": "zerofail3__seed_20261015",
+      "receiver_sha256": "b12cf3139cbf916683106a9a1292959c1b9bc94168e9285c1c28df563a7f8613",
+      "prompt_ids_sha256": "cce6aebdee2cd766af3e839571acf63cff9d889f8ab93c1d855df0412ca68197",
+      "sampling_seed": 110,
+      "members": [
+        {
+          "state_id": "zerofail3:seed_20261015:d4e9306_1:before_step_08",
+          "first_model": "net3__seed_20261016",
+          "followup_step": 3,
+          "sampling_context_sha256": "be7c9b2f88419bcfd93c1adc5780996e823b607c3b6b971524b9ead24192e489",
+          "response_sha256": "5cc0e0fbed63d354cc4e81fd7d177ea1cf1fc14a365f92221805ef3701776fd0",
+          "text_sha256": "a5c30edaa52958eb1d74284f334de46ead8f5e1820f2e581043117c95c2fcc58",
+          "code_sha256": "62277cc483921140e676d1e997b0c40f91050a01d923ee9cc286d2b252fe4984",
+          "h12_pass_fraction": 1.0,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/zerofail3__seed_20261015/net3__seed_20261016/zerofail3__seed_20261015__d4e9306_1__before_step_08.json"
+        },
+        {
+          "state_id": "zerofail3:seed_20261015:d4e9306_1:before_step_08",
+          "first_model": "zerofail3__seed_20261016",
+          "followup_step": 3,
+          "sampling_context_sha256": "be7c9b2f88419bcfd93c1adc5780996e823b607c3b6b971524b9ead24192e489",
+          "response_sha256": "67293a812013368b703efd27e2f93c0440416658c504b7cbe7a8a484e247041e",
+          "text_sha256": "1cca1feb4a524f77b4dbbfdc74c5a5a64d0af63f157165b7f046a9f23c0957e2",
+          "code_sha256": "6c122882567ae492e09fc07fd275895df24cef7660fd569b7fe143ea019eb938",
+          "h12_pass_fraction": 1.0,
+          "source": "/root/autodl-tmp/workspace-tw/experiments/2026-10-20_appworld_zerofail3_same_state_mechanism/results/continuations/continuation/zerofail3__seed_20261015/zerofail3__seed_20261016/zerofail3__seed_20261015__d4e9306_1__before_step_08.json"
+        }
+      ]
+    }
+  ],
+  "interpretation": "Fixed seed and greedy decoding did not ensure token-level identical output for all repeated inputs. Underlying cause not identified; no saved output changed or resampled. Counts are among observed repeated contexts and are not an estimate of all-run noise probability."
+}

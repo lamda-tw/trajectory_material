@@ -1,0 +1,121 @@
+{
+  "updated_at": "2026-10-21T10:32:02.022072+08:00",
+  "reason": "User requested a full plain-language rewrite explaining states/tasks, anchor and A/B/C panels, actual execution, metrics and results before interpretation.",
+  "previous_report": "analysis/REPORT_before_plain_language_rewrite.md",
+  "previous_report_sha256": "51e58e4797b1d2f71ebe79296068e1d12be771412ded8b34c0b9e0301ddfa33c",
+  "current_report_sha256": "a5d76a1a7f484693662159e81ae14f32e0b448b0ec2b2f9a2d7517ae61fae46d",
+  "statistics_changed": false,
+  "new_model_calls": 0,
+  "new_external_judge_calls": 0,
+  "statistical_csv_sha256": {
+    "analysis/api_request_ledger.csv": "8f10cf3229dfe2de87828d5d501c6c79686867501dbb067bba2f4775bbdd552b",
+    "analysis/api_response_ledger.csv": "5317182cc87425722faf4c029214a13c41c2c25afdd90d4f21eec7841120554f",
+    "analysis/behavior_metrics.csv": "9c001cea8a71983623a0655bedd33e8a78b8b3c5b7b1877ab1e90b7742d0f2a7",
+    "analysis/behavior_rows.csv": "cfd9866815d59c00973b70f10ef8f5bdf54718170483d15f5199c9d53807935b",
+    "analysis/behavior_source_family_subtype_slices.csv": "abb395099effcfd78abf20b7a160caff6891d0802e76cf402089dc193a1efa38",
+    "analysis/continuation_all_available_rows.csv": "03a41221d5b5ea2f08e3166d213bc036d1b5c790b8dd7ac8ad953d1209e238bf",
+    "analysis/continuation_common_rows.csv": "03a41221d5b5ea2f08e3166d213bc036d1b5c790b8dd7ac8ad953d1209e238bf",
+    "analysis/continuation_evaluator_categories.csv": "29a8520aea46f74be1ecaf7cfe2f62f53de96a77fb18e9757a7cf4757a9401d5",
+    "analysis/continuation_evaluator_checks.csv": "7293729d390ef2388e998f4a6d6fe07a47bd752582ac427545d08750e92d12a2",
+    "analysis/continuation_model_summary.csv": "4867dd5daa910209d4105fa267feffad79526b8b3773970ef805d061b3f0ad02",
+    "analysis/continuation_receiver_source_stage_slices.csv": "66f72bea929f46bed08763fa0c9e83a57c66ad6ab177e9c856a0d8f3a6566e21",
+    "analysis/evaluator_categories.csv": "4a3940dce2f68089e62fb82411dbddf2f8bdb8348e11064f71ef9582ac23d890",
+    "analysis/evaluator_checks.csv": "ae283f79d9c97c28871b5dcc661eb9dabd9fc1db681c5c5498853855f038250b",
+    "analysis/judge_repeat_consistency.csv": "f8f8265fdffd607ad0248a2593337fda80bf87c9352456114c4b9e32e741db8f",
+    "analysis/mechanism_coverage_gates.csv": "b5d8a184317bfab8a33e68b52309656237153ddca01a75df93674cea01712e14",
+    "analysis/opportunity_and_state_coverage.csv": "a09ef1dcbb897c3a80079906f89fbba5e000cd61c29dd9db9a4129abcd292226",
+    "analysis/paired_behavior_contrasts.csv": "cd88146b6928aac79d42920dd8f72f47dc147de5a565599e9bfe399b61fe07ae",
+    "analysis/paired_continuation_contrasts.csv": "4168a616bddb7f1e9cd8457d5563f4516ad8e5f95eeb5d0b47b07e9e7cf789c1",
+    "analysis/paired_continuation_evaluator_checks.csv": "9d2f63b913f02f36393ee8970f61aeb1ed3b4ed6ffb02785f8a19e087b63db19",
+    "analysis/paired_evaluator_checks.csv": "b2d9c551ef0f03580fc2c7a5c501b46eedc2083cf9ac327d11306174134aef25",
+    "analysis/rubric_distributions.csv": "c40e624fc7f85bd05ffb4e330d3558b88aebef342a2513da1b370b795a265eda",
+    "analysis/visible_collection_ledger.csv": "6a15cb9fabac6c5eaabdeca424e9309b79b6f5d2bad367249dcfa5e3b7623fd2"
+  },
+  "frozen_files_verified": 119,
+  "existing_example_rows_verified": [
+    {
+      "example": "A_full_spec",
+      "state_id": "net3:seed_20261015:4ec8de5_2:before_step_06",
+      "model": "zerofail3__seed_20261015",
+      "panel": "focus_A",
+      "metric": "relevant_gap_reduced",
+      "judgement": "judge_runs/actions/cb1b4a3ea6e4f17186e20139919f10a50d436d6d9f0620ac4dcbc0ca4a10e926/judgement.json",
+      "sanitized_public_evidence": "judge_runs/actions/cb1b4a3ea6e4f17186e20139919f10a50d436d6d9f0620ac4dcbc0ca4a10e926/input.json",
+      "opportunities": {
+        "A_opportunity": "yes",
+        "B_opportunity": "yes",
+        "C_opportunity": "uncertain"
+      }
+    },
+    {
+      "example": "A_discovery",
+      "state_id": "zerofail3:seed_20261017:68ee2c9_3:before_step_02",
+      "model": "zerofail3__seed_20261015",
+      "panel": "focus_A",
+      "metric": "relevant_gap_reduced",
+      "judgement": "judge_runs/actions/4246b1b12ce3acfcf148998fe79b3a4d19cb82a5e3946b7ad8f275e728d6c9a9/judgement.json",
+      "sanitized_public_evidence": "judge_runs/actions/4246b1b12ce3acfcf148998fe79b3a4d19cb82a5e3946b7ad8f275e728d6c9a9/input.json",
+      "opportunities": {
+        "A_opportunity": "yes",
+        "B_opportunity": "yes",
+        "C_opportunity": "no"
+      }
+    },
+    {
+      "example": "B_credentials",
+      "state_id": "zerofail3:seed_20261015:23cf851_3:before_step_06",
+      "model": "zerofail3__seed_20261015",
+      "panel": "focus_B",
+      "metric": "grounded_application",
+      "judgement": "judge_runs/actions/3cd99727bca3572f03152e347d1b16b12be46404289cdcecc1ac24d522a14cc4/judgement.json",
+      "sanitized_public_evidence": "judge_runs/actions/3cd99727bca3572f03152e347d1b16b12be46404289cdcecc1ac24d522a14cc4/input.json",
+      "opportunities": {
+        "A_opportunity": "yes",
+        "B_opportunity": "yes",
+        "C_opportunity": "yes"
+      }
+    },
+    {
+      "example": "B_read_with_other_error",
+      "state_id": "random:seed_20261015:50e1ac9_3:before_step_08",
+      "model": "zerofail3__seed_20261015",
+      "panel": "focus_B",
+      "metric": "grounded_application",
+      "judgement": "judge_runs/actions/7d66e71dd87ca9a223ac03f1a72e41163e41b4860dbfa5e0a1235bc50ff5062b/judgement.json",
+      "sanitized_public_evidence": "judge_runs/actions/7d66e71dd87ca9a223ac03f1a72e41163e41b4860dbfa5e0a1235bc50ff5062b/input.json",
+      "opportunities": {
+        "A_opportunity": "yes",
+        "B_opportunity": "yes",
+        "C_opportunity": "yes"
+      }
+    },
+    {
+      "example": "C_paging",
+      "state_id": "zerofail3:seed_20261015:d4e9306_1:before_step_08",
+      "model": "zerofail3__seed_20261015",
+      "panel": "focus_C",
+      "metric": "coverage_progress",
+      "judgement": "judge_runs/actions/6ab48b0ba99576fbc27da660913027438d5f2e652aa6160170160debe42114f8/judgement.json",
+      "sanitized_public_evidence": "judge_runs/actions/6ab48b0ba99576fbc27da660913027438d5f2e652aa6160170160debe42114f8/input.json",
+      "opportunities": {
+        "A_opportunity": "yes",
+        "B_opportunity": "yes",
+        "C_opportunity": "yes"
+      }
+    },
+    {
+      "example": "C_panel_with_A_opportunity",
+      "state_id": "zerofail3:seed_20261016:396c5a2_2:before_step_04",
+      "model": "zerofail3__seed_20261015",
+      "panel": "focus_C",
+      "metric": "relevant_gap_reduced",
+      "judgement": "judge_runs/actions/9542594683d0e71ab6237d55829e46836d8038e9952d3a761d1f391b197cea17/judgement.json",
+      "sanitized_public_evidence": "judge_runs/actions/9542594683d0e71ab6237d55829e46836d8038e9952d3a761d1f391b197cea17/input.json",
+      "opportunities": {
+        "A_opportunity": "yes",
+        "B_opportunity": "yes",
+        "C_opportunity": "no"
+      }
+    }
+  ]
+}

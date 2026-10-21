@@ -1,0 +1,52 @@
+{
+  "accepted": true,
+  "accepted_at_utc": "2026-10-19T14:52:45.170334+00:00",
+  "evaluator_verified": true,
+  "prompt_tokens_exact_states": 307,
+  "double_replay_states": 8,
+  "semantic_review_states": 8,
+  "judge_calibration_external_calls": 32,
+  "judge_calibration_policy_generations": 0,
+  "changed_snapshot_probe": {
+    "before_passes": 1,
+    "after_passes": 2,
+    "changed_requirement": "assert answers match.",
+    "excluded_from_formal_and_judge": true
+  },
+  "frozen_files": {
+    "config/card_prompt.txt": "75c9b8069a2379f4075f2158cc73498d2dbfe86ba975b655849fe1f8108ba5ee",
+    "config/action_prompt.txt": "bf14baa68a07a5fce985d41e72a07b62575110fe6cc9336e412edbad127bffa3",
+    "config/rubric_v7_source.txt": "2eb29f25a4cc9a3bcf33c120e5f3c0bba092be42e06ad7b44b08a64157d91502",
+    "config/runtime.json": "5aed53f0446ec4ae3b1ffa4e27aa4114a78048d0edf55ddebcad24e5c75b785e",
+    "config/agent_prompt.txt": "c41f7852217d46586047a38f68e88b827cb9dcbe624e9651f9db8301547a534b",
+    "plan_snapshot/states_selected.csv": "652b238f2230df17ae268c12cf19493b83790421228ac06ac7bda8467a2ea88c",
+    "plan_snapshot/same_state_models.json": "b991208d2d975bb846ce9758909c281ed4175abf4cb759a13c4907fee74d5bc0",
+    "scripts/judging.py": "30195f978bf94bb6bf31f20f009f98615cd7ff3cacae3a5360241f3978065611",
+    "scripts/public_payload.py": "78134151c7debffe712b3913c3c93daaebc384805e95f3b6657d891283257704"
+  },
+  "implementation_files": {
+    "scripts/analyze_phase1.py": "9cbf12955bc100c2769d206c9d1b1f32f0f6a8d8a698844052e499627c3af246",
+    "scripts/calibrate_evaluator.py": "5ca0256c81ae568a708db7dd964f93388530835e4c7e0f68a46b288a4f1bcd64",
+    "scripts/calibrate_judge.py": "8874633c6961707d57eeb1c2577226c3fd9e17e4b0e47418c6e80fb01893b9b1",
+    "scripts/calibrate_replay.py": "480e2dd5b89648032d81fee344ae9d83160ba6d88543d16d609c2a27db20b732",
+    "scripts/evaluate_snapshot.py": "23b02dcabdb96f82554d6c36abb91c854865a87dc9ddb49e726ecfbdc09de8b7",
+    "scripts/evaluator_parse.py": "2485afa9eedbc7e32a11aed0a42ddb901c09142e7384346b47fbbe000d4a2ca4",
+    "scripts/judging.py": "30195f978bf94bb6bf31f20f009f98615cd7ff3cacae3a5360241f3978065611",
+    "scripts/prepare_inputs.py": "e5677a76468894f66adfa65813095b20b2c8fbca5af45cf39459ce6557e734c4",
+    "scripts/progress.py": "1c58919d4f6eba228220223fbae2dcbbb4eaad91ba99426f44aade7831dadb2a",
+    "scripts/public_payload.py": "78134151c7debffe712b3913c3c93daaebc384805e95f3b6657d891283257704",
+    "scripts/replay_worker.py": "a312f2c126137f7b583e65648d20e5946740076849c5f3d1629e91b2045084af",
+    "scripts/run_phase1.py": "fa95afe650f49f64101f84d3a65a7d4f3559f29a0cbd415e033f4bdc025f37c0",
+    "scripts/validate_implementation.py": "cf2e11a689fd39e1d8d0bf83773cf18e83dc5c5a8dd6af67eca85ce09071bf69"
+  },
+  "scope": "phase1 only, GPU1 only; no SFT, no old ZeroFail3, no continuation",
+  "privacy_only_revision": {
+    "utc": "2026-10-19T14:56:50.230838+00:00",
+    "change": "Cover new/old/current password fields and named credential variables.",
+    "all_16_final_calibration_requests_identical": true,
+    "all_existing_formal_card_requests_identical": true,
+    "remaining_literal_credential_candidates": 0,
+    "criteria_unchanged": true
+  },
+  "analysis_completion_before_formal_actions": "Added explicit uncertain-opportunity sensitivity, unknown rates for cost labels, secondary R1-vs-R2 pairing, per-seed evaluator macros; no formal candidate outputs existed."
+}

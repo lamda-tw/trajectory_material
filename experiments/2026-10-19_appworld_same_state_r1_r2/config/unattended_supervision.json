@@ -1,0 +1,19 @@
+{
+  "authorized_at": "2026-10-20T00:30:03.680990+08:00",
+  "user_instruction": "之后将无人值守，请你定时查看，自行处理异常。",
+  "check_interval_seconds": 300,
+  "process_tracking_interval_seconds": 30,
+  "scope": "Existing first-stage same-state experiment only; GPU1 only; no training, no old ZeroFail3, no continuation.",
+  "recovery": "Resume saved first-valid generations and judgements; at most 3 consecutive same-failure restarts, 8 restarts total. Preserve all results.",
+  "guards": [
+    "Frozen protocol hashes unchanged",
+    "Never kill foreign GPU processes",
+    "Never weaken state/evaluator equality",
+    "No sample replacement or score-based retry",
+    "Pause below 10 GiB disk free",
+    "Complete only when final REPORT.md and completion node exist"
+  ],
+  "monitor_script": "scripts/watchdog.py",
+  "supervisor_safety_tests_passed": 7,
+  "started_at": "2026-10-20T00:28:54.763556+08:00"
+}

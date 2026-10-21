@@ -1,0 +1,60 @@
+{
+  "reviewer": "executing research assistant; public evidence review, not an independent accuracy benchmark",
+  "reviewed_all_8": true,
+  "protocol_revision": "draft1 -> state_probe_v1 final; general applicability clarifications before formal candidates",
+  "cases": [
+    {
+      "state_id": "0d8a4ee_3:before_step_08",
+      "evidence_review": "遗漏已获得的token，复现401；不将登录成功等同后续调用授权。",
+      "feedback_response": "ignored_or_repeated",
+      "rubrics": "FNPNNFNF"
+    },
+    {
+      "state_id": "396c5a2_3:before_step_15",
+      "evidence_review": "重复默认第一页查询；第二个代码块未执行；无查文档动作，documentation=N/A。",
+      "feedback_response": "ignored_or_repeated",
+      "rubrics": "PFUNNFNF"
+    },
+    {
+      "state_id": "3ab5b8b_2:before_step_09",
+      "evidence_review": "完整download_song规格刚已取得，重复读取无信息增量；R6=F。",
+      "feedback_response": "ignored_or_repeated",
+      "rubrics": "PPPNNFNP"
+    },
+    {
+      "state_id": "3ab5b8b_3:before_step_07",
+      "evidence_review": "首次完整response schema确实帮助诊断旧解析错误，可R6=P；同时错误声称看到了未显示内容，R3=F，两维独立。",
+      "feedback_response": "necessary_new_evidence",
+      "rubrics": "PPFNNPNP"
+    },
+    {
+      "state_id": "4ec8de5_1:before_step_19",
+      "evidence_review": "API列表明确有show_song_library，仍否认并重复song_ids错误；R3/R6违反有直接证据。",
+      "feedback_response": "ignored_or_repeated",
+      "rubrics": "FFFFNFNF"
+    },
+    {
+      "state_id": "50e1ac9_3:before_step_11",
+      "evidence_review": "已见相同Spotify目录，再列目录未解决字段问题；不会因正常执行就算恢复。",
+      "feedback_response": "ignored_or_repeated",
+      "rubrics": "PPPNNFNP"
+    },
+    {
+      "state_id": "68ee2c9_2:before_step_19",
+      "evidence_review": "文件移动已部分生效，旧列表再次打印没有当前状态证据；不假定异常回滚。",
+      "feedback_response": "ignored_or_repeated",
+      "rubrics": "PPPNNFNP"
+    },
+    {
+      "state_id": "6c2c621_2:before_step_04",
+      "evidence_review": "首次另一个子目标的文档发现有用，但未修复旧认证；保留evidence_gain，R6=N，反馈响应不计成功。",
+      "feedback_response": "not_applicable",
+      "rubrics": "PPPNNNNP"
+    }
+  ],
+  "limitations": [
+    "Only eight preselected states; all contain some prior recovery need.",
+    "Pilot original actions are mostly reads/docs/errors; R5 modifications and R7 completion applicability lack representative model-action calibration.",
+    "No group candidate outcomes were generated or used to tune labels."
+  ]
+}

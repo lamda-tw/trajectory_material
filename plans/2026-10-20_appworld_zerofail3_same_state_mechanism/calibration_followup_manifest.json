@@ -1,0 +1,74 @@
+{
+  "status": "plan_only",
+  "selection_rule": "sha256(20261020:zerofail_same_state_v1:continuation_calibration|<state_id>) ascending, one per stage, before_step <=47",
+  "fixtures": [
+    {
+      "state_id": "random:seed_20261016:37a8675_2:before_step_30",
+      "public_state_id": "state_c3008d67de714b78abfa",
+      "stage": "A",
+      "first_action_group": "random",
+      "first_action_seed": 20261015,
+      "receivers": [
+        {
+          "group": "random",
+          "seed": 20261015
+        },
+        {
+          "group": "net3",
+          "seed": 20261015
+        },
+        {
+          "group": "zerofail3",
+          "seed": 20261015
+        }
+      ],
+      "max_followup_calls_per_receiver": 3
+    },
+    {
+      "state_id": "random:seed_20261015:6171bbc_2:before_step_35",
+      "public_state_id": "state_929dc028f3d1183bf677",
+      "stage": "B",
+      "first_action_group": "net3",
+      "first_action_seed": 20261015,
+      "receivers": [
+        {
+          "group": "random",
+          "seed": 20261015
+        },
+        {
+          "group": "net3",
+          "seed": 20261015
+        },
+        {
+          "group": "zerofail3",
+          "seed": 20261015
+        }
+      ],
+      "max_followup_calls_per_receiver": 3
+    },
+    {
+      "state_id": "random:seed_20261017:df61dc5_2:before_step_12",
+      "public_state_id": "state_abf8433373b9164d807f",
+      "stage": "C",
+      "first_action_group": "zerofail3",
+      "first_action_seed": 20261015,
+      "receivers": [
+        {
+          "group": "random",
+          "seed": 20261015
+        },
+        {
+          "group": "net3",
+          "seed": 20261015
+        },
+        {
+          "group": "zerofail3",
+          "seed": 20261015
+        }
+      ],
+      "max_followup_calls_per_receiver": 3
+    }
+  ],
+  "branches": 9,
+  "max_generation_calls": 27
+}

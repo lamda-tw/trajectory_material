@@ -1,0 +1,63 @@
+{
+  "nodes": {
+    "授权与GPU1核对": {
+      "status": "complete",
+      "detail": "物理GPU1显存0MiB，无计算进程；UUID已冻结。",
+      "updated_at": "2026-10-19T22:45:16.524271+08:00"
+    },
+    "输入token核验": {
+      "status": "complete",
+      "detail": "299正式+8校准状态全部逐token等于原轨迹。",
+      "updated_at": "2026-10-19T22:45:16.524602+08:00"
+    },
+    "双重重放校准": {
+      "status": "complete",
+      "detail": "8状态双重重放通过。",
+      "updated_at": "2026-10-19T22:45:54.509082+08:00"
+    },
+    "评分校准与协议冻结": {
+      "status": "complete",
+      "detail": "8/8重放、评分语义校准通过；协议已冻结。隔离evaluator变更探针捕获答案检查0→1；校准不并入正式结果。",
+      "updated_at": "2026-10-19T22:52:45.171625+08:00"
+    },
+    "299张正式前缀卡": {
+      "status": "complete",
+      "detail": "299/299卡片已冻结；机会分母不随候选变化。",
+      "updated_at": "2026-10-19T23:41:26.960355+08:00",
+      "completed": 299,
+      "total": 299
+    },
+    "运行异常": {
+      "status": "error",
+      "detail": "RuntimeError('Worker exit 1; see /root/autodl-tmp/workspace-tw/experiments/2026-10-19_appworld_same_state_r1_r2/results/evaluators/reference/0d8a4ee_1__before_step_32.before.log')；已保存已有产物，禁止将基础设施错误补零。",
+      "updated_at": "2026-10-20T00:00:49.922456+08:00"
+    },
+    "正式状态重放核验": {
+      "status": "complete",
+      "detail": "299/299已核验；299可执行，失败状态不替换。",
+      "updated_at": "2026-10-20T00:26:08.896309+08:00"
+    },
+    "正式单步生成与执行": {
+      "status": "complete",
+      "detail": "9模型全部完成生成、配对执行核验和隔离after-evaluator。",
+      "updated_at": "2026-10-20T04:34:04.597151+08:00",
+      "generated": 2691,
+      "executed": 2691,
+      "total": 2691
+    },
+    "行为评分与72条复核": {
+      "status": "complete",
+      "detail": "完成2691行评分，1473种证据；重复复核72/72，共同缺失不替换。",
+      "updated_at": "2026-10-20T06:28:02.531169+08:00"
+    },
+    "evaluator与报告": {
+      "status": "complete",
+      "detail": "第一阶段已完成；结果见 REPORT.md。未运行旧ZeroFail3、可选续跑。",
+      "updated_at": "2026-10-20T06:28:12.549959+08:00"
+    }
+  },
+  "updated_at": "2026-10-20T06:28:12.549959+08:00",
+  "current_node": "evaluator与报告",
+  "current_detail": "第一阶段已完成；结果见 REPORT.md。未运行旧ZeroFail3、可选续跑。",
+  "status": "complete"
+}

@@ -1,0 +1,144 @@
+{
+  "status": "plan_only_not_started",
+  "protocol": "zerofail_state_mechanism_v1",
+  "date_beijing": "2026-10-20",
+  "state_selection": "frozen_v1",
+  "behavior_judge_protocol": "draft_pending_calibration",
+  "source_training_rubric": "v6 frozen labels; no new selection or training",
+  "posthoc_rubric": "v7; not numerically interchangeable with training labels",
+  "formal_states": 129,
+  "calibration_states": 9,
+  "models": 9,
+  "physical_gpu": 1,
+  "gpu_uuid": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501",
+  "shared_gpu_lock": "experiments/2026-10-14_appworld_sft_init_joint_rl_local_sft/runtime/gpu1.lock",
+  "new_training": false,
+  "execution_requires_later_start_instruction": true,
+  "external_calls_made": 0,
+  "new_external_scope": "public task, credential-redacted prefix/card/candidate/feedback only; no hidden tests, future actions, group names or training seeds; prepare preview and confirm scope at future launch",
+  "sampling": {
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "top_k": -1,
+    "repetition_penalty": 1.0,
+    "enable_thinking": false,
+    "seed": "100 + absolute_step - 1",
+    "max_model_len": 32000,
+    "max_new_tokens": "min(3000, 32000 - input_tokens)",
+    "max_absolute_steps": 50,
+    "parser": "first_python_fence_with_partial_fence_recovery",
+    "context_overflow": "terminate_without_truncation"
+  },
+  "receiver_policies": [
+    {
+      "group": "random",
+      "training_seed": 20261015
+    },
+    {
+      "group": "net3",
+      "training_seed": 20261015
+    },
+    {
+      "group": "zerofail3",
+      "training_seed": 20261015
+    }
+  ],
+  "max_followup_calls": 12,
+  "followup_readouts": [
+    0,
+    4,
+    12
+  ],
+  "judge": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "tools": false,
+    "max_workers": 8,
+    "max_technical_attempts": 3
+  },
+  "cpu_workers": 4,
+  "dependency_files": {
+    "agent_prompt": {
+      "path": "experiments/2026-10-16_appworld_rubric_selection_ablation/config/agent_prompt.txt",
+      "sha256": "c41f7852217d46586047a38f68e88b827cb9dcbe624e9651f9db8301547a534b"
+    },
+    "rubric_v7": {
+      "path": "plans/2026-10-12_appworld_step_rubric/prompt_v7_en.txt",
+      "sha256": "2eb29f25a4cc9a3bcf33c120e5f3c0bba092be42e06ad7b44b08a64157d91502"
+    },
+    "evaluator_type_mapping": {
+      "path": "experiments/2026-10-16_appworld_rubric_selection_ablation/analysis/evaluator_type_mapping.csv",
+      "sha256": "6384afe53a6fedaf28b58b27b468e14a11c90b157514277d11a270a600ce4237"
+    },
+    "reference_replay_worker": {
+      "path": "experiments/2026-10-19_appworld_same_state_r1_r2/scripts/replay_worker.py",
+      "sha256": "db87b7373fe0f6493bb75e1ac4e133e4ea04637b2514f605cb0ba531ceb0b8b4"
+    },
+    "reference_evaluate_snapshot": {
+      "path": "experiments/2026-10-19_appworld_same_state_r1_r2/scripts/evaluate_snapshot.py",
+      "sha256": "caa7a938925d292eb1bed777f8465ef47f6bdea5f7e19de583384179f104d270"
+    },
+    "reference_public_payload": {
+      "path": "experiments/2026-10-19_appworld_same_state_r1_r2/scripts/public_payload.py",
+      "sha256": "78134151c7debffe712b3913c3c93daaebc384805e95f3b6657d891283257704"
+    },
+    "original_config_random_20261015": {
+      "path": "experiments/2026-10-16_appworld_rubric_selection_ablation/evaluation/random/seed_20261015/epoch_01/config.json",
+      "sha256": "a7797be688cbbf61aa1ea201d91f9929d4355c3ae33d66c756f143c84315219d"
+    },
+    "original_config_random_20261016": {
+      "path": "experiments/2026-10-16_appworld_rubric_selection_ablation/evaluation/random/seed_20261016/epoch_01/config.json",
+      "sha256": "a7797be688cbbf61aa1ea201d91f9929d4355c3ae33d66c756f143c84315219d"
+    },
+    "original_config_random_20261017": {
+      "path": "experiments/2026-10-16_appworld_rubric_selection_ablation/evaluation/random/seed_20261017/epoch_01/config.json",
+      "sha256": "a7797be688cbbf61aa1ea201d91f9929d4355c3ae33d66c756f143c84315219d"
+    },
+    "original_config_net3_20261015": {
+      "path": "experiments/2026-10-16_appworld_rubric_selection_ablation/evaluation/net3/seed_20261015/epoch_01/config.json",
+      "sha256": "a7797be688cbbf61aa1ea201d91f9929d4355c3ae33d66c756f143c84315219d"
+    },
+    "original_config_net3_20261016": {
+      "path": "experiments/2026-10-16_appworld_rubric_selection_ablation/evaluation/net3/seed_20261016/epoch_01/config.json",
+      "sha256": "a7797be688cbbf61aa1ea201d91f9929d4355c3ae33d66c756f143c84315219d"
+    },
+    "original_config_net3_20261017": {
+      "path": "experiments/2026-10-16_appworld_rubric_selection_ablation/evaluation/net3/seed_20261017/epoch_01/config.json",
+      "sha256": "a7797be688cbbf61aa1ea201d91f9929d4355c3ae33d66c756f143c84315219d"
+    },
+    "original_config_zerofail3_20261015": {
+      "path": "experiments/2026-10-16_appworld_rubric_selection_ablation/evaluation/zerofail3/seed_20261015/epoch_01/config.json",
+      "sha256": "a7797be688cbbf61aa1ea201d91f9929d4355c3ae33d66c756f143c84315219d"
+    },
+    "original_config_zerofail3_20261016": {
+      "path": "experiments/2026-10-16_appworld_rubric_selection_ablation/evaluation/zerofail3/seed_20261016/epoch_01/config.json",
+      "sha256": "a7797be688cbbf61aa1ea201d91f9929d4355c3ae33d66c756f143c84315219d"
+    },
+    "original_config_zerofail3_20261017": {
+      "path": "experiments/2026-10-16_appworld_rubric_selection_ablation/evaluation/zerofail3/seed_20261017/epoch_01/config.json",
+      "sha256": "a7797be688cbbf61aa1ea201d91f9929d4355c3ae33d66c756f143c84315219d"
+    },
+    "base_config.json": {
+      "path": "/root/autodl-tmp/models/Qwen3-8B/config.json",
+      "sha256": "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30"
+    },
+    "base_generation_config.json": {
+      "path": "/root/autodl-tmp/models/Qwen3-8B/generation_config.json",
+      "sha256": "2325da0f15bb848e018c5ae071b7943332e9f871d6b60e2ed22ca97d4cb993d2"
+    },
+    "base_tokenizer_config.json": {
+      "path": "/root/autodl-tmp/models/Qwen3-8B/tokenizer_config.json",
+      "sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101"
+    },
+    "base_tokenizer.json": {
+      "path": "/root/autodl-tmp/models/Qwen3-8B/tokenizer.json",
+      "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+    },
+    "base_model.safetensors.index.json": {
+      "path": "/root/autodl-tmp/models/Qwen3-8B/model.safetensors.index.json",
+      "sha256": "f9fdbcb91c23971c13ec5d5f2573d2349e8f61f2f049371ec699281748fdb1bc"
+    }
+  },
+  "base_weight_limitation": "Configuration/tokenizer/index hashes frozen; full base shard hashes are not computed by this planning audit. Verify and record full base identity before future model loading.",
+  "reference_code_limitation": "Reference components only; old runner is hard-coded for different groups/scope and is not executable as this experiment."
+}
