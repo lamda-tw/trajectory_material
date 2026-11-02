@@ -1,0 +1,319 @@
+[
+  {
+    "state_id": "state_7bc3a64991ff9ad7",
+    "task": "Export a unique list of all the songs in my song and album library and all playlists in my Spotify account into \"~/backups/spotify_songs.csv\" file in my file system. The file should have headers, \"Title\" and \"Artists\" and artists should be separated by \"|\". Terminate my account after this backup is complete.",
+    "source_labels": "PPNNNNNP",
+    "feedback": null,
+    "original": {
+      "id": 7,
+      "commentary": "I will now use the `show_playlist_library` API to retrieve the playlists from the Spotify account. I will process all pages to get all playlists.",
+      "code": "page_index = 0\nplaylists = []\nwhile True:\n    playlist_page = apis.spotify.show_playlist_library(access_token=login_result[\"access_token\"], page_index=page_index)\n    if playlist_page:\n        playlists.extend(playlist_page)\n        page_index += 1\n    else:\n        break\nprint(len(playlists))",
+      "observation": "4\n"
+    },
+    "candidates": [
+      {
+        "id": "candidate_158cdd1bb6951162e1b70ee0",
+        "arm": "C0_original",
+        "repeat": 0,
+        "labels": "PPPPNNNP",
+        "LR": 1,
+        "reason": "",
+        "commentary": "I will now use the `show_playlist_library` API to retrieve all playlists from the Spotify account. I will loop through the pages to get all the playlists.",
+        "code": "page_index = 0\nplaylists = []\nwhile True:\n    playlist_page = apis.spotify.show_playlist_library(access_token=login_result[\"access_token\"], page_index=page_index)\n    if not playlist_page:\n        break\n    playlists.extend(playlist_page)\n    page_index += 1\nprint(len(playlists))",
+        "observation_excerpt": "4\n",
+        "doc_requests": []
+      },
+      {
+        "id": "candidate_adab6622d381f0fb1b6860f5",
+        "arm": "C0_original",
+        "repeat": 1,
+        "labels": "PPPPNNNP",
+        "LR": 1,
+        "reason": "",
+        "commentary": "I will now use the `show_playlist_library` API to retrieve all playlists from the Spotify account. Since this API is paginated, I will loop through all pages to ensure I retrieve all playlists.",
+        "code": "# Retrieve all playlists from Spotify\npage_index = 0\nplaylists = []\nwhile True:\n    playlist_page = apis.spotify.show_playlist_library(\n        access_token=login_result[\"access_token\"],\n        page_index=page_index\n    )\n    if playlist_page:\n        playlists.extend(playlist_page)\n        page_index += 1\n    else:\n        break\nnum_playlists = len(playlists)\nprint(num_playlists)",
+        "observation_excerpt": "4\n",
+        "doc_requests": []
+      },
+      {
+        "id": "candidate_ed46aa7ac1bfa11140b39704",
+        "arm": "C2_feedback",
+        "repeat": 0,
+        "labels": "FNNNNNNF",
+        "LR": 0,
+        "reason": "page_limit=100 exceeds documented maximum.",
+        "commentary": "I will now use the `show_playlist_library` API to retrieve the playlists from the Spotify account. I will set the page_limit to a higher value to ensure all playlists are retrieved.",
+        "code": "playlist_library = []\npage_index = 0\npage_limit = 100  # Increase page limit to retrieve all playlists\nwhile True:\n    response = apis.spotify.show_playlist_library(access_token=login_result[\"access_token\"], page_index=page_index, page_limit=page_limit)\n    if not response:\n        break\n    playlist_library.extend(response)\n    page_index += 1\nprint(len(playlist_library))",
+        "observation_excerpt": "Execution failed. Traceback:\n  File \"<python-input>\", line 5, in <module>\n    response = apis.spotify.show_playlist_library(access_token=login_result[\"access_token\"], page_index=page_index, page_limit=page_limit)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nException: Response status code is 422:\n{\"message\":\"Validation error. Reason: \\npage_limit: Input should be less than or equal to 20\"}",
+        "doc_requests": []
+      },
+      {
+        "id": "candidate_e44911e2afe925c013f16547",
+        "arm": "C2_feedback",
+        "repeat": 1,
+        "labels": "PPPNNNNP",
+        "LR": 1,
+        "reason": "",
+        "commentary": "I will now use the `show_playlist_library` API to retrieve the playlists from the Spotify account. I will process all the pages to get all the playlists.",
+        "code": "page_index = 0\nplaylists = []\nwhile True:\n    playlist_page = apis.spotify.show_playlist_library(access_token=login_result['access_token'], page_index=page_index)\n    if not playlist_page:\n        break\n    playlists.extend(playlist_page)\n    page_index += 1\nprint(len(playlists))",
+        "observation_excerpt": "4\n",
+        "doc_requests": []
+      }
+    ]
+  },
+  {
+    "state_id": "state_3c45df53edc6afe1",
+    "task": "All phone text messages and voice messages from 9294880327 are spam, delete them.",
+    "source_labels": "PPNNNNNP",
+    "feedback": null,
+    "original": {
+      "id": 5,
+      "commentary": "The `login` API can be used to login to the phone app. Let's check its specifications.",
+      "code": "print(apis.api_docs.show_api_doc(app_name='phone', api_name='login'))",
+      "observation": "{\n \"app_name\": \"phone\",\n \"api_name\": \"login\",\n \"path\": \"/phone/auth/token\",\n \"method\": \"POST\",\n \"description\": \"Login to your account.\",\n \"parameters\": [\n  {\n   \"name\": \"username\",\n   \"type\": \"string\",\n   \"required\": true,\n   \"description\": \"Your account phone_number.\",\n   \"default\": null,\n   \"constraints\": []\n  },\n  {\n   \"name\": \"password\",\n   \"type\": \"string\",\n   \"required\": true,\n   \"description\": \"Your account password.\",\n   \"default\": null,\n   \"constraints\": []\n  }\n ],\n \"response_schemas\": {\n  \"success\": {\n   \"access_token\": \"string\",\n   \"token_type\": \"string\"\n  },\n  \"failure\": {\n   \"message\": \"string\"\n  }\n }\n}\n"
+    },
+    "candidates": [
+      {
+        "id": "candidate_a617cc701c6a999f939a3866",
+        "arm": "C0_original",
+        "repeat": 0,
+        "labels": "PPPNNNNP",
+        "LR": 1,
+        "reason": "",
+        "commentary": "The `login` API can be used to login to the phone app. Let's check its specifications.",
+        "code": "print(apis.api_docs.show_api_doc(app_name='phone', api_name='login'))",
+        "observation_excerpt": "{\n \"app_name\": \"phone\",\n \"api_name\": \"login\",\n \"path\": \"/phone/auth/token\",\n \"method\": \"POST\",\n \"description\": \"Login to your account.\",\n \"parameters\": [\n  {\n   \"name\": \"username\",\n   \"type\": \"string\",\n   \"required\": true,\n   \"description\": \"Your account phone_number.\",\n   \"default\": null,\n   \"constraints\": []\n  },\n  {\n   \"name\": \"password\",\n   \"type\": \"string\",\n   \"required\": true,\n   \"description\": \"Your account password.\",\n   \"default\": null,\n   \"constraints\": []\n  }\n ],\n \"response_schemas\": {\n  \"success\": {\n   \"access_token\": \"string\",\n   \"token_type\": \"string\"\n  },\n  \"failure\": {\n   \"message\": \"string\"\n  }\n }\n}\n",
+        "doc_requests": [
+          {
+            "api": "show_api_doc",
+            "arguments": {
+              "app_name": "phone",
+              "api_name": "login"
+            },
+            "spec_name_seen_in_prior_observations_or_reference": false
+          }
+        ]
+      },
+      {
+        "id": "candidate_c95bd70a27a610b405edb7e5",
+        "arm": "C0_original",
+        "repeat": 1,
+        "labels": "PPPNNNNP",
+        "LR": 1,
+        "reason": "",
+        "commentary": "The `login` API can be used to login to the phone app. Let's check its specifications.",
+        "code": "print(apis.api_docs.show_api_doc(app_name='phone', api_name='login'))",
+        "observation_excerpt": "{\n \"app_name\": \"phone\",\n \"api_name\": \"login\",\n \"path\": \"/phone/auth/token\",\n \"method\": \"POST\",\n \"description\": \"Login to your account.\",\n \"parameters\": [\n  {\n   \"name\": \"username\",\n   \"type\": \"string\",\n   \"required\": true,\n   \"description\": \"Your account phone_number.\",\n   \"default\": null,\n   \"constraints\": []\n  },\n  {\n   \"name\": \"password\",\n   \"type\": \"string\",\n   \"required\": true,\n   \"description\": \"Your account password.\",\n   \"default\": null,\n   \"constraints\": []\n  }\n ],\n \"response_schemas\": {\n  \"success\": {\n   \"access_token\": \"string\",\n   \"token_type\": \"string\"\n  },\n  \"failure\": {\n   \"message\": \"string\"\n  }\n }\n}\n",
+        "doc_requests": [
+          {
+            "api": "show_api_doc",
+            "arguments": {
+              "app_name": "phone",
+              "api_name": "login"
+            },
+            "spec_name_seen_in_prior_observations_or_reference": false
+          }
+        ]
+      },
+      {
+        "id": "candidate_39f3d4f674d1c0ce6039ab74",
+        "arm": "C2_feedback",
+        "repeat": 0,
+        "labels": "PPPNNNNP",
+        "LR": 1,
+        "reason": "",
+        "commentary": "The `login` API is available for the phone app. Let's use it to get the access token.",
+        "code": "print(apis.api_docs.show_api_doc(app_name='phone', api_name='login'))",
+        "observation_excerpt": "{\n \"app_name\": \"phone\",\n \"api_name\": \"login\",\n \"path\": \"/phone/auth/token\",\n \"method\": \"POST\",\n \"description\": \"Login to your account.\",\n \"parameters\": [\n  {\n   \"name\": \"username\",\n   \"type\": \"string\",\n   \"required\": true,\n   \"description\": \"Your account phone_number.\",\n   \"default\": null,\n   \"constraints\": []\n  },\n  {\n   \"name\": \"password\",\n   \"type\": \"string\",\n   \"required\": true,\n   \"description\": \"Your account password.\",\n   \"default\": null,\n   \"constraints\": []\n  }\n ],\n \"response_schemas\": {\n  \"success\": {\n   \"access_token\": \"string\",\n   \"token_type\": \"string\"\n  },\n  \"failure\": {\n   \"message\": \"string\"\n  }\n }\n}\n",
+        "doc_requests": [
+          {
+            "api": "show_api_doc",
+            "arguments": {
+              "app_name": "phone",
+              "api_name": "login"
+            },
+            "spec_name_seen_in_prior_observations_or_reference": false
+          }
+        ]
+      },
+      {
+        "id": "candidate_c347dc6dd0fa4b8d09630084",
+        "arm": "C2_feedback",
+        "repeat": 1,
+        "labels": "PPPNNNNP",
+        "LR": 1,
+        "reason": "",
+        "commentary": "The `login` API is available for the phone app. Let's use it to get the access token.",
+        "code": "print(apis.api_docs.show_api_doc(app_name='phone', api_name='login'))",
+        "observation_excerpt": "{\n \"app_name\": \"phone\",\n \"api_name\": \"login\",\n \"path\": \"/phone/auth/token\",\n \"method\": \"POST\",\n \"description\": \"Login to your account.\",\n \"parameters\": [\n  {\n   \"name\": \"username\",\n   \"type\": \"string\",\n   \"required\": true,\n   \"description\": \"Your account phone_number.\",\n   \"default\": null,\n   \"constraints\": []\n  },\n  {\n   \"name\": \"password\",\n   \"type\": \"string\",\n   \"required\": true,\n   \"description\": \"Your account password.\",\n   \"default\": null,\n   \"constraints\": []\n  }\n ],\n \"response_schemas\": {\n  \"success\": {\n   \"access_token\": \"string\",\n   \"token_type\": \"string\"\n  },\n  \"failure\": {\n   \"message\": \"string\"\n  }\n }\n}\n",
+        "doc_requests": [
+          {
+            "api": "show_api_doc",
+            "arguments": {
+              "app_name": "phone",
+              "api_name": "login"
+            },
+            "spec_name_seen_in_prior_observations_or_reference": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "state_id": "state_72440e05db6e6e74",
+    "task": "Start playing a playlist on Spotify that has enough songs for my workout today. I do not want to have to change the playlist in the middle of my workout. The workout plan is in Simple Note.",
+    "source_labels": "PPPNNPNP",
+    "feedback": null,
+    "original": {
+      "id": 12,
+      "commentary": "I forgot to retrieve the access token for the Spotify app. Let's get it now.",
+      "code": "# Login to Spotify to get the access token\nspotify_password = [password for password in passwords if password[\"account_name\"] == \"spotify\"][0][\"password\"]\nlogin_result = apis.spotify.login(username='timothy.whit@gmail.com', password=spotify_password)\nspotify_access_token = login_result[\"access_token\"]",
+      "observation": "Execution successful."
+    },
+    "candidates": [
+      {
+        "id": "candidate_a5fbc95606dc8daa8a233878",
+        "arm": "C0_original",
+        "repeat": 0,
+        "labels": "FNFNNPNF",
+        "LR": 0,
+        "reason": "Used a Simple Note token for Spotify.",
+        "commentary": "It seems I forgot to store the access token obtained from the Spotify login. Let me retrieve it and then search for playlists.",
+        "code": "# Retrieve the access token from the login result\nspotify_access_token = login_result[\"access_token\"]\n\n# Search for playlists on Spotify\nsearch_results = apis.spotify.search_playlists(query=\"workout\", access_token=spotify_access_token)\nprint(search_results)",
+        "observation_excerpt": "Execution failed. Traceback:\n  File \"<python-input>\", line 5, in <module>\n    search_results = apis.spotify.search_playlists(query=\"workout\", access_token=spotify_access_token)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nException: Response status code is 401:\n{\"message\":\"You are either not authorized to access the private version of this spotify API endpoint or your access token is invalid or expired. To access the public version of this API, do not pass an access token at all.\"}",
+        "doc_requests": []
+      },
+      {
+        "id": "candidate_f015bfb648c18b24afc0b32e",
+        "arm": "C0_original",
+        "repeat": 1,
+        "labels": "FNPNNFNP",
+        "LR": 0,
+        "reason": "Repeated the known boolean extraction error.",
+        "commentary": "I need to retrieve the access token for the Spotify app. Let's use the `login` API for the Spotify app to obtain an access token.",
+        "code": "# Retrieve the Spotify password from the Supervisor app\nspotify_password = [password[\"account_name\"] == \"spotify\" for password in passwords][0][\"password\"]\n\n# Login to the Spotify app\nlogin_result = apis.spotify.login(username='timothy.whit@gmail.com', password=spotify_password)\nprint(login_result)",
+        "observation_excerpt": "Execution failed. Traceback:\n  File \"<python-input>\", line 2, in <module>\n    spotify_password = [password[\"account_name\"] == \"spotify\" for password in passwords][0][\"password\"]\n                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^\nTypeError: 'bool' object is not subscriptable",
+        "doc_requests": []
+      },
+      {
+        "id": "candidate_daaad38918345c91bc6b5daa",
+        "arm": "C2_feedback",
+        "repeat": 0,
+        "labels": "PPPNNPNP",
+        "LR": 1,
+        "reason": "",
+        "commentary": "I need to obtain the access token for the Spotify app to search for playlists. Let's log in to the Spotify app using the password retrieved earlier.",
+        "code": "spotify_password = [password for password in passwords if password[\"account_name\"] == \"spotify\"][0][\"password\"]\nlogin_result = apis.spotify.login(username='timothy.whit@gmail.com', password=spotify_password)\nspotify_access_token = login_result[\"access_token\"]",
+        "observation_excerpt": "Execution successful.",
+        "doc_requests": []
+      },
+      {
+        "id": "candidate_0bfd7da5aad273691b88ff3a",
+        "arm": "C2_feedback",
+        "repeat": 1,
+        "labels": "FNPNNFNP",
+        "LR": 0,
+        "reason": "Repeats the previously fixed boolean error.",
+        "commentary": "I need to obtain the Spotify access token to search for playlists. Let's use the `login` API for the Spotify app to obtain an access token. I'll use the supervisor's email address and password to login.",
+        "code": "# Login to Spotify to obtain an access token\nspotify_password = [password[\"account_name\"] == \"spotify\" for password in passwords][0][\"password\"]\nlogin_result = apis.spotify.login(username='timothy.whit@gmail.com', password=spotify_password)\nprint(login_result)",
+        "observation_excerpt": "Execution failed. Traceback:\n  File \"<python-input>\", line 2, in <module>\n    spotify_password = [password[\"account_name\"] == \"spotify\" for password in passwords][0][\"password\"]\n                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^\nTypeError: 'bool' object is not subscriptable",
+        "doc_requests": []
+      }
+    ]
+  },
+  {
+    "state_id": "state_384f3e43f6c5a2a7",
+    "task": "How long is my shortest Spotify playlist, in minutes, rounded to the nearest number?",
+    "source_labels": "PPNNNNNP",
+    "feedback": null,
+    "original": {
+      "id": 2,
+      "commentary": "Okay. Let's find the login API to get access to the Spotify account.",
+      "code": "print(apis.api_docs.show_api_doc(app_name='spotify', api_name='login'))",
+      "observation": "{\n \"app_name\": \"spotify\",\n \"api_name\": \"login\",\n \"path\": \"/spotify/auth/token\",\n \"method\": \"POST\",\n \"description\": \"Login to your account.\",\n \"parameters\": [\n  {\n   \"name\": \"username\",\n   \"type\": \"string\",\n   \"required\": true,\n   \"description\": \"Your account email.\",\n   \"default\": null,\n   \"constraints\": []\n  },\n  {\n   \"name\": \"password\",\n   \"type\": \"string\",\n   \"required\": true,\n   \"description\": \"Your account password.\",\n   \"default\": null,\n   \"constraints\": []\n  }\n ],\n \"response_schemas\": {\n  \"success\": {\n   \"access_token\": \"string\",\n   \"token_type\": \"string\"\n  },\n  \"failure\": {\n   \"message\": \"string\"\n  }\n }\n}\n"
+    },
+    "candidates": [
+      {
+        "id": "candidate_670a77dfd1262ef99b0cfa3d",
+        "arm": "C0_original",
+        "repeat": 0,
+        "labels": "PPNNNFNP",
+        "LR": 0,
+        "reason": "Repeated API listing without new need.",
+        "commentary": "Okay, I need to find the login API for Spotify. Let's check the available APIs for Spotify.",
+        "code": "print(apis.api_docs.show_api_descriptions(app_name='spotify'))",
+        "observation_excerpt": "[\n {\n  \"name\": \"show_account\",\n  \"description\": \"Show your account information. Unlike show_profile, this includes private information.\"\n },\n {\n  \"name\": \"signup\",\n  \"description\": \"Sign up to create account.\"\n },\n {\n  \"name\": \"delete_account\",\n  \"description\": \"Delete your account.\"\n },\n {\n  \"name\": \"update_account_name\",\n  \"description\": \"Update your first or last name in the account profile.\"\n },\n {\n  \"name\": \"login\",\n  \"description\": \"Login to your account.\"\n },\n {\n  \"name\": \"logout\",\n  \"description\": \"Logout from your account.\"\n },\n {\n  \"name\": \"send_verification_code\",\n  \"description\": \"Send account verification code to your email address.\"\n },\n {\n  \"name\": \"verify_account\",\n  \"description\": \"Verify your account using the verification code sent to your email address.\"\n },\n {\n  \"name\": \"send_password_reset_code\",\n  \"description\": \"Send password reset code to your email address.\"\n },",
+        "doc_requests": [
+          {
+            "api": "show_api_descriptions",
+            "arguments": {
+              "app_name": "spotify"
+            },
+            "spec_name_seen_in_prior_observations_or_reference": false
+          }
+        ]
+      },
+      {
+        "id": "candidate_ac7a89e52cea1c3f0f706df9",
+        "arm": "C0_original",
+        "repeat": 1,
+        "labels": "PPNNNNNP",
+        "LR": 1,
+        "reason": "",
+        "commentary": "Okay. Looks like I can use the `login` api. Let's find its specifications.",
+        "code": "print(apis.api_docs.show_api_doc(app_name='spotify', api_name='login'))",
+        "observation_excerpt": "{\n \"app_name\": \"spotify\",\n \"api_name\": \"login\",\n \"path\": \"/spotify/auth/token\",\n \"method\": \"POST\",\n \"description\": \"Login to your account.\",\n \"parameters\": [\n  {\n   \"name\": \"username\",\n   \"type\": \"string\",\n   \"required\": true,\n   \"description\": \"Your account email.\",\n   \"default\": null,\n   \"constraints\": []\n  },\n  {\n   \"name\": \"password\",\n   \"type\": \"string\",\n   \"required\": true,\n   \"description\": \"Your account password.\",\n   \"default\": null,\n   \"constraints\": []\n  }\n ],\n \"response_schemas\": {\n  \"success\": {\n   \"access_token\": \"string\",\n   \"token_type\": \"string\"\n  },\n  \"failure\": {\n   \"message\": \"string\"\n  }\n }\n}\n",
+        "doc_requests": [
+          {
+            "api": "show_api_doc",
+            "arguments": {
+              "app_name": "spotify",
+              "api_name": "login"
+            },
+            "spec_name_seen_in_prior_observations_or_reference": true
+          }
+        ]
+      },
+      {
+        "id": "candidate_a4018178f1b3cc4a60d103f1",
+        "arm": "C2_feedback",
+        "repeat": 0,
+        "labels": "PPNNNNNP",
+        "LR": 1,
+        "reason": "",
+        "commentary": "To solve the task of finding the shortest Spotify playlist in minutes, I need to follow these steps:\n\n1. Retrieve the access token to authenticate with the Spotify API.\n2. Fetch all playlists from the Spotify library.\n3. For each playlist, retrieve the songs and calculate the total duration.\n4. Find the playlist with the shortest duration and return the rounded value in minutes.\n\nFirst, let's get the access token by logging in to the Spotify account. I'll use the Supervisor app to get the password for Spotify.",
+        "code": "print(apis.api_docs.show_api_descriptions(app_name='supervisor'))",
+        "observation_excerpt": "[\n {\n  \"name\": \"show_active_task\",\n  \"description\": \"Show the currently active task assigned to you by the supervisor.\"\n },\n {\n  \"name\": \"complete_task\",\n  \"description\": \"Mark the currently active task as complete with the given answer.\"\n },\n {\n  \"name\": \"show_profile\",\n  \"description\": \"Show your supervisor's profile information.\"\n },\n {\n  \"name\": \"show_addresses\",\n  \"description\": \"Show your supervisor's addresses.\"\n },\n {\n  \"name\": \"show_payment_cards\",\n  \"description\": \"Show your supervisor's payment_cards.\"\n },\n {\n  \"name\": \"show_account_passwords\",\n  \"description\": \"Show your supervisor's app account passwords.\"\n }\n]\n",
+        "doc_requests": [
+          {
+            "api": "show_api_descriptions",
+            "arguments": {
+              "app_name": "supervisor"
+            },
+            "spec_name_seen_in_prior_observations_or_reference": false
+          }
+        ]
+      },
+      {
+        "id": "candidate_93170c3c3667418e991037f4",
+        "arm": "C2_feedback",
+        "repeat": 1,
+        "labels": "PPNNNNNP",
+        "LR": 1,
+        "reason": "",
+        "commentary": "To proceed with the task of finding the shortest Spotify playlist in minutes, I need to first authenticate with the Spotify API using the supervisor's credentials. Let's start by retrieving the Spotify password from the supervisor app.",
+        "code": "print(apis.api_docs.show_api_descriptions(app_name='supervisor'))",
+        "observation_excerpt": "[\n {\n  \"name\": \"show_active_task\",\n  \"description\": \"Show the currently active task assigned to you by the supervisor.\"\n },\n {\n  \"name\": \"complete_task\",\n  \"description\": \"Mark the currently active task as complete with the given answer.\"\n },\n {\n  \"name\": \"show_profile\",\n  \"description\": \"Show your supervisor's profile information.\"\n },\n {\n  \"name\": \"show_addresses\",\n  \"description\": \"Show your supervisor's addresses.\"\n },\n {\n  \"name\": \"show_payment_cards\",\n  \"description\": \"Show your supervisor's payment_cards.\"\n },\n {\n  \"name\": \"show_account_passwords\",\n  \"description\": \"Show your supervisor's app account passwords.\"\n }\n]\n",
+        "doc_requests": [
+          {
+            "api": "show_api_descriptions",
+            "arguments": {
+              "app_name": "supervisor"
+            },
+            "spec_name_seen_in_prior_observations_or_reference": false
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "created_at": "2026-10-26T09:54:04.432790+08:00",
+  "user_instruction": "使用GPU1，从纯SFT第二轮的完整检查点接着训练到第5轮，其他设置保持一致，恢复优化器状态、不重新warmup。第3、4、5轮都在dev57上评估，尽量只保留必要的模型，最后比较五轮的效果和重复查询文档情况，更新报告。此次训练loss放进autopanel。",
+  "source_phase": "/root/autodl-tmp/workspace-tw/experiments/2026-10-21_appworld_rubric_sdpo/phase_b_sft_only",
+  "source_checkpoint": "/root/autodl-tmp/workspace-tw/experiments/2026-10-21_appworld_rubric_sdpo/phase_b_sft_only/runs/sft/batch_036/checkpoint",
+  "source_complete_sha256": "f43e3d5edb5c39116cd80ae93f0c96978a07b4ce495478614a29fdc617a6e888",
+  "source_state_sha256": "8279fbf58d50eb5292315d0d49ae329e7e7fbce4b602271698c87e034bde5f62",
+  "source_updates": 36,
+  "first_batch": 37,
+  "last_batch": 90,
+  "evaluation_batches": [
+    54,
+    72,
+    90
+  ],
+  "resume_optimizer": true,
+  "resume_rng": true,
+  "restart_warmup": false,
+  "source_manifest_sha256": "8de721da3cf2434848ddd345c569811e9f5ecc40ac9406ee4110abb2f7ce2db0"
+}

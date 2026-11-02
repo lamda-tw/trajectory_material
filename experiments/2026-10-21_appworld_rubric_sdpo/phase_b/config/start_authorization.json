@@ -1,0 +1,18 @@
+{
+  "recorded_at": "2026-10-22T22:22:34.207151+08:00",
+  "user_instruction": "现在可以开始B阶段了，使用GPU1，默认C2教师。先跑第一个batch，检查显存、SFT和蒸馏loss以及梯度是否正常；没有问题就继续完成混合分支的2轮训练，暂时不跑SFT对照。这将是长时间无人值守的一个实验，请自行处理可能的问题。",
+  "physical_gpu": 1,
+  "gpu_uuid": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501",
+  "allowed_arms": [
+    "mixed"
+  ],
+  "epochs": 2,
+  "maximum_batches": 36,
+  "teacher_condition": "C2_feedback",
+  "first_batch_acceptance_required": true,
+  "automatic_resume": true,
+  "sft_control_allowed": false,
+  "evaluation_allowed": false,
+  "phase_c_allowed": false,
+  "manifest_sha256": "84aa9eb27d95b63a7b8309bacd41872ade46f0e646236523ffed3122c3674d65"
+}

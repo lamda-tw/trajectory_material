@@ -1,0 +1,92 @@
+{
+  "manifests": {
+    "mixed": {
+      "entries_checked": 38,
+      "manifest_sha256": "8b535ab88279f7fa94c7b58ecf1c79be61abf4dc675c34bcb4bdc0c2691d2ed0"
+    },
+    "sdpo": {
+      "entries_checked": 62,
+      "manifest_sha256": "511a7e68e1f78bbc3e6cea065a76c62e56639027d2bba7fc547159d702f68af9"
+    },
+    "sft": {
+      "entries_checked": 63,
+      "manifest_sha256": "8de721da3cf2434848ddd345c569811e9f5ecc40ac9406ee4110abb2f7ce2db0"
+    }
+  },
+  "shared": {
+    "training": {
+      "seed": 20261022,
+      "tasks_per_batch": 5,
+      "epochs": 2,
+      "update_opportunities": 36,
+      "teacher_condition": "C2_feedback",
+      "original_answer_in_teacher_prompt": false,
+      "teacher_uses_same_response_prefix": true,
+      "lora": {
+        "r": 8,
+        "lora_alpha": 16,
+        "lora_dropout": 0.0,
+        "target_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "bias": "none",
+        "task_type": "CAUSAL_LM"
+      },
+      "learning_rate": 5e-05,
+      "betas": [
+        0.9,
+        0.999
+      ],
+      "eps": 1e-08,
+      "weight_decay": 0.0,
+      "warmup_nonempty_updates": 5,
+      "grad_clip_norm": 1.0,
+      "lambda_sdpo": 1.0,
+      "ema_decay": 0.95,
+      "top_k": 100,
+      "head_chunk_size": 128,
+      "teacher_max_length": 32768,
+      "feedback_max_tokens": 256,
+      "sft_min_PASS": 3,
+      "sft_exclude_U": false,
+      "loss_normalization": "token mean within each step; independent step means for SFT/SDPO; one optimizer step per batch",
+      "zero_branch_behavior": "zero loss; if both branches empty skip optimizer/EMA/warmup count",
+      "teacher_gradient": false,
+      "train_base_parameters": false,
+      "precision": "bf16 base, fp32 probability arithmetic and EMA",
+      "attention": "sdpa",
+      "gradient_checkpointing": true
+    },
+    "agent": {
+      "prompt": "config/agent_prompt.txt",
+      "enable_thinking": false,
+      "max_steps": 50,
+      "max_model_len": 32000,
+      "max_new_tokens": 3000,
+      "context_overflow": "terminate_without_truncation",
+      "parser": "first_python_fence_with_partial_fence_recovery"
+    },
+    "sampling": {
+      "temperature": 1.0,
+      "top_p": 1.0,
+      "top_k": -1,
+      "repetition_penalty": 1.0
+    },
+    "collection": {
+      "workers": 3,
+      "rollouts_per_task": 1,
+      "trajectory_timeout_seconds": 5400,
+      "official_terminal_evaluation": false,
+      "judge_calls_during_rollout": 0
+    },
+    "train90.txt": "3aad17d37dd9946e4a8a76fb30a736d435fc09a086caaef2c6354436d576ffd2",
+    "dev57.txt": "b3a6059ce361c3b3ccc78b1cf54e39d437bf07e04eadd23f2cece7cde77df3c3",
+    "schedule.json": "965649c527ff6f9f6b32aba11763decd776d32002eea3a671a37bcf57643396c"
+  }
+}

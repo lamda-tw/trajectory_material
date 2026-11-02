@@ -1,0 +1,341 @@
+{
+  "scope": "Post-hoc manual review by assistant, no new external Codex calls. Y means an executable first action addresses the primary sampled problem or a necessary prerequisite; not all v7 rules pass, not task success. U retained when partial/indirect repair is ambiguous.",
+  "rows": [
+    {
+      "state_id": "R1_b011_cf6abd2_2_s03",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "Y",
+      "reason": "取得真实账号凭据，为修复缺少认证提供必要前提。",
+      "limitations_or_suffix": "仍未先读取凭据 API 完整规范；后续连续出现类型、缺少 username 和不存在 API 错误。"
+    },
+    {
+      "state_id": "R1_b011_cf6abd2_2_s03",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R1_b012_6104387_1_s14",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "Y",
+      "reason": "首次查询 file_system API 列表，为修复 create_file 参数错误取得必要资料。",
+      "limitations_or_suffix": "第 2 步才取得 create_file 完整规范；后续仍缺少认证。"
+    },
+    {
+      "state_id": "R1_b012_6104387_1_s14",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R1_b015_07b42fd_3_s07",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "N",
+      "reason": "仍用演示中的 dummy_spotify_pass 登录，实际返回 Invalid credentials。",
+      "limitations_or_suffix": "不能把将 print(login_result) 改成 login 调用视为有效修复。"
+    },
+    {
+      "state_id": "R1_b015_07b42fd_3_s07",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R1_b016_afc0fce_2_s06",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "Y",
+      "reason": "查询凭据来源的 Supervisor 文档，补足未定义 passwords 的前提。",
+      "limitations_or_suffix": "后续虽然成功取凭据并登录，但业务查询仍报错。"
+    },
+    {
+      "state_id": "R1_b016_afc0fce_2_s06",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R1_b021_34d9492_3_s12",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "Y",
+      "reason": "读取此前缺失的 file_system.login 完整规范。",
+      "limitations_or_suffix": "第 2 步成功登录，第 3 步成功读取目录；更后续还有错误。"
+    },
+    {
+      "state_id": "R1_b021_34d9492_3_s12",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R1_b023_e85d92a_2_s11",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "Y",
+      "reason": "page_limit 从非法 50 改成合法 20，首步实际检索成功。",
+      "limitations_or_suffix": "这一计数不证明后续遍历完整，也不等于 R8 已完全通过。"
+    },
+    {
+      "state_id": "R1_b023_e85d92a_2_s11",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "Y",
+      "reason": "合法 page_limit=20，执行成功，但单页极值结论仍不可靠。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R1_b025_29caf6f_3_s01",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "Y",
+      "reason": "从不存在的联系人 API 改为先发现 Phone 的真实 API。",
+      "limitations_or_suffix": "后续实际业务调用仍失败。"
+    },
+    {
+      "state_id": "R1_b025_29caf6f_3_s01",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R1_b028_d0b1f43_3_s19",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "Y",
+      "reason": "用真实 Phone 手机号代替错误 email 登录，认证成功。",
+      "limitations_or_suffix": "后续能读取联系人与交易；不作完整任务成功结论。"
+    },
+    {
+      "state_id": "R1_b028_d0b1f43_3_s19",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R6_b001_7d7fbf6_1_s10",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "N",
+      "reason": "首步依旧重复已获取的 Supervisor API 列表。",
+      "limitations_or_suffix": "后续有进展不能倒推首步已修复。"
+    },
+    {
+      "state_id": "R6_b001_7d7fbf6_1_s10",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R6_b013_229360a_3_s20",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "N",
+      "reason": "增加一个新查询的同时，仍重复反馈明确禁止的 show_song_library 规范查询。",
+      "limitations_or_suffix": "后续连续重复这两个文档查询。"
+    },
+    {
+      "state_id": "R6_b013_229360a_3_s20",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R6_b014_60d0b5b_1_s17",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "Y",
+      "reason": "按反馈读取此前缺失的 create_transaction 规范。",
+      "limitations_or_suffix": "后续用负数金额退款被拒绝，因此不能算业务纠正完成。"
+    },
+    {
+      "state_id": "R6_b014_60d0b5b_1_s17",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R6_b018_aa8502b_1_s05",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "Y",
+      "reason": "从重复 API 列表切换到首次读取凭据接口完整规范。",
+      "limitations_or_suffix": "后续取凭据、登录、分页读取 liked songs 都成功。"
+    },
+    {
+      "state_id": "R6_b018_aa8502b_1_s05",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R6_b031_c901732_1_s14",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "Y",
+      "reason": "从重复 search_albums 规范切换到执行真实相册检索并取得结果。",
+      "limitations_or_suffix": "C0 也做出了相同首步，不能归因为反馈带来的独有提升；后续完整性另论。"
+    },
+    {
+      "state_id": "R6_b031_c901732_1_s14",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "Y",
+      "reason": "执行真实 search_albums 检索，成功取得结果。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R6_b032_771d8fc_3_s35",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "Y",
+      "reason": "从重复凭据接口文档切换为真实执行该接口。",
+      "limitations_or_suffix": "后续仍有重复取凭据和变量问题，首步进展不等于持续恢复。"
+    },
+    {
+      "state_id": "R6_b032_771d8fc_3_s35",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R6_b033_b0a8eae_2_s19",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "N",
+      "reason": "尝试认证但依赖未定义 passwords，首步 NameError。",
+      "limitations_or_suffix": "还存在布尔列表取 password 的类型错误风险。"
+    },
+    {
+      "state_id": "R6_b033_b0a8eae_2_s19",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R6_b035_302c169_3_s21",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "N",
+      "reason": "尝试认证但依赖未定义 passwords，首步 NameError。",
+      "limitations_or_suffix": "没有正确利用已执行历史中的变量命名。"
+    },
+    {
+      "state_id": "R6_b035_302c169_3_s21",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R8_b007_27e1026_3_s02",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "Y",
+      "reason": "先读取缺失的 show_playlist 完整规范，第 2 步再读取 show_song 规范。",
+      "limitations_or_suffix": "短续跑后来用错误 songs 字段，故补文档并不保证后续正确使用。"
+    },
+    {
+      "state_id": "R8_b007_27e1026_3_s02",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R8_b008_302c169_1_s10",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "U",
+      "reason": "首步仅查找 label=Sleep 的闹钟并报告未找到，未实际调用更新接口。",
+      "limitations_or_suffix": "对原来的多项身份/规则/协议问题是否构成有效首步修复存在歧义；后续又把 Wake Up 当作睡眠闹钟。"
+    },
+    {
+      "state_id": "R8_b008_302c169_1_s10",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R8_b009_3c13f5a_3_s27",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "N",
+      "reason": "虽然改为浏览真实目录，但仍未先读目录 API 规范，主要 R8 问题没有修复。",
+      "limitations_or_suffix": "“不再猜文件名”属于部分改善，不计为主要问题已修复。"
+    },
+    {
+      "state_id": "R8_b009_3c13f5a_3_s27",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R8_b014_c901732_3_s07",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "Y",
+      "reason": "先读取缺失的 show_album 完整规范，下一步实际读取相册成功。",
+      "limitations_or_suffix": "后续又用占位的 listening_count=0，不是可直接信任的完整解法。"
+    },
+    {
+      "state_id": "R8_b014_c901732_3_s07",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R8_b019_76f2c72_1_s12",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "Y",
+      "reason": "读取缺失的 show_directory 完整规范，后续实际目录检索成功。",
+      "limitations_or_suffix": "第 4 步解析文件内容时出现类型错误。"
+    },
+    {
+      "state_id": "R8_b019_76f2c72_1_s12",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R8_b020_b0a8eae_1_s19",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "U",
+      "reason": "新查询 Spotify API 列表，但尚未读取反馈要求的 search_playlists 完整规范。",
+      "limitations_or_suffix": "仅属间接准备；后续继续使用不受支持的 134 首歌曲阈值。"
+    },
+    {
+      "state_id": "R8_b020_b0a8eae_1_s19",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R8_b022_c901732_2_s11",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "N",
+      "reason": "首步依旧只读默认第一页，没有按反馈进行 page_index 迭代。",
+      "limitations_or_suffix": "成功返回数据不代表分页协议修复。"
+    },
+    {
+      "state_id": "R8_b022_c901732_2_s11",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    },
+    {
+      "state_id": "R8_b025_2a163ab_2_s29",
+      "condition": "base_C2",
+      "targeted_first_step_repair": "Y",
+      "reason": "实际用 page_index 循环直到空页并保存联系人身份，首步执行成功。",
+      "limitations_or_suffix": "是反馈改变实质代码逻辑的正例。"
+    },
+    {
+      "state_id": "R8_b025_2a163ab_2_s29",
+      "condition": "base_C0",
+      "targeted_first_step_repair": "N",
+      "reason": "首步未修复主要反馈问题；参见保存的实际动作和环境反馈。",
+      "limitations_or_suffix": "此为主问题的局部诊断，不是全维度 ZeroFail 判定。"
+    }
+  ]
+}

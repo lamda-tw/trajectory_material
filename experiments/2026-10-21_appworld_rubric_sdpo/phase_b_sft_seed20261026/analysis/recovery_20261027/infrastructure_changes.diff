@@ -1,0 +1,360 @@
+--- before/scripts/b_judge.py
++++ after/scripts/b_judge.py
+@@ -4,6 +4,7 @@
+ from a_judge_audit import audit_events
+ from judge_protocol import command
+ from score_sources import repair_prompt
++from b_judge_recovery import JudgeTransportUnavailable, retryable_request, run_request
+ from concurrent.futures import ThreadPoolExecutor, as_completed
+ import json
+ import jsonschema
+@@ -23,6 +24,27 @@
+     assert all(current.get(i) == v for i, v in valid.items()), 'Format repair changed substantive labels'
+ 
+ 
++def recover_saved_response(payload, dest, meta):
++    # Recover only audited, valid prior responses; never re-score a completed judgment.
++    for folder in sorted(dest.glob('attempt_*')):
++        try:
++            audit = audit_events(folder / 'events.jsonl')
++            result = read(folder / 'response.json'); validate_result(payload, result)
++            for earlier in sorted(dest.glob('attempt_*')):
++                if earlier.name >= folder.name: break
++                try: previous = read(earlier / 'response.json')
++                except (OSError, ValueError): continue
++                preserve_labels(previous, result)
++        except (OSError, ValueError, AssertionError, KeyError, TypeError, jsonschema.ValidationError):
++            continue
++        frozen_json(dest / 'judgement.json', result)
++        meta.update(status='valid', recovered_attempt=folder.name, audit=audit, completed_at=now(),
++                    recovered_from_status=meta.get('status'), recovery_reason='audited_saved_response')
++        write_json(dest / 'metadata.json', meta)
++        return {'id': payload['trajectory_id'], 'recovered': True}
++    return None
++
++
+ def score(payload_path, dest, source_sha):
+     authorize('external_judging')
+     cfg = read(B / 'config/judge.json')
+@@ -40,28 +62,18 @@
+     meta_path = dest / 'metadata.json'
+     meta = read(meta_path) if meta_path.exists() else {'identity': identity, 'attempts': [], 'started_at': now()}
+     assert meta['identity'] == identity
++    recovered = recover_saved_response(payload, dest, meta)
++    if recovered: return recovered
+     if meta.get('status') == 'failed':
+-        raise RuntimeError(f'Existing failed judge request needs diagnosis: {dest}')
+-    # Recover only audited, valid prior responses; never re-score a completed judgment.
+-    for folder in sorted(dest.glob('attempt_*')):
+-        try:
+-            audit = audit_events(folder / 'events.jsonl')
+-            result = read(folder / 'response.json'); validate_result(payload, result)
+-            for earlier in sorted(dest.glob('attempt_*')):
+-                if earlier.name >= folder.name: break
+-                try: previous = read(earlier / 'response.json')
+-                except (OSError, ValueError): continue
+-                preserve_labels(previous, result)
+-        except (OSError, ValueError, AssertionError, KeyError, TypeError, jsonschema.ValidationError):
+-            continue
+-        frozen_json(dest / 'judgement.json', result)
+-        meta.update(status='valid', recovered_attempt=folder.name, audit=audit, completed_at=now())
++        if not retryable_request(dest, meta):
++            raise RuntimeError(f'Existing failed judge request needs diagnosis: {dest}')
++        meta.setdefault('network_retry_rounds', []).append({'at': now(), 'prior_attempts': len(meta['attempts'])})
++        meta.update(status='retry_pending', transport_round_start=len(meta['attempts']))
+         write_json(meta_path, meta)
+-        return {'id': payload['trajectory_id'], 'recovered': True}
+     cwd = dest / 'empty_cwd'; cwd.mkdir(exist_ok=True)
+     text = prompt; kind = 'initial'; repair_count = 0; transport_count = 0; originals = []
+-    for attempt in meta['attempts']:
+-        transport_count += attempt.get('failure_type') == 'transport'
++    for index, attempt in enumerate(meta['attempts']):
++        transport_count += index >= meta.get('transport_round_start', 0) and attempt.get('failure_type') == 'transport'
+         repair_count += attempt['kind'] == 'format_repair'
+     if meta['attempts']:
+         last = meta['attempts'][-1]
+@@ -82,6 +94,8 @@
+     number = max([int(f.name.split('_')[-1]) for f in dest.glob('attempt_*')] + [0])
+     while transport_count < cfg['max_transport_attempts']:
+         authorize('external_judging')
++        recovered = recover_saved_response(payload, dest, meta)
++        if recovered: return recovered
+         number += 1; folder = dest / f'attempt_{number:02d}'; folder.mkdir()
+         (folder / 'request.txt').write_text(text)
+         output = folder / 'response.json'; cmd = command(cfg, cwd, output)
+@@ -91,7 +105,7 @@
+         started = time.monotonic()
+         try:
+             with (folder / 'events.jsonl').open('w') as out, (folder / 'stderr.log').open('w') as err:
+-                result = subprocess.run(cmd, input=text, text=True, stdout=out, stderr=err, env=CPU, cwd=cwd, timeout=cfg['timeout_seconds'])
++                result = run_request(cmd, input=text, stdout=out, stderr=err, env=CPU, cwd=cwd, timeout=cfg['timeout_seconds'])
+             if result.returncode: raise RuntimeError(f'Codex exit {result.returncode}')
+             item['audit'] = audit_events(folder / 'events.jsonl')
+             try:
+@@ -122,7 +136,12 @@
+             if transport_count >= cfg['max_transport_attempts']: break
+             time.sleep(cfg['transport_retry_delays_seconds'][min(transport_count-1, 1)])
+             kind = 'transport_retry'
+-    meta.update(status='failed', completed_at=now()); write_json(meta_path, meta)
++    recovered = recover_saved_response(payload, dest, meta)
++    if recovered: return recovered
++    meta.update(status='failed', completed_at=now(), retryable_network=retryable_request(dest, meta))
++    write_json(meta_path, meta)
++    if meta['retryable_network']:
++        raise JudgeTransportUnavailable(f'Network unavailable; keep data and retry after cooldown: {dest}')
+     raise RuntimeError(f'Judge failed; batch will not update: {dest}')
+ 
+ 
+--- before/scripts/b_judge_recovery.py
++++ after/scripts/b_judge_recovery.py
+@@ -0,0 +1,77 @@
++"""Infrastructure recovery only: preserve prompts, labels, and all attempt evidence."""
++import os
++import signal
++import subprocess
++
++from b_common import read
++
++
++class JudgeTransportUnavailable(RuntimeError):
++    """The supervisor may retry this batch after a network cooldown."""
++
++
++def transient_transport(folder, item):
++    if item.get('failure_type') != 'transport':
++        return False
++    evidence = [item.get('error', '')]
++    for name in ('stderr.log', 'events.jsonl'):
++        path = folder / name
++        if path.exists():
++            with path.open('rb') as stream:
++                stream.seek(max(0, path.stat().st_size - 200000))
++                evidence.append(stream.read().decode(errors='replace'))
++    text = '\n'.join(evidence).lower()
++    # Authentication, exhausted quota, and invalid requests require diagnosis.
++    if any(x in text for x in ('unauthorized', 'invalid_api_key', 'insufficient_quota',
++                               'usage limit', 'quota exceeded', 'permission denied',
++                               'authentication failed', 'invalid request', 'http 401', 'http 403')):
++        return False
++    return any(x in text for x in ('timed out', 'timeout', 'connection reset',
++        'connection refused', 'connection closed', 'connection error', 'remote disconnected',
++        'stream disconnected', 'temporary failure in name resolution',
++        'network is unreachable', 'service unavailable', 'bad gateway', 'gateway timeout'))
++
++
++def retryable_request(dest, meta):
++    attempts = meta.get('attempts', [])
++    start = meta.get('transport_round_start', 0)
++    # Never reset semantic repair/protocol failures or re-sample an accepted answer.
++    return (bool(attempts[start:])
++            and all(a.get('failure_type') == 'transport' for a in attempts)
++            and all(transient_transport(dest / a['directory'], a) for a in attempts[start:]))
++
++
++def batch_network_retryable(folder):
++    failed = []
++    for path in (folder / 'judging').glob('*/metadata.json'):
++        meta = read(path)
++        if meta.get('status') == 'failed':
++            failed.append(retryable_request(path.parent, meta))
++    return bool(failed) and all(failed)
++
++
++def run_request(cmd, *, input, stdout, stderr, env, cwd, timeout):
++    # Codex's launcher spawns a native child. Kill the owned process group on timeout,
++    # otherwise a detached child can keep writing while another attempt is started.
++    with subprocess.Popen(cmd, stdin=subprocess.PIPE, text=True, stdout=stdout, stderr=stderr,
++                          env=env, cwd=cwd, start_new_session=True) as process:
++        try:
++            process.communicate(input=input, timeout=timeout)
++        except subprocess.TimeoutExpired:
++            try:
++                os.killpg(process.pid, signal.SIGTERM)
++            except ProcessLookupError:
++                pass
++            try:
++                process.wait(timeout=5)
++            except subprocess.TimeoutExpired:
++                pass
++            finally:
++                # A child can survive SIGTERM even if the wrapper already exited.
++                try:
++                    os.killpg(process.pid, signal.SIGKILL)
++                except ProcessLookupError:
++                    pass
++                process.wait()
++            raise
++        return subprocess.CompletedProcess(cmd, process.returncode)
+--- before/scripts/b_supervise.py
++++ after/scripts/b_supervise.py
+@@ -117,10 +117,13 @@
+                 validate_checkpoint(number);evaluate_epoch(number);continue
+             if number>1:
+                 assert read(B/'analysis/first_batch_acceptance.json')['passed']
+-            for attempt in range(1,5):
++            attempt=max([int(p.stem.rsplit('_',1)[1]) for p in root.glob(f'runner_batch_{number:03d}_attempt_*.log')]+[0])
++            resource_failures=0;network_rounds=0
++            while True:
++                attempt+=1
+                 wait_for_resources(number)
+                 log=root/f'runner_batch_{number:03d}_attempt_{attempt}.log'
+-                with log.open('a') as output:
++                with log.open('x') as output:
+                     process=subprocess.Popen([config()['paths']['training_python'],str(S/'b_run.py'),
+                         '--arm','sft','--until-batch',str(number),'--execute'],
+                         env=dict(CPU,USE_TORCH='1',USE_TF='0'),stdout=output,stderr=subprocess.STDOUT,cwd=R)
+@@ -136,10 +139,22 @@
+                     write_report()
+                     break
+                 reason=log.read_text()[-12000:]
++                from b_judge_recovery import batch_network_retryable
++                if 'JudgeTransportUnavailable:' in reason and batch_network_retryable(folder):
++                    network_rounds+=1;delay=min(300*network_rounds,900)
++                    status('waiting_for_judge_network',batch=number,attempt=attempt,
++                           retry_in_seconds=delay,log=str(log),training_started=True)
++                    print(json.dumps({'event':'judge_network_cooldown','at':now(),'batch':number,
++                                      'retry_in_seconds':delay,'log':str(log)}),flush=True)
++                    for _ in range(delay//30):
++                        authorize('training_allowed');authorize('external_judging')
++                        heartbeat(number);time.sleep(30)
++                    continue
+                 # Retry resource/transport interruption only; do not conceal deterministic or numerical failures.
+                 transient=any(x in reason for x in ['GPU1 is occupied','GPU1 has insufficient free memory',
+                     'Resource temporarily unavailable','Connection reset','Connection refused','RemoteDisconnected'])
+-                if not transient or attempt==4:
++                resource_failures+=1
++                if not transient or resource_failures>=4:
+                     raise RuntimeError(f'Batch {number} failed; inspect {log}')
+                 status('infrastructure_retry',batch=number,attempt=attempt,log=str(log))
+                 for _ in range(4):
+--- before/tests/test_seed_replication.py
++++ after/tests/test_seed_replication.py
+@@ -27,7 +27,8 @@
+         self.assertIsNone(c.previous_checkpoint('sft',1))
+         self.assertEqual(c.policy_identity(None)['initialization_seed'],20261026)
+         self.assertFalse((c.B/'config/first_batch_reuse.json').exists())
+-        for name in ['b_loss.py','b_dataset.py','b_judge.py','b_rollout_worker.py','b_train_batch.py']:
++        # The judge's infrastructure recovery was repaired; prompts/schema/config stay frozen.
++        for name in ['b_loss.py','b_dataset.py','b_rollout_worker.py','b_train_batch.py']:
+             self.assertEqual(c.file_sha(c.S/name),c.file_sha(c.R/'phase_b_sft_only/scripts'/name))
+ 
+     def test_schedule_same_algorithm_new_seed(self):
+--- before/tests/test_judge_recovery.py
++++ after/tests/test_judge_recovery.py
+@@ -0,0 +1,116 @@
++"""CPU regression checks for the batch-14 transport interruption; no external calls."""
++import json
++import os
++import subprocess
++import sys
++import tempfile
++import time
++import unittest
++from contextlib import ExitStack
++from pathlib import Path
++from unittest.mock import patch
++
++sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
++import b_judge as j
++import b_judge_recovery as recovery
++from b_common import read, write_json
++
++
++class RecoveryTests(unittest.TestCase):
++    def setUp(self):
++        self.stack = ExitStack(); self.addCleanup(self.stack.close)
++        self.root = Path(self.stack.enter_context(tempfile.TemporaryDirectory()))
++        self.dest = self.root / 'judging/case'
++        self.payload = self.root / 'payload.json'
++        write_json(self.payload, {'trajectory_id': 'case'})
++        (self.root / 'config').mkdir()
++        (self.root / 'config/scoring_prompt_v7_feedback_en.txt').write_text('{{TRAJECTORY_JSON}}')
++        write_json(self.root / 'config/judge.json', {'max_transport_attempts': 3,
++            'max_format_repairs': 1, 'transport_retry_delays_seconds': [0, 0], 'timeout_seconds': 1})
++        for name, value in [('B', self.root), ('R', self.root)]:
++            self.stack.enter_context(patch.object(j, name, value))
++        self.stack.enter_context(patch.object(j, 'authorize'))
++        self.stack.enter_context(patch.object(j, 'validate_result'))
++        self.stack.enter_context(patch.object(j, 'audit_events', return_value={'no_tools': True}))
++        self.stack.enter_context(patch.object(j.time, 'sleep'))
++        self.stack.enter_context(patch.object(j, 'command', side_effect=lambda cfg, cwd, out: [str(out)]))
++        self.run = self.stack.enter_context(patch.object(j, 'run_request', side_effect=subprocess.TimeoutExpired(['fixture'], 1)))
++
++    def fail_network(self):
++        with self.assertRaises(recovery.JudgeTransportUnavailable):
++            j.score(self.payload, self.dest, 'source')
++        self.assertEqual(len(read(self.dest / 'metadata.json')['attempts']), 3)
++
++    def valid_reply(self, cmd, **kwargs):
++        write_json(Path(cmd[0]), {'steps': [[1, 'PPPNNNNN', []]]})
++        return subprocess.CompletedProcess(cmd, 0)
++
++    def test_failed_metadata_with_late_response_recovers_without_new_request(self):
++        self.fail_network()
++        write_json(self.dest / 'attempt_01/response.json', {'steps': [[1, 'PPPNNNNN', []]]})
++        self.run.reset_mock()
++        self.assertTrue(j.score(self.payload, self.dest, 'source')['recovered'])
++        self.run.assert_not_called()
++        meta = read(self.dest / 'metadata.json')
++        self.assertEqual(meta['recovered_from_status'], 'failed')
++        self.assertEqual(len(meta['attempts']), 3)
++
++    def test_cooldown_round_preserves_attempts_and_exact_prompt(self):
++        self.fail_network()
++        self.assertTrue(recovery.batch_network_retryable(self.root))
++        self.run.side_effect = self.valid_reply
++        j.score(self.payload, self.dest, 'source')
++        meta = read(self.dest / 'metadata.json')
++        self.assertEqual(meta['status'], 'valid')
++        self.assertEqual(len(meta['attempts']), 4)
++        self.assertEqual(meta['transport_round_start'], 3)
++        self.assertEqual((self.dest / 'attempt_01/request.txt').read_bytes(),
++                         (self.dest / 'attempt_04/request.txt').read_bytes())
++
++    def test_response_written_during_timeout_is_checked_before_retry(self):
++        def late_response(cmd, **kwargs):
++            self.valid_reply(cmd, **kwargs)
++            raise subprocess.TimeoutExpired(cmd, 1)
++        self.run.side_effect = late_response
++        self.assertTrue(j.score(self.payload, self.dest, 'source')['recovered'])
++        self.assertEqual(self.run.call_count, 1)
++
++    def test_protocol_and_authentication_failures_are_not_network_retried(self):
++        self.fail_network()
++        path = self.dest / 'metadata.json'; meta = read(path)
++        meta['attempts'][-1]['failure_type'] = 'protocol'; write_json(path, meta)
++        self.assertFalse(recovery.batch_network_retryable(self.root))
++        self.run.reset_mock()
++        with self.assertRaisesRegex(RuntimeError, 'needs diagnosis'):
++            j.score(self.payload, self.dest, 'source')
++        self.run.assert_not_called()
++        self.assertFalse(recovery.transient_transport(self.dest, {'failure_type': 'transport',
++            'error': 'request timed out; insufficient_quota'}))
++
++    def test_recovery_rejects_changed_substantive_labels(self):
++        self.dest.mkdir(parents=True)
++        write_json(self.dest / 'attempt_01/response.json', {'steps': [[1, 'FPPNNNNN', []]]})
++        write_json(self.dest / 'attempt_02/response.json', {'steps': [[1, 'PPPNNNNN', []]]})
++        def audit(path):
++            if path.parent.name == 'attempt_01': raise AssertionError('incomplete event stream')
++            return {'no_tools': True}
++        with patch.object(j, 'audit_events', side_effect=audit):
++            self.assertIsNone(j.recover_saved_response(read(self.payload), self.dest, {'attempts': []}))
++        self.assertFalse((self.dest / 'judgement.json').exists())
++
++
++class ProcessGroupTests(unittest.TestCase):
++    def test_timeout_stops_wrapper_and_native_child(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            folder = Path(tmp); marker = folder / 'orphan_finished'
++            child = 'import time,pathlib;time.sleep(0.8);pathlib.Path(' + repr(str(marker)) + ').touch()'
++            wrapper = 'import subprocess,sys,time;subprocess.Popen([sys.executable,"-c",' + repr(child) + ']);time.sleep(30)'
++            with (folder / 'out').open('w') as out:
++                with self.assertRaises(subprocess.TimeoutExpired):
++                    recovery.run_request([sys.executable, '-c', wrapper], input='', stdout=out,
++                        stderr=out, env=dict(os.environ, CUDA_VISIBLE_DEVICES=''), cwd=folder, timeout=0.3)
++            time.sleep(0.9)
++            self.assertFalse(marker.exists())
++
++
++if __name__ == '__main__': unittest.main(verbosity=2)

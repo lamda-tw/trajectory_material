@@ -1,0 +1,23 @@
+{
+  "updated_at": "2026-10-26T17:07:56+08:00",
+  "user_instruction": "使用GPU1，从纯SFT第二轮的完整检查点接着训练到第5轮，其他设置保持一致，恢复优化器状态、不重新warmup。第3、4、5轮都在dev57上评估，尽量只保留必要的模型，最后比较五轮的效果和重复查询文档情况，更新报告。此次训练loss放进autopanel。",
+  "physical_gpu": 1,
+  "gpu_uuid": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501",
+  "rollout_allowed": false,
+  "external_judging": false,
+  "training_allowed": false,
+  "automatic_resume": false,
+  "phase_c_allowed": false,
+  "evaluation_allowed": false,
+  "allowed_arms": [
+    "sft"
+  ],
+  "evaluation_batches": [
+    54,
+    72,
+    90
+  ],
+  "automatic_epoch_evaluation": false,
+  "paused_by_user": true,
+  "pause_reason": "User requested pause while considering a learning-rate decay comparison."
+}

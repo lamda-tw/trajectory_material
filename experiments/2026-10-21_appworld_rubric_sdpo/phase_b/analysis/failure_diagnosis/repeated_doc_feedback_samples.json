@@ -1,0 +1,745 @@
+[
+  {
+    "batch": 1,
+    "trajectory_id": "b001_7d7fbf6_1",
+    "step": 10,
+    "labels": "PPPNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 10,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The agent repeated the same supervisor API listing already obtained in step 6. This supplied no new information about the missing profile field or the identifier required for login.",
+    "correction": "Use the existing API list to request the relevant complete specifications. Inspect the profile response and login requirements directly to resolve the missing-field problem rather than repeating unchanged discovery results.",
+    "evidence_steps": [
+      6,
+      9,
+      10
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 1,
+    "trajectory_id": "b001_cf6abd2_3",
+    "step": 3,
+    "labels": "PPPNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 3,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The agent repeated the same API listing even though step 1 already identified login. This supplied no new information about resolving the authentication failure.",
+    "correction": "Use the existing listing to request the full login specification and investigate the required authentication arguments instead of repeating discovery.",
+    "evidence_steps": [
+      1,
+      2,
+      3
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 18,
+    "trajectory_id": "b018_229360a_1",
+    "step": 12,
+    "labels": "PPPNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 12,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Spotify API descriptions had already identified show_song_library. Repeating the entire discovery query supplied no new information needed for the stated subgoal.",
+    "correction": "Reuse the available API list and request the complete specifications for show_song_library directly, then retrieve the library using its documented pagination parameters.",
+    "evidence_steps": [
+      1,
+      12
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 18,
+    "trajectory_id": "b018_229360a_1",
+    "step": 15,
+    "labels": "PPPNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 15,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The step repeated the full Spotify API discovery even though earlier results already listed both liked-song and downloaded-song retrieval APIs.",
+    "correction": "Use the existing discovery results to select show_liked_songs and show_downloaded_songs. Inspect their complete specifications directly before retrieving the needed evidence.",
+    "evidence_steps": [
+      1,
+      12,
+      15
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 18,
+    "trajectory_id": "b018_229360a_1",
+    "step": 22,
+    "labels": "PPPNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 22,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The full Spotify API list was requested again even though show_album_library had already appeared in several identical discovery responses.",
+    "correction": "Reuse the known API name and inspect show_album_library specifications directly. Proceed with its documented pagination instead of repeating discovery.",
+    "evidence_steps": [
+      1,
+      12,
+      15,
+      22
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 18,
+    "trajectory_id": "b018_229360a_1",
+    "step": 25,
+    "labels": "PPPNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 25,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The step repeated Spotify API discovery to locate liked albums, although show_liked_albums was already present in the earlier discovery results.",
+    "correction": "Select show_liked_albums from the existing results and request its complete specifications directly. Retrieve all pages using those specifications.",
+    "evidence_steps": [
+      1,
+      22,
+      25
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 18,
+    "trajectory_id": "b018_302c169_3",
+    "step": 8,
+    "labels": "PPPNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 8,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The phone API listing had already been retrieved. Repeating that unchanged listing supplied no new evidence about the login identifier or the cause of the authentication failure.",
+    "correction": "Use the existing listing to select the relevant specification. Inspect the complete phone login documentation to establish the identifier requirements before attempting another authentication action.",
+    "evidence_steps": [
+      2,
+      6,
+      8
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 18,
+    "trajectory_id": "b018_34d9492_1",
+    "step": 4,
+    "labels": "PPPNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 4,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The authentication failure required obtaining a token, but this step repeated the unchanged API listing already retrieved in step 1. That listing had already identified login.",
+    "correction": "Use the existing listing to request the login specification directly, then obtain the required credentials and authenticate before retrying the directory request.",
+    "evidence_steps": [
+      1,
+      3,
+      4
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 18,
+    "trajectory_id": "b018_aa8502b_1",
+    "step": 2,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 2,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The preceding step already returned the Spotify API descriptions, including the liked-song and artist-following endpoints. Repeating the same discovery query supplied no new information.",
+    "correction": "Use the descriptions already available to select the relevant endpoint and inspect its complete specification before calling it.",
+    "evidence_steps": [
+      1,
+      2
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 18,
+    "trajectory_id": "b018_aa8502b_1",
+    "step": 5,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 5,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "Step 4 already listed the Supervisor endpoints and identified the account-password endpoint. This identical discovery query did not advance credential retrieval or address an error.",
+    "correction": "Proceed from the existing descriptions to the complete specification for the credential endpoint, then retrieve the Spotify credential according to that specification.",
+    "evidence_steps": [
+      4,
+      5
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 2,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 2,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      2
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 3,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 3,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      3
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 4,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 4,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      4
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 5,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 5,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      5
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 6,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 6,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      6
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 7,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 7,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      7
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 8,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 8,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      8
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 9,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 9,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      9
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 10,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 10,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      10
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 11,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 11,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      11
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 12,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 12,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      12
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 13,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 13,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      13
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 14,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 14,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      14
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 15,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 15,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      15
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 16,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 16,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      16
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 17,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 17,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      17
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 18,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 18,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      18
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 19,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 19,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      19
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 20,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 20,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      20
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 21,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 21,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      21
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 22,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 22,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      22
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 23,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 23,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      23
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 24,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 24,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      24
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 25,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 25,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      25
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  },
+  {
+    "batch": 25,
+    "trajectory_id": "b025_29caf6f_2",
+    "step": 26,
+    "labels": "PPNNNFNP",
+    "docs_only": true,
+    "repeat_docs_literal": true,
+    "step_id": 26,
+    "failed_rules": [
+      "R6"
+    ],
+    "diagnosis": "The Simple Note API list was already available, and this identical lookup addressed no error or verification need.",
+    "correction": "Use the existing list to select a relevant API and inspect its full specification, such as login or search_notes, before proceeding.",
+    "evidence_steps": [
+      1,
+      26
+    ],
+    "uses_later_evidence": false,
+    "usable": true,
+    "unusable_reason": ""
+  }
+]

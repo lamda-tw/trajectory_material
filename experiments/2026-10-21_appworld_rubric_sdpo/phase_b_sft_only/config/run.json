@@ -1,0 +1,106 @@
+{
+  "experiment": "phase_b_online_ZeroFail3_SFT_only_control_v1",
+  "paths": {
+    "base_model": "/root/autodl-tmp/models/Qwen3-8B",
+    "appworld_python": "/root/autodl-tmp/envs/appworld-0.2.0-py312/bin/python",
+    "training_python": "/root/autodl-tmp/workspace-tw/.conda-training/bin/python",
+    "vllm_python": "/root/autodl-tmp/envs/qwen3-vllm-py312/bin/python",
+    "appworld_data": "/root/autodl-tmp/data/benchmarks/appworld/runtime/data",
+    "appworld_test_cache": "/root/autodl-tmp/workspace-tw/experiments/2026-09-10_173848_appworld_qwen3-8b_react_oneshot_smoke/cache/tests"
+  },
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8194,
+    "gpu": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501",
+    "model_name": "qwen3-8b",
+    "adapter_name": "phase-b-sft-student",
+    "gpu_memory_utilization": 0.8,
+    "startup_timeout_seconds": 900,
+    "request_timeout_seconds": 600,
+    "max_num_seqs": 3,
+    "minimum_free_gpu_gib": 80
+  },
+  "agent": {
+    "prompt": "config/agent_prompt.txt",
+    "enable_thinking": false,
+    "max_steps": 50,
+    "max_model_len": 32000,
+    "max_new_tokens": 3000,
+    "context_overflow": "terminate_without_truncation",
+    "parser": "first_python_fence_with_partial_fence_recovery"
+  },
+  "sampling": {
+    "temperature": 1.0,
+    "top_p": 1.0,
+    "top_k": -1,
+    "repetition_penalty": 1.0
+  },
+  "training": {
+    "seed": 20261022,
+    "tasks_per_batch": 5,
+    "epochs": 2,
+    "update_opportunities": 36,
+    "teacher_condition": "C2_feedback",
+    "original_answer_in_teacher_prompt": false,
+    "teacher_uses_same_response_prefix": true,
+    "lora": {
+      "r": 8,
+      "lora_alpha": 16,
+      "lora_dropout": 0.0,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ],
+      "bias": "none",
+      "task_type": "CAUSAL_LM"
+    },
+    "learning_rate": 5e-05,
+    "betas": [
+      0.9,
+      0.999
+    ],
+    "eps": 1e-08,
+    "weight_decay": 0.0,
+    "warmup_nonempty_updates": 5,
+    "grad_clip_norm": 1.0,
+    "lambda_sdpo": 1.0,
+    "ema_decay": 0.95,
+    "top_k": 100,
+    "head_chunk_size": 128,
+    "teacher_max_length": 32768,
+    "feedback_max_tokens": 256,
+    "sft_min_PASS": 3,
+    "sft_exclude_U": false,
+    "loss_normalization": "token mean within each step; independent step means for SFT/SDPO; one optimizer step per batch",
+    "zero_branch_behavior": "zero loss; if both branches empty skip optimizer/EMA/warmup count",
+    "teacher_gradient": false,
+    "train_base_parameters": false,
+    "precision": "bf16 base, fp32 probability arithmetic and EMA",
+    "attention": "sdpa",
+    "gradient_checkpointing": true
+  },
+  "evaluation": {
+    "tasks": "phase_b_sft_only/config/dev57.txt",
+    "temperature": 0.0,
+    "seed": 100,
+    "automatic_after_training": false,
+    "metric": "official task-goal completion on the final student, without feedback"
+  },
+  "collection": {
+    "tasks": "phase_b_sft_only/config/train90.txt",
+    "workers": 3,
+    "rollouts_per_task": 1,
+    "trajectory_timeout_seconds": 5400,
+    "official_terminal_evaluation": false,
+    "judge_calls_during_rollout": 0
+  },
+  "default_arm": "sft",
+  "available_arms": [
+    "sft"
+  ]
+}

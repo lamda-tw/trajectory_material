@@ -1,0 +1,99 @@
+{
+  "stage": "formal",
+  "candidate_rows": 892,
+  "fail_states": 99,
+  "good_states": 25,
+  "comparisons": [
+    {
+      "arm": "C2_feedback",
+      "baseline": "C0_original",
+      "metric": "LR",
+      "states": 99,
+      "families": 30,
+      "difference": 0.6189583333333333,
+      "ci95": [
+        0.5453700739930359,
+        0.6946100515629968
+      ],
+      "bootstrap_iterations": 10000,
+      "missing_stratum_redraws": 0,
+      "family_clustered": true,
+      "strata_equally_weighted": true
+    },
+    {
+      "arm": "C2_feedback",
+      "baseline": "C1_fail_labels",
+      "metric": "LR",
+      "states": 99,
+      "families": 30,
+      "difference": 0.5645833333333333,
+      "ci95": [
+        0.49302977047544616,
+        0.6369902068716723
+      ],
+      "bootstrap_iterations": 10000,
+      "missing_stratum_redraws": 0,
+      "family_clustered": true,
+      "strata_equally_weighted": true
+    },
+    {
+      "arm": "C3_feedback_and_original_answer",
+      "baseline": "C2_feedback",
+      "metric": "LR",
+      "states": 99,
+      "families": 30,
+      "difference": -0.11708333333333332,
+      "ci95": [
+        -0.190382250510774,
+        -0.046631913454395366
+      ],
+      "bootstrap_iterations": 10000,
+      "missing_stratum_redraws": 0,
+      "family_clustered": true,
+      "strata_equally_weighted": true
+    },
+    {
+      "arm": "C2_feedback",
+      "baseline": "C0_original",
+      "metric": "new_F_dimension_rate",
+      "states": 99,
+      "families": 30,
+      "difference": -0.03172222222222222,
+      "ci95": [
+        -0.05362987535932352,
+        -0.010459270653427447
+      ],
+      "bootstrap_iterations": 10000,
+      "missing_stratum_redraws": 0,
+      "family_clustered": true,
+      "strata_equally_weighted": true
+    },
+    {
+      "arm": "C2_feedback",
+      "baseline": "C0_original",
+      "metric": "executable_no_F",
+      "states": 25,
+      "families": 25,
+      "difference": -0.06,
+      "ci95": [
+        -0.22,
+        0.08
+      ],
+      "bootstrap_iterations": 10000,
+      "missing_stratum_redraws": 0,
+      "family_clustered": true,
+      "strata_equally_weighted": false
+    }
+  ],
+  "source_v7_F_fixed_before_generation": true,
+  "weights_updated": false,
+  "task_completion_improvement_measured": false,
+  "independent_human_review_completed": false,
+  "assistant_evidence_review_pending": false,
+  "coverage_adjusted_C2_LR_yield": 0.745,
+  "states_excluded_for_incomplete_paired_execution": [],
+  "assistant_evidence_review_completed": true,
+  "assistant_review_blinded_to_conditions": false,
+  "assistant_review_path": "phase_a/analysis/formal/assistant_review.json",
+  "reviewed_at": "2026-10-22T21:04:28.992521+08:00"
+}

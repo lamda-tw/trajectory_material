@@ -1,0 +1,26 @@
+{
+  "reviewed_at": "2026-10-21T18:08:25.677563+08:00",
+  "allow_formal_source_scoring": true,
+  "gpu_execution_allowed": false,
+  "reviewer": "Codex assistant evidence review; not independent human gold labels",
+  "reviewed_target_states": 8,
+  "notes": {
+    "state_8d7aed3e40856abe": "Steps 11/26/27 repeat the same KeyError on song_id; advice asks for actual entry/schema inspection rather than inventing an identifier.",
+    "state_9860356f25b9fa95": "Steps 4/7 establish the nonexistent endpoint; correction asks for discovery and full specifications, not a guessed replacement endpoint.",
+    "state_a2ce4a2463895df2": "Earlier password retrieval and repeated login rejection support avoiding another credential read; login-spec inspection addresses unresolved input assumptions.",
+    "state_bc78cf7eeda1c3b7": "Target password API call precedes its full-spec lookup; feedback is a concrete protocol repair.",
+    "state_841cb44c1afc36cc": "Missing token and rejected login are visible before target search; feedback distinguishes repairing authentication from repeating the search.",
+    "state_c87eba2e10465e95": "Supervisor discovery was available at step 6 and password API specification at step 10; feedback directs use of known information rather than redundant discovery.",
+    "state_5ca6ebb09be2da13": "Descriptions do not provide complete endpoint specs; feedback names the observed endpoints and requests their documentation without asserting unseen response fields.",
+    "state_e3b619574c346fba": "Target created_at KeyError and later schema are cited; later-evidence flag is correct. R2 local-versus-global coverage remains a rubric interpretation caveat; both v7 variants agree and the feedback describes the actual all-three-libraries task requirement."
+  },
+  "non_target_disagreements": 23,
+  "non_target_disagreeing_steps": 17,
+  "limitations": [
+    "Single call per variant cannot separate prompt effect from judge stochasticity.",
+    "Source feedback availability does not establish Qwen correction or SDPO learning efficacy.",
+    "A local/global R2 boundary caveat is retained for the oldest-song target; no label or feedback was rewritten.",
+    "Full independent human semantic validation was not performed."
+  ],
+  "decision": "Proceed only with previously authorized formal source scoring and CPU packaging; candidate generation, replay and training remain gated."
+}

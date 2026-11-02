@@ -1,0 +1,716 @@
+{
+  "mixed": {
+    "start": "2026-10-22T22:22:34.209014+08:00",
+    "end": "2026-10-23T23:48:28.407086+08:00",
+    "timing": {
+      "total_wall_seconds": 91554.198072,
+      "training_seconds": 66627.66342705861,
+      "judge_wall_seconds": 10296.093369999999,
+      "evaluation_wall_seconds": 4110.6702319999995,
+      "other_wall_seconds": 10519.771042941393
+    },
+    "judge_calls": {
+      "calls": 184,
+      "initial": 180,
+      "serial_seconds_sum": 32290.36386922002,
+      "input_tokens": 6035771,
+      "output_tokens": 1044263,
+      "cached_input_tokens": 1024512,
+      "format_repair": 1,
+      "transport_retry": 3
+    },
+    "counts": {
+      "sdpo": 4300,
+      "sft": 912,
+      "mask": 2
+    },
+    "response_tokens_by_branch": {
+      "sdpo": 415654,
+      "sft": 71438,
+      "mask": 151
+    },
+    "processed_tokens": {
+      "student_input_tokens": 63320677,
+      "teacher_input_tokens": 57452410
+    },
+    "rule_failures_by_epoch": {
+      "1": {
+        "R8": 1114,
+        "R1": 750,
+        "R3": 417,
+        "R7": 39,
+        "R2": 196,
+        "R6": 905,
+        "R4": 315,
+        "R5": 8
+      },
+      "2": {
+        "R8": 383,
+        "R1": 196,
+        "R2": 107,
+        "R3": 88,
+        "R4": 166,
+        "R7": 8,
+        "R6": 2481,
+        "R5": 30
+      }
+    },
+    "branches_by_epoch": {
+      "1": {
+        "sdpo": 1644,
+        "sft": 404
+      },
+      "2": {
+        "sft": 508,
+        "sdpo": 2656,
+        "mask": 2
+      }
+    },
+    "train": {
+      "1": {
+        "counts": {
+          "trajectories": 90,
+          "steps": 2048,
+          "docs_only": 405,
+          "repeated_code": 829,
+          "repeated_docs_code": 189,
+          "non_doc_api_steps": 1303,
+          "response_tokens": 251952,
+          "prompt_tokens": 19705158,
+          "observation_chars": 2509983,
+          "generation_seconds_sum": 0.0,
+          "elapsed_seconds_sum": 8598.914888519794
+        },
+        "terminations": {
+          "completion_api": 52,
+          "no_python_code": 13,
+          "step_limit": 21,
+          "context_limit": 4
+        },
+        "mean_steps": 22.755555555555556,
+        "mean_response_tokens_per_step": 123.0234375,
+        "docs_only_fraction": 0.19775390625,
+        "repeated_docs_fraction": 0.09228515625,
+        "repeated_code_fraction": 0.40478515625,
+        "trajectories_with_5_consecutive_identical_docs": 3
+      },
+      "2": {
+        "counts": {
+          "trajectories": 90,
+          "steps": 3166,
+          "docs_only": 1691,
+          "repeated_code": 2455,
+          "repeated_docs_code": 1346,
+          "non_doc_api_steps": 1298,
+          "response_tokens": 235291,
+          "prompt_tokens": 43147218,
+          "observation_chars": 6031827,
+          "generation_seconds_sum": 0.0,
+          "elapsed_seconds_sum": 8673.617734793574
+        },
+        "terminations": {
+          "completion_api": 11,
+          "step_limit": 42,
+          "context_limit": 33,
+          "no_python_code": 4
+        },
+        "mean_steps": 35.17777777777778,
+        "mean_response_tokens_per_step": 74.31806696146558,
+        "docs_only_fraction": 0.5341124447252054,
+        "repeated_docs_fraction": 0.425142135186355,
+        "repeated_code_fraction": 0.7754264055590651,
+        "trajectories_with_5_consecutive_identical_docs": 53
+      }
+    },
+    "dev": {
+      "1": {
+        "completed_at": "2026-10-23T06:53:16.231385+08:00",
+        "epoch": 1,
+        "checkpoint_batch": 18,
+        "policy_identity": {
+          "kind": "student_adapter",
+          "checkpoint_complete_sha256": "19bab760f978a46f245a062a17f2e55c6a0b1eff29c3874acd2c6f84844a6a8e"
+        },
+        "tasks": 57,
+        "successes": 5,
+        "task_goal_completion": 0.08771929824561403,
+        "macro_test_pass_fraction": 0.412781954887218,
+        "student_without_feedback": true,
+        "temperature": 0.0,
+        "seed": 100,
+        "counts": {
+          "trajectories": 57,
+          "steps": 1531,
+          "docs_only": 696,
+          "repeated_code": 995,
+          "repeated_docs_code": 516,
+          "non_doc_api_steps": 570,
+          "response_tokens": 189463,
+          "prompt_tokens": 20457705,
+          "observation_chars": 3549439,
+          "generation_seconds_sum": 0.0,
+          "elapsed_seconds_sum": 6681.212414942682
+        },
+        "terminations": {
+          "context_limit": 24,
+          "completion_api": 14,
+          "step_limit": 14,
+          "no_python_code": 5
+        },
+        "mean_steps": 26.859649122807017,
+        "mean_response_tokens_per_step": 123.75114304376224,
+        "docs_only_fraction": 0.45460483344219466,
+        "repeated_docs_fraction": 0.3370346178967995,
+        "repeated_code_fraction": 0.6499020248203788,
+        "trajectories_with_5_consecutive_identical_docs": 24,
+        "wall_seconds": 2409.359909,
+        "successful_tasks": [
+          "23cf851_1",
+          "6c2c621_1",
+          "6c2c621_2",
+          "b119b1f_2",
+          "d4e9306_2"
+        ]
+      },
+      "2": {
+        "completed_at": "2026-10-23T23:47:59.757055+08:00",
+        "epoch": 2,
+        "checkpoint_batch": 36,
+        "policy_identity": {
+          "kind": "student_adapter",
+          "checkpoint_complete_sha256": "71c389477411c1d77359ddd039c51d5cdaefacaf39a71305dacabca367323309"
+        },
+        "tasks": 57,
+        "successes": 1,
+        "task_goal_completion": 0.017543859649122806,
+        "macro_test_pass_fraction": 0.26378446115288223,
+        "student_without_feedback": true,
+        "temperature": 0.0,
+        "seed": 100,
+        "counts": {
+          "trajectories": 57,
+          "steps": 2183,
+          "docs_only": 1733,
+          "repeated_code": 1911,
+          "repeated_docs_code": 1546,
+          "non_doc_api_steps": 394,
+          "response_tokens": 131017,
+          "prompt_tokens": 30480833,
+          "observation_chars": 4227098,
+          "generation_seconds_sum": 0.0,
+          "elapsed_seconds_sum": 4877.794071663171
+        },
+        "terminations": {
+          "step_limit": 30,
+          "completion_api": 1,
+          "context_limit": 26
+        },
+        "mean_steps": 38.29824561403509,
+        "mean_response_tokens_per_step": 60.016949152542374,
+        "docs_only_fraction": 0.7938616582684379,
+        "repeated_docs_fraction": 0.7081997251488777,
+        "repeated_code_fraction": 0.8754008245533669,
+        "trajectories_with_5_consecutive_identical_docs": 47,
+        "wall_seconds": 1701.310323,
+        "successful_tasks": [
+          "23cf851_1"
+        ]
+      }
+    },
+    "technical": {
+      "updates": 36,
+      "clipped_batches": 2,
+      "sdpo_loss_min": 0.017315477632049728,
+      "sdpo_loss_max": 0.5602130265059797,
+      "first_sdpo_loss": 0.4317961180737862,
+      "last_sdpo_loss": 0.06020807144124576,
+      "first_batch_seconds": 280.9642893485725,
+      "peak_allocated_gib": 37.77664566040039,
+      "peak_reserved_gib": 92.470703125
+    }
+  },
+  "sdpo": {
+    "start": "2026-10-24T15:25:24.997707+08:00",
+    "end": "2026-10-25T15:02:24.158209+08:00",
+    "timing": {
+      "total_wall_seconds": 85019.160502,
+      "training_seconds": 66400.27714899927,
+      "judge_wall_seconds": 6326.832240999999,
+      "evaluation_wall_seconds": 2411.566064,
+      "other_wall_seconds": 9880.485048000724
+    },
+    "judge_calls": {
+      "calls": 176,
+      "initial": 175,
+      "serial_seconds_sum": 20325.070298876613,
+      "input_tokens": 6199483,
+      "output_tokens": 894844,
+      "cached_input_tokens": 1199360,
+      "transport_retry": 1
+    },
+    "counts": {
+      "sdpo": 4122,
+      "mask": 592
+    },
+    "response_tokens_by_branch": {
+      "sdpo": 384658,
+      "mask": 44254
+    },
+    "processed_tokens": {
+      "student_input_tokens": 56930127,
+      "teacher_input_tokens": 57688251
+    },
+    "rule_failures_by_epoch": {
+      "1": {
+        "R8": 1151,
+        "R1": 694,
+        "R3": 407,
+        "R7": 35,
+        "R2": 342,
+        "R6": 1049,
+        "R4": 345,
+        "R5": 8
+      },
+      "2": {
+        "R8": 438,
+        "R1": 105,
+        "R3": 51,
+        "R4": 62,
+        "R2": 14,
+        "R7": 2,
+        "R6": 2358
+      }
+    },
+    "branches_by_epoch": {
+      "1": {
+        "sdpo": 1685,
+        "mask": 346
+      },
+      "2": {
+        "mask": 246,
+        "sdpo": 2437
+      }
+    },
+    "train": {
+      "1": {
+        "counts": {
+          "trajectories": 90,
+          "steps": 2031,
+          "docs_only": 426,
+          "repeated_code": 982,
+          "repeated_docs_code": 218,
+          "non_doc_api_steps": 1403,
+          "response_tokens": 256487,
+          "prompt_tokens": 19636039,
+          "observation_chars": 2047589,
+          "generation_seconds_sum": 0.0,
+          "elapsed_seconds_sum": 8608.427911367267
+        },
+        "terminations": {
+          "completion_api": 51,
+          "no_python_code": 14,
+          "step_limit": 20,
+          "context_limit": 5
+        },
+        "mean_steps": 22.566666666666666,
+        "mean_response_tokens_per_step": 126.28606597735106,
+        "docs_only_fraction": 0.20974889217134415,
+        "repeated_docs_fraction": 0.10733628754308222,
+        "repeated_code_fraction": 0.483505662235352,
+        "trajectories_with_5_consecutive_identical_docs": 9
+      },
+      "2": {
+        "counts": {
+          "trajectories": 90,
+          "steps": 2683,
+          "docs_only": 1857,
+          "repeated_code": 2344,
+          "repeated_docs_code": 1663,
+          "non_doc_api_steps": 675,
+          "response_tokens": 172425,
+          "prompt_tokens": 40392264,
+          "observation_chars": 8108275,
+          "generation_seconds_sum": 0.0,
+          "elapsed_seconds_sum": 6525.15420774743
+        },
+        "terminations": {
+          "completion_api": 5,
+          "context_limit": 62,
+          "step_limit": 21,
+          "no_python_code": 2
+        },
+        "mean_steps": 29.81111111111111,
+        "mean_response_tokens_per_step": 64.26574729780097,
+        "docs_only_fraction": 0.6921356690272084,
+        "repeated_docs_fraction": 0.619828550130451,
+        "repeated_code_fraction": 0.8736489004845323,
+        "trajectories_with_5_consecutive_identical_docs": 68
+      }
+    },
+    "dev": {
+      "1": {
+        "completed_at": "2026-10-24T23:21:39.618027+08:00",
+        "epoch": 1,
+        "checkpoint_batch": 18,
+        "policy_identity": {
+          "kind": "student_adapter",
+          "checkpoint_complete_sha256": "93a98fcae231b1f08dcbce37afeb168fc7cb04d4ed325591e6bff6485a26e060"
+        },
+        "tasks": 57,
+        "successes": 2,
+        "task_goal_completion": 0.03508771929824561,
+        "macro_test_pass_fraction": 0.3141604010025063,
+        "student_without_feedback": true,
+        "temperature": 0.0,
+        "seed": 100,
+        "counts": {
+          "trajectories": 57,
+          "steps": 1478,
+          "docs_only": 1038,
+          "repeated_code": 1152,
+          "repeated_docs_code": 924,
+          "non_doc_api_steps": 326,
+          "response_tokens": 112659,
+          "prompt_tokens": 20947503,
+          "observation_chars": 4428940,
+          "generation_seconds_sum": 0.0,
+          "elapsed_seconds_sum": 4118.036608334631
+        },
+        "terminations": {
+          "context_limit": 32,
+          "no_python_code": 6,
+          "completion_api": 7,
+          "step_limit": 12
+        },
+        "mean_steps": 25.92982456140351,
+        "mean_response_tokens_per_step": 76.22395128552097,
+        "docs_only_fraction": 0.7023004059539919,
+        "repeated_docs_fraction": 0.625169147496617,
+        "repeated_code_fraction": 0.7794316644113667,
+        "trajectories_with_5_consecutive_identical_docs": 38,
+        "wall_seconds": 1449.048684,
+        "successful_tasks": [
+          "396c5a2_1",
+          "b119b1f_3"
+        ]
+      },
+      "2": {
+        "completed_at": "2026-10-25T15:02:24.073512+08:00",
+        "epoch": 2,
+        "checkpoint_batch": 36,
+        "policy_identity": {
+          "kind": "student_adapter",
+          "checkpoint_complete_sha256": "a27f5bd4a298887c0de89440e44267ec10ea15bce09cfd46c441779868061730"
+        },
+        "tasks": 57,
+        "successes": 0,
+        "task_goal_completion": 0.0,
+        "macro_test_pass_fraction": 0.24799498746867168,
+        "student_without_feedback": true,
+        "temperature": 0.0,
+        "seed": 100,
+        "counts": {
+          "trajectories": 57,
+          "steps": 1344,
+          "docs_only": 1322,
+          "repeated_code": 1261,
+          "repeated_docs_code": 1250,
+          "non_doc_api_steps": 14,
+          "response_tokens": 64628,
+          "prompt_tokens": 21345037,
+          "observation_chars": 6236612,
+          "generation_seconds_sum": 0.0,
+          "elapsed_seconds_sum": 2707.0365166962147
+        },
+        "terminations": {
+          "context_limit": 45,
+          "no_python_code": 4,
+          "step_limit": 8
+        },
+        "mean_steps": 23.57894736842105,
+        "mean_response_tokens_per_step": 48.086309523809526,
+        "docs_only_fraction": 0.9836309523809523,
+        "repeated_docs_fraction": 0.9300595238095238,
+        "repeated_code_fraction": 0.9382440476190477,
+        "trajectories_with_5_consecutive_identical_docs": 57,
+        "wall_seconds": 962.51738,
+        "successful_tasks": []
+      }
+    },
+    "technical": {
+      "updates": 36,
+      "clipped_batches": 1,
+      "sdpo_loss_min": 0.012088479946982403,
+      "sdpo_loss_max": 0.7505003590438816,
+      "first_sdpo_loss": 0.4317961180737862,
+      "last_sdpo_loss": 0.012088479946982403,
+      "first_batch_seconds": 208.97571233659983,
+      "peak_allocated_gib": 37.77664566040039,
+      "peak_reserved_gib": 94.306640625
+    }
+  },
+  "paired_comparisons": {
+    "1": {
+      "both_success": [],
+      "mixed_only_success": [
+        "23cf851_1",
+        "6c2c621_1",
+        "6c2c621_2",
+        "b119b1f_2",
+        "d4e9306_2"
+      ],
+      "sdpo_only_success": [
+        "396c5a2_1",
+        "b119b1f_3"
+      ],
+      "both_fail": [
+        "0d8a4ee_1",
+        "0d8a4ee_2",
+        "0d8a4ee_3",
+        "23cf851_2",
+        "23cf851_3",
+        "37a8675_1",
+        "37a8675_2",
+        "37a8675_3",
+        "383cbac_1",
+        "383cbac_2",
+        "383cbac_3",
+        "396c5a2_2",
+        "396c5a2_3",
+        "3ab5b8b_1",
+        "3ab5b8b_2",
+        "3ab5b8b_3",
+        "4ec8de5_1",
+        "4ec8de5_2",
+        "4ec8de5_3",
+        "4fab96f_1",
+        "4fab96f_2",
+        "4fab96f_3",
+        "50e1ac9_1",
+        "50e1ac9_2",
+        "50e1ac9_3",
+        "530b157_1",
+        "530b157_2",
+        "530b157_3",
+        "57c3486_1",
+        "57c3486_2",
+        "57c3486_3",
+        "6171bbc_1",
+        "6171bbc_2",
+        "6171bbc_3",
+        "68ee2c9_1",
+        "68ee2c9_2",
+        "68ee2c9_3",
+        "6bdbc26_1",
+        "6bdbc26_2",
+        "6bdbc26_3",
+        "6c2c621_3",
+        "b119b1f_1",
+        "d4e9306_1",
+        "d4e9306_3",
+        "df61dc5_1",
+        "df61dc5_2",
+        "df61dc5_3",
+        "fac291d_1",
+        "fac291d_2",
+        "fac291d_3"
+      ],
+      "sdpo_more_tests": [
+        "396c5a2_1",
+        "57c3486_3",
+        "b119b1f_3",
+        "df61dc5_2"
+      ],
+      "sdpo_fewer_tests": [
+        "0d8a4ee_2",
+        "23cf851_1",
+        "37a8675_3",
+        "396c5a2_2",
+        "3ab5b8b_1",
+        "3ab5b8b_2",
+        "3ab5b8b_3",
+        "530b157_2",
+        "6171bbc_1",
+        "6c2c621_1",
+        "6c2c621_2",
+        "b119b1f_2",
+        "d4e9306_2",
+        "df61dc5_1"
+      ],
+      "same_tests": [
+        "0d8a4ee_1",
+        "0d8a4ee_3",
+        "23cf851_2",
+        "23cf851_3",
+        "37a8675_1",
+        "37a8675_2",
+        "383cbac_1",
+        "383cbac_2",
+        "383cbac_3",
+        "396c5a2_3",
+        "4ec8de5_1",
+        "4ec8de5_2",
+        "4ec8de5_3",
+        "4fab96f_1",
+        "4fab96f_2",
+        "4fab96f_3",
+        "50e1ac9_1",
+        "50e1ac9_2",
+        "50e1ac9_3",
+        "530b157_1",
+        "530b157_3",
+        "57c3486_1",
+        "57c3486_2",
+        "6171bbc_2",
+        "6171bbc_3",
+        "68ee2c9_1",
+        "68ee2c9_2",
+        "68ee2c9_3",
+        "6bdbc26_1",
+        "6bdbc26_2",
+        "6bdbc26_3",
+        "6c2c621_3",
+        "b119b1f_1",
+        "d4e9306_1",
+        "d4e9306_3",
+        "df61dc5_3",
+        "fac291d_1",
+        "fac291d_2",
+        "fac291d_3"
+      ]
+    },
+    "2": {
+      "both_success": [],
+      "mixed_only_success": [
+        "23cf851_1"
+      ],
+      "sdpo_only_success": [],
+      "both_fail": [
+        "0d8a4ee_1",
+        "0d8a4ee_2",
+        "0d8a4ee_3",
+        "23cf851_2",
+        "23cf851_3",
+        "37a8675_1",
+        "37a8675_2",
+        "37a8675_3",
+        "383cbac_1",
+        "383cbac_2",
+        "383cbac_3",
+        "396c5a2_1",
+        "396c5a2_2",
+        "396c5a2_3",
+        "3ab5b8b_1",
+        "3ab5b8b_2",
+        "3ab5b8b_3",
+        "4ec8de5_1",
+        "4ec8de5_2",
+        "4ec8de5_3",
+        "4fab96f_1",
+        "4fab96f_2",
+        "4fab96f_3",
+        "50e1ac9_1",
+        "50e1ac9_2",
+        "50e1ac9_3",
+        "530b157_1",
+        "530b157_2",
+        "530b157_3",
+        "57c3486_1",
+        "57c3486_2",
+        "57c3486_3",
+        "6171bbc_1",
+        "6171bbc_2",
+        "6171bbc_3",
+        "68ee2c9_1",
+        "68ee2c9_2",
+        "68ee2c9_3",
+        "6bdbc26_1",
+        "6bdbc26_2",
+        "6bdbc26_3",
+        "6c2c621_1",
+        "6c2c621_2",
+        "6c2c621_3",
+        "b119b1f_1",
+        "b119b1f_2",
+        "b119b1f_3",
+        "d4e9306_1",
+        "d4e9306_2",
+        "d4e9306_3",
+        "df61dc5_1",
+        "df61dc5_2",
+        "df61dc5_3",
+        "fac291d_1",
+        "fac291d_2",
+        "fac291d_3"
+      ],
+      "sdpo_more_tests": [],
+      "sdpo_fewer_tests": [
+        "23cf851_1",
+        "57c3486_3"
+      ],
+      "same_tests": [
+        "0d8a4ee_1",
+        "0d8a4ee_2",
+        "0d8a4ee_3",
+        "23cf851_2",
+        "23cf851_3",
+        "37a8675_1",
+        "37a8675_2",
+        "37a8675_3",
+        "383cbac_1",
+        "383cbac_2",
+        "383cbac_3",
+        "396c5a2_1",
+        "396c5a2_2",
+        "396c5a2_3",
+        "3ab5b8b_1",
+        "3ab5b8b_2",
+        "3ab5b8b_3",
+        "4ec8de5_1",
+        "4ec8de5_2",
+        "4ec8de5_3",
+        "4fab96f_1",
+        "4fab96f_2",
+        "4fab96f_3",
+        "50e1ac9_1",
+        "50e1ac9_2",
+        "50e1ac9_3",
+        "530b157_1",
+        "530b157_2",
+        "530b157_3",
+        "57c3486_1",
+        "57c3486_2",
+        "6171bbc_1",
+        "6171bbc_2",
+        "6171bbc_3",
+        "68ee2c9_1",
+        "68ee2c9_2",
+        "68ee2c9_3",
+        "6bdbc26_1",
+        "6bdbc26_2",
+        "6bdbc26_3",
+        "6c2c621_1",
+        "6c2c621_2",
+        "6c2c621_3",
+        "b119b1f_1",
+        "b119b1f_2",
+        "b119b1f_3",
+        "d4e9306_1",
+        "d4e9306_2",
+        "d4e9306_3",
+        "df61dc5_1",
+        "df61dc5_2",
+        "df61dc5_3",
+        "fac291d_1",
+        "fac291d_2",
+        "fac291d_3"
+      ]
+    }
+  },
+  "verification": {
+    "checkpoint_files": 432,
+    "datasets": 72,
+    "training_trajectories": 360,
+    "evaluation_trajectories": 228
+  }
+}

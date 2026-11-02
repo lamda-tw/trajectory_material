@@ -1,0 +1,2809 @@
+[
+  {
+    "epoch": 1,
+    "task_id": "6c2c621_1",
+    "success": true,
+    "passes": 8,
+    "tests": 8,
+    "termination": "completion_api",
+    "steps": 19,
+    "repeat_docs": 0,
+    "sequence": [
+      {
+        "step": 1,
+        "calls": [
+          "apis.api_docs.show_api_descriptions(app_name='simple_note')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 1780
+      },
+      {
+        "step": 2,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='simple_note', api_name='search_notes')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 2478
+      },
+      {
+        "step": 3,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='simple_note', api_name='login')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 629
+      },
+      {
+        "step": 4,
+        "calls": [
+          "apis.api_docs.show_api_descriptions(app_name='supervisor')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 632
+      },
+      {
+        "step": 5,
+        "calls": [
+          "apis.supervisor.show_account_passwords"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 546
+      },
+      {
+        "step": 6,
+        "calls": [
+          "apis.simple_note.login"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 210
+      },
+      {
+        "step": 7,
+        "calls": [
+          "apis.simple_note.search_notes"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 300
+      },
+      {
+        "step": 8,
+        "calls": [
+          "apis.simple_note.search_notes"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 3
+      },
+      {
+        "step": 9,
+        "calls": [
+          "apis.api_docs.show_api_descriptions(app_name='file_system')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 2512
+      },
+      {
+        "step": 10,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 11,
+        "calls": [
+          "apis.file_system.create_directory"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 380
+      },
+      {
+        "step": 12,
+        "calls": [
+          "apis.supervisor.show_account_passwords"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 343
+      },
+      {
+        "step": 13,
+        "calls": [
+          "apis.supervisor.show_account_passwords"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 8
+      },
+      {
+        "step": 14,
+        "calls": [
+          "apis.file_system.login"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 210
+      },
+      {
+        "step": 15,
+        "calls": [
+          "apis.file_system.create_directory"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 34
+      },
+      {
+        "step": 16,
+        "calls": [
+          "apis.simple_note.show_note",
+          "apis.file_system.create_file"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 305
+      },
+      {
+        "step": 17,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='simple_note', api_name='show_note')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 851
+      },
+      {
+        "step": 18,
+        "calls": [
+          "apis.simple_note.show_note",
+          "apis.file_system.create_file"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 3193
+      },
+      {
+        "step": 19,
+        "calls": [
+          "apis.supervisor.complete_task"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 21
+      }
+    ],
+    "trajectory": "/root/autodl-tmp/workspace-tw/experiments/2026-10-21_appworld_rubric_sdpo/phase_b_sft_only/runs/sft/epoch_01_dev57/trajectories/6c2c621_1.json"
+  },
+  {
+    "epoch": 1,
+    "task_id": "b119b1f_2",
+    "success": false,
+    "passes": 5,
+    "tests": 6,
+    "termination": "completion_api",
+    "steps": 14,
+    "repeat_docs": 0,
+    "sequence": [
+      {
+        "step": 1,
+        "calls": [
+          "apis.supervisor.show_account_passwords",
+          "apis.spotify.login"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 205
+      },
+      {
+        "step": 2,
+        "calls": [
+          "apis.api_docs.show_api_descriptions(app_name='spotify')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 9306
+      },
+      {
+        "step": 3,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_current_song')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 729
+      },
+      {
+        "step": 4,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='next_song')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 509
+      },
+      {
+        "step": 5,
+        "calls": [
+          "apis.spotify.show_current_song"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 262
+      },
+      {
+        "step": 6,
+        "calls": [
+          "apis.spotify.next_song"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 67
+      },
+      {
+        "step": 7,
+        "calls": [
+          "apis.spotify.show_current_song"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 244
+      },
+      {
+        "step": 8,
+        "calls": [
+          "apis.spotify.next_song"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 68
+      },
+      {
+        "step": 9,
+        "calls": [
+          "apis.spotify.show_current_song"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 250
+      },
+      {
+        "step": 10,
+        "calls": [
+          "apis.spotify.next_song"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 68
+      },
+      {
+        "step": 11,
+        "calls": [
+          "apis.spotify.show_current_song"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 236
+      },
+      {
+        "step": 12,
+        "calls": [
+          "apis.spotify.next_song"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 67
+      },
+      {
+        "step": 13,
+        "calls": [
+          "apis.spotify.show_current_song"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 307
+      },
+      {
+        "step": 14,
+        "calls": [
+          "apis.supervisor.complete_task"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 21
+      }
+    ],
+    "trajectory": "/root/autodl-tmp/workspace-tw/experiments/2026-10-21_appworld_rubric_sdpo/phase_b_sft_only/runs/sft/epoch_01_dev57/trajectories/b119b1f_2.json"
+  },
+  {
+    "epoch": 1,
+    "task_id": "d4e9306_2",
+    "success": false,
+    "passes": 2,
+    "tests": 6,
+    "termination": "step_limit",
+    "steps": 50,
+    "repeat_docs": 0,
+    "sequence": [
+      {
+        "step": 1,
+        "calls": [
+          "apis.spotify.login"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 340
+      },
+      {
+        "step": 2,
+        "calls": [
+          "apis.supervisor.show_account_passwords"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 546
+      },
+      {
+        "step": 3,
+        "calls": [
+          "apis.spotify.login"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 202
+      },
+      {
+        "step": 4,
+        "calls": [
+          "apis.spotify.show_liked_songs_and_albums"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 328
+      },
+      {
+        "step": 5,
+        "calls": [
+          "apis.api_docs.show_api_descriptions(app_name='spotify')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 9306
+      },
+      {
+        "step": 6,
+        "calls": [
+          "apis.spotify.show_liked_songs",
+          "apis.spotify.show_liked_albums"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 3105
+      },
+      {
+        "step": 7,
+        "calls": [
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 395
+      },
+      {
+        "step": 8,
+        "calls": [
+          "apis.spotify.show_following_artists"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 863
+      },
+      {
+        "step": 9,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 204
+      },
+      {
+        "step": 10,
+        "calls": [
+          "apis.spotify.show_following_artists"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 863
+      },
+      {
+        "step": 11,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 206
+      },
+      {
+        "step": 12,
+        "calls": [],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 645
+      },
+      {
+        "step": 13,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 14,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 15,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 16,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 17,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 18,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 19,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 20,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 21,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 22,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 23,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 24,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 25,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 26,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 27,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 28,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 29,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 30,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 31,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 32,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 33,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 34,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 35,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 36,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 37,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 38,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 39,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 40,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 41,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 42,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 43,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 44,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 45,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 46,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 47,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 48,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 49,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      },
+      {
+        "step": 50,
+        "calls": [
+          "apis.spotify.show_following_artists",
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 389
+      }
+    ],
+    "trajectory": "/root/autodl-tmp/workspace-tw/experiments/2026-10-21_appworld_rubric_sdpo/phase_b_sft_only/runs/sft/epoch_01_dev57/trajectories/d4e9306_2.json"
+  },
+  {
+    "epoch": 2,
+    "task_id": "6c2c621_1",
+    "success": false,
+    "passes": 6,
+    "tests": 8,
+    "termination": "completion_api",
+    "steps": 20,
+    "repeat_docs": 2,
+    "sequence": [
+      {
+        "step": 1,
+        "calls": [
+          "apis.api_docs.show_api_descriptions(app_name='simple_note')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 1780
+      },
+      {
+        "step": 2,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='simple_note', api_name='search_notes')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 2478
+      },
+      {
+        "step": 3,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='simple_note', api_name='login')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 629
+      },
+      {
+        "step": 4,
+        "calls": [
+          "apis.api_docs.show_api_descriptions(app_name='supervisor')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 632
+      },
+      {
+        "step": 5,
+        "calls": [
+          "apis.supervisor.show_account_passwords"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 546
+      },
+      {
+        "step": 6,
+        "calls": [
+          "apis.simple_note.login"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 375
+      },
+      {
+        "step": 7,
+        "calls": [
+          "apis.simple_note.login"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 210
+      },
+      {
+        "step": 8,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='simple_note', api_name='search_notes')"
+        ],
+        "docs": true,
+        "repeat_of": 2,
+        "business": false,
+        "observation_chars": 2478
+      },
+      {
+        "step": 9,
+        "calls": [
+          "apis.simple_note.search_notes"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 366
+      },
+      {
+        "step": 10,
+        "calls": [
+          "apis.simple_note.search_notes"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 490
+      },
+      {
+        "step": 11,
+        "calls": [
+          "apis.simple_note.search_notes"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 3
+      },
+      {
+        "step": 12,
+        "calls": [
+          "apis.api_docs.show_api_descriptions(app_name='file_system')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 2512
+      },
+      {
+        "step": 13,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 14,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='login')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 629
+      },
+      {
+        "step": 15,
+        "calls": [
+          "apis.api_docs.show_api_descriptions(app_name='supervisor')"
+        ],
+        "docs": true,
+        "repeat_of": 4,
+        "business": false,
+        "observation_chars": 632
+      },
+      {
+        "step": 16,
+        "calls": [
+          "apis.supervisor.show_account_passwords"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 546
+      },
+      {
+        "step": 17,
+        "calls": [
+          "apis.file_system.login"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 210
+      },
+      {
+        "step": 18,
+        "calls": [
+          "apis.file_system.create_directory"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 34
+      },
+      {
+        "step": 19,
+        "calls": [
+          "apis.file_system.create_file"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 3193
+      },
+      {
+        "step": 20,
+        "calls": [
+          "apis.supervisor.complete_task"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 21
+      }
+    ],
+    "trajectory": "/root/autodl-tmp/workspace-tw/experiments/2026-10-21_appworld_rubric_sdpo/phase_b_sft_only/runs/sft/epoch_02_dev57/trajectories/6c2c621_1.json"
+  },
+  {
+    "epoch": 2,
+    "task_id": "b119b1f_2",
+    "success": true,
+    "passes": 6,
+    "tests": 6,
+    "termination": "completion_api",
+    "steps": 17,
+    "repeat_docs": 0,
+    "sequence": [
+      {
+        "step": 1,
+        "calls": [
+          "apis.api_docs.show_api_descriptions(app_name='spotify')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 9306
+      },
+      {
+        "step": 2,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_current_song')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 729
+      },
+      {
+        "step": 3,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='login')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 621
+      },
+      {
+        "step": 4,
+        "calls": [
+          "apis.api_docs.show_api_descriptions(app_name='supervisor')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 632
+      },
+      {
+        "step": 5,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='supervisor', api_name='show_account_passwords')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 367
+      },
+      {
+        "step": 6,
+        "calls": [
+          "apis.supervisor.show_account_passwords"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 546
+      },
+      {
+        "step": 7,
+        "calls": [
+          "apis.spotify.login"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 205
+      },
+      {
+        "step": 8,
+        "calls": [
+          "apis.spotify.show_current_song"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 262
+      },
+      {
+        "step": 9,
+        "calls": [
+          "apis.spotify.next_song"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 67
+      },
+      {
+        "step": 10,
+        "calls": [
+          "apis.spotify.show_current_song"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 244
+      },
+      {
+        "step": 11,
+        "calls": [
+          "apis.spotify.next_song"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 68
+      },
+      {
+        "step": 12,
+        "calls": [
+          "apis.spotify.show_current_song"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 250
+      },
+      {
+        "step": 13,
+        "calls": [
+          "apis.spotify.next_song"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 68
+      },
+      {
+        "step": 14,
+        "calls": [
+          "apis.spotify.show_current_song"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 236
+      },
+      {
+        "step": 15,
+        "calls": [
+          "apis.spotify.next_song"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 67
+      },
+      {
+        "step": 16,
+        "calls": [
+          "apis.spotify.show_current_song"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 307
+      },
+      {
+        "step": 17,
+        "calls": [
+          "apis.supervisor.complete_task"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 21
+      }
+    ],
+    "trajectory": "/root/autodl-tmp/workspace-tw/experiments/2026-10-21_appworld_rubric_sdpo/phase_b_sft_only/runs/sft/epoch_02_dev57/trajectories/b119b1f_2.json"
+  },
+  {
+    "epoch": 2,
+    "task_id": "d4e9306_2",
+    "success": true,
+    "passes": 6,
+    "tests": 6,
+    "termination": "completion_api",
+    "steps": 17,
+    "repeat_docs": 0,
+    "sequence": [
+      {
+        "step": 1,
+        "calls": [
+          "apis.api_docs.show_api_descriptions(app_name='spotify')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 9306
+      },
+      {
+        "step": 2,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_liked_songs')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 1384
+      },
+      {
+        "step": 3,
+        "calls": [
+          "apis.spotify.show_liked_songs"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 325
+      },
+      {
+        "step": 4,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='login')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 621
+      },
+      {
+        "step": 5,
+        "calls": [
+          "apis.api_docs.show_api_descriptions(app_name='supervisor')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 632
+      },
+      {
+        "step": 6,
+        "calls": [
+          "apis.supervisor.show_account_passwords"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 21
+      },
+      {
+        "step": 7,
+        "calls": [
+          "apis.spotify.login"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 21
+      },
+      {
+        "step": 8,
+        "calls": [
+          "apis.spotify.show_liked_songs"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 21
+      },
+      {
+        "step": 9,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_liked_albums')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 1471
+      },
+      {
+        "step": 10,
+        "calls": [
+          "apis.spotify.show_liked_albums"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 21
+      },
+      {
+        "step": 11,
+        "calls": [],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 21
+      },
+      {
+        "step": 12,
+        "calls": [],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 21
+      },
+      {
+        "step": 13,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='follow_artist')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 645
+      },
+      {
+        "step": 14,
+        "calls": [
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 512
+      },
+      {
+        "step": 15,
+        "calls": [
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 372
+      },
+      {
+        "step": 16,
+        "calls": [
+          "apis.spotify.follow_artist"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": true,
+        "observation_chars": 128
+      },
+      {
+        "step": 17,
+        "calls": [
+          "apis.supervisor.complete_task"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 21
+      }
+    ],
+    "trajectory": "/root/autodl-tmp/workspace-tw/experiments/2026-10-21_appworld_rubric_sdpo/phase_b_sft_only/runs/sft/epoch_02_dev57/trajectories/d4e9306_2.json"
+  },
+  {
+    "epoch": 3,
+    "task_id": "6c2c621_1",
+    "success": false,
+    "passes": 1,
+    "tests": 8,
+    "termination": "step_limit",
+    "steps": 50,
+    "repeat_docs": 37,
+    "sequence": [
+      {
+        "step": 1,
+        "calls": [
+          "apis.api_docs.show_app_descriptions()"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 1367
+      },
+      {
+        "step": 2,
+        "calls": [
+          "apis.api_docs.show_api_descriptions(app_name='simple_note')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 1780
+      },
+      {
+        "step": 3,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='simple_note', api_name='search_notes')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 2478
+      },
+      {
+        "step": 4,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='simple_note', api_name='login')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 629
+      },
+      {
+        "step": 5,
+        "calls": [
+          "apis.api_docs.show_api_descriptions(app_name='supervisor')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 632
+      },
+      {
+        "step": 6,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='supervisor', api_name='show_account_passwords')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 367
+      },
+      {
+        "step": 7,
+        "calls": [
+          "apis.supervisor.show_account_passwords"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 546
+      },
+      {
+        "step": 8,
+        "calls": [],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 343
+      },
+      {
+        "step": 9,
+        "calls": [],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 8
+      },
+      {
+        "step": 10,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='simple_note', api_name='login')"
+        ],
+        "docs": true,
+        "repeat_of": 4,
+        "business": false,
+        "observation_chars": 629
+      },
+      {
+        "step": 11,
+        "calls": [
+          "apis.simple_note.login"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 210
+      },
+      {
+        "step": 12,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_file')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 1126
+      },
+      {
+        "step": 13,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 14,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 15,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_file')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 1126
+      },
+      {
+        "step": 16,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='simple_note', api_name='show_note')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 851
+      },
+      {
+        "step": 17,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='simple_note', api_name='search_notes')"
+        ],
+        "docs": true,
+        "repeat_of": 3,
+        "business": false,
+        "observation_chars": 2478
+      },
+      {
+        "step": 18,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 19,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_file')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 1126
+      },
+      {
+        "step": 20,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 21,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 22,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_file')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 1126
+      },
+      {
+        "step": 23,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 24,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_file')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 1126
+      },
+      {
+        "step": 25,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 26,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_file')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 1126
+      },
+      {
+        "step": 27,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 28,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_file')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 1126
+      },
+      {
+        "step": 29,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 30,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_file')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 1126
+      },
+      {
+        "step": 31,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 32,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_file')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 1126
+      },
+      {
+        "step": 33,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 34,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_file')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 1126
+      },
+      {
+        "step": 35,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 36,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_file')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 1126
+      },
+      {
+        "step": 37,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 38,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_file')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 1126
+      },
+      {
+        "step": 39,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 40,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_file')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 1126
+      },
+      {
+        "step": 41,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 42,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_file')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 1126
+      },
+      {
+        "step": 43,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 44,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_file')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 1126
+      },
+      {
+        "step": 45,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 46,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_file')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 1126
+      },
+      {
+        "step": 47,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 48,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_file')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 1126
+      },
+      {
+        "step": 49,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_directory')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 1226
+      },
+      {
+        "step": 50,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='file_system', api_name='create_file')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 1126
+      }
+    ],
+    "trajectory": "/root/autodl-tmp/workspace-tw/experiments/2026-10-21_appworld_rubric_sdpo/phase_b_sft_extend5/runs/sft/epoch_03_dev57/trajectories/6c2c621_1.json"
+  },
+  {
+    "epoch": 3,
+    "task_id": "b119b1f_2",
+    "success": false,
+    "passes": 0,
+    "tests": 6,
+    "termination": "context_limit",
+    "steps": 29,
+    "repeat_docs": 23,
+    "sequence": [
+      {
+        "step": 1,
+        "calls": [
+          "apis.api_docs.show_api_descriptions(app_name='spotify')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 9306
+      },
+      {
+        "step": 2,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_current_song')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 729
+      },
+      {
+        "step": 3,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_song_queue')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 784
+      },
+      {
+        "step": 4,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='play_music')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 1604
+      },
+      {
+        "step": 5,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_songs')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 4347
+      },
+      {
+        "step": 6,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_artists')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 2032
+      },
+      {
+        "step": 7,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_songs')"
+        ],
+        "docs": true,
+        "repeat_of": 5,
+        "business": false,
+        "observation_chars": 4347
+      },
+      {
+        "step": 8,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_artists')"
+        ],
+        "docs": true,
+        "repeat_of": 6,
+        "business": false,
+        "observation_chars": 2032
+      },
+      {
+        "step": 9,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_songs')"
+        ],
+        "docs": true,
+        "repeat_of": 5,
+        "business": false,
+        "observation_chars": 4347
+      },
+      {
+        "step": 10,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_artists')"
+        ],
+        "docs": true,
+        "repeat_of": 6,
+        "business": false,
+        "observation_chars": 2032
+      },
+      {
+        "step": 11,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_songs')"
+        ],
+        "docs": true,
+        "repeat_of": 5,
+        "business": false,
+        "observation_chars": 4347
+      },
+      {
+        "step": 12,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_artists')"
+        ],
+        "docs": true,
+        "repeat_of": 6,
+        "business": false,
+        "observation_chars": 2032
+      },
+      {
+        "step": 13,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_songs')"
+        ],
+        "docs": true,
+        "repeat_of": 5,
+        "business": false,
+        "observation_chars": 4347
+      },
+      {
+        "step": 14,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_artists')"
+        ],
+        "docs": true,
+        "repeat_of": 6,
+        "business": false,
+        "observation_chars": 2032
+      },
+      {
+        "step": 15,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_songs')"
+        ],
+        "docs": true,
+        "repeat_of": 5,
+        "business": false,
+        "observation_chars": 4347
+      },
+      {
+        "step": 16,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_artists')"
+        ],
+        "docs": true,
+        "repeat_of": 6,
+        "business": false,
+        "observation_chars": 2032
+      },
+      {
+        "step": 17,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_songs')"
+        ],
+        "docs": true,
+        "repeat_of": 5,
+        "business": false,
+        "observation_chars": 4347
+      },
+      {
+        "step": 18,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_artists')"
+        ],
+        "docs": true,
+        "repeat_of": 6,
+        "business": false,
+        "observation_chars": 2032
+      },
+      {
+        "step": 19,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_songs')"
+        ],
+        "docs": true,
+        "repeat_of": 5,
+        "business": false,
+        "observation_chars": 4347
+      },
+      {
+        "step": 20,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_artists')"
+        ],
+        "docs": true,
+        "repeat_of": 6,
+        "business": false,
+        "observation_chars": 2032
+      },
+      {
+        "step": 21,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_songs')"
+        ],
+        "docs": true,
+        "repeat_of": 5,
+        "business": false,
+        "observation_chars": 4347
+      },
+      {
+        "step": 22,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_artists')"
+        ],
+        "docs": true,
+        "repeat_of": 6,
+        "business": false,
+        "observation_chars": 2032
+      },
+      {
+        "step": 23,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_songs')"
+        ],
+        "docs": true,
+        "repeat_of": 5,
+        "business": false,
+        "observation_chars": 4347
+      },
+      {
+        "step": 24,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_artists')"
+        ],
+        "docs": true,
+        "repeat_of": 6,
+        "business": false,
+        "observation_chars": 2032
+      },
+      {
+        "step": 25,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_songs')"
+        ],
+        "docs": true,
+        "repeat_of": 5,
+        "business": false,
+        "observation_chars": 4347
+      },
+      {
+        "step": 26,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_artists')"
+        ],
+        "docs": true,
+        "repeat_of": 6,
+        "business": false,
+        "observation_chars": 2032
+      },
+      {
+        "step": 27,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_songs')"
+        ],
+        "docs": true,
+        "repeat_of": 5,
+        "business": false,
+        "observation_chars": 4347
+      },
+      {
+        "step": 28,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_artists')"
+        ],
+        "docs": true,
+        "repeat_of": 6,
+        "business": false,
+        "observation_chars": 2032
+      },
+      {
+        "step": 29,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_songs')"
+        ],
+        "docs": true,
+        "repeat_of": 5,
+        "business": false,
+        "observation_chars": 4347
+      }
+    ],
+    "trajectory": "/root/autodl-tmp/workspace-tw/experiments/2026-10-21_appworld_rubric_sdpo/phase_b_sft_extend5/runs/sft/epoch_03_dev57/trajectories/b119b1f_2.json"
+  },
+  {
+    "epoch": 3,
+    "task_id": "d4e9306_2",
+    "success": false,
+    "passes": 1,
+    "tests": 6,
+    "termination": "step_limit",
+    "steps": 50,
+    "repeat_docs": 36,
+    "sequence": [
+      {
+        "step": 1,
+        "calls": [
+          "apis.api_docs.show_api_descriptions(app_name='spotify')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 9306
+      },
+      {
+        "step": 2,
+        "calls": [
+          "apis.api_docs.show_api_descriptions(app_name='supervisor')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 632
+      },
+      {
+        "step": 3,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='supervisor', api_name='show_account_passwords')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 367
+      },
+      {
+        "step": 4,
+        "calls": [
+          "apis.supervisor.show_account_passwords"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 546
+      },
+      {
+        "step": 5,
+        "calls": [],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 327
+      },
+      {
+        "step": 6,
+        "calls": [],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 8
+      },
+      {
+        "step": 7,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='login')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 621
+      },
+      {
+        "step": 8,
+        "calls": [
+          "apis.spotify.login"
+        ],
+        "docs": false,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 202
+      },
+      {
+        "step": 9,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_liked_songs')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 1384
+      },
+      {
+        "step": 10,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_liked_albums')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 1471
+      },
+      {
+        "step": 11,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_artists')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 2032
+      },
+      {
+        "step": 12,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='follow_artist')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 645
+      },
+      {
+        "step": 13,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_artist')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 566
+      },
+      {
+        "step": 14,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_artist_following')"
+        ],
+        "docs": true,
+        "repeat_of": null,
+        "business": false,
+        "observation_chars": 676
+      },
+      {
+        "step": 15,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_artist_following')"
+        ],
+        "docs": true,
+        "repeat_of": 14,
+        "business": false,
+        "observation_chars": 676
+      },
+      {
+        "step": 16,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_artist_following')"
+        ],
+        "docs": true,
+        "repeat_of": 14,
+        "business": false,
+        "observation_chars": 676
+      },
+      {
+        "step": 17,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_artist')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 566
+      },
+      {
+        "step": 18,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_artist_following')"
+        ],
+        "docs": true,
+        "repeat_of": 14,
+        "business": false,
+        "observation_chars": 676
+      },
+      {
+        "step": 19,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_artist')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 566
+      },
+      {
+        "step": 20,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='follow_artist')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 645
+      },
+      {
+        "step": 21,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_liked_songs')"
+        ],
+        "docs": true,
+        "repeat_of": 9,
+        "business": false,
+        "observation_chars": 1384
+      },
+      {
+        "step": 22,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_liked_albums')"
+        ],
+        "docs": true,
+        "repeat_of": 10,
+        "business": false,
+        "observation_chars": 1471
+      },
+      {
+        "step": 23,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_artists')"
+        ],
+        "docs": true,
+        "repeat_of": 11,
+        "business": false,
+        "observation_chars": 2032
+      },
+      {
+        "step": 24,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_artist')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 566
+      },
+      {
+        "step": 25,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='follow_artist')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 645
+      },
+      {
+        "step": 26,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_artist_following')"
+        ],
+        "docs": true,
+        "repeat_of": 14,
+        "business": false,
+        "observation_chars": 676
+      },
+      {
+        "step": 27,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_artists')"
+        ],
+        "docs": true,
+        "repeat_of": 11,
+        "business": false,
+        "observation_chars": 2032
+      },
+      {
+        "step": 28,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_artist')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 566
+      },
+      {
+        "step": 29,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_artist_following')"
+        ],
+        "docs": true,
+        "repeat_of": 14,
+        "business": false,
+        "observation_chars": 676
+      },
+      {
+        "step": 30,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_artists')"
+        ],
+        "docs": true,
+        "repeat_of": 11,
+        "business": false,
+        "observation_chars": 2032
+      },
+      {
+        "step": 31,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='follow_artist')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 645
+      },
+      {
+        "step": 32,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_artist')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 566
+      },
+      {
+        "step": 33,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_artist_following')"
+        ],
+        "docs": true,
+        "repeat_of": 14,
+        "business": false,
+        "observation_chars": 676
+      },
+      {
+        "step": 34,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_artists')"
+        ],
+        "docs": true,
+        "repeat_of": 11,
+        "business": false,
+        "observation_chars": 2032
+      },
+      {
+        "step": 35,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_liked_albums')"
+        ],
+        "docs": true,
+        "repeat_of": 10,
+        "business": false,
+        "observation_chars": 1471
+      },
+      {
+        "step": 36,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_liked_songs')"
+        ],
+        "docs": true,
+        "repeat_of": 9,
+        "business": false,
+        "observation_chars": 1384
+      },
+      {
+        "step": 37,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_artists')"
+        ],
+        "docs": true,
+        "repeat_of": 11,
+        "business": false,
+        "observation_chars": 2032
+      },
+      {
+        "step": 38,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_artist')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 566
+      },
+      {
+        "step": 39,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_artist_following')"
+        ],
+        "docs": true,
+        "repeat_of": 14,
+        "business": false,
+        "observation_chars": 676
+      },
+      {
+        "step": 40,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='follow_artist')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 645
+      },
+      {
+        "step": 41,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_liked_albums')"
+        ],
+        "docs": true,
+        "repeat_of": 10,
+        "business": false,
+        "observation_chars": 1471
+      },
+      {
+        "step": 42,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_liked_songs')"
+        ],
+        "docs": true,
+        "repeat_of": 9,
+        "business": false,
+        "observation_chars": 1384
+      },
+      {
+        "step": 43,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_artists')"
+        ],
+        "docs": true,
+        "repeat_of": 11,
+        "business": false,
+        "observation_chars": 2032
+      },
+      {
+        "step": 44,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_artist')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 566
+      },
+      {
+        "step": 45,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_artist_following')"
+        ],
+        "docs": true,
+        "repeat_of": 14,
+        "business": false,
+        "observation_chars": 676
+      },
+      {
+        "step": 46,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='follow_artist')"
+        ],
+        "docs": true,
+        "repeat_of": 12,
+        "business": false,
+        "observation_chars": 645
+      },
+      {
+        "step": 47,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_liked_albums')"
+        ],
+        "docs": true,
+        "repeat_of": 10,
+        "business": false,
+        "observation_chars": 1471
+      },
+      {
+        "step": 48,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_liked_songs')"
+        ],
+        "docs": true,
+        "repeat_of": 9,
+        "business": false,
+        "observation_chars": 1384
+      },
+      {
+        "step": 49,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='search_artists')"
+        ],
+        "docs": true,
+        "repeat_of": 11,
+        "business": false,
+        "observation_chars": 2032
+      },
+      {
+        "step": 50,
+        "calls": [
+          "apis.api_docs.show_api_doc(app_name='spotify', api_name='show_artist')"
+        ],
+        "docs": true,
+        "repeat_of": 13,
+        "business": false,
+        "observation_chars": 566
+      }
+    ],
+    "trajectory": "/root/autodl-tmp/workspace-tw/experiments/2026-10-21_appworld_rubric_sdpo/phase_b_sft_extend5/runs/sft/epoch_03_dev57/trajectories/d4e9306_2.json"
+  }
+]

@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AppWorld v7 scores with retrospective corrective feedback",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "trajectory_id",
+    "rubric_version",
+    "steps",
+    "feedback_version",
+    "feedback"
+  ],
+  "properties": {
+    "trajectory_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rubric_version": {
+      "const": "appworld-step-v7"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "type": "string",
+            "pattern": "^[PFUN]{8}$"
+          },
+          {
+            "type": "string",
+            "maxLength": 60
+          }
+        ],
+        "items": false,
+        "minItems": 3,
+        "maxItems": 3
+      }
+    },
+    "feedback_version": {
+      "const": "appworld-step-v7-feedback-v1"
+    },
+    "feedback": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "step_id",
+          "failed_rules",
+          "diagnosis",
+          "correction",
+          "evidence_steps",
+          "uses_later_evidence",
+          "usable",
+          "unusable_reason"
+        ],
+        "properties": {
+          "step_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "failed_rules": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^R[1-8]$"
+            }
+          },
+          "diagnosis": {
+            "type": "string",
+            "minLength": 1
+          },
+          "correction": {
+            "type": "string"
+          },
+          "evidence_steps": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "uses_later_evidence": {
+            "type": "boolean"
+          },
+          "usable": {
+            "type": "boolean"
+          },
+          "unusable_reason": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "$comment": "Also check original v7 step coverage/reasons, requested FAIL coverage, exact failed_rules, real evidence IDs and later-evidence flag, usable/correction consistency, and the Qwen-token budget. Structural checks do not validate feedback truth or usefulness."
+}

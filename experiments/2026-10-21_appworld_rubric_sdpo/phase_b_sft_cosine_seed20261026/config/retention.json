@@ -1,0 +1,16 @@
+{
+  "user_authorized_model_retention": true,
+  "keep_full_batches": [],
+  "keep_latest_batches": 1,
+  "eligible_model_files": [
+    "state.pt",
+    "adapters/student/adapter_model.safetensors"
+  ],
+  "scope": "This cosine experiment only. Keep latest full resume state and best evaluated epoch; never delete previous experiment files.",
+  "keep_best_evaluated_epoch": true,
+  "best_epoch_selection": [
+    "successes_desc",
+    "macro_test_pass_fraction_desc",
+    "earliest_epoch_on_tie"
+  ]
+}

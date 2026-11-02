@@ -1,0 +1,1218 @@
+{
+  "generated_at": "2026-10-23T23:48:28.362431+08:00",
+  "complete": true,
+  "arm": "mixed",
+  "teacher": "C2_feedback",
+  "completed_batches": 36,
+  "optimizer_updates": 36,
+  "training_trajectories": 180,
+  "steps": 5214,
+  "branch_counts": {
+    "sdpo": 4300,
+    "sft": 912,
+    "mask": 2
+  },
+  "mask_reasons": {
+    "zero_fail_P_below_3": 2
+  },
+  "zero_FAIL_PASS_histogram": {
+    "5": 222,
+    "3": 496,
+    "4": 180,
+    "6": 12,
+    "7": 2,
+    "2": 2
+  },
+  "supervised_response_tokens": 487092,
+  "sdpo_steps_using_later_evidence": 43,
+  "selected_steps_with_U": 166,
+  "judge_attempts": 184,
+  "format_repair_attempts": 1,
+  "evaluations": {
+    "1": {
+      "completed_at": "2026-10-23T06:53:16.231385+08:00",
+      "epoch": 1,
+      "checkpoint_batch": 18,
+      "policy_identity": {
+        "kind": "student_adapter",
+        "checkpoint_complete_sha256": "19bab760f978a46f245a062a17f2e55c6a0b1eff29c3874acd2c6f84844a6a8e"
+      },
+      "tasks": 57,
+      "successes": 5,
+      "task_goal_completion": 0.08771929824561403,
+      "macro_test_pass_fraction": 0.412781954887218,
+      "student_without_feedback": true,
+      "temperature": 0.0,
+      "seed": 100,
+      "results": [
+        {
+          "task_id": "0d8a4ee_1",
+          "success": false,
+          "num_tests": 5,
+          "num_passes": 1,
+          "num_failures": 4,
+          "steps": 38,
+          "termination": "context_limit",
+          "trajectory_sha256": "7d2160d57819f7b1b40184d4085dee929fd501c3a9cd2ed2ece0104fd563c59c"
+        },
+        {
+          "task_id": "0d8a4ee_2",
+          "success": false,
+          "num_tests": 5,
+          "num_passes": 4,
+          "num_failures": 1,
+          "steps": 12,
+          "termination": "completion_api",
+          "trajectory_sha256": "29cf0960c1950230c5bb6b60539bc16e800374f74da16771c0f274a8b7e0968f"
+        },
+        {
+          "task_id": "0d8a4ee_3",
+          "success": false,
+          "num_tests": 5,
+          "num_passes": 1,
+          "num_failures": 4,
+          "steps": 39,
+          "termination": "context_limit",
+          "trajectory_sha256": "a719cffc6c2d924ce4c83ffc28997d1df4d6f1d5e1251198ddb55b2990b8aa31"
+        },
+        {
+          "task_id": "23cf851_1",
+          "success": true,
+          "num_tests": 2,
+          "num_passes": 2,
+          "num_failures": 0,
+          "steps": 13,
+          "termination": "completion_api",
+          "trajectory_sha256": "4a886b9786d5a2d3fabef521083fb35cbec5160fd4cc5766c84724a4fe90e4ea"
+        },
+        {
+          "task_id": "23cf851_2",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 22,
+          "termination": "context_limit",
+          "trajectory_sha256": "d244a264bdc9da470917929959744fa3791ce308efb3598dd42bc38efc163a41"
+        },
+        {
+          "task_id": "23cf851_3",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 22,
+          "termination": "context_limit",
+          "trajectory_sha256": "4d504d8389ec13f9ee7c8006d07bf7d50e9fa7adb38b59f074e85c11eadb647b"
+        },
+        {
+          "task_id": "37a8675_1",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 0,
+          "num_failures": 6,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "682b59afe62460111f11d1e88ca0c748c586b5720e4ce2c795c2a8967cd57d5e"
+        },
+        {
+          "task_id": "37a8675_2",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 0,
+          "num_failures": 6,
+          "steps": 21,
+          "termination": "context_limit",
+          "trajectory_sha256": "57042c9eed4ab6784b8fd1d3fe5703b7b9d7f34cc483880e9ed296399e806ec2"
+        },
+        {
+          "task_id": "37a8675_3",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 4,
+          "num_failures": 2,
+          "steps": 43,
+          "termination": "completion_api",
+          "trajectory_sha256": "53e6657870d66a74f889e567b95342e3285ac18ef70c1d2553a82dd310ae60b4"
+        },
+        {
+          "task_id": "383cbac_1",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 22,
+          "termination": "context_limit",
+          "trajectory_sha256": "3642525387e071522bff623f47f6a391fa3439131d8a937b607cb4146bca480f"
+        },
+        {
+          "task_id": "383cbac_2",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 22,
+          "termination": "context_limit",
+          "trajectory_sha256": "dd3a5039c913fe6afc00a1f1a9a27a3c27eafba4d3d4efdbc93bc471554f4cbc"
+        },
+        {
+          "task_id": "383cbac_3",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 11,
+          "termination": "completion_api",
+          "trajectory_sha256": "03a9affc58f9ce6890aaee9fdaaa69273d2b32c6d18b19f486e4dd3aee2ec58e"
+        },
+        {
+          "task_id": "396c5a2_1",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 0,
+          "num_failures": 6,
+          "steps": 16,
+          "termination": "context_limit",
+          "trajectory_sha256": "2192c38838c7d2753503cb2a80dc87dd527bfa40d4e4767227cf117982a1cf08"
+        },
+        {
+          "task_id": "396c5a2_2",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 1,
+          "num_failures": 5,
+          "steps": 4,
+          "termination": "completion_api",
+          "trajectory_sha256": "16f0e6ce429c2a0859abb1d478ee2613ff2f3dc441e3272ea12c1c137e324c2f"
+        },
+        {
+          "task_id": "396c5a2_3",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 0,
+          "num_failures": 6,
+          "steps": 13,
+          "termination": "no_python_code",
+          "trajectory_sha256": "0091f566086ab3c125ad9e44c6cbadd6bace2673512d422c581af47df4f1bcbd"
+        },
+        {
+          "task_id": "3ab5b8b_1",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 3,
+          "num_failures": 3,
+          "steps": 39,
+          "termination": "context_limit",
+          "trajectory_sha256": "1ec12b536fc9b132db80cc6eb1bc268ed599b5c5c3fc5938a772b4bd8db12686"
+        },
+        {
+          "task_id": "3ab5b8b_2",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 4,
+          "num_failures": 2,
+          "steps": 15,
+          "termination": "completion_api",
+          "trajectory_sha256": "d85edd89c696893d0fb0b8bfffac364af0cc8423ca62107747124ffb3b9f81c2"
+        },
+        {
+          "task_id": "3ab5b8b_3",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 4,
+          "num_failures": 2,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "6bab5c05f17b7b9493bd2321797ddd2e2ae906ad4f7167a4154458351d475379"
+        },
+        {
+          "task_id": "4ec8de5_1",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 13,
+          "termination": "context_limit",
+          "trajectory_sha256": "2c54b91763e68773b93fdee499933e6dc5f561a2de18a005a1fd2d9779631a69"
+        },
+        {
+          "task_id": "4ec8de5_2",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 13,
+          "termination": "context_limit",
+          "trajectory_sha256": "b995cbec0e44ce54b290a5c558f8e926451d3410ffa13e1bd19cafb8b9608456"
+        },
+        {
+          "task_id": "4ec8de5_3",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "1d82e6f82532b937d0a78fa3880efb8a7933520d27f56710bb0ad5534347d1ec"
+        },
+        {
+          "task_id": "4fab96f_1",
+          "success": false,
+          "num_tests": 8,
+          "num_passes": 1,
+          "num_failures": 7,
+          "steps": 36,
+          "termination": "no_python_code",
+          "trajectory_sha256": "b1b7db1a6967c543e30085d41a2e7a6f42df4b1f26b98464173a9bff90ac70bd"
+        },
+        {
+          "task_id": "4fab96f_2",
+          "success": false,
+          "num_tests": 8,
+          "num_passes": 1,
+          "num_failures": 7,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "cfca686680698b10ebdc6ece284f0301826994e155fd9ca803ffc51bd89b2d64"
+        },
+        {
+          "task_id": "4fab96f_3",
+          "success": false,
+          "num_tests": 8,
+          "num_passes": 1,
+          "num_failures": 7,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "8d80aacfa38155882e7b7b3937a71beff5dfeb64e4cf4b0fb19825ecd93965c4"
+        },
+        {
+          "task_id": "50e1ac9_1",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 12,
+          "termination": "context_limit",
+          "trajectory_sha256": "eb953567037bb509939391dd90f1adb0c6c28a6801286ba8a18e46818fc32b09"
+        },
+        {
+          "task_id": "50e1ac9_2",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "77d6736831693512bcc7a4459138a841585d9a68995ac05431ad5fc42eb122bc"
+        },
+        {
+          "task_id": "50e1ac9_3",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 12,
+          "termination": "context_limit",
+          "trajectory_sha256": "9b76145a81d63cfe4f28fd466137a86c987105ff5569e5939673652fae71ed87"
+        },
+        {
+          "task_id": "530b157_1",
+          "success": false,
+          "num_tests": 10,
+          "num_passes": 1,
+          "num_failures": 9,
+          "steps": 14,
+          "termination": "no_python_code",
+          "trajectory_sha256": "603ff7c73cc56a71d21fdbea7685f3292c9a2b5723a3c2b726a343b1928a8cd7"
+        },
+        {
+          "task_id": "530b157_2",
+          "success": false,
+          "num_tests": 10,
+          "num_passes": 9,
+          "num_failures": 1,
+          "steps": 34,
+          "termination": "completion_api",
+          "trajectory_sha256": "d1725b14883d178a30059719c4155bdf26ebd6ab8b4681a18f40d193789874fc"
+        },
+        {
+          "task_id": "530b157_3",
+          "success": false,
+          "num_tests": 10,
+          "num_passes": 1,
+          "num_failures": 9,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "13b07bed371ba0f65421fef27aa97eec5f6026dc3cf6d55c0165fd64ba240150"
+        },
+        {
+          "task_id": "57c3486_1",
+          "success": false,
+          "num_tests": 5,
+          "num_passes": 4,
+          "num_failures": 1,
+          "steps": 22,
+          "termination": "completion_api",
+          "trajectory_sha256": "fed2ca55671d22066c298faced801a5d5b16d9b60312c55ef1bef45b103d5611"
+        },
+        {
+          "task_id": "57c3486_2",
+          "success": false,
+          "num_tests": 5,
+          "num_passes": 1,
+          "num_failures": 4,
+          "steps": 17,
+          "termination": "context_limit",
+          "trajectory_sha256": "d6a4f3ab9e6ef109e9fffc043ef35ce0639456fcbbcab9d05a37198b8c4733f3"
+        },
+        {
+          "task_id": "57c3486_3",
+          "success": false,
+          "num_tests": 5,
+          "num_passes": 1,
+          "num_failures": 4,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "5f70e94145cdca5d36e284252dbf87745ced4aa61ff4952bf6ee5b662d4f1173"
+        },
+        {
+          "task_id": "6171bbc_1",
+          "success": false,
+          "num_tests": 7,
+          "num_passes": 5,
+          "num_failures": 2,
+          "steps": 6,
+          "termination": "completion_api",
+          "trajectory_sha256": "d1d5aaf149b2f7b440b8a6086269960ee414df9189dbb6a99865987e1bd3cbc3"
+        },
+        {
+          "task_id": "6171bbc_2",
+          "success": false,
+          "num_tests": 7,
+          "num_passes": 1,
+          "num_failures": 6,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "56676ad3f7d75dad73b4dc904275dcbc0966db3d6ead9c340f82b1d611befada"
+        },
+        {
+          "task_id": "6171bbc_3",
+          "success": false,
+          "num_tests": 7,
+          "num_passes": 1,
+          "num_failures": 6,
+          "steps": 17,
+          "termination": "context_limit",
+          "trajectory_sha256": "01c3bc8a8ff70a534b29b2f91d0f480b3096a386b50b8ab8c8f1cf33ccd948a8"
+        },
+        {
+          "task_id": "68ee2c9_1",
+          "success": false,
+          "num_tests": 5,
+          "num_passes": 1,
+          "num_failures": 4,
+          "steps": 49,
+          "termination": "no_python_code",
+          "trajectory_sha256": "fa4d1e2dc6df8569e999b2fe8b1b32feb6de928f15d81f9b353ea851c9da800b"
+        },
+        {
+          "task_id": "68ee2c9_2",
+          "success": false,
+          "num_tests": 5,
+          "num_passes": 1,
+          "num_failures": 4,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "affd82607a5bef77411f8b6e2be1de7f7a23d0ff54d67fad4579f065ee806130"
+        },
+        {
+          "task_id": "68ee2c9_3",
+          "success": false,
+          "num_tests": 5,
+          "num_passes": 1,
+          "num_failures": 4,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "4f3a59522cd9cff2c7fbae012ffb8904b831d17a3b6f52c18b5fbfa81ad92efe"
+        },
+        {
+          "task_id": "6bdbc26_1",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 9,
+          "termination": "no_python_code",
+          "trajectory_sha256": "0540257a83aaff3cd997e7f0b80b3f3bf4df8d5d0c1f98e69edfb05318ce3428"
+        },
+        {
+          "task_id": "6bdbc26_2",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 13,
+          "termination": "context_limit",
+          "trajectory_sha256": "e2221054ea01702021141124dccdeceac4b599fe0ec2e5018825de1d2c8c3f93"
+        },
+        {
+          "task_id": "6bdbc26_3",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 13,
+          "termination": "context_limit",
+          "trajectory_sha256": "e9777343e33dc19ec87debeb274cd0bf69d323c15fb9bfcb7cac9821c31ae106"
+        },
+        {
+          "task_id": "6c2c621_1",
+          "success": true,
+          "num_tests": 8,
+          "num_passes": 8,
+          "num_failures": 0,
+          "steps": 27,
+          "termination": "completion_api",
+          "trajectory_sha256": "eaf26979ac52fd1dc661877e3ed61d1e852147ea9f8952103507c8c06ba41c7c"
+        },
+        {
+          "task_id": "6c2c621_2",
+          "success": true,
+          "num_tests": 8,
+          "num_passes": 8,
+          "num_failures": 0,
+          "steps": 23,
+          "termination": "completion_api",
+          "trajectory_sha256": "f33a24daaa10b90945739689a0e5929e9427038fafa4cd6c760dbece5a54d97e"
+        },
+        {
+          "task_id": "6c2c621_3",
+          "success": false,
+          "num_tests": 8,
+          "num_passes": 1,
+          "num_failures": 7,
+          "steps": 20,
+          "termination": "context_limit",
+          "trajectory_sha256": "a2f9d90524e879ea504ca31176faf2b23baa911cbbeb35ba355467a14f0ecff4"
+        },
+        {
+          "task_id": "b119b1f_1",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 0,
+          "num_failures": 6,
+          "steps": 13,
+          "termination": "context_limit",
+          "trajectory_sha256": "c84db9cd6821f18306b7ccbdc3109a5926f5c80e58fa600a08428fd12479dfa1"
+        },
+        {
+          "task_id": "b119b1f_2",
+          "success": true,
+          "num_tests": 6,
+          "num_passes": 6,
+          "num_failures": 0,
+          "steps": 23,
+          "termination": "completion_api",
+          "trajectory_sha256": "68f11a9d498115ada91f2c9c7755a9e48573111bcfa8b8185e77c78b664dc595"
+        },
+        {
+          "task_id": "b119b1f_3",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 0,
+          "num_failures": 6,
+          "steps": 13,
+          "termination": "context_limit",
+          "trajectory_sha256": "5d3e32b96261b13d681df3a49504f0e239db54a7e580c58635c5f3ce0b609681"
+        },
+        {
+          "task_id": "d4e9306_1",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 1,
+          "num_failures": 5,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "9fd393b0ced1f52d11da45178ca10cf6dfd69d0f09d37084231bac04f9533043"
+        },
+        {
+          "task_id": "d4e9306_2",
+          "success": true,
+          "num_tests": 6,
+          "num_passes": 6,
+          "num_failures": 0,
+          "steps": 11,
+          "termination": "completion_api",
+          "trajectory_sha256": "8dc26ccc23661eb6d1498bd57b71eb5a4bb2d3efabeb93dd2f3e8951217e5517"
+        },
+        {
+          "task_id": "d4e9306_3",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 1,
+          "num_failures": 5,
+          "steps": 12,
+          "termination": "context_limit",
+          "trajectory_sha256": "3961c49a5bf60a05df8f8e44ecbb94f5be765e4814e65871f03aa9f34599c72b"
+        },
+        {
+          "task_id": "df61dc5_1",
+          "success": false,
+          "num_tests": 7,
+          "num_passes": 6,
+          "num_failures": 1,
+          "steps": 19,
+          "termination": "completion_api",
+          "trajectory_sha256": "49b156df496ffead6abf8921223dae00a8430cac572c749c266da5f2b14621b4"
+        },
+        {
+          "task_id": "df61dc5_2",
+          "success": false,
+          "num_tests": 7,
+          "num_passes": 2,
+          "num_failures": 5,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "a1a9b36e525343ff29863acd89843603ed734c4e9b3c8bc889f4883489918ba1"
+        },
+        {
+          "task_id": "df61dc5_3",
+          "success": false,
+          "num_tests": 7,
+          "num_passes": 2,
+          "num_failures": 5,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "2f63739fb2c78c90a75aecc8a49d8e027bc100dbdbc4eea141c61bf7683967ac"
+        },
+        {
+          "task_id": "fac291d_1",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 13,
+          "termination": "context_limit",
+          "trajectory_sha256": "1d7e12e744cd505d950c3d85b472a01a7e08fb079728e597110abacff69136f5"
+        },
+        {
+          "task_id": "fac291d_2",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 13,
+          "termination": "context_limit",
+          "trajectory_sha256": "de9bfd974457b739adc0e4fe0844c2f1e22a2de2e7ee0593017ee14b6f12dde8"
+        },
+        {
+          "task_id": "fac291d_3",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 12,
+          "termination": "context_limit",
+          "trajectory_sha256": "5f936743eac25a3177054381db071e5a014395ae8464f4ec62575bb1604fcf7e"
+        }
+      ]
+    },
+    "2": {
+      "completed_at": "2026-10-23T23:47:59.757055+08:00",
+      "epoch": 2,
+      "checkpoint_batch": 36,
+      "policy_identity": {
+        "kind": "student_adapter",
+        "checkpoint_complete_sha256": "71c389477411c1d77359ddd039c51d5cdaefacaf39a71305dacabca367323309"
+      },
+      "tasks": 57,
+      "successes": 1,
+      "task_goal_completion": 0.017543859649122806,
+      "macro_test_pass_fraction": 0.26378446115288223,
+      "student_without_feedback": true,
+      "temperature": 0.0,
+      "seed": 100,
+      "results": [
+        {
+          "task_id": "0d8a4ee_1",
+          "success": false,
+          "num_tests": 5,
+          "num_passes": 1,
+          "num_failures": 4,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "26887471c49cbb49f3d32dec5249c990e41a4d081544283e7feb7b6a135a3aea"
+        },
+        {
+          "task_id": "0d8a4ee_2",
+          "success": false,
+          "num_tests": 5,
+          "num_passes": 1,
+          "num_failures": 4,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "507ec1c7fde507834ec99f1b8e46b6adafe1f56db2fe28af2dcc3051be070f8b"
+        },
+        {
+          "task_id": "0d8a4ee_3",
+          "success": false,
+          "num_tests": 5,
+          "num_passes": 1,
+          "num_failures": 4,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "b959154101b950860c14f3ef518bf70f9940ce6b9efbbdf87b6653e2cd186aac"
+        },
+        {
+          "task_id": "23cf851_1",
+          "success": true,
+          "num_tests": 2,
+          "num_passes": 2,
+          "num_failures": 0,
+          "steps": 16,
+          "termination": "completion_api",
+          "trajectory_sha256": "be991611234e16e563180fc68840a0261b909c0568480a82fc64f4a32bdf8918"
+        },
+        {
+          "task_id": "23cf851_2",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 33,
+          "termination": "context_limit",
+          "trajectory_sha256": "eab6612c250ca8baf6d057b37ef98c3a9f9830af1b1756ede532ed7dccf6f846"
+        },
+        {
+          "task_id": "23cf851_3",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "1a2217f13d569a11c2ae2bb385beb16b7aec065f919de77b609162bf54710d9b"
+        },
+        {
+          "task_id": "37a8675_1",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 0,
+          "num_failures": 6,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "6fd2b2a42991ba4dbe4ff1767966fe9fb36c68db0e512c44f7b90b06afd1d5e1"
+        },
+        {
+          "task_id": "37a8675_2",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 0,
+          "num_failures": 6,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "cb5972243ee6cc5fe1cc3a110bfc946535d87a2e59a3a97a383b2aa15f9c9c10"
+        },
+        {
+          "task_id": "37a8675_3",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 0,
+          "num_failures": 6,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "21ec97c98ae6909f1c80d5278d0fff4cace734f74bb6216aff883d2338383b2a"
+        },
+        {
+          "task_id": "383cbac_1",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 21,
+          "termination": "context_limit",
+          "trajectory_sha256": "82dde49c9d4a7dfa6344a42108f639c2b2749dbf80f93a66428e3a642e7aee11"
+        },
+        {
+          "task_id": "383cbac_2",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "1cb32974a9a92ec788d0f7da5099825ca9b837af0b3b0a6e21a88e9b84795ea0"
+        },
+        {
+          "task_id": "383cbac_3",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 31,
+          "termination": "context_limit",
+          "trajectory_sha256": "66fef626b2e3a95537f7937a3c4d49d74bfc82e43fba5d197324faa7711c51b2"
+        },
+        {
+          "task_id": "396c5a2_1",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 0,
+          "num_failures": 6,
+          "steps": 22,
+          "termination": "context_limit",
+          "trajectory_sha256": "a4e544429c8735fd0fc23252aacdba6e1f3dfb7b3e4297c989ab6fd73ad1f11d"
+        },
+        {
+          "task_id": "396c5a2_2",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 0,
+          "num_failures": 6,
+          "steps": 40,
+          "termination": "context_limit",
+          "trajectory_sha256": "764d7a9ed2a69fe0103080c90d11c40857a81ee5d7fd5b3404c8154d5124e0eb"
+        },
+        {
+          "task_id": "396c5a2_3",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 0,
+          "num_failures": 6,
+          "steps": 28,
+          "termination": "context_limit",
+          "trajectory_sha256": "4a4069da5a6c0e324e3faa7ca6adb9d94fcd959ae53e592605699af4aaa22ae3"
+        },
+        {
+          "task_id": "3ab5b8b_1",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 1,
+          "num_failures": 5,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "855e32d30e026cfa15e15f89959695bf009596efcf67c96be5e66ac72cb8f044"
+        },
+        {
+          "task_id": "3ab5b8b_2",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 1,
+          "num_failures": 5,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "7fbe4b58ca7a58701ca2b4618421ce3a99c1a336d416f896e9c347829f7c86e9"
+        },
+        {
+          "task_id": "3ab5b8b_3",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 1,
+          "num_failures": 5,
+          "steps": 13,
+          "termination": "context_limit",
+          "trajectory_sha256": "53affb3be128590e187f1a0a69c3a2f3d83ff0fe38f6a9923355cd5d3ce51d6e"
+        },
+        {
+          "task_id": "4ec8de5_1",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 13,
+          "termination": "context_limit",
+          "trajectory_sha256": "2b90a18767fb1563e9a71ede224751159fbff291ecf838c8efcff1e23d4aae40"
+        },
+        {
+          "task_id": "4ec8de5_2",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 13,
+          "termination": "context_limit",
+          "trajectory_sha256": "5f0fdb4fcbb9f95d998875134ec62e4b4d0d22a3c9539289cd9a2d83086b432c"
+        },
+        {
+          "task_id": "4ec8de5_3",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 13,
+          "termination": "context_limit",
+          "trajectory_sha256": "115e5972afc97288a443bc1cdec2272343b6b1460e5176cbba15365f99562038"
+        },
+        {
+          "task_id": "4fab96f_1",
+          "success": false,
+          "num_tests": 8,
+          "num_passes": 1,
+          "num_failures": 7,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "819ea49a3ba1789b63c8247aa78f4f09e1b2bc9ba9be6c6c2423e83bcddf07a6"
+        },
+        {
+          "task_id": "4fab96f_2",
+          "success": false,
+          "num_tests": 8,
+          "num_passes": 1,
+          "num_failures": 7,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "c28a6926bc1b30f72a4c3e8f6c8510bc9c5a84ab0f6991644bcd3f970d8a217c"
+        },
+        {
+          "task_id": "4fab96f_3",
+          "success": false,
+          "num_tests": 8,
+          "num_passes": 1,
+          "num_failures": 7,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "a0892330076a437772649773a1b87bec1c2b951f2b5a355ece32ccabd87777aa"
+        },
+        {
+          "task_id": "50e1ac9_1",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 41,
+          "termination": "context_limit",
+          "trajectory_sha256": "67947b5816e48b7482e61a9e8a09991e92da6e94f99dada811a2b5e0cbe92458"
+        },
+        {
+          "task_id": "50e1ac9_2",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 46,
+          "termination": "context_limit",
+          "trajectory_sha256": "7f937d68788e46e6901f976da6da1547663549016262ea1ec04437a18b918180"
+        },
+        {
+          "task_id": "50e1ac9_3",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 41,
+          "termination": "context_limit",
+          "trajectory_sha256": "dee04648eabe04c8b9f22bb86f10da3326db15978a1c3791a44d86e373fc4d6f"
+        },
+        {
+          "task_id": "530b157_1",
+          "success": false,
+          "num_tests": 10,
+          "num_passes": 1,
+          "num_failures": 9,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "f5b1cd1aa77466bda1438e1960bcb985b0b8a208266a5346320078dfb04724ad"
+        },
+        {
+          "task_id": "530b157_2",
+          "success": false,
+          "num_tests": 10,
+          "num_passes": 1,
+          "num_failures": 9,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "d2eda2b953e16421ba731bb514a1ee8f97064d62b9a150d7eecd29e5e79c99f6"
+        },
+        {
+          "task_id": "530b157_3",
+          "success": false,
+          "num_tests": 10,
+          "num_passes": 1,
+          "num_failures": 9,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "91b6b1460ad4be81c0f0907e28df16a3119ed536058acf1950fd4826df693d1a"
+        },
+        {
+          "task_id": "57c3486_1",
+          "success": false,
+          "num_tests": 5,
+          "num_passes": 1,
+          "num_failures": 4,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "a78ea066659fa32156e096a9b60aafcf05f3ed32ac9ed76385a93be2a51a1286"
+        },
+        {
+          "task_id": "57c3486_2",
+          "success": false,
+          "num_tests": 5,
+          "num_passes": 1,
+          "num_failures": 4,
+          "steps": 25,
+          "termination": "context_limit",
+          "trajectory_sha256": "fff53690b8bd817e5bd658e7b8b070fe529f4723da3fcdeedacf1f9f2a93fb37"
+        },
+        {
+          "task_id": "57c3486_3",
+          "success": false,
+          "num_tests": 5,
+          "num_passes": 3,
+          "num_failures": 2,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "191a5bfa8e66075fbfe0fef8897c271a7dd0e5b801072d9371cb0099440ae1e9"
+        },
+        {
+          "task_id": "6171bbc_1",
+          "success": false,
+          "num_tests": 7,
+          "num_passes": 1,
+          "num_failures": 6,
+          "steps": 45,
+          "termination": "context_limit",
+          "trajectory_sha256": "a7f08efc60eac4de4edd015d2b65a403a816f756994e99392d23740d21a86504"
+        },
+        {
+          "task_id": "6171bbc_2",
+          "success": false,
+          "num_tests": 7,
+          "num_passes": 1,
+          "num_failures": 6,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "0fc3fff479f7c69a7c59d967b5a348c9e02bded30fa08ff3a97655c1cfd95475"
+        },
+        {
+          "task_id": "6171bbc_3",
+          "success": false,
+          "num_tests": 7,
+          "num_passes": 1,
+          "num_failures": 6,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "2098bdc4b6c2c71c5ae8c5364a1347ddd78d9c53f7325459469bf0dd32663997"
+        },
+        {
+          "task_id": "68ee2c9_1",
+          "success": false,
+          "num_tests": 5,
+          "num_passes": 1,
+          "num_failures": 4,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "86cd80e1b1f62c91ca5eec37614525d2d38b6638150355fdbca317cd03705886"
+        },
+        {
+          "task_id": "68ee2c9_2",
+          "success": false,
+          "num_tests": 5,
+          "num_passes": 1,
+          "num_failures": 4,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "8b11e0f030bdbef25118cadea4b033f1782927b5430c3b46d9f61b50041f8db2"
+        },
+        {
+          "task_id": "68ee2c9_3",
+          "success": false,
+          "num_tests": 5,
+          "num_passes": 1,
+          "num_failures": 4,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "4220b681aecbc606ac274d34cfd71422f705ae7ada54b9dcb4c43e8da20e3f1c"
+        },
+        {
+          "task_id": "6bdbc26_1",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "7cc6a97c2c35491452832c43265db9ed48662b3595761d0f9f2335377aceebec"
+        },
+        {
+          "task_id": "6bdbc26_2",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "0e0ac7a5cf5d7f26a562c25592ce9539251c762ed889e80ae8b6941e78866ec5"
+        },
+        {
+          "task_id": "6bdbc26_3",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "001254e14e25c57d269d0edb56e1bc068d8bc8890b8cf6ae6e3eb0ab79b3a94d"
+        },
+        {
+          "task_id": "6c2c621_1",
+          "success": false,
+          "num_tests": 8,
+          "num_passes": 1,
+          "num_failures": 7,
+          "steps": 45,
+          "termination": "context_limit",
+          "trajectory_sha256": "49f89401546cbd578118d7b752be2391567647f31601f94c814382f990aaf1b5"
+        },
+        {
+          "task_id": "6c2c621_2",
+          "success": false,
+          "num_tests": 8,
+          "num_passes": 1,
+          "num_failures": 7,
+          "steps": 44,
+          "termination": "context_limit",
+          "trajectory_sha256": "f0b3c5cd3bc55e5468d5101e708796be3ebe7f384c6245970831dc04eb25f5dc"
+        },
+        {
+          "task_id": "6c2c621_3",
+          "success": false,
+          "num_tests": 8,
+          "num_passes": 1,
+          "num_failures": 7,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "66d9164f36cfeb91434b1f026d4c94841d3453828d5a6f61eca896cf60599d9c"
+        },
+        {
+          "task_id": "b119b1f_1",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 0,
+          "num_failures": 6,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "0a3f4f114955f5dc0933ca6f761e130a9e4d60c22f9a2e0742b652d42e41aa78"
+        },
+        {
+          "task_id": "b119b1f_2",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 0,
+          "num_failures": 6,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "b12a90320847e860d7a3966d584b1020358ce3345a2ecd3d2f46557b610c44ed"
+        },
+        {
+          "task_id": "b119b1f_3",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 0,
+          "num_failures": 6,
+          "steps": 31,
+          "termination": "context_limit",
+          "trajectory_sha256": "b451c2df02fb7a54e5e2d24e5b507dfed183c49e7821da90c04bdaa81a49a55e"
+        },
+        {
+          "task_id": "d4e9306_1",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 1,
+          "num_failures": 5,
+          "steps": 13,
+          "termination": "context_limit",
+          "trajectory_sha256": "acb256f062b963f3d181748c9d86fd15eb0c2e0828c656b89d51dff8578ae747"
+        },
+        {
+          "task_id": "d4e9306_2",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 1,
+          "num_failures": 5,
+          "steps": 13,
+          "termination": "context_limit",
+          "trajectory_sha256": "e38e30c566c32aa26f5b09223f6c82cd2687ba7df11d7d728e436105b963d7f5"
+        },
+        {
+          "task_id": "d4e9306_3",
+          "success": false,
+          "num_tests": 6,
+          "num_passes": 1,
+          "num_failures": 5,
+          "steps": 13,
+          "termination": "context_limit",
+          "trajectory_sha256": "0c00ef44c97f0d40efe3ec15124af62bbef7a4e0886cb4d6f549c8efb3bc2249"
+        },
+        {
+          "task_id": "df61dc5_1",
+          "success": false,
+          "num_tests": 7,
+          "num_passes": 2,
+          "num_failures": 5,
+          "steps": 50,
+          "termination": "step_limit",
+          "trajectory_sha256": "fabea6ebb22510399bbb040f65c65f0e28b88370febdb7ad8648f9bf674a09a6"
+        },
+        {
+          "task_id": "df61dc5_2",
+          "success": false,
+          "num_tests": 7,
+          "num_passes": 2,
+          "num_failures": 5,
+          "steps": 22,
+          "termination": "context_limit",
+          "trajectory_sha256": "f168b664ce88b4ccbb6470d2bf53e688ad69aa6436fca3013bd3454e75276e7e"
+        },
+        {
+          "task_id": "df61dc5_3",
+          "success": false,
+          "num_tests": 7,
+          "num_passes": 2,
+          "num_failures": 5,
+          "steps": 22,
+          "termination": "context_limit",
+          "trajectory_sha256": "281c6dd0ca11bdea9430c638e954480b3045114fc8e4d8ab777ebd0328563ee8"
+        },
+        {
+          "task_id": "fac291d_1",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 13,
+          "termination": "context_limit",
+          "trajectory_sha256": "25d560324277ab6a32270db9da7885298a7a037a9fbeb85e6e9777ee7a510d7d"
+        },
+        {
+          "task_id": "fac291d_2",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 13,
+          "termination": "context_limit",
+          "trajectory_sha256": "5f0e795832e2a500b463367c176fc42835a521770071c44db5c79f2e80e99561"
+        },
+        {
+          "task_id": "fac291d_3",
+          "success": false,
+          "num_tests": 2,
+          "num_passes": 1,
+          "num_failures": 1,
+          "steps": 13,
+          "termination": "context_limit",
+          "trajectory_sha256": "082ef6ff3215b4d25f39f623617dcd183f5522f9f41ffb0fb5c9b72eb3244b55"
+        }
+      ]
+    }
+  },
+  "epoch_2_gains": [],
+  "epoch_2_regressions": [
+    "6c2c621_1",
+    "6c2c621_2",
+    "b119b1f_2",
+    "d4e9306_2"
+  ],
+  "sft_control_run": false,
+  "matched_base_model_dev57_run": false
+}

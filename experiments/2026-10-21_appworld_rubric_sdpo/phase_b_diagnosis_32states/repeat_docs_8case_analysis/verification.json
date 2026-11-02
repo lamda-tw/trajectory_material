@@ -1,0 +1,111 @@
+{
+  "sources_unchanged": true,
+  "sources": [
+    {
+      "path": "analysis/case_audit_sanitized.json",
+      "sha256": "5b34dc5b025d8dc4b4eedd34e859b2bb6cc71434b5d09bfa626b04355de94cb9"
+    },
+    {
+      "path": "analysis/manual_first_step_review.json",
+      "sha256": "7b698c2878bc2b4db56d472a0980905735cb0bf0f9fc0bcad92df26650e6bba9"
+    },
+    {
+      "path": "states/R6_b001_7d7fbf6_1_s10.json",
+      "sha256": "a9dd9966e689373b00f5324ee527dbbb31288e0284786f4c745afec474693d43"
+    },
+    {
+      "path": "probabilities/R6_b001_7d7fbf6_1_s10.json",
+      "sha256": "f8149a436615507d332a22e1c73d2fc9e51f8ab58f2164866cf02f621ec76b29"
+    },
+    {
+      "path": "states/R6_b013_229360a_3_s20.json",
+      "sha256": "40b91be35d059c944d20c8cee1205d8afabc6dde55cac13aaec9a1b0b3a5492b"
+    },
+    {
+      "path": "probabilities/R6_b013_229360a_3_s20.json",
+      "sha256": "6d6a189cd81967e9fad9cb32d152b73cf0518100dd0433f450ac720481c54238"
+    },
+    {
+      "path": "states/R6_b014_60d0b5b_1_s17.json",
+      "sha256": "5519836cc2ad1360dde06784f6916abe4dffa2d077a3690aa94a123840a0bd83"
+    },
+    {
+      "path": "probabilities/R6_b014_60d0b5b_1_s17.json",
+      "sha256": "9137c41521da37b8e31f2bd87eb074de622803ab011188bba8c69dd5a0bb9769"
+    },
+    {
+      "path": "states/R6_b018_aa8502b_1_s05.json",
+      "sha256": "eee210906711faee7f10c71d7f738ea9619aec91efc47aa799f9b08d98b3bf1c"
+    },
+    {
+      "path": "probabilities/R6_b018_aa8502b_1_s05.json",
+      "sha256": "4390ffd1e2b41164fd900a2f88407dd6e88859a5f7d629afd684118b81cdd73e"
+    },
+    {
+      "path": "states/R6_b031_c901732_1_s14.json",
+      "sha256": "eeb6a8127c8f3dc009c60bb94d4b845eb3b82a5e806cc41438271f25510b954b"
+    },
+    {
+      "path": "probabilities/R6_b031_c901732_1_s14.json",
+      "sha256": "683a66ed110fbdc0e0c81e2b52f1d0d9bf4e2f8e715b68d274844d4292c45e2d"
+    },
+    {
+      "path": "states/R6_b032_771d8fc_3_s35.json",
+      "sha256": "bcc0e0c8c97c8122daf8cbe2385cbe6adbf0790e2218cf4efc87ba5b0ebd5e12"
+    },
+    {
+      "path": "probabilities/R6_b032_771d8fc_3_s35.json",
+      "sha256": "94b2443c4ac3883fd2e377010ece81d81f5547d3995b3a4c9a50f8e7a252ce9c"
+    },
+    {
+      "path": "states/R6_b033_b0a8eae_2_s19.json",
+      "sha256": "333f2dd047a87f0b28624dc156ca5f15e97686e34b87b4124e15b9c439ae0752"
+    },
+    {
+      "path": "probabilities/R6_b033_b0a8eae_2_s19.json",
+      "sha256": "d99df03af21fcb72621ca54555b66531483dd103324f3327c6dbff3db3ef0df6"
+    },
+    {
+      "path": "states/R6_b035_302c169_3_s21.json",
+      "sha256": "3c3b79f2694dfd752d707804d44c3f56ec1c04e8a8cb38a94313267f539445e2"
+    },
+    {
+      "path": "probabilities/R6_b035_302c169_3_s21.json",
+      "sha256": "4370664d1f215aef7e6699edd478ac4a6561ad6da452664dd75cd7abe21c9739"
+    }
+  ],
+  "analysis_script_sha256": "71457e0dfda7fe6a0f4a2c870b7f66e8e06fa81fa94dc0ad1a247b79caccea8f",
+  "states": 8,
+  "base_C2": {
+    "repeat": 2,
+    "repair": 4,
+    "new_error": 2
+  },
+  "ema36_C2": {
+    "repeat": 6,
+    "repair": 2
+  },
+  "teacher_change": {
+    "neither_repaired": 2,
+    "repair_retained": 2,
+    "repair_lost": 2,
+    "error_to_repeat": 2
+  },
+  "historical_code_signal": {
+    "code_near_agreement": 4,
+    "encourages_repeat_at_action_fork": 1,
+    "suppresses_original_code": 3
+  },
+  "base_correct_states": [
+    "R6_b014_60d0b5b_1_s17",
+    "R6_b018_aa8502b_1_s05",
+    "R6_b031_c901732_1_s14",
+    "R6_b032_771d8fc_3_s35"
+  ],
+  "method": "Post-hoc unblinded review of existing greedy rollouts; first action only for repair labels. Historical signal uses actual pre-batch student and EMA teacher. Whole response and code tokens inspected.",
+  "limits": "Signal categories describe direct code-position differences, not total shared-parameter training effects. The three questions overlap. No population-rate or causal attribution to a loss branch.",
+  "new_model_forward_calls": 0,
+  "new_codex_calls": 0,
+  "new_optimizer_updates": 0,
+  "new_gpu_tasks": 0
+}

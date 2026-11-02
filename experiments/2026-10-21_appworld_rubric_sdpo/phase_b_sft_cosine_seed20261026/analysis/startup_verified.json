@@ -1,0 +1,91 @@
+{
+  "checked_at": "2026-10-27T21:09:26.245106+08:00",
+  "first_batch_accepted": true,
+  "checkpoint_complete_sha256": "d8ab0ea3818505d03f34394ef13336528ae0ef0d1ae3173950d377d297f01015",
+  "seed": 20261026,
+  "from_base": true,
+  "metrics": {
+    "batch": 1,
+    "arm": "sft",
+    "created_at": "2026-10-27T21:07:41.056991+08:00",
+    "counts": {
+      "mask": 40,
+      "sft": 17
+    },
+    "mask_reasons": {
+      "FAIL_excluded_from_SFT_control": 40
+    },
+    "lr": 1e-05,
+    "lambda_sdpo": 1.0,
+    "sft_loss": 0.08131336559103254,
+    "sdpo_loss": 0.0,
+    "supervised_tokens": 1402,
+    "sft_grad_norm": 0.27890023589134216,
+    "weighted_sdpo_grad_norm": 0.0,
+    "branch_grad_cosine": null,
+    "grad_norm_before_clip": 0.2789001762866974,
+    "grad_norm_after_clip": 0.27890023589134216,
+    "clipped": false,
+    "optimizer_updates": 1,
+    "optimizer_step_performed": true,
+    "total_loss": 0.08131336559103254,
+    "seconds": 55.84823462739587,
+    "peak_allocated_gib": 23.40944814682007,
+    "peak_reserved_gib": 25.892578125,
+    "physical_gpu_uuid": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501",
+    "teacher_received_gradient": false,
+    "student_parameter_delta_norm": 0.03319641575217247
+  },
+  "autopanel_run": "appworld-rubric-ZeroFail3-SFT-cosine-seed20261026",
+  "autopanel_verified_scalars": {
+    "loss/sft": [
+      1793106512.817529,
+      1,
+      0.0813133642077446
+    ],
+    "optimizer/learning_rate": [
+      1793106512.817529,
+      1,
+      9.999999747378752e-06
+    ],
+    "grad/sft_norm": [
+      1793106512.817529,
+      1,
+      0.27890023589134216
+    ]
+  },
+  "supervisor_pid": 118971,
+  "supervisor_alive": true,
+  "exporter_alive": true,
+  "current_status": {
+    "updated_at": "2026-10-27T21:08:44.971180+08:00",
+    "stage": "collecting",
+    "arm": "sft",
+    "batch": 2,
+    "training_started": true
+  },
+  "planned_epochs": 3,
+  "planned_batches": 54,
+  "evaluation_batches": [
+    18,
+    36,
+    54
+  ],
+  "retention": {
+    "user_authorized_model_retention": true,
+    "keep_full_batches": [],
+    "keep_latest_batches": 1,
+    "eligible_model_files": [
+      "state.pt",
+      "adapters/student/adapter_model.safetensors"
+    ],
+    "scope": "This cosine experiment only. Keep latest full resume state and best evaluated epoch; never delete previous experiment files.",
+    "keep_best_evaluated_epoch": true,
+    "best_epoch_selection": [
+      "successes_desc",
+      "macro_test_pass_fraction_desc",
+      "earliest_epoch_on_tie"
+    ]
+  },
+  "cpu_tests_passed": 30
+}

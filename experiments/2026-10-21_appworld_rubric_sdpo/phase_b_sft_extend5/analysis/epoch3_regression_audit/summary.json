@@ -1,0 +1,337 @@
+{
+  "audited_at_utc": "2026-10-26T08:47:02.935560+00:00",
+  "committed_batch_cap": 59,
+  "verified": {
+    "frozen_dependencies": 89,
+    "unchanged_core_scripts": 4,
+    "training_trajectories": 295,
+    "protected_checkpoint_files": 12,
+    "continuation_parent_and_optimizer_links": 23,
+    "documented_pruned_checkpoints": 17,
+    "dev_trajectories_and_official_reports": 171
+  },
+  "config_changes": [
+    {
+      "key": "collection.tasks",
+      "old": "phase_b_sft_only/config/train90.txt",
+      "new": "phase_b_sft_extend5/config/train90.txt"
+    },
+    {
+      "key": "evaluation.tasks",
+      "old": "phase_b_sft_only/config/dev57.txt",
+      "new": "phase_b_sft_extend5/config/dev57.txt"
+    },
+    {
+      "key": "experiment",
+      "old": "phase_b_online_ZeroFail3_SFT_only_control_v1",
+      "new": "phase_b_online_ZeroFail3_SFT_continuation_to_epoch5_v1"
+    },
+    {
+      "key": "training.epochs",
+      "old": 2,
+      "new": 5
+    },
+    {
+      "key": "training.update_opportunities",
+      "old": 36,
+      "new": 90
+    }
+  ],
+  "train_epochs": {
+    "1": {
+      "batches": 18,
+      "trajectories": 90,
+      "steps": 1954,
+      "docs": 336,
+      "repeat_docs": 129,
+      "business": 909,
+      "R6_FAIL": 892,
+      "sft": 311,
+      "sft_docs": 201,
+      "sft_repeat_docs": 4,
+      "sft_business": 43,
+      "sft_tokens": 22334,
+      "sft_U": 6,
+      "sft_docs_fraction": 0.6463022508038585,
+      "sft_repeat_docs_fraction": 0.012861736334405145,
+      "mean_step_length": 71.81350482315112,
+      "batch_mean_sft_loss": 0.11061739109324184,
+      "loss_min_max": [
+        0.05262247950720069,
+        0.14953915136201043
+      ],
+      "grad_norm_min_max": [
+        0.2053510993719101,
+        0.4395017921924591
+      ],
+      "clipped_batches": 0,
+      "parameter_delta_min_max": [
+        0.03318396210670471,
+        0.10831113904714584
+      ],
+      "batch_mean_docs_weight": 0.6225750239230632
+    },
+    "2": {
+      "batches": 18,
+      "trajectories": 90,
+      "steps": 1891,
+      "docs": 658,
+      "repeat_docs": 239,
+      "business": 705,
+      "R6_FAIL": 680,
+      "sft": 650,
+      "sft_docs": 411,
+      "sft_repeat_docs": 12,
+      "sft_business": 109,
+      "sft_tokens": 42786,
+      "sft_U": 7,
+      "sft_docs_fraction": 0.6323076923076923,
+      "sft_repeat_docs_fraction": 0.018461538461538463,
+      "mean_step_length": 65.82461538461538,
+      "batch_mean_sft_loss": 0.09978349233177046,
+      "loss_min_max": [
+        0.06851980832731859,
+        0.1270947887658559
+      ],
+      "grad_norm_min_max": [
+        0.19167038798332214,
+        0.46810054779052734
+      ],
+      "clipped_batches": 0,
+      "parameter_delta_min_max": [
+        0.06988738477230072,
+        0.08775470405817032
+      ],
+      "batch_mean_docs_weight": 0.6304902172837805
+    },
+    "3": {
+      "batches": 18,
+      "trajectories": 90,
+      "steps": 2787,
+      "docs": 1609,
+      "repeat_docs": 886,
+      "business": 566,
+      "R6_FAIL": 1174,
+      "sft": 1198,
+      "sft_docs": 731,
+      "sft_repeat_docs": 33,
+      "sft_business": 160,
+      "sft_tokens": 53635,
+      "sft_U": 3,
+      "sft_docs_fraction": 0.6101836393989983,
+      "sft_repeat_docs_fraction": 0.027545909849749584,
+      "mean_step_length": 44.770450751252085,
+      "batch_mean_sft_loss": 0.06074735212866467,
+      "loss_min_max": [
+        0.034212608783566835,
+        0.09054848485781501
+      ],
+      "grad_norm_min_max": [
+        0.304905503988266,
+        0.5232581496238708
+      ],
+      "clipped_batches": 0,
+      "parameter_delta_min_max": [
+        0.06817697733640671,
+        0.07929429411888123
+      ],
+      "batch_mean_docs_weight": 0.613638191633781
+    },
+    "4": {
+      "batches": 5,
+      "trajectories": 25,
+      "steps": 993,
+      "docs": 704,
+      "repeat_docs": 395,
+      "business": 73,
+      "R6_FAIL": 408,
+      "sft": 487,
+      "sft_docs": 303,
+      "sft_repeat_docs": 10,
+      "sft_business": 36,
+      "sft_tokens": 14729,
+      "sft_U": 0,
+      "sft_docs_fraction": 0.62217659137577,
+      "sft_repeat_docs_fraction": 0.02053388090349076,
+      "mean_step_length": 30.24435318275154,
+      "batch_mean_sft_loss": 0.03474433183465635,
+      "loss_min_max": [
+        0.03259041294554819,
+        0.037265232440955524
+      ],
+      "grad_norm_min_max": [
+        0.3891560137271881,
+        2.396026611328125
+      ],
+      "clipped_batches": 1,
+      "parameter_delta_min_max": [
+        0.07304567098617554,
+        0.08186621218919754
+      ],
+      "batch_mean_docs_weight": 0.6208329294380748
+    }
+  },
+  "dev_epochs": {
+    "1": {
+      "source_sha256": "864a10a45f41162d7ae2db6d5455e1e31bd3de880c7a4f87f33edbc3b82e1f99",
+      "epoch": 1,
+      "summary_path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-21_appworld_rubric_sdpo/phase_b_sft_only/runs/sft/epoch_01_dev57/summary.json",
+      "successes": 7,
+      "task_goal_completion": 0.12280701754385964,
+      "macro_test_pass_fraction": 0.48636173767752716,
+      "passes": 127,
+      "tests": 291,
+      "mean_steps": 20.614035087719298,
+      "behavior": {
+        "steps": 1175,
+        "docs_steps": 240,
+        "repeated_docs_steps": 89,
+        "business_api_steps": 458,
+        "response_tokens": 145539,
+        "docs_fraction": 0.20425531914893616,
+        "repeated_docs_fraction": 0.07574468085106383,
+        "long_loop_tasks": 5,
+        "context_limit_tasks": 7,
+        "business_api_tasks": 54,
+        "terminations": {
+          "no_python_code": 7,
+          "completion_api": 34,
+          "step_limit": 9,
+          "context_limit": 7
+        }
+      },
+      "successful_tasks": [
+        "23cf851_1",
+        "23cf851_2",
+        "6bdbc26_1",
+        "6bdbc26_3",
+        "6c2c621_1",
+        "6c2c621_3",
+        "fac291d_3"
+      ]
+    },
+    "2": {
+      "source_sha256": "3e38d34e2651eaf2b191ffe0ba1a9df1b8833c3ecf3bc0ac0d60a7ad8aac0a86",
+      "epoch": 2,
+      "summary_path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-21_appworld_rubric_sdpo/phase_b_sft_only/runs/sft/epoch_02_dev57/summary.json",
+      "successes": 12,
+      "task_goal_completion": 0.21052631578947367,
+      "macro_test_pass_fraction": 0.5841269841269842,
+      "passes": 158,
+      "tests": 291,
+      "mean_steps": 25.80701754385965,
+      "behavior": {
+        "steps": 1471,
+        "docs_steps": 604,
+        "repeated_docs_steps": 244,
+        "business_api_steps": 538,
+        "response_tokens": 116615,
+        "docs_fraction": 0.4106050305914344,
+        "repeated_docs_fraction": 0.16587355540448676,
+        "long_loop_tasks": 5,
+        "context_limit_tasks": 6,
+        "business_api_tasks": 53,
+        "terminations": {
+          "completion_api": 34,
+          "step_limit": 14,
+          "context_limit": 6,
+          "no_python_code": 3
+        }
+      },
+      "successful_tasks": [
+        "23cf851_2",
+        "23cf851_3",
+        "6171bbc_3",
+        "6bdbc26_1",
+        "6bdbc26_2",
+        "6bdbc26_3",
+        "6c2c621_3",
+        "b119b1f_2",
+        "d4e9306_2",
+        "d4e9306_3",
+        "fac291d_2",
+        "fac291d_3"
+      ]
+    },
+    "3": {
+      "source_sha256": "ec285883f15f4790805be010696d4b8d0a85d11cb0593faf9d97e5611af3ca89",
+      "epoch": 3,
+      "summary_path": "/root/autodl-tmp/workspace-tw/experiments/2026-10-21_appworld_rubric_sdpo/phase_b_sft_extend5/runs/sft/epoch_03_dev57/summary.json",
+      "successes": 2,
+      "task_goal_completion": 0.03508771929824561,
+      "macro_test_pass_fraction": 0.3354427736006683,
+      "passes": 79,
+      "tests": 291,
+      "mean_steps": 43.29824561403509,
+      "behavior": {
+        "steps": 2468,
+        "docs_steps": 2054,
+        "repeated_docs_steps": 1479,
+        "business_api_steps": 165,
+        "response_tokens": 78302,
+        "docs_fraction": 0.8322528363047001,
+        "repeated_docs_fraction": 0.5992706645056726,
+        "long_loop_tasks": 11,
+        "context_limit_tasks": 12,
+        "business_api_tasks": 22,
+        "terminations": {
+          "step_limit": 34,
+          "completion_api": 11,
+          "context_limit": 12
+        }
+      },
+      "successful_tasks": [
+        "23cf851_1",
+        "df61dc5_1"
+      ]
+    }
+  },
+  "first_batch_restore": {
+    "checked_at": "2026-10-26T10:31:14.929745+08:00",
+    "batch": 37,
+    "passed": true,
+    "metrics": {
+      "batch": 37,
+      "arm": "sft",
+      "created_at": "2026-10-26T10:14:55.456965+08:00",
+      "counts": {
+        "sft": 39,
+        "mask": 109
+      },
+      "mask_reasons": {
+        "FAIL_excluded_from_SFT_control": 109
+      },
+      "lr": 5e-05,
+      "lambda_sdpo": 1.0,
+      "sft_loss": 0.09054848485781501,
+      "sdpo_loss": 0.0,
+      "supervised_tokens": 2188,
+      "restored_optimizer_updates": 36,
+      "optimizer_state_entries": 504,
+      "optimizer_step_min_before": 36,
+      "optimizer_step_max_before": 36,
+      "resume_checkpoint": "/root/autodl-tmp/workspace-tw/experiments/2026-10-21_appworld_rubric_sdpo/phase_b_sft_only/runs/sft/batch_036/checkpoint",
+      "resume_checkpoint_sha256": "f43e3d5edb5c39116cd80ae93f0c96978a07b4ce495478614a29fdc617a6e888",
+      "restored_optimizer_lr": 5e-05,
+      "exact_student_and_optimizer_restore_verified": true,
+      "sft_grad_norm": 0.36784234642982483,
+      "weighted_sdpo_grad_norm": 0.0,
+      "branch_grad_cosine": null,
+      "grad_norm_before_clip": 0.367842435836792,
+      "grad_norm_after_clip": 0.36784234642982483,
+      "clipped": false,
+      "optimizer_updates": 37,
+      "optimizer_step_performed": true,
+      "total_loss": 0.09054848485781501,
+      "seconds": 130.1572099402547,
+      "peak_allocated_gib": 23.387730598449707,
+      "peak_reserved_gib": 27.896484375,
+      "physical_gpu_uuid": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501",
+      "teacher_received_gradient": false,
+      "student_parameter_delta_norm": 0.07108049839735031
+    },
+    "checkpoint_sha256": "193cca03e05fb037615b01891ccb54b566833afdca39ca8a3a11d637ea03794a",
+    "scope": "Technical validity only; this does not establish task quality gains."
+  },
+  "note": "Epoch 4 training statistics cover only batches 55-59. No GPU work or training mutation performed."
+}

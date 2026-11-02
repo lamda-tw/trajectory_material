@@ -1,0 +1,288 @@
+{
+  "generated_at": "2026-10-24T11:23:20.312779+08:00",
+  "methods": {
+    "docs_only": "At least one statically named apis call; every such call is apis.api_docs.*. Unrelated dynamic calls are not resolved.",
+    "repeat_code": "Exact AST-normalized code seen earlier in the same trajectory, excluding empty code.",
+    "repeat_docs_literal": "All documentation calls have literal arguments and identical API/argument tuples seen earlier; this is an audit indicator, not a new rubric label.",
+    "sampled_token_nll": "Mean old sampled-token negative log probability per step; not full vocabulary entropy. Dev temperature zero is not comparable to train sampling."
+  },
+  "training_epochs": {
+    "1": {
+      "all": {
+        "steps": 2048,
+        "docs_only": 405,
+        "docs_only_fraction": 0.19775390625,
+        "repeat_code": 829,
+        "repeat_code_fraction": 0.40478515625,
+        "repeat_docs_literal": 190,
+        "repeat_docs_literal_fraction": 0.0927734375,
+        "business_step": 1131,
+        "business_step_fraction": 0.55224609375,
+        "business_non_auth_step": 957,
+        "business_non_auth_step_fraction": 0.46728515625,
+        "completion_call": 53,
+        "completion_call_fraction": 0.02587890625,
+        "traceback": 737,
+        "traceback_fraction": 0.35986328125,
+        "mean_sampled_token_nll": 0.07428340303290595,
+        "mean_response_tokens": 123.0234375
+      },
+      "by_branch": {
+        "sft": {
+          "steps": 404,
+          "docs_only": 217,
+          "docs_only_fraction": 0.5371287128712872,
+          "repeat_code": 16,
+          "repeat_code_fraction": 0.039603960396039604,
+          "repeat_docs_literal": 9,
+          "repeat_docs_literal_fraction": 0.022277227722772276,
+          "business_step": 124,
+          "business_step_fraction": 0.3069306930693069,
+          "business_non_auth_step": 84,
+          "business_non_auth_step_fraction": 0.2079207920792079,
+          "completion_call": 0,
+          "completion_call_fraction": 0.0,
+          "traceback": 0,
+          "traceback_fraction": 0.0,
+          "mean_sampled_token_nll": 0.12004646352267738,
+          "mean_response_tokens": 92.5990099009901
+        },
+        "sdpo": {
+          "steps": 1644,
+          "docs_only": 188,
+          "docs_only_fraction": 0.11435523114355231,
+          "repeat_code": 813,
+          "repeat_code_fraction": 0.49452554744525545,
+          "repeat_docs_literal": 181,
+          "repeat_docs_literal_fraction": 0.11009732360097324,
+          "business_step": 1007,
+          "business_step_fraction": 0.6125304136253041,
+          "business_non_auth_step": 873,
+          "business_non_auth_step_fraction": 0.531021897810219,
+          "completion_call": 53,
+          "completion_call_fraction": 0.03223844282238443,
+          "traceback": 737,
+          "traceback_fraction": 0.44829683698296835,
+          "mean_sampled_token_nll": 0.063037492790894,
+          "mean_response_tokens": 130.5
+        },
+        "mask": {
+          "steps": 0,
+          "docs_only": 0,
+          "docs_only_fraction": null,
+          "repeat_code": 0,
+          "repeat_code_fraction": null,
+          "repeat_docs_literal": 0,
+          "repeat_docs_literal_fraction": null,
+          "business_step": 0,
+          "business_step_fraction": null,
+          "business_non_auth_step": 0,
+          "business_non_auth_step_fraction": null,
+          "completion_call": 0,
+          "completion_call_fraction": null,
+          "traceback": 0,
+          "traceback_fraction": null,
+          "mean_sampled_token_nll": null,
+          "mean_response_tokens": null
+        }
+      },
+      "FAIL_rules": {
+        "R8": 1114,
+        "R1": 750,
+        "R3": 417,
+        "R7": 39,
+        "R2": 196,
+        "R6": 905,
+        "R4": 315,
+        "R5": 8
+      },
+      "mean_sft_loss": 0.12859017502497183,
+      "mean_sdpo_loss": 0.3000463271533272,
+      "mean_sft_grad_norm": 0.3117688637640741,
+      "mean_sdpo_grad_norm": 0.47549834350744885,
+      "mean_grad_cosine": 0.007092821243632998,
+      "termination": {
+        "completion_api": 52,
+        "no_python_code": 13,
+        "step_limit": 21,
+        "context_limit": 4
+      }
+    },
+    "2": {
+      "all": {
+        "steps": 3166,
+        "docs_only": 1691,
+        "docs_only_fraction": 0.5341124447252054,
+        "repeat_code": 2455,
+        "repeat_code_fraction": 0.7754264055590651,
+        "repeat_docs_literal": 1346,
+        "repeat_docs_literal_fraction": 0.425142135186355,
+        "business_step": 638,
+        "business_step_fraction": 0.20151610865445357,
+        "business_non_auth_step": 505,
+        "business_non_auth_step_fraction": 0.15950726468730259,
+        "completion_call": 11,
+        "completion_call_fraction": 0.003474415666456096,
+        "traceback": 192,
+        "traceback_fraction": 0.060644346178142766,
+        "mean_sampled_token_nll": 0.030000783933069156,
+        "mean_response_tokens": 74.31806696146558
+      },
+      "by_branch": {
+        "sft": {
+          "steps": 508,
+          "docs_only": 347,
+          "docs_only_fraction": 0.6830708661417323,
+          "repeat_code": 11,
+          "repeat_code_fraction": 0.021653543307086614,
+          "repeat_docs_literal": 5,
+          "repeat_docs_literal_fraction": 0.00984251968503937,
+          "business_step": 64,
+          "business_step_fraction": 0.12598425196850394,
+          "business_non_auth_step": 33,
+          "business_non_auth_step_fraction": 0.06496062992125984,
+          "completion_call": 0,
+          "completion_call_fraction": 0.0,
+          "traceback": 0,
+          "traceback_fraction": 0.0,
+          "mean_sampled_token_nll": 0.10470855655910989,
+          "mean_response_tokens": 66.98425196850394
+        },
+        "sdpo": {
+          "steps": 2656,
+          "docs_only": 1344,
+          "docs_only_fraction": 0.5060240963855421,
+          "repeat_code": 2444,
+          "repeat_code_fraction": 0.9201807228915663,
+          "repeat_docs_literal": 1341,
+          "repeat_docs_literal_fraction": 0.504894578313253,
+          "business_step": 573,
+          "business_step_fraction": 0.2157379518072289,
+          "business_non_auth_step": 472,
+          "business_non_auth_step_fraction": 0.17771084337349397,
+          "completion_call": 11,
+          "completion_call_fraction": 0.004141566265060241,
+          "traceback": 192,
+          "traceback_fraction": 0.07228915662650602,
+          "mean_sampled_token_nll": 0.015697671136268302,
+          "mean_response_tokens": 75.71987951807229
+        },
+        "mask": {
+          "steps": 2,
+          "docs_only": 0,
+          "docs_only_fraction": 0.0,
+          "repeat_code": 0,
+          "repeat_code_fraction": 0.0,
+          "repeat_docs_literal": 0,
+          "repeat_docs_literal_fraction": 0.0,
+          "business_step": 1,
+          "business_step_fraction": 0.5,
+          "business_non_auth_step": 0,
+          "business_non_auth_step_fraction": 0.0,
+          "completion_call": 0,
+          "completion_call_fraction": 0.0,
+          "traceback": 0,
+          "traceback_fraction": 0.0,
+          "mean_sampled_token_nll": 0.04876033107025418,
+          "mean_response_tokens": 75.5
+        }
+      },
+      "FAIL_rules": {
+        "R8": 383,
+        "R1": 196,
+        "R2": 107,
+        "R3": 88,
+        "R4": 166,
+        "R7": 8,
+        "R6": 2481,
+        "R5": 30
+      },
+      "mean_sft_loss": 0.11073600847330939,
+      "mean_sdpo_loss": 0.09080390332188226,
+      "mean_sft_grad_norm": 0.49231164985232884,
+      "mean_sdpo_grad_norm": 0.321314407305585,
+      "mean_grad_cosine": -0.02921679918654263,
+      "termination": {
+        "completion_api": 11,
+        "step_limit": 42,
+        "context_limit": 33,
+        "no_python_code": 4
+      }
+    }
+  },
+  "dev": {
+    "1": {
+      "steps": 1531,
+      "docs_only": 696,
+      "docs_only_fraction": 0.45460483344219466,
+      "repeat_code": 995,
+      "repeat_code_fraction": 0.6499020248203788,
+      "repeat_docs_literal": 516,
+      "repeat_docs_literal_fraction": 0.3370346178967995,
+      "business_step": 466,
+      "business_step_fraction": 0.3043762246897453,
+      "business_non_auth_step": 404,
+      "business_non_auth_step_fraction": 0.263879817112998,
+      "completion_call": 14,
+      "completion_call_fraction": 0.009144350097975179,
+      "traceback": 171,
+      "traceback_fraction": 0.11169170476812541,
+      "mean_sampled_token_nll": 0.01860694689719411,
+      "mean_response_tokens": 123.75114304376224,
+      "successes": 5,
+      "macro_test_pass_fraction": 0.412781954887218,
+      "terminations": {
+        "context_limit": 24,
+        "completion_api": 14,
+        "step_limit": 14,
+        "no_python_code": 5
+      },
+      "tasks_with_at_least_5_identical_consecutive_blocks": 36,
+      "tasks_no_business_non_auth_call": 24
+    },
+    "2": {
+      "steps": 2183,
+      "docs_only": 1733,
+      "docs_only_fraction": 0.7938616582684379,
+      "repeat_code": 1911,
+      "repeat_code_fraction": 0.8754008245533669,
+      "repeat_docs_literal": 1546,
+      "repeat_docs_literal_fraction": 0.7081997251488777,
+      "business_step": 139,
+      "business_step_fraction": 0.06367384333486029,
+      "business_non_auth_step": 112,
+      "business_non_auth_step_fraction": 0.05130554283096656,
+      "completion_call": 1,
+      "completion_call_fraction": 0.0004580852038479157,
+      "traceback": 56,
+      "traceback_fraction": 0.02565277141548328,
+      "mean_sampled_token_nll": 0.0077281445750985315,
+      "mean_response_tokens": 60.016949152542374,
+      "successes": 1,
+      "macro_test_pass_fraction": 0.26378446115288223,
+      "terminations": {
+        "step_limit": 30,
+        "completion_api": 1,
+        "context_limit": 26
+      },
+      "tasks_with_at_least_5_identical_consecutive_blocks": 56,
+      "tasks_no_business_non_auth_call": 49
+    }
+  },
+  "feedback_count": 4300,
+  "feedback_repeat_doc_with_R6_F": 1521,
+  "sdpo_losses_by_behavior": {
+    "repeated_doc": {
+      "count": 1522,
+      "mean_loss": 0.07870831106313346
+    },
+    "non_repeated_doc": {
+      "count": 10,
+      "mean_loss": 0.35856736786663534
+    },
+    "not_doc_only": {
+      "count": 2768,
+      "mean_loss": 0.19617135807952948
+    }
+  }
+}

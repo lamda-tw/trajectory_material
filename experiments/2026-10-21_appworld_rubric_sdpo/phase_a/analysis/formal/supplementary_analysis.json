@@ -1,0 +1,641 @@
+{
+  "integrity": {
+    "valid_inputs_and_executions": 892
+  },
+  "frozen_execution_files": {
+    "scripts/a_analyze.py": true,
+    "scripts/a_candidates.py": true,
+    "scripts/a_common.py": true,
+    "scripts/a_distribution.py": true,
+    "scripts/a_judge.py": true,
+    "scripts/a_judge_v2.py": true,
+    "scripts/a_recover_local.py": true,
+    "scripts/a_replay.py": true,
+    "scripts/a_replay_worker.py": true,
+    "scripts/a_state.py": true,
+    "runtime_code/a_policy_server.py": true,
+    "runtime_code/api_capture.py": true,
+    "runtime_code/a_judge_audit.py": true,
+    "config/phase_a_runtime.json": true
+  },
+  "judge_attempts": {
+    "logical_requests": 892,
+    "cli_attempts": 894,
+    "status_valid": 892,
+    "kind_initial": 892,
+    "status_invalid": 2,
+    "kind_format_repair": 2
+  },
+  "audit_errors": [],
+  "raw_counts": [
+    {
+      "panel": "formal_fail",
+      "arm": "C0_original",
+      "n": 198,
+      "LR": 26.0,
+      "strict_LR": 26.0,
+      "executable_no_F": 26.0,
+      "old_F_to_U": 7.0,
+      "any_U": 27.0,
+      "execution_error": 73.0,
+      "exact_code_repeat": 65.0,
+      "completion_api": 5.0,
+      "db_changed": 15.0,
+      "length_termination": 0.0,
+      "any_new_F": 43.0,
+      "per_rule_F": {
+        "R1": 73,
+        "R2": 26,
+        "R3": 33,
+        "R4": 32,
+        "R5": 2,
+        "R6": 74,
+        "R7": 4,
+        "R8": 123
+      },
+      "doc_only": 42,
+      "any_doc_spec_previously_seen": 4,
+      "feedback_revealed_in_commentary": 0,
+      "LR_doc_only": 21,
+      "LR_prior_doc_spec": 0
+    },
+    {
+      "panel": "formal_fail",
+      "arm": "C1_fail_labels",
+      "n": 198,
+      "LR": 37.0,
+      "strict_LR": 35.0,
+      "executable_no_F": 37.0,
+      "old_F_to_U": 4.0,
+      "any_U": 19.0,
+      "execution_error": 60.0,
+      "exact_code_repeat": 51.0,
+      "completion_api": 3.0,
+      "db_changed": 10.0,
+      "length_termination": 0.0,
+      "any_new_F": 52.0,
+      "per_rule_F": {
+        "R1": 60,
+        "R2": 13,
+        "R3": 24,
+        "R4": 15,
+        "R5": 1,
+        "R6": 73,
+        "R7": 0,
+        "R8": 107
+      },
+      "doc_only": 59,
+      "any_doc_spec_previously_seen": 4,
+      "feedback_revealed_in_commentary": 52,
+      "LR_doc_only": 30,
+      "LR_prior_doc_spec": 1
+    },
+    {
+      "panel": "formal_fail",
+      "arm": "C2_feedback",
+      "n": 198,
+      "LR": 149.0,
+      "strict_LR": 145.0,
+      "executable_no_F": 149.0,
+      "old_F_to_U": 0.0,
+      "any_U": 5.0,
+      "execution_error": 9.0,
+      "exact_code_repeat": 24.0,
+      "completion_api": 0.0,
+      "db_changed": 1.0,
+      "length_termination": 0.0,
+      "any_new_F": 20.0,
+      "per_rule_F": {
+        "R1": 9,
+        "R2": 7,
+        "R3": 9,
+        "R4": 9,
+        "R5": 0,
+        "R6": 30,
+        "R7": 0,
+        "R8": 26
+      },
+      "doc_only": 147,
+      "any_doc_spec_previously_seen": 2,
+      "feedback_revealed_in_commentary": 49,
+      "LR_doc_only": 131,
+      "LR_prior_doc_spec": 1
+    },
+    {
+      "panel": "formal_fail",
+      "arm": "C3_feedback_and_original_answer",
+      "n": 198,
+      "LR": 126.0,
+      "strict_LR": 125.0,
+      "executable_no_F": 126.0,
+      "old_F_to_U": 1.0,
+      "any_U": 4.0,
+      "execution_error": 21.0,
+      "exact_code_repeat": 31.0,
+      "completion_api": 0.0,
+      "db_changed": 6.0,
+      "length_termination": 0.0,
+      "any_new_F": 19.0,
+      "per_rule_F": {
+        "R1": 21,
+        "R2": 4,
+        "R3": 6,
+        "R4": 10,
+        "R5": 1,
+        "R6": 42,
+        "R7": 0,
+        "R8": 40
+      },
+      "doc_only": 134,
+      "any_doc_spec_previously_seen": 4,
+      "feedback_revealed_in_commentary": 59,
+      "LR_doc_only": 111,
+      "LR_prior_doc_spec": 1
+    },
+    {
+      "panel": "formal_good",
+      "arm": "C0_original",
+      "n": 50,
+      "LR": 34.0,
+      "strict_LR": 34.0,
+      "executable_no_F": 34.0,
+      "old_F_to_U": 0.0,
+      "any_U": 0.0,
+      "execution_error": 11.0,
+      "exact_code_repeat": 3.0,
+      "completion_api": 0.0,
+      "db_changed": 0.0,
+      "length_termination": 0.0,
+      "any_new_F": 16.0,
+      "per_rule_F": {
+        "R1": 11,
+        "R2": 2,
+        "R3": 3,
+        "R4": 2,
+        "R5": 0,
+        "R6": 7,
+        "R7": 0,
+        "R8": 10
+      },
+      "doc_only": 24,
+      "any_doc_spec_previously_seen": 1,
+      "feedback_revealed_in_commentary": 0,
+      "LR_doc_only": 21,
+      "LR_prior_doc_spec": 1
+    },
+    {
+      "panel": "formal_good",
+      "arm": "C2_feedback",
+      "n": 50,
+      "LR": 31.0,
+      "strict_LR": 31.0,
+      "executable_no_F": 31.0,
+      "old_F_to_U": 0.0,
+      "any_U": 0.0,
+      "execution_error": 12.0,
+      "exact_code_repeat": 2.0,
+      "completion_api": 0.0,
+      "db_changed": 0.0,
+      "length_termination": 0.0,
+      "any_new_F": 19.0,
+      "per_rule_F": {
+        "R1": 12,
+        "R2": 2,
+        "R3": 2,
+        "R4": 3,
+        "R5": 0,
+        "R6": 5,
+        "R7": 0,
+        "R8": 14
+      },
+      "doc_only": 19,
+      "any_doc_spec_previously_seen": 0,
+      "feedback_revealed_in_commentary": 0,
+      "LR_doc_only": 17,
+      "LR_prior_doc_spec": 0
+    }
+  ],
+  "state_paired_direction": [
+    {
+      "arm": "C2_feedback",
+      "baseline": "C0_original",
+      "better": 72,
+      "tie": 23,
+      "worse": 4
+    },
+    {
+      "arm": "C2_feedback",
+      "baseline": "C1_fail_labels",
+      "better": 72,
+      "tie": 21,
+      "worse": 6
+    },
+    {
+      "arm": "C3_feedback_and_original_answer",
+      "baseline": "C2_feedback",
+      "better": 12,
+      "tie": 61,
+      "worse": 26
+    }
+  ],
+  "distribution": {
+    "states": 99,
+    "all_no_grad": true,
+    "parameter_updates": 0,
+    "self_KL_max_abs": 0.0,
+    "all_token_alignment_verified": true,
+    "vllm_logprob_mae_mean": 0.005725081271803528,
+    "vllm_logprob_mae_max": 0.02450884357585067,
+    "student_top100_mass_min": 0.9999737739562988,
+    "student_tail_mass_max": 2.6247978894389234e-05,
+    "arms": {
+      "C0_original": {
+        "mean_logprob_delta_vs_C0": {
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "reverse_KL_student_to_conditioned_full_vocab": {
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "reverse_KL_top100_plus_tail": {
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "original_answer_logprob_increased_states": 0,
+        "span_deltas": {
+          "n": 15,
+          "negative": 0,
+          "positive": 0,
+          "mean": 0.0
+        }
+      },
+      "C1_fail_labels": {
+        "mean_logprob_delta_vs_C0": {
+          "mean": -0.10137862343849106,
+          "median": -0.07532130926847458,
+          "min": -0.6825652122497559,
+          "max": 0.020851127803325653
+        },
+        "reverse_KL_student_to_conditioned_full_vocab": {
+          "mean": 0.10706124831028659,
+          "median": 0.07907102257013321,
+          "min": 0.004754791036248207,
+          "max": 0.6826097965240479
+        },
+        "reverse_KL_top100_plus_tail": {
+          "mean": 0.10706156038801477,
+          "median": 0.07907124608755112,
+          "min": 0.00475497730076313,
+          "max": 0.6826098561286926
+        },
+        "original_answer_logprob_increased_states": 6,
+        "span_deltas": {
+          "n": 15,
+          "negative": 13,
+          "positive": 2,
+          "mean": -0.2341644131703133
+        }
+      },
+      "C2_feedback": {
+        "mean_logprob_delta_vs_C0": {
+          "mean": -0.34935996088791976,
+          "median": -0.29211553931236267,
+          "min": -1.2440067529678345,
+          "max": -0.007345271296799183
+        },
+        "reverse_KL_student_to_conditioned_full_vocab": {
+          "mean": 0.3568836068499344,
+          "median": 0.29092127084732056,
+          "min": 0.006619635503739119,
+          "max": 1.59615957736969
+        },
+        "reverse_KL_top100_plus_tail": {
+          "mean": 0.3568831529524742,
+          "median": 0.2909214496612549,
+          "min": 0.00661997776478529,
+          "max": 1.59615957736969
+        },
+        "original_answer_logprob_increased_states": 0,
+        "span_deltas": {
+          "n": 15,
+          "negative": 9,
+          "positive": 5,
+          "mean": -0.642896252630191
+        }
+      },
+      "C3_feedback_and_original_answer": {
+        "mean_logprob_delta_vs_C0": {
+          "mean": -0.09305014223744622,
+          "median": -0.04976821690797806,
+          "min": -0.8575745820999146,
+          "max": 0.40326276421546936
+        },
+        "reverse_KL_student_to_conditioned_full_vocab": {
+          "mean": 0.667098250917413,
+          "median": 0.5824363827705383,
+          "min": 0.029185902327299118,
+          "max": 2.2304813861846924
+        },
+        "reverse_KL_top100_plus_tail": {
+          "mean": 0.6671072324606204,
+          "median": 0.5824375748634338,
+          "min": 0.029186243191361427,
+          "max": 2.2304892539978027
+        },
+        "original_answer_logprob_increased_states": 33,
+        "span_deltas": {
+          "n": 15,
+          "negative": 3,
+          "positive": 10,
+          "mean": 0.1365964396824527
+        }
+      }
+    }
+  },
+  "error_expression_spans": [
+    {
+      "state_id": "state_0a1a32cb2e02b7d2",
+      "expression": "spotify_access_token",
+      "evidence": "source execution error and literal diagnosis mention",
+      "token_positions": [
+        64,
+        65,
+        66
+      ],
+      "scope": "occurrences of error-related expression, not a proof that every occurrence is itself an incorrect token",
+      "delta_by_arm": {
+        "C0_original": 0.0,
+        "C1_fail_labels": -3.973642748178463e-08,
+        "C2_feedback": 0.0,
+        "C3_feedback_and_original_answer": 0.0
+      }
+    },
+    {
+      "state_id": "state_0a2379c1a374ced5",
+      "expression": "list_files",
+      "evidence": "source execution error and literal diagnosis mention",
+      "token_positions": [
+        64,
+        65
+      ],
+      "scope": "occurrences of error-related expression, not a proof that every occurrence is itself an incorrect token",
+      "delta_by_arm": {
+        "C0_original": 0.0,
+        "C1_fail_labels": -0.004039401886984706,
+        "C2_feedback": 0.007940249767301566,
+        "C3_feedback_and_original_answer": 0.007944660494104028
+      }
+    },
+    {
+      "state_id": "state_1abe92d466de6d33",
+      "expression": "spotify_access_token",
+      "evidence": "source execution error and literal diagnosis mention",
+      "token_positions": [
+        82,
+        83,
+        84
+      ],
+      "scope": "occurrences of error-related expression, not a proof that every occurrence is itself an incorrect token",
+      "delta_by_arm": {
+        "C0_original": 0.0,
+        "C1_fail_labels": -3.973642037635727e-08,
+        "C2_feedback": -7.94728478581419e-08,
+        "C3_feedback_and_original_answer": 0.0
+      }
+    },
+    {
+      "state_id": "state_2169d7040b0af46d",
+      "expression": "song_id",
+      "evidence": "source execution error and literal diagnosis mention",
+      "token_positions": [
+        6,
+        7,
+        30,
+        31,
+        102,
+        103,
+        107,
+        108,
+        111,
+        112,
+        115,
+        116,
+        126,
+        127,
+        128,
+        129,
+        130
+      ],
+      "scope": "occurrences of error-related expression, not a proof that every occurrence is itself an incorrect token",
+      "delta_by_arm": {
+        "C0_original": 0.0,
+        "C1_fail_labels": -0.0001937711861510352,
+        "C2_feedback": -0.3237830249769582,
+        "C3_feedback_and_original_answer": -0.23637228762953222
+      }
+    },
+    {
+      "state_id": "state_5a3db19203a224b7",
+      "expression": "get_directories",
+      "evidence": "source execution error and literal diagnosis mention",
+      "token_positions": [
+        14,
+        15,
+        16,
+        74,
+        75,
+        76
+      ],
+      "scope": "occurrences of error-related expression, not a proof that every occurrence is itself an incorrect token",
+      "delta_by_arm": {
+        "C0_original": 0.0,
+        "C1_fail_labels": 3.36639930331728e-05,
+        "C2_feedback": -0.02870791401610025,
+        "C3_feedback_and_original_answer": 0.019207351840833553
+      }
+    },
+    {
+      "state_id": "state_6dd1876801c80339",
+      "expression": "list_directory",
+      "evidence": "source execution error and literal diagnosis mention",
+      "token_positions": [
+        23,
+        24,
+        68,
+        69
+      ],
+      "scope": "occurrences of error-related expression, not a proof that every occurrence is itself an incorrect token",
+      "delta_by_arm": {
+        "C0_original": 0.0,
+        "C1_fail_labels": -0.9350017439574003,
+        "C2_feedback": -1.5772524427738954,
+        "C3_feedback_and_original_answer": 0.1729393033888318
+      }
+    },
+    {
+      "state_id": "state_76c7a7d0af9d3182",
+      "expression": "get_song",
+      "evidence": "source execution error and literal diagnosis mention",
+      "token_positions": [
+        134,
+        135
+      ],
+      "scope": "occurrences of error-related expression, not a proof that every occurrence is itself an incorrect token",
+      "delta_by_arm": {
+        "C0_original": 0.0,
+        "C1_fail_labels": -0.031082788482308388,
+        "C2_feedback": 0.014713797718258093,
+        "C3_feedback_and_original_answer": 0.01902016438620535
+      }
+    },
+    {
+      "state_id": "state_859cc3a9f212b286",
+      "expression": "get_contacts",
+      "evidence": "source execution error and literal diagnosis mention",
+      "token_positions": [
+        36,
+        37
+      ],
+      "scope": "occurrences of error-related expression, not a proof that every occurrence is itself an incorrect token",
+      "delta_by_arm": {
+        "C0_original": 0.0,
+        "C1_fail_labels": -0.0012138050224166363,
+        "C2_feedback": -0.0002898460952565074,
+        "C3_feedback_and_original_answer": 0.0011366934496663816
+      }
+    },
+    {
+      "state_id": "state_892f4749a5dc63b7",
+      "expression": "extend",
+      "evidence": "source execution error and literal diagnosis mention",
+      "token_positions": [
+        88
+      ],
+      "scope": "occurrences of error-related expression, not a proof that every occurrence is itself an incorrect token",
+      "delta_by_arm": {
+        "C0_original": 0.0,
+        "C1_fail_labels": -2.164407730102539,
+        "C2_feedback": -5.928553104400635,
+        "C3_feedback_and_original_answer": 0.8888881206512451
+      }
+    },
+    {
+      "state_id": "state_a25d4953a01da350",
+      "expression": "get_contacts",
+      "evidence": "source execution error and literal diagnosis mention",
+      "token_positions": [
+        5,
+        6,
+        41,
+        42
+      ],
+      "scope": "occurrences of error-related expression, not a proof that every occurrence is itself an incorrect token",
+      "delta_by_arm": {
+        "C0_original": 0.0,
+        "C1_fail_labels": -2.3841837837323965e-07,
+        "C2_feedback": -1.3112999965869676e-06,
+        "C3_feedback_and_original_answer": -8.642664113267529e-07
+      }
+    },
+    {
+      "state_id": "state_a2f1543412667ab6",
+      "expression": "get_queue",
+      "evidence": "source execution error and literal diagnosis mention",
+      "token_positions": [
+        40,
+        41
+      ],
+      "scope": "occurrences of error-related expression, not a proof that every occurrence is itself an incorrect token",
+      "delta_by_arm": {
+        "C0_original": 0.0,
+        "C1_fail_labels": -0.15467260777950287,
+        "C2_feedback": -2.5126669579185545,
+        "C3_feedback_and_original_answer": 0.462388413034887
+      }
+    },
+    {
+      "state_id": "state_b2d22f381f779d0f",
+      "expression": "id",
+      "evidence": "source execution error and literal diagnosis mention",
+      "token_positions": [
+        11,
+        120,
+        124,
+        185,
+        189
+      ],
+      "scope": "occurrences of error-related expression, not a proof that every occurrence is itself an incorrect token",
+      "delta_by_arm": {
+        "C0_original": 0.0,
+        "C1_fail_labels": -3.3615488064242527e-06,
+        "C2_feedback": -2.3886649796622805e-05,
+        "C3_feedback_and_original_answer": -2.2478183745988643e-05
+      }
+    },
+    {
+      "state_id": "state_d7692fbe9cb16b83",
+      "expression": "list_files",
+      "evidence": "source execution error and literal diagnosis mention",
+      "token_positions": [
+        77,
+        78
+      ],
+      "scope": "occurrences of error-related expression, not a proof that every occurrence is itself an incorrect token",
+      "delta_by_arm": {
+        "C0_original": 0.0,
+        "C1_fail_labels": -0.00038017958286218345,
+        "C2_feedback": 0.0019169216159333757,
+        "C3_feedback_and_original_answer": 0.0019187097500434902
+      }
+    },
+    {
+      "state_id": "state_e8423313c1edf7ee",
+      "expression": "rating",
+      "evidence": "source execution error and literal diagnosis mention",
+      "token_positions": [
+        20,
+        24,
+        53,
+        66,
+        70,
+        75,
+        88,
+        104,
+        113,
+        142
+      ],
+      "scope": "occurrences of error-related expression, not a proof that every occurrence is itself an incorrect token",
+      "delta_by_arm": {
+        "C0_original": 0.0,
+        "C1_fail_labels": 0.004338533382977516,
+        "C2_feedback": 0.0011982131813205398,
+        "C3_feedback_and_original_answer": 0.009774367413938733
+      }
+    },
+    {
+      "state_id": "state_ef628380f92aeabc",
+      "expression": "get_contact_email",
+      "evidence": "source execution error and literal diagnosis mention",
+      "token_positions": [
+        51,
+        52,
+        53
+      ],
+      "scope": "occurrences of error-related expression, not a proof that every occurrence is itself an incorrect token",
+      "delta_by_arm": {
+        "C0_original": 0.0,
+        "C1_fail_labels": -0.22584268749051262,
+        "C2_feedback": 0.7020655958683619,
+        "C3_feedback_and_original_answer": 0.7021244409067245
+      }
+    }
+  ],
+  "scope": "Post-run descriptive diagnostics. Does not change preregistered labels or metrics. Documentation matches are heuristic, not progress labels."
+}

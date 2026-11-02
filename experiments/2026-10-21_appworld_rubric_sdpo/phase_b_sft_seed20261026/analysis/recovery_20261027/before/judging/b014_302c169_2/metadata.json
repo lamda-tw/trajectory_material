@@ -1,0 +1,78 @@
+{
+  "identity": {
+    "source_sha256": "d607d1f878cb5b4712f2dceb8990ae0303200ca2c8c72b43b1fe5e06eb14bc89",
+    "payload_sha256": "352baa4d81fbaf3a82148257c5cea33f6c50c905d0d4aef070a4cbcd836f2f6b",
+    "prompt_sha256": "c21ef04443d8bf3580b7527624c982f207c197321e456221cb38881e7aba2871",
+    "template_sha256": "b51c0d62c39bc22b68110c5ffafadd6f88e99652d17223e7b19012e060b53a2b",
+    "config_sha256": "9506bf49f802650fa684b659b97caa3e7d325160df786edeb2a0e37696aa7d73"
+  },
+  "attempts": [
+    {
+      "directory": "attempt_01",
+      "kind": "initial",
+      "started_at": "2026-10-26T20:24:51.828826+08:00",
+      "audit": {
+        "usage": {
+          "input_tokens": 18063,
+          "cached_input_tokens": 8192,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2604,
+          "reasoning_output_tokens": 1552
+        },
+        "event_types": [
+          "thread.started",
+          "item.completed",
+          "turn.started",
+          "error",
+          "error",
+          "error",
+          "error",
+          "item.completed",
+          "item.completed",
+          "turn.completed"
+        ],
+        "tool_items": [],
+        "nonfatal_error_events": [
+          {
+            "type": "item.completed",
+            "item": {
+              "id": "item_0",
+              "type": "error",
+              "message": "Code Mode is unavailable because code-mode host is disabled. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`."
+            }
+          },
+          {
+            "type": "error",
+            "message": "Reconnecting... 2/5 (request timed out)"
+          },
+          {
+            "type": "error",
+            "message": "Reconnecting... 3/5 (request timed out)"
+          },
+          {
+            "type": "error",
+            "message": "Reconnecting... 4/5 (request timed out)"
+          },
+          {
+            "type": "error",
+            "message": "Reconnecting... 5/5 (request timed out)"
+          },
+          {
+            "type": "item.completed",
+            "item": {
+              "id": "item_1",
+              "type": "error",
+              "message": "Falling back from WebSockets to HTTPS transport. request timed out"
+            }
+          }
+        ],
+        "audit_version": "phase_a_transport_notice_v2"
+      },
+      "status": "valid",
+      "seconds": 353.1301068253815
+    }
+  ],
+  "started_at": "2026-10-26T20:24:51.799286+08:00",
+  "status": "valid",
+  "completed_at": "2026-10-26T20:30:44.958951+08:00"
+}

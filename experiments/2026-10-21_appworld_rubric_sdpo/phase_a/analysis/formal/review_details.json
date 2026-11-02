@@ -1,0 +1,2790 @@
+{
+  "post_hoc_sensitivity": [
+    {
+      "subset": "exclude_protocol_only",
+      "arm": "C2_feedback",
+      "baseline": "C0_original",
+      "metric": "LR",
+      "states": 74,
+      "families": 29,
+      "difference": 0.5186111111111111,
+      "ci95": [
+        0.4276565493295019,
+        0.6124946037590662
+      ],
+      "bootstrap_iterations": 10000,
+      "missing_stratum_redraws": 0,
+      "family_clustered": true,
+      "strata_equally_weighted": true
+    },
+    {
+      "subset": "exclude_protocol_only",
+      "arm": "C2_feedback",
+      "baseline": "C1_fail_labels",
+      "metric": "LR",
+      "states": 74,
+      "families": 29,
+      "difference": 0.4594444444444445,
+      "ci95": [
+        0.37023611111111115,
+        0.5488320175375236
+      ],
+      "bootstrap_iterations": 10000,
+      "missing_stratum_redraws": 0,
+      "family_clustered": true,
+      "strata_equally_weighted": true
+    },
+    {
+      "subset": "exclude_protocol_only",
+      "arm": "C3_feedback_and_original_answer",
+      "baseline": "C2_feedback",
+      "metric": "LR",
+      "states": 74,
+      "families": 29,
+      "difference": -0.07611111111111112,
+      "ci95": [
+        -0.1497561405985319,
+        -0.0019750712250712348
+      ],
+      "bootstrap_iterations": 10000,
+      "missing_stratum_redraws": 0,
+      "family_clustered": true,
+      "strata_equally_weighted": true
+    },
+    {
+      "subset": "no_later_evidence",
+      "arm": "C2_feedback",
+      "baseline": "C0_original",
+      "metric": "LR",
+      "states": 96,
+      "families": 30,
+      "difference": 0.6097554347826086,
+      "ci95": [
+        0.5330470269464834,
+        0.688402040606491
+      ],
+      "bootstrap_iterations": 10000,
+      "missing_stratum_redraws": 0,
+      "family_clustered": true,
+      "strata_equally_weighted": true
+    },
+    {
+      "subset": "no_later_evidence",
+      "arm": "C2_feedback",
+      "baseline": "C1_fail_labels",
+      "metric": "LR",
+      "states": 96,
+      "families": 30,
+      "difference": 0.5512952898550725,
+      "ci95": [
+        0.4762290727175638,
+        0.6258668900078146
+      ],
+      "bootstrap_iterations": 10000,
+      "missing_stratum_redraws": 0,
+      "family_clustered": true,
+      "strata_equally_weighted": true
+    },
+    {
+      "subset": "no_later_evidence",
+      "arm": "C3_feedback_and_original_answer",
+      "baseline": "C2_feedback",
+      "metric": "LR",
+      "states": 96,
+      "families": 30,
+      "difference": -0.11706521739130435,
+      "ci95": [
+        -0.19348710317460316,
+        -0.04484840333843774
+      ],
+      "bootstrap_iterations": 10000,
+      "missing_stratum_redraws": 0,
+      "family_clustered": true,
+      "strata_equally_weighted": true
+    },
+    {
+      "subset": "all_FAIL_strict_LR",
+      "arm": "C2_feedback",
+      "baseline": "C0_original",
+      "metric": "strict_LR",
+      "states": 99,
+      "families": 30,
+      "difference": 0.59875,
+      "ci95": [
+        0.5278608307453416,
+        0.6703197492383348
+      ],
+      "bootstrap_iterations": 10000,
+      "missing_stratum_redraws": 0,
+      "family_clustered": true,
+      "strata_equally_weighted": true
+    }
+  ],
+  "identical_payload_judge_consistency": {
+    "identical_public_payload_groups": 49,
+    "candidates_in_groups": 105,
+    "groups_with_any_label_disagreement": 8,
+    "groups_with_LR_disagreement": 0,
+    "disagreements": [
+      {
+        "ids": [
+          "candidate_11e70bf16a4d5704ad8e0917",
+          "candidate_7b9a1514bf160e7e9f82d677"
+        ],
+        "labels": [
+          "PPPNNFNP",
+          "PPFNNFNP"
+        ],
+        "LR": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "ids": [
+          "candidate_2a4658c7cafa359e15835301",
+          "candidate_abba418a4d3f6b0af187d49f"
+        ],
+        "labels": [
+          "FUFUNFNF",
+          "FUFNNFNF"
+        ],
+        "LR": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "ids": [
+          "candidate_2ac879cfa0fd7c13e5d284ef",
+          "candidate_8f82ef4c1e37a45332af952c"
+        ],
+        "labels": [
+          "FNUFNFNF",
+          "FNFFNFNF"
+        ],
+        "LR": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "ids": [
+          "candidate_31b697591f2f368c5fa8170f",
+          "candidate_58b45c0cfbaab7e077a3d99d",
+          "candidate_ea1de9715e3ced284526d868"
+        ],
+        "labels": [
+          "PPPNNPNP",
+          "PPNNNPNP",
+          "PPNNNPNP"
+        ],
+        "LR": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "ids": [
+          "candidate_379e161d7cd12d5b40e03152",
+          "candidate_75f5dc80e54b409bee07233c"
+        ],
+        "labels": [
+          "PNPPPPNF",
+          "PNPNPPNF"
+        ],
+        "LR": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "ids": [
+          "candidate_70cd64e596505c48ebb1dadb",
+          "candidate_b019392a356ecf7270a2ec49"
+        ],
+        "labels": [
+          "FFUNNFNF",
+          "FNPNNFNF"
+        ],
+        "LR": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "ids": [
+          "candidate_8902b8823d3c7e070332ad54",
+          "candidate_ecbe091c738a417e80ef24f8"
+        ],
+        "labels": [
+          "PPUNNFNP",
+          "PPUNNFFP"
+        ],
+        "LR": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "ids": [
+          "candidate_b16c0b57bad4c96af3d74cdd",
+          "candidate_b72cacd2b6e23d18bbf1f7f0"
+        ],
+        "labels": [
+          "PPNNNPNP",
+          "PPPNNPNP"
+        ],
+        "LR": [
+          1.0,
+          1.0
+        ]
+      }
+    ]
+  },
+  "good_control_state_differences": [
+    {
+      "state_id": "state_5222a4ef1d05d98f",
+      "C0": 1.0,
+      "C2": 0.5,
+      "difference": -0.5
+    },
+    {
+      "state_id": "state_573c1b1c717e81b6",
+      "C0": 0.0,
+      "C2": 0.0,
+      "difference": 0.0
+    },
+    {
+      "state_id": "state_0c3889bbec1b27ea",
+      "C0": 1.0,
+      "C2": 1.0,
+      "difference": 0.0
+    },
+    {
+      "state_id": "state_72440e05db6e6e74",
+      "C0": 0.0,
+      "C2": 0.5,
+      "difference": 0.5
+    },
+    {
+      "state_id": "state_7bc3a64991ff9ad7",
+      "C0": 1.0,
+      "C2": 0.5,
+      "difference": -0.5
+    },
+    {
+      "state_id": "state_b4895957e8fd9615",
+      "C0": 1.0,
+      "C2": 1.0,
+      "difference": 0.0
+    },
+    {
+      "state_id": "state_d8275f6e871092e3",
+      "C0": 1.0,
+      "C2": 0.5,
+      "difference": -0.5
+    },
+    {
+      "state_id": "state_903220946d32e9b0",
+      "C0": 0.5,
+      "C2": 0.0,
+      "difference": -0.5
+    },
+    {
+      "state_id": "state_1441d9ff83b20c6e",
+      "C0": 1.0,
+      "C2": 1.0,
+      "difference": 0.0
+    },
+    {
+      "state_id": "state_1b64bc7e5004baa7",
+      "C0": 1.0,
+      "C2": 1.0,
+      "difference": 0.0
+    },
+    {
+      "state_id": "state_26a5b8d1b5da94f0",
+      "C0": 0.0,
+      "C2": 0.5,
+      "difference": 0.5
+    },
+    {
+      "state_id": "state_9e98750faf7e155f",
+      "C0": 0.5,
+      "C2": 0.0,
+      "difference": -0.5
+    },
+    {
+      "state_id": "state_bcacdb099d4ab419",
+      "C0": 0.0,
+      "C2": 0.5,
+      "difference": 0.5
+    },
+    {
+      "state_id": "state_0837f8968f1bbeba",
+      "C0": 1.0,
+      "C2": 0.5,
+      "difference": -0.5
+    },
+    {
+      "state_id": "state_f23a0ff5a81bc13c",
+      "C0": 1.0,
+      "C2": 1.0,
+      "difference": 0.0
+    },
+    {
+      "state_id": "state_3c45df53edc6afe1",
+      "C0": 1.0,
+      "C2": 1.0,
+      "difference": 0.0
+    },
+    {
+      "state_id": "state_b9724a5680e1ca05",
+      "C0": 1.0,
+      "C2": 1.0,
+      "difference": 0.0
+    },
+    {
+      "state_id": "state_6e377ce51804767d",
+      "C0": 1.0,
+      "C2": 1.0,
+      "difference": 0.0
+    },
+    {
+      "state_id": "state_98cdc6826e57610b",
+      "C0": 0.0,
+      "C2": 0.0,
+      "difference": 0.0
+    },
+    {
+      "state_id": "state_4e6da70adf099b03",
+      "C0": 0.5,
+      "C2": 1.0,
+      "difference": 0.5
+    },
+    {
+      "state_id": "state_8fc4a0bf2a2c275d",
+      "C0": 1.0,
+      "C2": 0.0,
+      "difference": -1.0
+    },
+    {
+      "state_id": "state_384f3e43f6c5a2a7",
+      "C0": 0.5,
+      "C2": 1.0,
+      "difference": 0.5
+    },
+    {
+      "state_id": "state_e179cb2c4b50234f",
+      "C0": 1.0,
+      "C2": 1.0,
+      "difference": 0.0
+    },
+    {
+      "state_id": "state_7ee5be26bcd7fb3b",
+      "C0": 1.0,
+      "C2": 1.0,
+      "difference": 0.0
+    },
+    {
+      "state_id": "state_25dfb3d6963ac770",
+      "C0": 0.0,
+      "C2": 0.0,
+      "difference": 0.0
+    }
+  ],
+  "uses_later_evidence_states": [
+    {
+      "state_id": "state_31d8ced0e84fd4c6",
+      "LR": {
+        "C0_original": 0.0,
+        "C1_fail_labels": 0.0,
+        "C2_feedback": 1.0,
+        "C3_feedback_and_original_answer": 1.0
+      }
+    },
+    {
+      "state_id": "state_76c7a7d0af9d3182",
+      "LR": {
+        "C0_original": 0.5,
+        "C1_fail_labels": 0.5,
+        "C2_feedback": 1.0,
+        "C3_feedback_and_original_answer": 1.0
+      }
+    },
+    {
+      "state_id": "state_e8423313c1edf7ee",
+      "LR": {
+        "C0_original": 0.0,
+        "C1_fail_labels": 0.0,
+        "C2_feedback": 1.0,
+        "C3_feedback_and_original_answer": 1.0
+      }
+    }
+  ],
+  "error_token_evidence": [
+    {
+      "state_id": "state_0a1a32cb2e02b7d2",
+      "expression": "spotify_access_token",
+      "tokens": [
+        {
+          "position": 64,
+          "piece": "spotify",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 0.9999998807907247,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -1.1920928244535389e-07,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 65,
+          "piece": "_access",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 66,
+          "piece": "_token",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        }
+      ],
+      "original_code_redacted": "# Get the list of playlists in the Spotify account\nplaylists = []\npage_index = 0\nwhile True:\n    playlist_page = apis.spotify.show_playlist_library(access_token=spotify_access_token, page_index=page_index)\n    if not playlist_page:\n        break\n    playlists.extend(playlist_page)\n    page_index += 1",
+      "original_observation_redacted": "Execution failed. Traceback:\n  File \"<python-input>\", line 5, in <module>\n    playlist_page = apis.spotify.show_playlist_library(access_token=spotify_access_token, page_index=page_index)\n                                                                    ^^^^^^^^^^^^^^^^^^^^\nNameError: name 'spotify_access_token' is not defined",
+      "feedback": {
+        "step_id": 3,
+        "failed_rules": [
+          "R1",
+          "R3"
+        ],
+        "diagnosis": "The preceding step retrieved the Spotify password but never executed login. This step nevertheless claims login succeeded and uses the undefined spotify_access_token, causing NameError before retrieving any playlists.",
+        "correction": "Execute the documented Spotify login with the retrieved password and assign its returned access token before fetching playlists. Claim authentication succeeded only after an executed login result supports that statement.",
+        "evidence_steps": [
+          2,
+          3
+        ],
+        "uses_later_evidence": false,
+        "usable": true,
+        "unusable_reason": ""
+      },
+      "candidates": [
+        {
+          "id": "candidate_0421ca25b6da9faadc3b636d",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "0",
+          "labels_v7": "PNPNNNNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_1e361c570f5e4ee4d6c61f5a",
+          "arm": "C0_original",
+          "repeat": "1",
+          "labels_v7": "FNFNNNNP",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_4307c06980ed173c3c0ec058",
+          "arm": "C1_fail_labels",
+          "repeat": "1",
+          "labels_v7": "PNPNNNNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_5f8f73eeab2cb3d5905034a8",
+          "arm": "C1_fail_labels",
+          "repeat": "0",
+          "labels_v7": "FNNNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_816c8858e8e25d6d69b83baa",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "1",
+          "labels_v7": "PNPNNNNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_9ccd3eb69b0757f01795de5c",
+          "arm": "C2_feedback",
+          "repeat": "0",
+          "labels_v7": "PNPNNNNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_e050af77f37c9366ad7e430b",
+          "arm": "C0_original",
+          "repeat": "0",
+          "labels_v7": "FNFNNNNP",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_f4787b2c599af3c02bf09c09",
+          "arm": "C2_feedback",
+          "repeat": "1",
+          "labels_v7": "PNPNNPNP",
+          "LR": 1.0
+        }
+      ]
+    },
+    {
+      "state_id": "state_0a2379c1a374ced5",
+      "expression": "list_files",
+      "tokens": [
+        {
+          "position": 64,
+          "piece": ".list",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.9867194227174974,
+            "C1_fail_labels": 0.9829666619519004,
+            "C2_feedback": 0.9999994039539004,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -0.003810521215200424,
+            "C2_feedback": 0.013368956744841398,
+            "C3_feedback_and_original_answer": 0.013369552791118622
+          }
+        },
+        {
+          "position": 65,
+          "piece": "_files",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.9974834037540409,
+            "C1_fail_labels": 0.9932349360194662,
+            "C2_feedback": 0.9999917746265009,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -0.004268282558768988,
+            "C2_feedback": 0.0025115427897617337,
+            "C3_feedback_and_original_answer": 0.0025197681970894337
+          }
+        }
+      ],
+      "original_code_redacted": "file_system_files = apis.file_system.list_files(directory='~/photographs/vacations/')\nprint(file_system_files)",
+      "original_observation_redacted": "Execution failed. Traceback:\n  File \"<python-input>\", line 1, in <module>\n    file_system_files = apis.file_system.list_files(directory='~/photographs/vacations/')\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^\nException: No API named 'list_files' found in the file_system app.",
+      "feedback": {
+        "step_id": 1,
+        "failed_rules": [
+          "R1",
+          "R8"
+        ],
+        "diagnosis": "The submitted call used list_files, which execution reported does not exist. It also called an app API without first inspecting its complete specification, contrary to the execution instructions.",
+        "correction": "Discover the file_system APIs through the supplied documentation entry point, then inspect the selected directory-reading API's complete specification before calling it. Obtain any required authentication and use the documented arguments.",
+        "evidence_steps": [
+          1
+        ],
+        "uses_later_evidence": false,
+        "usable": true,
+        "unusable_reason": ""
+      },
+      "candidates": [
+        {
+          "id": "candidate_2430c7358b6d6d9a7095ed51",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "1",
+          "labels_v7": "PPNNNNNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_2562b9a1fe0794f35801e983",
+          "arm": "C0_original",
+          "repeat": "0",
+          "labels_v7": "FNNNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_43feb6fadec05fbcd564fd9f",
+          "arm": "C1_fail_labels",
+          "repeat": "1",
+          "labels_v7": "FNNNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_57cb7873f55c027344aba68a",
+          "arm": "C2_feedback",
+          "repeat": "0",
+          "labels_v7": "PPNNNNNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_64cd32d786db3fa6a5b3f1ce",
+          "arm": "C0_original",
+          "repeat": "1",
+          "labels_v7": "FNNNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_8f5a0ffcab9b605c36342155",
+          "arm": "C1_fail_labels",
+          "repeat": "0",
+          "labels_v7": "FNNNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_b6fb86af761f7c6864f209ad",
+          "arm": "C2_feedback",
+          "repeat": "1",
+          "labels_v7": "PPNNNNNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_e911b13c4d9bf507ea5c4c94",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "0",
+          "labels_v7": "PPNNNNNP",
+          "LR": 1.0
+        }
+      ]
+    },
+    {
+      "state_id": "state_1abe92d466de6d33",
+      "expression": "spotify_access_token",
+      "tokens": [
+        {
+          "position": 82,
+          "piece": "spotify",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.9999997615814777,
+            "C1_fail_labels": 0.9999996423722521,
+            "C2_feedback": 0.9999998807907247,
+            "C3_feedback_and_original_answer": 0.9999997615814777
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -1.1920926112907182e-07,
+            "C2_feedback": 1.1920926823449918e-07,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 83,
+          "piece": "_access",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 0.9999996423722521,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": -3.576278118089249e-07,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 84,
+          "piece": "_token",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        }
+      ],
+      "original_code_redacted": "recommendations_page = apis.spotify.show_recommendations(access_token=spotify_access_token, page_index=0)\nprint(recommendations_page)",
+      "original_observation_redacted": "Execution failed. Traceback:\n  File \"<python-input>\", line 1, in <module>\n    recommendations_page = apis.spotify.show_recommendations(access_token=spotify_access_token, page_index=0)\n                                                                          ^^^^^^^^^^^^^^^^^^^^\nNameError: name 'spotify_access_token' is not defined",
+      "feedback": {
+        "step_id": 3,
+        "failed_rules": [
+          "R1"
+        ],
+        "diagnosis": "The recommendation request references spotify_access_token before any preceding executed step defines it, causing NameError before Spotify is called.",
+        "correction": "Retrieve the Spotify credentials from Supervisor after checking the relevant API specification, log in using the documented Spotify login API, and bind the returned access token. Use that defined token when requesting recommendations.",
+        "evidence_steps": [
+          3
+        ],
+        "uses_later_evidence": false,
+        "usable": true,
+        "unusable_reason": ""
+      },
+      "candidates": [
+        {
+          "id": "candidate_08a175d9f7c5557b5a8d5685",
+          "arm": "C1_fail_labels",
+          "repeat": "0",
+          "labels_v7": "PPPNNFNP",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_4494030180e5e454374b6083",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "1",
+          "labels_v7": "PPPNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_77f395ff5c40239d6a52d063",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "0",
+          "labels_v7": "PPPNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_ad879047fd34ac434d65a065",
+          "arm": "C0_original",
+          "repeat": "1",
+          "labels_v7": "PPPNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_b389f83daede84878b1bb1c5",
+          "arm": "C2_feedback",
+          "repeat": "1",
+          "labels_v7": "PPPNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_bde2264319edac14caf83210",
+          "arm": "C0_original",
+          "repeat": "0",
+          "labels_v7": "FNPNNNNP",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_f2cc3c7e1a597bb92d28be56",
+          "arm": "C2_feedback",
+          "repeat": "0",
+          "labels_v7": "PPPNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_f8530769d59398c5cc3047a6",
+          "arm": "C1_fail_labels",
+          "repeat": "1",
+          "labels_v7": "FNPNNNNP",
+          "LR": 0.0
+        }
+      ]
+    },
+    {
+      "state_id": "state_2169d7040b0af46d",
+      "expression": "song_id",
+      "tokens": [
+        {
+          "position": 6,
+          "piece": "song",
+          "in_or_after_first_python_fence": false,
+          "probability": {
+            "C0_original": 0.9999938011552557,
+            "C1_fail_labels": 0.9967317458745305,
+            "C2_feedback": 0.004070135999190959,
+            "C3_feedback_and_original_answer": 0.017986185584564048
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -0.0032674076692273957,
+            "C2_feedback": -5.504072666187312,
+            "C3_feedback_and_original_answer": -4.018145084400203
+          }
+        },
+        {
+          "position": 7,
+          "piece": "_id",
+          "in_or_after_first_python_fence": false,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 0.9999985694905718,
+            "C2_feedback": 0.9999455243228242,
+            "C3_feedback_and_original_answer": 0.9999985694905718
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -1.4305104514278355e-06,
+            "C2_feedback": -5.447716102935374e-05,
+            "C3_feedback_and_original_answer": -1.4305104514278355e-06
+          }
+        },
+        {
+          "position": 30,
+          "piece": "song",
+          "in_or_after_first_python_fence": false,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 31,
+          "piece": "_id",
+          "in_or_after_first_python_fence": false,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 0.9999867679437158,
+            "C3_feedback_and_original_answer": 0.9999961853172863
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": -1.3232143828645349e-05,
+            "C3_feedback_and_original_answer": -3.814689989667386e-06
+          }
+        },
+        {
+          "position": 102,
+          "piece": " song",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.9999969005680498,
+            "C1_fail_labels": 0.9999825957461574,
+            "C2_feedback": 0.999819311370447,
+            "C3_feedback_and_original_answer": 0.9998243163809589
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -1.430496854482044e-05,
+            "C2_feedback": -0.00017760551895662502,
+            "C3_feedback_and_original_answer": -0.00017259961646232114
+          }
+        },
+        {
+          "position": 103,
+          "piece": "_id",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 0.9999988079084972,
+            "C3_feedback_and_original_answer": 0.9999991655356624
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": -1.1920922133867862e-06,
+            "C3_feedback_and_original_answer": -8.344646857949556e-07
+          }
+        },
+        {
+          "position": 107,
+          "piece": "song",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.9999833109787883,
+            "C1_fail_labels": 0.9999724634116024,
+            "C2_feedback": 0.9999921322487634,
+            "C3_feedback_and_original_answer": 0.9999870063564401
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -1.084780706150923e-05,
+            "C2_feedback": 8.8213782873936e-06,
+            "C3_feedback_and_original_answer": 3.6954324968974106e-06
+          }
+        },
+        {
+          "position": 108,
+          "piece": "_id",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 111,
+          "piece": " song",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 0.9999998807907247,
+            "C2_feedback": 0.9999991655356624,
+            "C3_feedback_and_original_answer": 0.9999916554191085
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -1.1920928244535389e-07,
+            "C2_feedback": -8.344646857949556e-07,
+            "C3_feedback_and_original_answer": -8.34461570775602e-06
+          }
+        },
+        {
+          "position": 112,
+          "piece": "_id",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 0.9999997615814777,
+            "C3_feedback_and_original_answer": 0.9999995231630692
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": -2.3841855067985307e-07,
+            "C3_feedback_and_original_answer": -4.768370445162873e-07
+          }
+        },
+        {
+          "position": 115,
+          "piece": "(song",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 116,
+          "piece": "_id",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 126,
+          "piece": "(song",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 127,
+          "piece": "_id",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 128,
+          "piece": "=s",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 129,
+          "piece": "ong",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 130,
+          "piece": "_id",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        }
+      ],
+      "original_code_redacted": "# Calculate the length of each playlist in minutes\nplaylist_lengths = []\nfor playlist in playlists:\n    playlist_id = playlist[\"playlist_id\"]\n    playlist_details = apis.spotify.show_playlist(playlist_id=playlist_id)\n    total_duration_seconds = 0\n    for song in playlist_details[\"songs\"]:\n        song_id = song[\"song_id\"]\n        song_id = int(song_id)\n        song_details = apis.spotify.show_song(song_id=song_id)\n        total_duration_seconds += song_details[\"duration_seconds\"]\n    total_duration_minutes = total_duration_seconds / 60\n    playlist_lengths.append(total_duration_minutes)",
+      "original_observation_redacted": "Execution failed. Traceback:\n  File \"<python-input>\", line 8, in <module>\n    song_id = song[\"song_id\"]\n              ~~~~^^^^^^^^^^^\nKeyError: 'song_id'",
+      "feedback": {
+        "step_id": 12,
+        "failed_rules": [
+          "R1",
+          "R6",
+          "R8"
+        ],
+        "diagnosis": "The code repeats song[\"song_id\"], although earlier executions already established that this key is absent, and raises the same KeyError. It also calls show_playlist without the required prior specification lookup.",
+        "correction": "Inspect the retained song records and read the complete specifications for show_playlist and show_song before further calls. Establish the actual identifier field and accepted arguments, then validate one song lookup before resuming the duration calculation.",
+        "evidence_steps": [
+          4,
+          8,
+          10,
+          12
+        ],
+        "uses_later_evidence": false,
+        "usable": true,
+        "unusable_reason": ""
+      },
+      "candidates": [
+        {
+          "id": "candidate_09372c30fcd4c1eb9535897e",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "0",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_16eac4cd6a4e30dd1d63757e",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "1",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_77cdf28c48946d9aceeeb6ef",
+          "arm": "C2_feedback",
+          "repeat": "1",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_87ce182632303de53d35ef81",
+          "arm": "C2_feedback",
+          "repeat": "0",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_8ccddbf1a20a931910e60dfe",
+          "arm": "C1_fail_labels",
+          "repeat": "0",
+          "labels_v7": "FNFNNFNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_b4ee89bc95c4b06811ea4437",
+          "arm": "C0_original",
+          "repeat": "1",
+          "labels_v7": "FPFNNFNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_b8b3064384b6b282de1efdfa",
+          "arm": "C1_fail_labels",
+          "repeat": "1",
+          "labels_v7": "PPPNNPNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_f20406531d105f43099dbc9a",
+          "arm": "C0_original",
+          "repeat": "0",
+          "labels_v7": "FPFNNFNF",
+          "LR": 0.0
+        }
+      ]
+    },
+    {
+      "state_id": "state_5a3db19203a224b7",
+      "expression": "get_directories",
+      "tokens": [
+        {
+          "position": 14,
+          "piece": "get",
+          "in_or_after_first_python_fence": false,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 0.9992903742048809,
+            "C2_feedback": 0.9999785427891018,
+            "C3_feedback_and_original_answer": 0.9999996423722521
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -0.0007098776986822486,
+            "C2_feedback": -2.1457441107486375e-05,
+            "C3_feedback_and_original_answer": -3.576278118089249e-07
+          }
+        },
+        {
+          "position": 15,
+          "piece": "_direct",
+          "in_or_after_first_python_fence": false,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 0.9999998807907247,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -1.1920928244535389e-07,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 16,
+          "piece": "ories",
+          "in_or_after_first_python_fence": false,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 74,
+          "piece": ".get",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.8506079533713962,
+            "C1_fail_labels": 0.834403918335714,
+            "C2_feedback": 0.7306720878084216,
+            "C3_feedback_and_original_answer": 0.8175207308171442
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -0.019233733415603638,
+            "C2_feedback": -0.15198655426502228,
+            "C3_feedback_and_original_answer": -0.03967507183551788
+          }
+        },
+        {
+          "position": 75,
+          "piece": "_direct",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.8342365417396905,
+            "C1_fail_labels": 0.8512121464789627,
+            "C2_feedback": 0.8175204871770168,
+            "C3_feedback_and_original_answer": 0.9740230572690666
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.020144402980804443,
+            "C2_feedback": -0.02024102210998535,
+            "C3_feedback_and_original_answer": 0.1549179907888174
+          }
+        },
+        {
+          "position": 76,
+          "piece": "ories",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.9999984502816872,
+            "C1_fail_labels": 0.9999997615814777,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 1.3113009629250882e-06,
+            "C2_feedback": 1.5497195136049413e-06,
+            "C3_feedback_and_original_answer": 1.5497195136049413e-06
+          }
+        }
+      ],
+      "original_code_redacted": "# Access the file system to get the list of directories inside the ~/pictures/ directory\nvacation_directories = apis.file_system.get_directories(path='~/pictures/')\nprint(vacation_directories)",
+      "original_observation_redacted": "Execution failed. Traceback:\n  File \"<python-input>\", line 2, in <module>\n    vacation_directories = apis.file_system.get_directories(path='~/pictures/')\n                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nException: No API named 'get_directories' found in the file_system app.",
+      "feedback": {
+        "step_id": 23,
+        "failed_rules": [
+          "R1",
+          "R6",
+          "R8"
+        ],
+        "diagnosis": "The call repeats get_directories despite earlier explicit missing-API errors, causing another execution failure. Its specification was never checked as required.",
+        "correction": "Use the supplied discovery entry points to identify the file-system listing operation, then read its complete specification before invoking it through the provided apis object. Stop retrying API names already rejected by the environment.",
+        "evidence_steps": [
+          7,
+          22,
+          23
+        ],
+        "uses_later_evidence": false,
+        "usable": true,
+        "unusable_reason": ""
+      },
+      "candidates": [
+        {
+          "id": "candidate_06d2eca22121d6b6754053bf",
+          "arm": "C2_feedback",
+          "repeat": "0",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_17ee3064dfbf1787b9fa0dd4",
+          "arm": "C0_original",
+          "repeat": "1",
+          "labels_v7": "FNNNNFNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_5f30dbf9ac214833f7b19410",
+          "arm": "C1_fail_labels",
+          "repeat": "0",
+          "labels_v7": "FNNNNFNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_8c285a09807c6ac3654d8b06",
+          "arm": "C2_feedback",
+          "repeat": "1",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_9b64a0d8b121b1c91f46736a",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "1",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_a6834e416092df181d8c5855",
+          "arm": "C0_original",
+          "repeat": "0",
+          "labels_v7": "FNPNNFNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_aad3097e61aee6ce7533c065",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "0",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_c1580ac959341614a131b9e0",
+          "arm": "C1_fail_labels",
+          "repeat": "1",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        }
+      ]
+    },
+    {
+      "state_id": "state_6dd1876801c80339",
+      "expression": "list_directory",
+      "tokens": [
+        {
+          "position": 23,
+          "piece": "list",
+          "in_or_after_first_python_fence": false,
+          "probability": {
+            "C0_original": 0.5581128943671602,
+            "C1_fail_labels": 0.013889391595790345,
+            "C2_feedback": 0.0009109323803586106,
+            "C3_feedback_and_original_answer": 0.9994471746722718
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -3.6934359073638916,
+            "C2_feedback": -6.4178478717803955,
+            "C3_feedback_and_original_answer": 0.5826410392182879
+          }
+        },
+        {
+          "position": 24,
+          "piece": "_directory",
+          "in_or_after_first_python_fence": false,
+          "probability": {
+            "C0_original": 0.8966166268337602,
+            "C1_fail_labels": 0.8558176325859205,
+            "C2_feedback": 0.9997113584423853,
+            "C3_feedback_and_original_answer": 0.9999893904859
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -0.046571068465709686,
+            "C2_feedback": 0.10883821989409626,
+            "C3_feedback_and_original_answer": 0.10911629354632169
+          }
+        },
+        {
+          "position": 68,
+          "piece": ".list",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 69,
+          "piece": "_directory",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 0.9999998807907247,
+            "C3_feedback_and_original_answer": 0.9999998807907247
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": -1.1920928244535389e-07,
+            "C3_feedback_and_original_answer": -1.1920928244535389e-07
+          }
+        }
+      ],
+      "original_code_redacted": "# Get the list of files in the ~/bills/ directory\nfiles = apis.file_system.list_directory(directory='~/bills/')\nprint(files)",
+      "original_observation_redacted": "Execution failed. Traceback:\n  File \"<python-input>\", line 2, in <module>\n    files = apis.file_system.list_directory(directory='~/bills/')\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nException: No API named 'list_directory' found in the file_system app.",
+      "feedback": {
+        "step_id": 2,
+        "failed_rules": [
+          "R1",
+          "R3",
+          "R8"
+        ],
+        "diagnosis": "After list_files failed, the step asserted that list_directory was the correct API without supporting documentation. That API also did not exist, so execution failed, and its specification had not been checked.",
+        "correction": "Use the documented discovery entry point to identify an available file-system API, then read its complete specification before calling it with the required arguments and authentication.",
+        "evidence_steps": [
+          1,
+          2
+        ],
+        "uses_later_evidence": false,
+        "usable": true,
+        "unusable_reason": ""
+      },
+      "candidates": [
+        {
+          "id": "candidate_19e2fd223ad288db9a3e8dad",
+          "arm": "C2_feedback",
+          "repeat": "0",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_5c30ebaf1fb0172dfdfbed2f",
+          "arm": "C1_fail_labels",
+          "repeat": "0",
+          "labels_v7": "PPPNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_8619fd9384d3285b79f6ee6d",
+          "arm": "C0_original",
+          "repeat": "1",
+          "labels_v7": "PPPNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_895cf31625f5dd5892685129",
+          "arm": "C0_original",
+          "repeat": "0",
+          "labels_v7": "PPPNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_afdd22e31067cc539e3c50ed",
+          "arm": "C1_fail_labels",
+          "repeat": "1",
+          "labels_v7": "PPPNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_bf7b8961eb0013117e896b73",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "0",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_f37aefd0a48503241d325467",
+          "arm": "C2_feedback",
+          "repeat": "1",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_fda9566dfdf63464db4ef8f0",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "1",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        }
+      ]
+    },
+    {
+      "state_id": "state_76c7a7d0af9d3182",
+      "expression": "get_song",
+      "tokens": [
+        {
+          "position": 134,
+          "piece": ".get",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.9626727395290742,
+            "C1_fail_labels": 0.9046498318889643,
+            "C2_feedback": 0.9914224771982877,
+            "C3_feedback_and_original_answer": 0.9999982118638471
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -0.062165576964616776,
+            "C2_feedback": 0.029427237808704376,
+            "C3_feedback_and_original_answer": 0.038039971144598894
+          }
+        },
+        {
+          "position": 135,
+          "piece": "_song",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.9999996423722521,
+            "C1_fail_labels": 0.9999996423722521,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 3.576278118089249e-07,
+            "C3_feedback_and_original_answer": 3.576278118089249e-07
+          }
+        }
+      ],
+      "original_code_redacted": "# Extract song IDs from all playlists\nsong_ids = [playlist[\"song_ids\"] for playlist in playlists]\n\n# Get all songs from the Spotify song library\nall_songs = []\nfor song_id in song_ids:\n    song = apis.spotify.get_song(song_id=song_id)\n    all_songs.append(song)\n\n# Extract artist names from the songs\nartists = [song[\"artist\"] for song in all_songs]\n\n# Find the most recommended artist\nmost_recommended_artist = max(artists, key=artists.count)\nprint(most_recommended_artist)",
+      "original_observation_redacted": "Execution failed. Traceback:\n  File \"<python-input>\", line 7, in <module>\n    song = apis.spotify.get_song(song_id=song_id)\n           ^^^^^^^^^^^^^^^^^^^^^\nException: No API named 'get_song' found in the spotify app.",
+      "feedback": {
+        "step_id": 3,
+        "failed_rules": [
+          "R1",
+          "R2",
+          "R4",
+          "R8"
+        ],
+        "diagnosis": "The call fails because get_song does not exist, and no complete specification was checked before attempting it. The proposed calculation also substitutes playlist song frequency for personalized recommendation frequency without evidence connecting them.",
+        "correction": "Discover the available Spotify APIs and inspect complete specifications before calling them. Find a source explicitly providing personalized recommendations, then calculate artist frequencies from those results, following the documented response structure and pagination.",
+        "evidence_steps": [
+          2,
+          3,
+          5,
+          6
+        ],
+        "uses_later_evidence": true,
+        "usable": true,
+        "unusable_reason": ""
+      },
+      "candidates": [
+        {
+          "id": "candidate_200ed0fd05faf5fd56e33771",
+          "arm": "C1_fail_labels",
+          "repeat": "1",
+          "labels_v7": "PPPNNFNP",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_93286f16b2bd86abb935d63e",
+          "arm": "C0_original",
+          "repeat": "0",
+          "labels_v7": "PPPNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_974fe1e4f15017fb6caa9124",
+          "arm": "C2_feedback",
+          "repeat": "0",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_988764cee76ded63d02c93e3",
+          "arm": "C0_original",
+          "repeat": "1",
+          "labels_v7": "PFFFNFNP",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_ce52a7d0a2db646ae143175a",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "1",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_de461adac410ef9432522725",
+          "arm": "C2_feedback",
+          "repeat": "1",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_ec0befc0d2f2a49086499e91",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "0",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_f68dab2455b557d03b8d3711",
+          "arm": "C1_fail_labels",
+          "repeat": "0",
+          "labels_v7": "PPPNNPNP",
+          "LR": 1.0
+        }
+      ]
+    },
+    {
+      "state_id": "state_859cc3a9f212b286",
+      "expression": "get_contacts",
+      "tokens": [
+        {
+          "position": 36,
+          "piece": ".get",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.9990606795092,
+            "C1_fail_labels": 0.9980329896334614,
+            "C2_feedback": 0.9992734707978447,
+            "C3_feedback_and_original_answer": 0.9999771123402672
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -0.0010291855433024466,
+            "C2_feedback": 0.0002129686763510108,
+            "C3_feedback_and_original_answer": 0.0009168740070890635
+          }
+        },
+        {
+          "position": 37,
+          "piece": "_contacts",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.9986423829488449,
+            "C1_fail_labels": 0.9972468329853201,
+            "C2_feedback": 0.9978511118581341,
+            "C3_feedback_and_original_answer": 0.9999979734461775
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -0.001398424501530826,
+            "C2_feedback": -0.0007926608668640256,
+            "C3_feedback_and_original_answer": 0.0013565128922436998
+          }
+        }
+      ],
+      "original_code_redacted": "contacts = apis.phone.get_contacts()\ncoworkers = [contact for contact in contacts if contact['relationship'] == 'coworker']\ncoworkers_emails = [contact['email'] for contact in coworkers]\nprint(coworkers_emails)",
+      "original_observation_redacted": "Execution failed. Traceback:\n  File \"<python-input>\", line 1, in <module>\n    contacts = apis.phone.get_contacts()\n               ^^^^^^^^^^^^^^^^^^^^^^^\nException: No API named 'get_contacts' found in the phone app.",
+      "feedback": {
+        "step_id": 2,
+        "failed_rules": [
+          "R1",
+          "R8"
+        ],
+        "diagnosis": "The step called phone.get_contacts without inspecting its specification, and execution confirmed that the endpoint does not exist. The contact filtering therefore did not execute.",
+        "correction": "Discover the available phone contact APIs and inspect the complete specification of the appropriate endpoint before calling it. Obtain any required authentication, use documented arguments and response fields, and process pagination if specified.",
+        "evidence_steps": [
+          2
+        ],
+        "uses_later_evidence": false,
+        "usable": true,
+        "unusable_reason": ""
+      },
+      "candidates": [
+        {
+          "id": "candidate_17e44ebcb7ff0bab7d4b5d0a",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "1",
+          "labels_v7": "PPNNNNNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_23a6922fcc0905e4f7e2c639",
+          "arm": "C1_fail_labels",
+          "repeat": "0",
+          "labels_v7": "FNNNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_7d96276ee6ace57967745c5f",
+          "arm": "C2_feedback",
+          "repeat": "1",
+          "labels_v7": "PPNNNNNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_8b09cf6a5d9b399938494a98",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "0",
+          "labels_v7": "PPNNNNNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_903e8e48fd30706748f35d9d",
+          "arm": "C0_original",
+          "repeat": "1",
+          "labels_v7": "FNNNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_a8c678a8a2c6b2a0d7076f39",
+          "arm": "C1_fail_labels",
+          "repeat": "1",
+          "labels_v7": "FNNNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_b70025dfb80396450d542d87",
+          "arm": "C0_original",
+          "repeat": "0",
+          "labels_v7": "FNNNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_dd89fb6a033d316d33c1fbcc",
+          "arm": "C2_feedback",
+          "repeat": "0",
+          "labels_v7": "PPNNNNNP",
+          "LR": 1.0
+        }
+      ]
+    },
+    {
+      "state_id": "state_892f4749a5dc63b7",
+      "expression": "extend",
+      "tokens": [
+        {
+          "position": 88,
+          "piece": ".extend",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.3502446785394993,
+            "C1_fail_labels": 0.04021436466120865,
+            "C2_feedback": 0.0009324673769133862,
+            "C3_feedback_and_original_answer": 0.8519434168128641
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -2.164407730102539,
+            "C2_feedback": -5.928553104400635,
+            "C3_feedback_and_original_answer": 0.8888881206512451
+          }
+        }
+      ],
+      "original_code_redacted": "# Retrieve the list of songs from the remaining playlists\nfor playlist in playlists[1:]:\n    songs.extend(apis.spotify.show_playlist(access_token=spotify_access_token, playlist_id=playlist[\"playlist_id\"]))",
+      "original_observation_redacted": "Execution failed. Traceback:\n  File \"<python-input>\", line 3, in <module>\n    songs.extend(apis.spotify.show_playlist(access_token=spotify_access_token, playlist_id=playlist[\"playlist_id\"]))\n    ^^^^^^^^^^^^\nAttributeError: 'dict' object has no attribute 'extend'",
+      "feedback": {
+        "step_id": 4,
+        "failed_rules": [
+          "R1",
+          "R3"
+        ],
+        "diagnosis": "The step describes songs as a list of song records, but the AttributeError establishes that it is a dictionary. Calling extend on that dictionary stops execution before another playlist is retrieved.",
+        "correction": "Inspect the existing response and read the playlist API specification to establish its structure. Identify the actual song records or references, then aggregate retrieved song records into a separate list.",
+        "evidence_steps": [
+          3,
+          4
+        ],
+        "uses_later_evidence": false,
+        "usable": true,
+        "unusable_reason": ""
+      },
+      "candidates": [
+        {
+          "id": "candidate_01e252b9cc1153784e7d7fa0",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "0",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_341ecfa465db1c19a8c7b43e",
+          "arm": "C0_original",
+          "repeat": "0",
+          "labels_v7": "PPUNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_3743714804226af5900c6455",
+          "arm": "C1_fail_labels",
+          "repeat": "0",
+          "labels_v7": "FFFFNFNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_410bc4a17a51be88845a6b8e",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "1",
+          "labels_v7": "PPPNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_538ed0f4cf700449c5d8fa92",
+          "arm": "C1_fail_labels",
+          "repeat": "1",
+          "labels_v7": "PUUNNFNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_958ab91b334a4ea35e3f6c5e",
+          "arm": "C2_feedback",
+          "repeat": "1",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_c15b8a2281120aa27c47fcc6",
+          "arm": "C0_original",
+          "repeat": "1",
+          "labels_v7": "PPUNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_c81a3fb2cbb54e338b6fc1c4",
+          "arm": "C2_feedback",
+          "repeat": "0",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        }
+      ]
+    },
+    {
+      "state_id": "state_a25d4953a01da350",
+      "expression": "get_contacts",
+      "tokens": [
+        {
+          "position": 5,
+          "piece": "get",
+          "in_or_after_first_python_fence": false,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 6,
+          "piece": "_contacts",
+          "in_or_after_first_python_fence": false,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 41,
+          "piece": ".get",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 0.9999998807907247,
+            "C2_feedback": 0.9999963045256735,
+            "C3_feedback_and_original_answer": 0.9999977350285647
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -1.1920928244535389e-07,
+            "C2_feedback": -3.6954811548639555e-06,
+            "C3_feedback_and_original_answer": -2.264974000354414e-06
+          }
+        },
+        {
+          "position": 42,
+          "piece": "_contacts",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.9999995231630692,
+            "C1_fail_labels": 0.9999986886995842,
+            "C2_feedback": 0.9999979734461775,
+            "C3_feedback_and_original_answer": 0.9999983310727032
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -8.344642310476047e-07,
+            "C2_feedback": -1.549718831483915e-06,
+            "C3_feedback_and_original_answer": -1.1920916449525976e-06
+          }
+        }
+      ],
+      "original_code_redacted": "contacts = apis.supervisor.get_contacts()\nprint(contacts)",
+      "original_observation_redacted": "Execution failed. Traceback:\n  File \"<python-input>\", line 1, in <module>\n    contacts = apis.supervisor.get_contacts()\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nException: No API named 'get_contacts' found in the supervisor app.",
+      "feedback": {
+        "step_id": 21,
+        "failed_rules": [
+          "R1",
+          "R6",
+          "R8"
+        ],
+        "diagnosis": "The step calls supervisor.get_contacts without inspecting its specification, causing another exception. Earlier executions already established that this exact API does not exist, so repeating it ignores explicit feedback.",
+        "correction": "Stop retrying the rejected endpoint. Use the supplied documentation discovery entry points to identify the Phone app's supported contact APIs, then inspect the complete specification with show_api_doc before making a supported call.",
+        "evidence_steps": [
+          3,
+          20,
+          21
+        ],
+        "uses_later_evidence": false,
+        "usable": true,
+        "unusable_reason": ""
+      },
+      "candidates": [
+        {
+          "id": "candidate_0ad2d36dab828a45fe308b46",
+          "arm": "C1_fail_labels",
+          "repeat": "1",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_70cd64e596505c48ebb1dadb",
+          "arm": "C0_original",
+          "repeat": "0",
+          "labels_v7": "FFUNNFNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_8811b817df52c5bc31e8b0b9",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "1",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_93e855b0474b0e8e8bd6f54c",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "0",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_b019392a356ecf7270a2ec49",
+          "arm": "C0_original",
+          "repeat": "1",
+          "labels_v7": "FNPNNFNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_c48ad427b0e825af03a6c6d5",
+          "arm": "C2_feedback",
+          "repeat": "0",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_cf2e6b910d85ffde95f5ea7b",
+          "arm": "C2_feedback",
+          "repeat": "1",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_fb422eb996d1cd684607ecb1",
+          "arm": "C1_fail_labels",
+          "repeat": "0",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        }
+      ]
+    },
+    {
+      "state_id": "state_a2f1543412667ab6",
+      "expression": "get_queue",
+      "tokens": [
+        {
+          "position": 40,
+          "piece": ".get",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.5621752292535293,
+            "C1_fail_labels": 0.4999985685382473,
+            "C2_feedback": 0.002472623024627213,
+            "C3_feedback_and_original_answer": 0.9399132203118943
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -0.11720836162567139,
+            "C2_feedback": -5.426534056663513,
+            "C3_feedback_and_original_answer": 0.513973955065012
+          }
+        },
+        {
+          "position": 41,
+          "piece": "_queue",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.6631139231122214,
+            "C1_fail_labels": 0.5471975840708253,
+            "C2_feedback": 0.9904376795465851,
+            "C3_feedback_and_original_answer": 0.999994397195003
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -0.19213685393333435,
+            "C2_feedback": 0.4012001408264041,
+            "C3_feedback_and_original_answer": 0.410802871004762
+          }
+        }
+      ],
+      "original_code_redacted": "# Retrieve the list of songs in the music player queue\nqueue = apis.spotify.get_queue(access_token=spotify_access_token)",
+      "original_observation_redacted": "Execution failed. Traceback:\n  File \"<python-input>\", line 2, in <module>\n    queue = apis.spotify.get_queue(access_token=spotify_access_token)\n            ^^^^^^^^^^^^^^^^^^^^^^\nException: No API named 'get_queue' found in the spotify app.",
+      "feedback": {
+        "step_id": 2,
+        "failed_rules": [
+          "R1",
+          "R8"
+        ],
+        "diagnosis": "The step called get_queue without checking its specification, and execution failed because Spotify has no API with that name.",
+        "correction": "Discover the available Spotify APIs through the provided documentation entry point. Identify the supported queue retrieval API and read its complete specification before calling it with the existing access token; do not infer API names from familiar terminology.",
+        "evidence_steps": [
+          2
+        ],
+        "uses_later_evidence": false,
+        "usable": true,
+        "unusable_reason": ""
+      },
+      "candidates": [
+        {
+          "id": "candidate_0d4d205ac1055d16d93123f4",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "1",
+          "labels_v7": "PPNNNNNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_2646452ae52d6827ee78a2b0",
+          "arm": "C2_feedback",
+          "repeat": "1",
+          "labels_v7": "PPNNNNNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_29ce8862a411b7197712214d",
+          "arm": "C0_original",
+          "repeat": "1",
+          "labels_v7": "FNPNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_34e21a3cb34d29e0bb423c18",
+          "arm": "C1_fail_labels",
+          "repeat": "1",
+          "labels_v7": "FNFNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_41de7f2432d20c6c9f192108",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "0",
+          "labels_v7": "PPNNNNNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_aafd644d1612c40ece4cdca6",
+          "arm": "C2_feedback",
+          "repeat": "0",
+          "labels_v7": "PPNNNNNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_b76bc9ecb75beac373553c37",
+          "arm": "C0_original",
+          "repeat": "0",
+          "labels_v7": "FNFNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_f835b11d9b861677c4eecc8e",
+          "arm": "C1_fail_labels",
+          "repeat": "0",
+          "labels_v7": "PPNNNNNP",
+          "LR": 1.0
+        }
+      ]
+    },
+    {
+      "state_id": "state_b2d22f381f779d0f",
+      "expression": "id",
+      "tokens": [
+        {
+          "position": 11,
+          "piece": "id",
+          "in_or_after_first_python_fence": false,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 120,
+          "piece": "_id",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.9997376891930273,
+            "C1_fail_labels": 0.999735901989869,
+            "C2_feedback": 0.9997024229848472,
+            "C3_feedback_and_original_answer": 0.9996634662716496
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -1.787673681974411e-06,
+            "C2_feedback": -3.527608350850642e-05,
+            "C3_feedback_and_original_answer": -7.424515206366777e-05
+          }
+        },
+        {
+          "position": 124,
+          "piece": "id",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.9999874831811497,
+            "C1_fail_labels": 0.9999724634116024,
+            "C2_feedback": 0.9999033306101257,
+            "C3_feedback_and_original_answer": 0.9999493386194785
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -1.5020070350146852e-05,
+            "C2_feedback": -8.415716547460761e-05,
+            "C3_feedback_and_original_answer": -3.814576666627545e-05
+          }
+        },
+        {
+          "position": 185,
+          "piece": "_id",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 189,
+          "piece": "id",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        }
+      ],
+      "original_code_redacted": "# Search for EDM artists\nartists_search_result = apis.spotify.search_artists(query=\"EDM\")\n\n# Filter the artists to only include those with at least 23 followers\nedm_artists = []\nfor artist in artists_search_result:\n    # Get the details of the artist\n    artist_details = apis.spotify.show_artist(artist_id=artist[\"id\"])\n    # Check if the artist has at least 23 followers\n    if artist_details[\"followers\"] >= 23:\n        edm_artists.append(artist)\n\n# Follow each EDM artist with at least 23 followers\nfor artist in edm_artists:\n    apis.spotify.follow_artist(artist_id=artist[\"id\"])",
+      "original_observation_redacted": "Execution failed. Traceback:\n  File \"<python-input>\", line 8, in <module>\n    artist_details = apis.spotify.show_artist(artist_id=artist[\"id\"])\n                                                        ~~~~~~^^^^^^\nKeyError: 'id'",
+      "feedback": {
+        "step_id": 26,
+        "failed_rules": [
+          "R1",
+          "R3",
+          "R6",
+          "R8"
+        ],
+        "diagnosis": "The block treats the known absent 'id' field as an available artist identifier and repeats the same KeyError without repair. It also calls search_artists without checking its full specification.",
+        "correction": "Inspect the full search_artists specification and an existing result to establish the actual identifier and follower fields. Replace the invalid lookup before retrying, and read the specifications for any detail or follow APIs before calling them.",
+        "evidence_steps": [
+          11,
+          25,
+          26
+        ],
+        "uses_later_evidence": false,
+        "usable": true,
+        "unusable_reason": ""
+      },
+      "candidates": [
+        {
+          "id": "candidate_03b42affc25e105f0b5380fb",
+          "arm": "C1_fail_labels",
+          "repeat": "0",
+          "labels_v7": "FUFUNFNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_239fe6c067efbd7ffe1a8b5c",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "0",
+          "labels_v7": "PPNNNFNP",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_2690d6d3762b1f68fe93742e",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "1",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_2a4658c7cafa359e15835301",
+          "arm": "C0_original",
+          "repeat": "1",
+          "labels_v7": "FUFUNFNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_59513cfe10ffc639f176a6ec",
+          "arm": "C2_feedback",
+          "repeat": "1",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_a10b47220a8413564bc73b32",
+          "arm": "C1_fail_labels",
+          "repeat": "1",
+          "labels_v7": "PUPNNFNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_a5dfdf6e64090635b80e2d18",
+          "arm": "C2_feedback",
+          "repeat": "0",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_abba418a4d3f6b0af187d49f",
+          "arm": "C0_original",
+          "repeat": "0",
+          "labels_v7": "FUFNNFNF",
+          "LR": 0.0
+        }
+      ]
+    },
+    {
+      "state_id": "state_d7692fbe9cb16b83",
+      "expression": "list_files",
+      "tokens": [
+        {
+          "position": 77,
+          "piece": ".list",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.9970811223408117,
+            "C1_fail_labels": 0.9965811238349397,
+            "C2_feedback": 0.9999998807907247,
+            "C3_feedback_and_original_answer": 0.9999986886995842
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -0.000501587986946106,
+            "C2_feedback": 0.0029230266809534555,
+            "C3_feedback_and_original_answer": 0.002921834588960337
+          }
+        },
+        {
+          "position": 78,
+          "piece": "_files",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.9990848341088455,
+            "C1_fail_labels": 0.9988263331963592,
+            "C2_feedback": 0.9999952316511552,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -0.00025877117877826095,
+            "C2_feedback": 0.0009108165509132959,
+            "C3_feedback_and_original_answer": 0.0009155849111266434
+          }
+        }
+      ],
+      "original_code_redacted": "files = apis.file_system.list_files(directory='~/bills/')\nprint(files)",
+      "original_observation_redacted": "Execution failed. Traceback:\n  File \"<python-input>\", line 1, in <module>\n    files = apis.file_system.list_files(directory='~/bills/')\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^\nException: No API named 'list_files' found in the file_system app.",
+      "feedback": {
+        "step_id": 1,
+        "failed_rules": [
+          "R1",
+          "R8"
+        ],
+        "diagnosis": "The submitted call fails because file_system has no list_files API. The agent also calls it without first checking its complete specification, contrary to the execution instructions.",
+        "correction": "Use the provided API discovery entry points to identify the directory-listing API, then inspect its complete specification before calling it. Obtain any required authentication through documented APIs and use the specified argument names.",
+        "evidence_steps": [
+          1
+        ],
+        "uses_later_evidence": false,
+        "usable": true,
+        "unusable_reason": ""
+      },
+      "candidates": [
+        {
+          "id": "candidate_21e0d010d47ef1a22f894530",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "0",
+          "labels_v7": "PPNNNNNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_49924016256a2591b9f7bd53",
+          "arm": "C0_original",
+          "repeat": "0",
+          "labels_v7": "FNNNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_49b113e6b3a6580da676239e",
+          "arm": "C0_original",
+          "repeat": "1",
+          "labels_v7": "FNNNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_4e314a69687d7f962b14117a",
+          "arm": "C2_feedback",
+          "repeat": "1",
+          "labels_v7": "PPNNNNNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_57b612400c49e1f9f616e1af",
+          "arm": "C2_feedback",
+          "repeat": "0",
+          "labels_v7": "PPNNNNNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_598c9bc4c512715f6dbf0b74",
+          "arm": "C1_fail_labels",
+          "repeat": "0",
+          "labels_v7": "FNNNNNNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_6156bc4fbd40bccba7a8239c",
+          "arm": "C1_fail_labels",
+          "repeat": "1",
+          "labels_v7": "PPNNNNNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_d936a654cc711510b46987c6",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "1",
+          "labels_v7": "PPNNNNNP",
+          "LR": 1.0
+        }
+      ]
+    },
+    {
+      "state_id": "state_e8423313c1edf7ee",
+      "expression": "rating",
+      "tokens": [
+        {
+          "position": 20,
+          "piece": " rating",
+          "in_or_after_first_python_fence": false,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 0.9999998807907247,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": -1.1920928244535389e-07,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 24,
+          "piece": " rating",
+          "in_or_after_first_python_fence": false,
+          "probability": {
+            "C0_original": 0.9999898673126559,
+            "C1_fail_labels": 0.9999723442092404,
+            "C2_feedback": 0.9706819296190939,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -1.75234345078934e-05,
+            "C2_feedback": -0.029746301523118746,
+            "C3_feedback_and_original_answer": 1.0132738680113107e-05
+          }
+        },
+        {
+          "position": 53,
+          "piece": " rating",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 1.0,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": 0.0,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 66,
+          "piece": "_rating",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.9999991655356624,
+            "C1_fail_labels": 0.9999985694905718,
+            "C2_feedback": 0.9999983310727032,
+            "C3_feedback_and_original_answer": 0.9999994039539004
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -5.960457656328799e-07,
+            "C2_feedback": -8.344640036739293e-07,
+            "C3_feedback_and_original_answer": 2.3841840857130592e-07
+          }
+        },
+        {
+          "position": 70,
+          "piece": "rating",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 1.0,
+            "C2_feedback": 0.9999909401759619,
+            "C3_feedback_and_original_answer": 0.9999850990607846
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0,
+            "C2_feedback": -9.059865078597795e-06,
+            "C3_feedback_and_original_answer": -1.490105023549404e-05
+          }
+        },
+        {
+          "position": 75,
+          "piece": "_rating",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 1.0,
+            "C1_fail_labels": 0.9999998807907247,
+            "C2_feedback": 0.9999998807907247,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -1.1920928244535389e-07,
+            "C2_feedback": -1.1920928244535389e-07,
+            "C3_feedback_and_original_answer": 0.0
+          }
+        },
+        {
+          "position": 88,
+          "piece": "_rating",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.9999998807907247,
+            "C1_fail_labels": 0.9999997615814777,
+            "C2_feedback": 0.9999997615814777,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -1.1920926823449918e-07,
+            "C2_feedback": -1.1920926823449918e-07,
+            "C3_feedback_and_original_answer": 1.1920928244535389e-07
+          }
+        },
+        {
+          "position": 104,
+          "piece": " rating",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.9999545833252356,
+            "C1_fail_labels": 0.9997965511486372,
+            "C2_feedback": 0.9994471746722718,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -0.00015805184375494719,
+            "C2_feedback": -0.0005075604858575389,
+            "C3_feedback_and_original_answer": 4.541770613286644e-05
+          }
+        },
+        {
+          "position": 113,
+          "piece": " rating",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.952071313905806,
+            "C1_fail_labels": 0.9759045373066053,
+            "C2_feedback": 0.9524277075791869,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.02472482994198799,
+            "C2_feedback": 0.00037426501512527466,
+            "C3_feedback_and_original_answer": 0.04911533743143082
+          }
+        },
+        {
+          "position": 142,
+          "piece": " rating",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.9525741476724274,
+            "C1_fail_labels": 0.9706877714009485,
+            "C2_feedback": 0.9933071486460123,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.018836913630366325,
+            "C2_feedback": 0.041871980763971806,
+            "C3_feedback_and_original_answer": 0.04858732968568802
+          }
+        }
+      ],
+      "original_code_redacted": "# Iterate through each liked song and update its rating if necessary\nfor song in liked_songs:\n    current_rating = song[\"rating\"]\n    if current_rating < 4:\n        update_result = apis.spotify.update_song_rating(access_token=spotify_access_token, song_id=song[\"song_id\"], rating=4)\n        print(f\"Updated rating for song {song['title']} to 4 stars.\")\n    else:\n        print(f\"Song {song['title']} already has a rating of 4 stars.\")",
+      "original_observation_redacted": "Execution failed. Traceback:\n  File \"<python-input>\", line 3, in <module>\n    current_rating = song[\"rating\"]\n                     ~~~~^^^^^^^^^^\nKeyError: 'rating'",
+      "feedback": {
+        "step_id": 3,
+        "failed_rules": [
+          "R1"
+        ],
+        "diagnosis": "The loop indexed song[\"rating\"], but the liked-song objects lack that field. Execution raised KeyError before attempting any rating change; the later inspection confirms the response structure.",
+        "correction": "Inspect the response and relevant API specifications, then retrieve the user's existing rating through a documented endpoint before comparing it with 4. Do not assume liked-song objects contain review data.",
+        "evidence_steps": [
+          3,
+          4
+        ],
+        "uses_later_evidence": true,
+        "usable": true,
+        "unusable_reason": ""
+      },
+      "candidates": [
+        {
+          "id": "candidate_566e910e8df910e5577ab5b1",
+          "arm": "C0_original",
+          "repeat": "1",
+          "labels_v7": "FNNFNNNP",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_799705f38b92390c3cba7027",
+          "arm": "C2_feedback",
+          "repeat": "0",
+          "labels_v7": "PPPNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_8a740ba5b61a9bfd9f9d5dc9",
+          "arm": "C0_original",
+          "repeat": "0",
+          "labels_v7": "FNNFNNNP",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_8caa317ae8ccf1ef6acdef14",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "1",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_d4ef8a41a4e14fe09690569b",
+          "arm": "C1_fail_labels",
+          "repeat": "0",
+          "labels_v7": "PPFNNFNP",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_f8fedbdd430698a1b6ceddb0",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "0",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_fa6777606f6c2ec2b3808efc",
+          "arm": "C2_feedback",
+          "repeat": "1",
+          "labels_v7": "PPPNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_fb89108ceaabf3015eae05fc",
+          "arm": "C1_fail_labels",
+          "repeat": "1",
+          "labels_v7": "PPFNNFNP",
+          "LR": 0.0
+        }
+      ]
+    },
+    {
+      "state_id": "state_ef628380f92aeabc",
+      "expression": "get_contact_email",
+      "tokens": [
+        {
+          "position": 51,
+          "piece": ".get",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.9992853745283221,
+            "C1_fail_labels": 0.9998717472513625,
+            "C2_feedback": 0.9999972581939645,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": 0.0005866199644515291,
+            "C2_feedback": 0.0007121391283817502,
+            "C3_feedback_and_original_answer": 0.0007148809381760657
+          }
+        },
+        {
+          "position": 52,
+          "piece": "_contact",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.18229150469274458,
+            "C1_fail_labels": 0.14787703261089033,
+            "C2_feedback": 0.9998338498645966,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -0.20922601222991943,
+            "C2_feedback": 1.7019820351415547,
+            "C3_feedback_and_original_answer": 1.702148199081421
+          }
+        },
+        {
+          "position": 53,
+          "piece": "_email",
+          "in_or_after_first_python_fence": true,
+          "probability": {
+            "C0_original": 0.6679711849351088,
+            "C1_fail_labels": 0.41794772549316844,
+            "C2_feedback": 0.9999923706636761,
+            "C3_feedback_and_original_answer": 1.0
+          },
+          "delta": {
+            "C0_original": 0.0,
+            "C1_fail_labels": -0.46888867020606995,
+            "C2_feedback": 0.40350261333514936,
+            "C3_feedback_and_original_answer": 0.4035102427005768
+          }
+        }
+      ],
+      "original_code_redacted": "# Contact the supervisor to get Robert's email address\nrobert_email = apis.supervisor.get_contact_email(contact_name=\"Robert\")\nprint(robert_email)",
+      "original_observation_redacted": "Execution failed. Traceback:\n  File \"<python-input>\", line 2, in <module>\n    robert_email = apis.supervisor.get_contact_email(contact_name=\"Robert\")\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nException: No API named 'get_contact_email' found in the supervisor app.",
+      "feedback": {
+        "step_id": 23,
+        "failed_rules": [
+          "R1",
+          "R8"
+        ],
+        "diagnosis": "The call uses supervisor.get_contact_email, which execution reports does not exist. Its complete specification was not checked before use, violating the mandatory API lookup requirement.",
+        "correction": "Use API discovery to find supported Phone contact endpoints, since the instructions identify Phone contacts as the source for other people's identities. Read the appropriate endpoint's complete specification and satisfy its documented requirements before looking up Robert; do not guess another endpoint.",
+        "evidence_steps": [
+          23
+        ],
+        "uses_later_evidence": false,
+        "usable": true,
+        "unusable_reason": ""
+      },
+      "candidates": [
+        {
+          "id": "candidate_077047e7b8fa6a488b3464df",
+          "arm": "C2_feedback",
+          "repeat": "1",
+          "labels_v7": "FNNNNPNP",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_0e47111f5b5bff98015d78c4",
+          "arm": "C0_original",
+          "repeat": "0",
+          "labels_v7": "FNNNNFNF",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_26eb17ff0c9f764d0d0bed1a",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "1",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_2967dcbf62114f724b24153d",
+          "arm": "C3_feedback_and_original_answer",
+          "repeat": "0",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_737aa4d637bb511e8eb7f4cc",
+          "arm": "C2_feedback",
+          "repeat": "0",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_bfa202c225fa88cde30e5334",
+          "arm": "C1_fail_labels",
+          "repeat": "1",
+          "labels_v7": "PPNNNFNP",
+          "LR": 0.0
+        },
+        {
+          "id": "candidate_c90df348fdf11733745d5f7e",
+          "arm": "C1_fail_labels",
+          "repeat": "0",
+          "labels_v7": "PPNNNPNP",
+          "LR": 1.0
+        },
+        {
+          "id": "candidate_ec8d27137369aaf47440fbcc",
+          "arm": "C0_original",
+          "repeat": "1",
+          "labels_v7": "FNNNNFNF",
+          "LR": 0.0
+        }
+      ]
+    }
+  ],
+  "no_model_loaded": true,
+  "training_started": false
+}

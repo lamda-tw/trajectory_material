@@ -1,0 +1,73 @@
+{
+  "checked_at": "2026-10-22T21:57:35.319730+08:00",
+  "cached_A_C2_prompts_exact": 100,
+  "whole_trajectory_CPU_fixtures": [
+    {
+      "state_id": "state_9ac003937b88afdd",
+      "all_step_prompts_exact": true,
+      "steps": 50,
+      "mixed_counts": {
+        "mask": 49,
+        "sdpo": 1
+      },
+      "fixture_only": true,
+      "no_training_dataset_written": true
+    },
+    {
+      "state_id": "state_74151614143520ad",
+      "all_step_prompts_exact": true,
+      "steps": 50,
+      "mixed_counts": {
+        "mask": 47,
+        "sft": 2,
+        "sdpo": 1
+      },
+      "fixture_only": true,
+      "no_training_dataset_written": true
+    },
+    {
+      "state_id": "state_126d6a707faa9c5f",
+      "all_step_prompts_exact": true,
+      "steps": 50,
+      "mixed_counts": {
+        "mask": 47,
+        "sft": 2,
+        "sdpo": 1
+      },
+      "fixture_only": true,
+      "no_training_dataset_written": true
+    }
+  ],
+  "gate_denials_verified": [
+    "training_allowed",
+    "rollout_allowed",
+    "external_judging",
+    "evaluation_allowed"
+  ],
+  "runtime_versions": {
+    "/root/autodl-tmp/workspace-tw/.conda-training/bin/python": {
+      "torch": "2.8.0+cu128",
+      "transformers": "4.56.2",
+      "peft": "0.17.1"
+    },
+    "/root/autodl-tmp/envs/qwen3-vllm-py312/bin/python": {
+      "torch": "2.8.0+cu128",
+      "transformers": "4.56.2",
+      "peft": "0.17.1",
+      "vllm": "0.10.2"
+    },
+    "/root/autodl-tmp/envs/appworld-0.2.0-py312/bin/python": {
+      "appworld": "0.2.0.dev0"
+    }
+  },
+  "phase_b_config_sha256": "7a33ef75efcc7eb82ceacb9b1af6149d47c4b0db8f15f9ada36b92e2394b6f19",
+  "model_weights_loaded": false,
+  "gpu_used": false,
+  "remote_judge_calls": 0,
+  "new_rollouts": 0,
+  "training_updates": 0,
+  "remaining_runtime_checks": [
+    "Real Qwen3-8B GPU memory/throughput and first gradient diagnostics",
+    "One new complete trajectory scored with all FAIL feedback; structural CPU fixtures do not verify Codex semantic quality"
+  ]
+}

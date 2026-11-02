@@ -1,0 +1,49 @@
+{
+  "checkpoint_sha256": "deea94b3e8d692f29df5b52194bab59d0326aa4482d4b340e8cd5bd572de5bfa",
+  "batch": 32,
+  "epoch": 2,
+  "counts": {
+    "sft_steps": 56,
+    "steps": 100,
+    "docs_steps": 49,
+    "repeated_docs_steps": 10,
+    "business_api_steps": 20,
+    "response_tokens": 6989,
+    "sft_docs_steps": 39,
+    "sft_business_steps": 4,
+    "sft_repeated_docs_steps": 2
+  },
+  "metrics": {
+    "batch": 32,
+    "arm": "sft",
+    "created_at": "2026-10-27T12:52:10.036560+08:00",
+    "counts": {
+      "sft": 56,
+      "mask": 44
+    },
+    "mask_reasons": {
+      "FAIL_excluded_from_SFT_control": 43,
+      "zero_fail_P_below_3": 1
+    },
+    "lr": 5e-05,
+    "lambda_sdpo": 1.0,
+    "sft_loss": 0.13798369454776244,
+    "sdpo_loss": 0.0,
+    "supervised_tokens": 3441,
+    "sft_grad_norm": 0.279451459646225,
+    "weighted_sdpo_grad_norm": 0.0,
+    "branch_grad_cosine": null,
+    "grad_norm_before_clip": 0.27945151925086975,
+    "grad_norm_after_clip": 0.279451459646225,
+    "clipped": false,
+    "optimizer_updates": 32,
+    "optimizer_step_performed": true,
+    "total_loss": 0.13798369454776244,
+    "seconds": 265.8570545054972,
+    "peak_allocated_gib": 24.026488780975342,
+    "peak_reserved_gib": 29.46875,
+    "physical_gpu_uuid": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501",
+    "teacher_received_gradient": false,
+    "student_parameter_delta_norm": 0.07095032930374146
+  }
+}

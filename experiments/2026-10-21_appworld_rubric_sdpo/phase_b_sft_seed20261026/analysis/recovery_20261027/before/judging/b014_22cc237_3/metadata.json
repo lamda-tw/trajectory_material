@@ -1,0 +1,88 @@
+{
+  "identity": {
+    "source_sha256": "570875c72434ea2fbec16fc00fa9e3da9eb9fb12a11113f3b184b06a73e71752",
+    "payload_sha256": "9edb30bea0a15ffe019ec027e5466ad6ebf272de99f3f37f23ca0a28bd6ffaa5",
+    "prompt_sha256": "02a8394ba1fc747847f742f45f55800a8d6eb22c70e2e7924ea9938635758d43",
+    "template_sha256": "b51c0d62c39bc22b68110c5ffafadd6f88e99652d17223e7b19012e060b53a2b",
+    "config_sha256": "9506bf49f802650fa684b659b97caa3e7d325160df786edeb2a0e37696aa7d73"
+  },
+  "attempts": [
+    {
+      "directory": "attempt_01",
+      "kind": "initial",
+      "started_at": "2026-10-26T20:24:51.829224+08:00",
+      "audit": {
+        "usage": {
+          "input_tokens": 22853,
+          "cached_input_tokens": 22656,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 4806,
+          "reasoning_output_tokens": 3106
+        },
+        "event_types": [
+          "thread.started",
+          "item.completed",
+          "turn.started",
+          "error",
+          "error",
+          "error",
+          "error",
+          "item.completed",
+          "error",
+          "error",
+          "item.completed",
+          "turn.completed"
+        ],
+        "tool_items": [],
+        "nonfatal_error_events": [
+          {
+            "type": "item.completed",
+            "item": {
+              "id": "item_0",
+              "type": "error",
+              "message": "Code Mode is unavailable because code-mode host is disabled. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`."
+            }
+          },
+          {
+            "type": "error",
+            "message": "Reconnecting... 2/5 (request timed out)"
+          },
+          {
+            "type": "error",
+            "message": "Reconnecting... 3/5 (request timed out)"
+          },
+          {
+            "type": "error",
+            "message": "Reconnecting... 4/5 (request timed out)"
+          },
+          {
+            "type": "error",
+            "message": "Reconnecting... 5/5 (request timed out)"
+          },
+          {
+            "type": "item.completed",
+            "item": {
+              "id": "item_1",
+              "type": "error",
+              "message": "Falling back from WebSockets to HTTPS transport. request timed out"
+            }
+          },
+          {
+            "type": "error",
+            "message": "Reconnecting... waiting for network (Connection failed: error sending request)"
+          },
+          {
+            "type": "error",
+            "message": "Reconnecting... waiting for network (Connection failed: error sending request)"
+          }
+        ],
+        "audit_version": "phase_a_transport_notice_v2"
+      },
+      "status": "valid",
+      "seconds": 1030.142790876329
+    }
+  ],
+  "started_at": "2026-10-26T20:24:51.798140+08:00",
+  "status": "valid",
+  "completed_at": "2026-10-26T20:42:01.972043+08:00"
+}

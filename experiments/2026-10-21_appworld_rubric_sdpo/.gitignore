@@ -1,0 +1,31 @@
+/runtime/
+/logs/
+/phase_a/inputs/
+/phase_a/judging/
+/phase_a/ready/
+/phase_a/execution/
+/phase_a/generations/
+/phase_a/diagnostics/
+/phase_a/calibration/private_evidence/
+/phase_b/runs/
+/phase_c/runs/
+
+# Additional training branches: raw trajectories, judge requests and checkpoints stay local.
+/phase_b_sdpo_only/runs/
+/phase_b_sft_only/runs/
+/phase_b_sft_extend5/runs/
+/phase_b_sft_seed20261026/runs/
+/phase_b_sft_cosine_seed20261026/runs/
+
+# Fixed-state diagnosis: raw inputs, execution branches and model links stay local.
+/phase_b_diagnosis_32states/states/
+/phase_b_diagnosis_32states/replay/
+/phase_b_diagnosis_32states/runs/
+/phase_b_diagnosis_32states/models/
+
+# Runtime monitoring files; CSV summaries and reports remain versioned.
+**/monitoring/exporter.lock
+**/monitoring/tensorboard/
+
+# Keep the sanitized case audit in version control.
+/phase_b_diagnosis_32states/analysis/case_audit.json

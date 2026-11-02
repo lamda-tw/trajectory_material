@@ -1,0 +1,24 @@
+state_id,target_step,step,rule,base,feedback,base_reason,feedback_reason
+state_8d7aed3e40856abe,27,10,R2,F,U,Playlist scope mismatches the song library.,Missing play_count; library scope unverified.
+state_9860356f25b9fa95,7,2,R4,P,N,Playlist search targets the wrong objects.,Playlist search does not establish song matches.
+state_9860356f25b9fa95,7,3,R3,F,P,Playlist details lack the assumed song_ids.,Missing song_ids; unchecked API specifications.
+state_a2ce4a2463895df2,22,3,R6,N,P,Missing authentication and prior API spec.,Unauthenticated call; spec not checked.
+state_a2ce4a2463895df2,22,6,R3,P,N,References undefined passwords variable.,The passwords variable is undefined.
+state_bc78cf7eeda1c3b7,7,12,R3,F,P,Misreads credentials and skips the API spec.,Repeated unchecked credential lookup.
+state_bc78cf7eeda1c3b7,7,12,R6,P,F,Misreads credentials and skips the API spec.,Repeated unchecked credential lookup.
+state_841cb44c1afc36cc,20,9,R3,N,P,,
+state_841cb44c1afc36cc,20,12,R2,P,N,Login rejected; API specs unchecked.,Invalid login; phone login spec unchecked.
+state_841cb44c1afc36cc,20,24,R2,F,N,Fabricated roommate emails and year.,Guessed identities and year; token undefined.
+state_841cb44c1afc36cc,20,24,R6,N,F,Fabricated roommate emails and year.,Guessed identities and year; token undefined.
+state_841cb44c1afc36cc,20,25,R2,F,N,Invented roommate email does not exist.,Guessed roommate lookup found no such user.
+state_841cb44c1afc36cc,20,26,R2,F,U,Unsupported roommate filter; only one page.,Roommate and year filters lack evidence.
+state_841cb44c1afc36cc,20,26,R3,F,P,Unsupported roommate filter; only one page.,Roommate and year filters lack evidence.
+state_841cb44c1afc36cc,20,27,R2,F,U,Unverified roommate total submitted.,Unverified total submitted; spec unchecked.
+state_841cb44c1afc36cc,20,27,R4,F,N,Unverified roommate total submitted.,Unverified total submitted; spec unchecked.
+state_c87eba2e10465e95,14,21,R3,P,N,,
+state_c87eba2e10465e95,14,22,R2,P,N,,
+state_c87eba2e10465e95,14,25,R8,P,F,,Search pagination was not completed.
+state_c87eba2e10465e95,14,34,R2,F,N,Claims playback despite no playback action.,Playback and completion were falsely claimed.
+state_c87eba2e10465e95,14,34,R8,P,F,Claims playback despite no playback action.,Playback and completion were falsely claimed.
+state_5ca6ebb09be2da13,7,14,R2,F,N,Claims success after removing a protected song.,False completion; required API never called.
+state_5ca6ebb09be2da13,7,14,R8,P,N,Claims success after removing a protected song.,False completion; required API never called.

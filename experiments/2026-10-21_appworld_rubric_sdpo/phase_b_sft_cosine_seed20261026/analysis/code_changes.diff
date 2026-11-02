@@ -1,0 +1,398 @@
+--- constant/b_common.py
++++ cosine/b_common.py
+@@ -6,7 +6,7 @@
+ import fcntl
+ import os
+ 
+-B = R / 'phase_b_sft_seed20261026'
++B = R / 'phase_b_sft_cosine_seed20261026'
+ S = Path(__file__).resolve().parent
+ 
+ 
+--- constant/b_evaluate.py
++++ cosine/b_evaluate.py
+@@ -11,8 +11,9 @@
+     assert arm in gate['allowed_arms'] and number in gate['evaluation_batches']
+     assert number in (18,36,54)
+     checkpoint=batch_dir(arm,number)/'checkpoint';done=read(checkpoint/'COMPLETE.json')
+-    for name,h in done['files'].items():assert file_sha(checkpoint/name)==h
+     folder=run_dir(arm)/f'epoch_{number//18:02d}_dev57';folder.mkdir(parents=True,exist_ok=True)
++    from b_retention import validate_committed
++    validate_committed(checkpoint, allow_pruned=(folder/'summary.json').exists())
+     identity=policy_identity(checkpoint)
+     frozen_json(folder/'identity.json',{'policy_identity':identity,'checkpoint_batch':number,'epoch':number//18,
+         'config_sha256':file_sha(B/'config/run.json'),'no_feedback':True})
+--- constant/b_learning_rate.py
++++ cosine/b_learning_rate.py
+@@ -0,0 +1,22 @@
++"""Stateless schedule indexed by the persisted count of nonempty Adam updates."""
++import math
++
++
++def learning_rate(update, cfg):
++    assert isinstance(update, int) and update >= 1
++    peak = cfg['learning_rate']
++    warmup = cfg['warmup_nonempty_updates']
++    assert peak > 0 and warmup >= 1
++    schedule = cfg.get('lr_schedule')
++    if schedule is None:
++        # Preserve the original function for baseline numerical regression checks.
++        return peak * min(1.0, update / warmup)
++    assert schedule['type'] == 'cosine_with_min_lr'
++    assert schedule['advance_on'] == 'nonempty_optimizer_update' and not schedule['warm_restarts']
++    total = schedule['total_nonempty_updates']
++    floor = schedule['min_learning_rate']
++    assert total > warmup and 0 < floor < peak
++    if update <= warmup:
++        return peak * min(1.0, update / warmup)
++    fraction = min(1.0, (update - warmup) / (total - warmup))
++    return floor + (peak - floor) * (1.0 + math.cos(math.pi * fraction)) / 2.0
+--- constant/b_loss.py
++++ cosine/b_loss.py
+@@ -1,5 +1,6 @@
+ """Differentiable student top-k + exact tail reverse KL; teacher always detached."""
+ import torch
++from b_learning_rate import learning_rate
+ from torch.utils.checkpoint import checkpoint
+ 
+ 
+@@ -59,11 +60,6 @@
+     return torch.stack(pieces).sum() / len(target)
+ 
+ 
+-def learning_rate(update, cfg):
+-    assert update >= 1
+-    return cfg['learning_rate'] * min(1.0, update / cfg['warmup_nonempty_updates'])
+-
+-
+ def ema_state(teacher, student, decay):
+     assert set(teacher) == set(student)
+     return {key: teacher[key].detach().float() * decay + student[key].detach().float() * (1 - decay) for key in teacher}
+--- constant/b_progress.py
++++ cosine/b_progress.py
+@@ -0,0 +1,39 @@
++"""Human-readable progress from saved state only; no model or network calls."""
++from b_common import B, read, run_dir
++
++
++def write_progress(heartbeat):
++    root = run_dir('sft')
++    completed = len(list(root.glob('batch_*/checkpoint/COMPLETE.json')))
++    state = heartbeat.get('stage') or {}
++    stage = state.get('stage', 'preparing')
++    names = {'collecting': '采集完整轨迹', 'whole_trajectory_judging': 'Codex 评分',
++        'batch_prepared_for_update': '计算 SFT loss 并更新模型', 'batch_complete': '当前批次已完成',
++        'requested_batches_complete': '当前批次完成，准备进入下一批',
++        'dev57_evaluation': 'dev57 评估', 'waiting_for_judge_network': '等待评分网络恢复，自动重试',
++        'waiting_for_gpu1': '等待 GPU1 空闲', 'infrastructure_retry': '基础设施重试中',
++        'supervisor_needs_attention': '异常停止，需要排查',
++        'sft_training_and_dev57_complete': '三轮训练和三次评估全部完成'}
++    batch = heartbeat['batch']
++    rows = ['# 余弦学习率 SFT 实时进度', '',
++        f"更新时间：{heartbeat['at']}（约每30秒更新，打开后需刷新）", '',
++        f"- 当前阶段：**{names.get(stage,stage)}**",
++        f'- 已提交训练批次：**{completed}/54**',
++        f'- 当前批次：**{batch}**，第 {(batch-1)//18+1} 轮，第 {(batch-1)%18+1}/18 批',
++        f"- GPU1：{heartbeat['gpu1']}",
++        f"- 磁盘剩余：{heartbeat['disk_free_gib']:.1f} GiB"]
++    if stage == 'whole_trajectory_judging':
++        count = len(list((root/f'batch_{batch:03d}/judging').glob('*/judgement.json')))
++        rows.append(f'- 本批评分已完成：{count}/5 条轨迹（评分期间 GPU 空闲正常）')
++    if stage == 'batch_prepared_for_update' and heartbeat.get('training'):
++        t = heartbeat['training']; rows.append(f"- 本批训练步骤：{t['done']}/{t['total']}")
++    for e in range(1,4):
++        folder = root/f'epoch_{e:02d}_dev57'
++        if (folder/'summary.json').exists():
++            s=read(folder/'summary.json'); rows.append(f"- 第{e}轮 dev57：{s['successes']}/57 成功，Macro {s['macro_test_pass_fraction']:.2%}")
++        elif (folder/'partial.json').exists():
++            p=read(folder/'partial.json'); rows.append(f"- 第{e}轮 dev57：评估中，{p['completed']}/57 题")
++    rows += ['', 'AutoPanel：`appworld-rubric-ZeroFail3-SFT-cosine-seed20261026`', '',
++        f"[详细状态]({B/'STATUS.json'}) · [心跳]({root/'heartbeat.json'}) · [对比报告]({B/'REPORT.md'})", '',
++        '固定计划：seed 20261026，从原始模型训练3轮，warmup后余弦衰减5e-5→5e-6。']
++    temporary = B/'PROGRESS.md.tmp';temporary.write_text('\n'.join(rows)+'\n');temporary.replace(B/'PROGRESS.md')
+--- constant/b_report.py
++++ cosine/b_report.py
+@@ -1,4 +1,4 @@
+-"""Read committed artifacts only; compare the two seeds without changing training."""
++"""Read committed artifacts; compare constant and cosine learning rates at the same seed."""
+ from b_report_helpers import *
+ 
+ 
+@@ -43,104 +43,118 @@
+     return value
+ 
+ 
+-def plot(old, new, metrics):
++def no_code(v):
++    return v['behavior']['terminations'].get('no_python_code', 0)
++
++
++def plot(baseline, epochs, metrics):
+     import matplotlib
+     matplotlib.use('Agg')
+     import matplotlib.pyplot as plt
+-    fig, axes = plt.subplots(2, 2, figsize=(11, 7))
++    fig, axes = plt.subplots(2, 3, figsize=(14, 8))
+     settings = [('Successes / 57', lambda x: x['successes']),
+         ('Macro test pass (%)', lambda x: 100*x['macro_test_pass_fraction']),
+-        ('Repeated documentation steps (%)', lambda x: 100*x['behavior']['repeated_docs_fraction'])]
++        ('Repeated documentation (%)', lambda x: 100*x['behavior']['repeated_docs_fraction']),
++        ('No executable Python / 57', no_code),
++        ('Business API steps', lambda x: x['behavior']['business_api_steps'])]
+     for ax, (title, fn) in zip(axes.flat, settings):
+-        for label, epochs in [('seed 20261022', old), ('seed 20261026', new)]:
+-            if epochs:
+-                keys=sorted(epochs,key=int); ax.plot([int(k) for k in keys], [fn(epochs[k]) for k in keys], 'o-', label=label)
++        for label, values in [('Constant 5e-5', baseline), ('Cosine to 5e-6', epochs)]:
++            if values:
++                keys=sorted(values,key=int)
++                ax.plot([int(k) for k in keys],[fn(values[k]) for k in keys],'o-',label=label)
+         ax.set_xticks([1,2,3]); ax.set_title(title); ax.grid(alpha=.2); ax.legend()
+-    ax=axes.flat[3]
+-    ax.plot([m['batch'] for m in metrics], [m['sft_loss'] for m in metrics]); ax.set_title('SFT loss: changing online samples')
+-    ax.set_xlabel('Batch'); ax.grid(alpha=.2)
+-    fig.tight_layout(); fig.savefig(B/'analysis/seed_comparison.png',dpi=150); plt.close(fig)
++    ax=axes.flat[5]
++    ax.plot([m['batch'] for m in metrics],[m['sft_loss'] for m in metrics])
++    ax.set_title('SFT loss: changing online samples'); ax.set_xlabel('Batch'); ax.grid(alpha=.2)
++    fig.tight_layout(); fig.savefig(B/'analysis/lr_comparison.png',dpi=150); plt.close(fig)
+ 
+ 
+ def main():
+-    batches = [batch_record(n) for n in range(1,55) if (batch_dir('sft',n)/'checkpoint/COMPLETE.json').exists()]
+-    metrics = [b['metrics'] for b in batches]
+-    epochs = {str(e): v for e in range(1,4) if (v := epoch_record(e)) is not None}
+-    baseline = read(B/'config/baseline_results.json')['epochs']
+-    complete = len(batches)==54 and len(epochs)==3
+-    pairs=[]
+-    for e in (2,3):
+-        if str(e-1) in epochs and str(e) in epochs:
+-            pairs += paired(epochs[str(e-1)], epochs[str(e)])
++    from b_learning_rate import learning_rate
++    batches=[batch_record(n) for n in range(1,55) if (batch_dir('sft',n)/'checkpoint/COMPLETE.json').exists()]
++    metrics=[b['metrics'] for b in batches]
++    epochs={str(e):v for e in range(1,4) if (v:=epoch_record(e)) is not None}
++    baseline=read(B/'config/baseline_results.json')['epochs']
++    complete=len(batches)==54 and len(epochs)==3
+     train_epochs={}
+     for e in range(1,4):
+         group=[b for b in batches if b['epoch']==e]
+         if not group:continue
+-        c=Counter()
+-        for b in group:c.update(b['counts'])
+-        train_epochs[str(e)]={'completed_batches':len(group),**c,'batch_mean_sft_loss':sum(b['metrics']['sft_loss'] for b in group)/len(group)}
+-    summary={'updated_at':now(),'complete':complete,'seed':20261026,'baseline_seed':20261022,
++        counts=Counter()
++        for item in group:counts.update(item['counts'])
++        train_epochs[str(e)]={'completed_batches':len(group),**counts,
++            'batch_mean_sft_loss':sum(b['metrics']['sft_loss'] for b in group)/len(group),
++            'lr_first':group[0]['metrics']['lr'],'lr_last':group[-1]['metrics']['lr']}
++    cross=[];within=[];deltas={}
++    for e,v in epochs.items():
++        cross += [{'comparison':'constant_to_cosine',**row} for row in paired(baseline[e],v)]
++        deltas[e]={'success_delta':v['successes']-baseline[e]['successes'],
++            'macro_delta':v['macro_test_pass_fraction']-baseline[e]['macro_test_pass_fraction'],
++            'repeated_docs_fraction_delta':v['behavior']['repeated_docs_fraction']-baseline[e]['behavior']['repeated_docs_fraction'],
++            'business_steps_delta':v['behavior']['business_api_steps']-baseline[e]['behavior']['business_api_steps'],
++            'no_python_code_tasks_delta':no_code(v)-no_code(baseline[e])}
++    for e in (2,3):
++        if str(e-1) in epochs and str(e) in epochs:within+=paired(epochs[str(e-1)],epochs[str(e)])
++    summary={'updated_at':now(),'complete':complete,'seed':20261026,'baseline_seed':20261026,
++        'baseline_schedule':'constant_after_warmup','schedule':config()['training']['lr_schedule'],
++        'only_training_factor_changed':'learning_rate_schedule','from_base':True,
+         'completed_batches':len(batches),'optimizer_updates':metrics[-1]['optimizer_updates'] if metrics else 0,
+-        'epochs':epochs,'training_epochs':train_epochs,'from_base':True,'only_training_factor_changed':'seed',
+-        'wall_time_limit':None,'epochs_planned':3}
+-    if '2' in epochs and '3' in epochs:
+-        two,three=epochs['2'],epochs['3']
+-        summary['epoch3_vs_epoch2']={'success_delta':three['successes']-two['successes'],
+-            'macro_delta':three['macro_test_pass_fraction']-two['macro_test_pass_fraction'],
+-            'repeated_docs_fraction_delta':three['behavior']['repeated_docs_fraction']-two['behavior']['repeated_docs_fraction'],
+-            'business_steps_delta':three['behavior']['business_api_steps']-two['behavior']['business_api_steps']}
+-    write_json(B/'analysis/seed_summary.json',summary)
++        'epochs':epochs,'training_epochs':train_epochs,'same_epoch_deltas':deltas,
++        'epochs_planned':3,'wall_time_limit':None}
++    write_json(B/'analysis/lr_summary.json',summary)
+     csv_write(B/'analysis/training_metrics.csv',[{k:m.get(k) for k in ['batch','lr','sft_loss','sdpo_loss','sft_grad_norm','grad_norm_before_clip','grad_norm_after_clip','clipped','seconds','optimizer_updates','student_parameter_delta_norm']} for m in metrics])
+     csv_write(B/'analysis/train_behavior.csv',[{'batch':b['batch'],'epoch':b['epoch'],**b['counts']} for b in batches])
+-    csv_write(B/'analysis/paired_epochs.csv',pairs)
++    csv_write(B/'analysis/paired_schedules.csv',cross);csv_write(B/'analysis/paired_epochs.csv',within)
+     csv_write(B/'analysis/dev_tasks.csv',[{'epoch':int(e),**{k:v for k,v in row.items() if k!='checks'}} for e,val in epochs.items() for row in val['results']])
+-    rows=['# 纯 ZeroFail3 SFT 新 seed 三轮复现实验','',f"更新时间：{summary['updated_at']}。{'三轮训练和 dev57 评估全部完成。' if complete else '进行中；未完成轮次不作结论。'}",
+-        f"已提交 {len(batches)}/54 批；优化器更新 {summary['optimizer_updates']} 次。用户已取消时间上限，三轮完成后停止。",'',
+-        '## 实验设置','',
+-        '从原始 Qwen3-8B 初始化新的 LoRA（r=8、alpha=16），不加载旧训练检查点，不复用旧首批轨迹或 Codex 评分。训练 seed 从 20261022 改为 20261026，作用于 LoRA 初始化、每轮题目顺序及派生的 rollout 采样种子。dev57 评估 seed 保持 100、temperature=0。Codex 外部评审没有可固定的随机 seed，属于保留的运行噪声。',
+-        '每轮90题，每批5题，每题1条完整在线轨迹，轨迹结束后用原 Codex v7 prompt 逐步评分。仅 F=0 且 P>=3 做 SFT，所有 FAIL 均 mask；SDPO loss 与梯度必须为0。前5次有效更新 warmup 至5e-5，此后恒定，不使用学习率衰减。每轮18批，三轮54批；基础模型、数据划分、prompt、LoRA、优化器、loss归一化、上下文和生成参数保持原配方。',
+-        '## 两个 seed 的正式 dev57 结果','',
+-        '| seed | 轮次 | 成功题数 | TGC | Macro | 通过检查 | 纯文档步占比 | 重复文档步占比 | 业务API步骤 | 平均步骤 |',
++    rows=['# 同 seed 纯 ZeroFail3 SFT：恒定学习率与余弦衰减对照','',
++        f"更新时间：{summary['updated_at']}。{'三轮训练和三次 dev57 评估全部完成。' if complete else '进行中；尚未完成的轮次不作效果结论。'}",
++        f"已提交 {len(batches)}/54 批，优化器更新 {summary['optimizer_updates']} 次。GPU1，无时间上限，三轮完成后停止。",'',
++        '## 唯一主动改变的训练因素','',
++        '基线为 phase_b_sft_seed20261026，训练 seed 同为 20261026。从原始 Qwen3-8B 初始化新的 LoRA 和 Adam，不加载旧检查点、不复用轨迹或评分。90题/轮、5题/批、每题一条在线完整轨迹，18批/轮；沿用相同任务顺序及派生 rollout seed。Codex 使用相同 v7 rubric prompt，仅 F=0 且 P>=3 的步骤进入 SFT。LoRA、loss、生成和评估配置保持一致。',
++        '前5次有效更新与基线完全相同：1e-5、2e-5、3e-5、4e-5、5e-5。之后按有效更新次数平滑余弦衰减，第54次为5e-6。没有 warm restart；空 batch 不更新优化器，也不推进衰减。每轮更新进度以检查点中的 optimizer_updates 为准，重启进程不会重置曲线。',
++        '`lr(u)=5e-6+(5e-5-5e-6)*(1+cos(pi*(u-5)/49))/2`，用于 u=6..54。若出现空 batch，54批内实际有效更新少于54，则终值尚未达到5e-6；不为凑终值添加训练批次。',
++        '网络恢复使用基线实验修复后的流程。仅监控、报告和模型保留策略有管理性变更，不改变梯度或采样分布。Codex 无可固定的评分 seed；相同训练 seed 也不能保证外部评分和 GPU 计算逐位一致。模型分叉后在线轨迹自然变化，属于学习率变化的下游结果。','',
++        '## 学习率计划','', '| 更新次数 | 阶段 | 学习率 |','|---:|---|---:|']
++    for u,label in [(1,'首次更新'),(5,'warmup结束'),(18,'第一轮末'),(36,'第二轮末'),(54,'第三轮末')]:
++        rows.append(f'| {u} | {label} | {learning_rate(u,config()["training"]):.9g} |')
++    rows+=['','## 同 seed 正式 dev57 对照','',
++        '| 学习率 | 轮次 | 成功题数 | Macro | 通过检查 | 纯文档占比 | 重复文档占比 | 业务步骤 | 无代码终止 | 平均步骤 |',
+         '|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|']
+-    for seed, values in [(20261022,baseline),(20261026,epochs)]:
++    for label,values in [('恒定',baseline),('余弦',epochs)]:
+         for e in range(1,4):
+             v=values.get(str(e))
+-            if not v:rows.append(f'| {seed} | {e} | 待完成 | — | — | — | — | — | — | — |');continue
+-            c=v['behavior'];rows.append(f"| {seed} | {e} | {v['successes']}/57 | {v['task_goal_completion']:.2%} | {v['macro_test_pass_fraction']:.2%} | {v['passes']}/{v['tests']} | {c['docs_fraction']:.2%} | {c['repeated_docs_fraction']:.2%} | {c['business_api_steps']} | {v['mean_steps']:.2f} |")
+-    rows+=['','重复文档口径：同一轨迹中此前已经出现过相同 Python AST 的纯文档动作，包含交替查多份文档。业务 API 排除文档、Supervisor 和 login/logout；代码出现不保证执行成功。Macro 是每题检查通过比例的平均，不能等同业务任务完成率。','',
+-        '## 入选 SFT 样本的动作分布','',
+-        '| 轮次 | 已完成批数 | 全步骤 | SFT步骤 | SFT文档步骤 | SFT业务步骤 | SFT重复文档步骤 | 平均batch loss |',
++            if not v:rows.append(f'| {label} | {e} | 待完成 | — | — | — | — | — | — | — |');continue
++            c=v['behavior'];rows.append(f"| {label} | {e} | {v['successes']}/57 | {v['macro_test_pass_fraction']:.2%} | {v['passes']}/{v['tests']} | {c['docs_fraction']:.2%} | {c['repeated_docs_fraction']:.2%} | {c['business_api_steps']} | {no_code(v)}/57 | {v['mean_steps']:.2f} |")
++    rows+=['','全部评估使用 dev57、temperature=0、seed=100、无反馈学生策略和官方终态检查。重复文档按同一轨迹中相同 Python AST 计数；业务动作排除文档、Supervisor 和 login/logout。出现 API 代码不保证调用成功。','',
++        '## 入选训练样本','',
++        '| 轮次 | 批数 | 全步骤 | SFT步骤 | 文档SFT | 业务SFT | 重复文档SFT | 平均batch loss |',
+         '|---|---:|---:|---:|---:|---:|---:|---:|']
+     for e,c in train_epochs.items():
+-        n=c['sft_steps'];rows.append(f"| {e} | {c['completed_batches']}/18 | {c['steps']} | {n} | {c.get('sft_docs_steps',0)}（{c.get('sft_docs_steps',0)/max(1,n):.2%}） | {c.get('sft_business_steps',0)} | {c.get('sft_repeated_docs_steps',0)} | {c['batch_mean_sft_loss']:.6f} |")
+-    rows+=['','每轮样本重新采集，loss 不能当作固定验证集曲线；重复文档样本也可能属于合理重新查阅，不能仅凭 AST 相同认定评分错误。','',
+-        '## 第三轮趋势与逐题变化','']
+-    if 'epoch3_vs_epoch2' in summary:
+-        delta=summary['epoch3_vs_epoch2'];pp=[x for x in pairs if x['from_epoch']==2]
+-        rows += [f"新 seed 第三轮相对第二轮：成功题数 {delta['success_delta']:+d}，Macro {100*delta['macro_delta']:+.2f} 个百分点，重复文档占比 {100*delta['repeated_docs_fraction_delta']:+.2f} 个百分点，业务步骤 {delta['business_steps_delta']:+d}。",
+-            f"新增成功 {sum(x['success_gained'] for x in pp)} 题，丢失成功 {sum(x['success_lost'] for x in pp)} 题；新通过检查 {sum(x['checks_gained'] for x in pp)} 项，丢失检查 {sum(x['checks_lost'] for x in pp)} 项。"]
+-        same=delta['success_delta']<0 and delta['macro_delta']<0 and delta['repeated_docs_fraction_delta']>0
+-        rows += ['新 seed 也出现“整题成功下降、Macro下降、重复文档增加”的共同方向，支持原问题不是旧 seed 独有；这仍不是对学习率或筛选偏差的因果归因。' if same else '新 seed 没有同时出现上述三个方向，不能说第三轮退化完整复现；也不能据此判定配方没有问题，应结合三轮全程与具体失败案例。']
+-    else:rows+=['第三轮尚未完成，暂不判断原 seed 的退化是否复现。']
+-    rows+=['','## 固定案例','', '| seed | 案例 | 第1轮：检查；重复/全部步 | 第2轮 | 第3轮 |','|---|---|---|---|---|']
+-    for seed,values in [(20261022,baseline),(20261026,epochs)]:
++        rows.append(f"| {e} | {c['completed_batches']}/18 | {c['steps']} | {c['sft_steps']} | {c.get('sft_docs_steps',0)} | {c.get('sft_business_steps',0)} | {c.get('sft_repeated_docs_steps',0)} | {c['batch_mean_sft_loss']:.6f} |")
++    rows+=['','每轮数据在线重采，loss不是固定验证集指标；不根据训练loss判断任务能力。','',
++        '## 同轮次逐题比较','']
++    for e,d in deltas.items():
++        pairs=[x for x in cross if x['to_epoch']==int(e)]
++        rows.append(f"第{e}轮余弦相对恒定：成功 {d['success_delta']:+d} 题，Macro {100*d['macro_delta']:+.2f} 个百分点，重复文档 {100*d['repeated_docs_fraction_delta']:+.2f} 个百分点，业务步骤 {d['business_steps_delta']:+d}，无代码终止 {d['no_python_code_tasks_delta']:+d} 题；新增成功 {sum(x['success_gained'] for x in pairs)}、丢失成功 {sum(x['success_lost'] for x in pairs)}，检查新增 {sum(x['checks_gained'] for x in pairs)}、丢失 {sum(x['checks_lost'] for x in pairs)}。")
++    if not deltas:rows.append('尚无余弦分支正式 dev57 结果。')
++    rows+=['','即使较恒定学习率更好，也需同时判断是否保留早期能力、是否仅延迟退化。该实验同时降低了后期学习率和累计学习率，不能单独证明余弦形状优于所有低恒定学习率。单个seed与57题不足以确立稳定泛化收益。','',
++        '## 固定案例','', '| 分支 | 案例 | 第1轮：检查；重复/全部步；终止 | 第2轮 | 第3轮 |','|---|---|---|---|---|']
++    for label,values in [('恒定',baseline),('余弦',epochs)]:
+         for task in ['b119b1f_2','d4e9306_2','6c2c621_1','396c5a2_1','23cf851_1']:
+             cells=[]
+             for e in range(1,4):
+                 if str(e) not in values:cells.append('待完成');continue
+                 x=next(x for x in values[str(e)]['results'] if x['task_id']==task)
+-                cells.append(f"{x['num_passes']}/{x['num_tests']}；{x['repeated_docs_steps']}/{x['steps']}")
+-            rows.append(f'| {seed} | {task} | '+' | '.join(cells)+' |')
+-    rows+=['','## 验收、保存与复核','']
++                cells.append(f"{x['num_passes']}/{x['num_tests']}；{x['repeated_docs_steps']}/{x['steps']}；{x['termination']}")
++            rows.append(f'| {label} | {task} | '+' | '.join(cells)+' |')
++    rows+=['','## 验收和保存','']
+     first=B/'analysis/first_batch_acceptance.json'
+     if first.exists():
+-        m=read(first)['metrics'];rows+=[f"首批通过验收：SFT loss={m['sft_loss']:.6f}，梯度={m['sft_grad_norm']:.6f}，lr={m['lr']:.1e}，SDPO loss/梯度为0；峰值已分配显存={m['peak_allocated_gib']:.2f} GiB。"]
+-    rows+=['保留本实验首批、每轮末及最近两批完整模型；只清理本实验其余中间模型权重，并保留哈希记录。全部轨迹、评分、样本、loss和正式评估报告保留。旧实验保持暂停，不修改其模型和数据。',
+-        '新 seed 同时改变初始化随机数、任务顺序和采样随机数；这是整套配方的 seed 复现，不能将差异单独归因于其中一种随机来源。两个 seed 仍不足以确定总体稳定性。',
+-        f"[汇总]({B/'analysis/seed_summary.json'})；[逐批loss与梯度]({B/'analysis/training_metrics.csv'})；[训练行为]({B/'analysis/train_behavior.csv'})；[逐题变化]({B/'analysis/paired_epochs.csv'})；[dev轨迹和官方报告索引]({B/'analysis/dev_tasks.csv'})。",'',
+-        f"![两seed走势]({B/'analysis/seed_comparison.png'})"]
+-    (B/'REPORT.md').write_text('\n'.join(rows)+'\n')
+-    plot(baseline,epochs,metrics)
++        m=read(first)['metrics'];rows.append(f"首批已验收：loss={m['sft_loss']:.6f}，梯度={m['sft_grad_norm']:.6f}，lr={m['lr']:.1e}，SDPO loss/梯度=0，显存峰值={m['peak_allocated_gib']:.2f} GiB。")
++    rows+=['只保留最新完整检查点及已评估最优轮次（先比较成功题数，再比较Macro，同分选更早轮次），重合时只保留一份；写入新检查点期间会短暂多一份。全部轨迹、评分、dataset、指标与官方报告保留。仅清理本余弦实验的权重，原实验不动。',
++        f"[实时状态]({B/'STATUS.json'}) · [心跳]({run_dir('sft')/'heartbeat.json'}) · [预检]({B/'analysis/preflight.json'}) · [汇总]({B/'analysis/lr_summary.json'}) · [逐批指标]({B/'analysis/training_metrics.csv'}) · [同轮逐题比较]({B/'analysis/paired_schedules.csv'})",'',
++        f"![学习率对照]({B/'analysis/lr_comparison.png'})"]
++    (B/'REPORT.md').write_text('\n'.join(rows)+'\n');plot(baseline,epochs,metrics)
+     return summary
+ 
+ 
+--- constant/b_report_helpers.py
++++ cosine/b_report_helpers.py
+@@ -72,7 +72,7 @@
+         rows.append({**row,**c,'checks':checks,'trajectory':str(p),'official_report':str(report),'official_report_sha256':file_sha(report)})
+     n=counts['steps'];behavior_summary={**counts,'docs_fraction':counts['docs_steps']/n,'repeated_docs_fraction':counts['repeated_docs_steps']/n,
+         'long_loop_tasks':sum(x['longest_docs_streak']>=5 for x in rows),'context_limit_tasks':terms['context_limit'],
+-        'business_api_tasks':sum(x['business_api_steps']>0 for x in rows),'terminations':dict(terms)}
++        'no_python_code_tasks':terms['no_python_code'],'business_api_tasks':sum(x['business_api_steps']>0 for x in rows),'terminations':dict(terms)}
+     value={'source_sha256':h,'epoch':epoch,'summary_path':str(path),'successes':summ['successes'],'task_goal_completion':summ['task_goal_completion'],
+         'macro_test_pass_fraction':summ['macro_test_pass_fraction'],'passes':sum(x['num_passes'] for x in rows),'tests':sum(x['num_tests'] for x in rows),
+         'mean_steps':n/57,'behavior':behavior_summary,'results':rows}
+--- constant/b_retention.py
++++ cosine/b_retention.py
+@@ -1,4 +1,4 @@
+-"""Keep epoch checkpoints and the latest two; operate only inside this run."""
++"""Keep the latest resume state and best evaluated epoch; only touch this run."""
+ from b_common import *
+ 
+ 
+@@ -26,6 +26,14 @@
+     validate_committed(batch_dir('sft', latest) / 'checkpoint')
+     assert read(batch_dir('sft', latest) / 'acceptance.json')['passed']
+     keep = set(policy['keep_full_batches']) | set(range(max(1, latest - policy['keep_latest_batches'] + 1), latest + 1))
++    best = None
++    if policy.get('keep_best_evaluated_epoch'):
++        evaluated = [read(p) for p in run_dir('sft').glob('epoch_*_dev57/summary.json')]
++        evaluated = [x for x in evaluated if x['checkpoint_batch'] <= latest]
++        if evaluated:
++            assert all(x['tasks'] == 57 and len(x['results']) == 57 for x in evaluated)
++            best = max(evaluated, key=lambda x: (x['successes'], x['macro_test_pass_fraction'], -x['checkpoint_batch']))
++            keep.add(best['checkpoint_batch'])
+     removed = []; freed = 0
+     for number in range(1, latest + 1):
+         if number in keep:
+@@ -37,7 +45,7 @@
+             continue
+         done = validate_committed(checkpoint, allow_pruned=True)
+         receipt = read(path) if path.exists() else {'created_at': now(), 'complete_sha256': file_sha(checkpoint / 'COMPLETE.json'),
+-            'reason': 'Keep necessary epoch models and the latest two; retain all data and metrics.', 'removed_files': {}}
++            'reason': 'Keep latest resume model and best evaluated epoch; retain all data and metrics.', 'removed_files': {}}
+         for name in policy['eligible_model_files']:
+             target = checkpoint / name
+             if not target.exists():
+@@ -50,7 +58,8 @@
+             target.unlink(); freed += size
+         receipt.update(status='complete', completed_at=now()); write_json(path, receipt)
+         validate_committed(checkpoint, allow_pruned=True); removed.append(number)
+-    event = {'at': now(), 'latest_accepted_batch': latest, 'pruned_batches': removed, 'bytes_freed': freed, 'protected_batches': sorted(keep)}
++    event = {'at': now(), 'latest_accepted_batch': latest, 'pruned_batches': removed, 'bytes_freed': freed, 'protected_batches': sorted(keep),
++             'best_evaluated_batch': best['checkpoint_batch'] if best else None}
+     with (B / 'analysis/retention_events.jsonl').open('a') as handle:
+         handle.write(__import__('json').dumps(event) + '\n')
+     return event
+--- constant/b_supervise.py
++++ cosine/b_supervise.py
+@@ -22,6 +22,11 @@
+         assert math.isfinite(m[name]), (name,m[name])
+     assert m['sdpo_loss']>=-1e-4 and m['sft_loss']>=0
+     assert m['grad_norm_after_clip']<=config()['training']['grad_clip_norm']*1.001
++    from b_learning_rate import learning_rate
++    rate_index=m['optimizer_updates'] if m['optimizer_step_performed'] else m['optimizer_updates']+1
++    assert math.isclose(m['lr'],learning_rate(rate_index,config()['training']),rel_tol=1e-12), 'Learning-rate schedule mismatch'
++    prior=read(batch_dir('sft',number-1)/'checkpoint/COMPLETE.json')['optimizer_updates'] if number>1 else 0
++    assert m['optimizer_updates']==prior+int(m['optimizer_step_performed']), 'Optimizer update count discontinuity'
+     counts=m['counts']
+     assert counts.get('sdpo',0)==0 and m['sdpo_loss']==0 and m['weighted_sdpo_grad_norm']==0, 'SFT control leaked SDPO'
+     assert math.isclose(m['total_loss'],m['sft_loss'],rel_tol=1e-7,abs_tol=1e-8)
+@@ -51,6 +56,8 @@
+     if (folder/'training_progress.json').exists():value['training']=read(folder/'training_progress.json')
+     with (root/'resources.jsonl').open('a') as out:out.write(json.dumps(value,ensure_ascii=False)+'\n')
+     write_json(root/'heartbeat.json',value)
++    from b_progress import write_progress
++    write_progress(value)
+ 
+ 
+ def wait_for_resources(number):
+@@ -161,11 +168,14 @@
+                     authorize('training_allowed');time.sleep(30)
+             evaluate_epoch(number)
+         report=write_report();assert report['complete']
++        from b_retention import apply_retention
++        apply_retention(54)
+         summary={'completed_at':now(),'arm':'sft','epochs':3,'batches':54,
+                  'optimizer_updates':read(batch_dir('sft',54)/'checkpoint/COMPLETE.json')['optimizer_updates'],
+                  'final_checkpoint':str(batch_dir('sft',54)/'checkpoint'),'sft_control_run':True,'evaluation_run':True,
+                  'dev57_evaluated_batches':[18,36,54],'report':str(B/'REPORT.md')}
+         write_json(root/'COMPLETE.json',summary);status('sft_training_and_dev57_complete',**summary)
++        heartbeat(54)
+         print(json.dumps(summary),flush=True)
+ 
+ 

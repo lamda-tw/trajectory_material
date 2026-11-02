@@ -1,0 +1,120 @@
+{
+  "checked_at": "2026-10-27T20:58:40.740257+08:00",
+  "passed": true,
+  "cpu_tests_passed": 30,
+  "physical_gpu": 1,
+  "gpu_uuid": "GPU-35170b76-56ce-240a-19c0-0c092a3e8501",
+  "base_model_files_verified": 12,
+  "frozen_dependencies": 125,
+  "source_dependencies_verified": 92,
+  "seed": 20261026,
+  "from_base": true,
+  "old_checkpoint_loaded": false,
+  "reuse_trajectories_or_judgements": false,
+  "task_schedule_sha256": "32d101bb888660032688af0539b3f60b2c22ca6ad3ce8aa58025dc703a1ce57d",
+  "only_training_config_change": "training.lr_schedule (plus experiment/output paths)",
+  "lr_schedule": {
+    "type": "cosine_with_min_lr",
+    "min_learning_rate": 5e-06,
+    "total_nonempty_updates": 54,
+    "advance_on": "nonempty_optimizer_update",
+    "warm_restarts": false
+  },
+  "milestones": [
+    {
+      "update": 1,
+      "epoch": 1,
+      "constant_lr": 1e-05,
+      "cosine_lr": 1e-05
+    },
+    {
+      "update": 5,
+      "epoch": 1,
+      "constant_lr": 5e-05,
+      "cosine_lr": 5e-05
+    },
+    {
+      "update": 18,
+      "epoch": 1,
+      "constant_lr": 5e-05,
+      "cosine_lr": 4.262677003087963e-05
+    },
+    {
+      "update": 36,
+      "epoch": 2,
+      "constant_lr": 5e-05,
+      "cosine_lr": 1.839237477974614e-05
+    },
+    {
+      "update": 54,
+      "epoch": 3,
+      "constant_lr": 5e-05,
+      "cosine_lr": 5e-06
+    }
+  ],
+  "code_changes": [
+    {
+      "file": "scripts/b_common.py",
+      "source_sha256": "4ae4f7b62a9a704a2d035f1bb440245b8b82b0a29e0c17a9eb64bfd755987691",
+      "sha256": "6ac7c86f61e9274e4e576a2dcbe1f0de03dc5f58d840108fc12e70af714c0093"
+    },
+    {
+      "file": "scripts/b_evaluate.py",
+      "source_sha256": "d9657e7977cc5683105e4d52a5d55ad78f8839ff8dfa68bcda01256158398f7a",
+      "sha256": "ff475dc01ef7cfa3a0ffb893106dd3aede22a903b56fbbcb61b1880dd84984fd"
+    },
+    {
+      "file": "scripts/b_learning_rate.py",
+      "source_sha256": null,
+      "sha256": "695aa2d8f798120478ec000b5a3b0d282a9bae03e470f4a9b92f5f6e2345adfb"
+    },
+    {
+      "file": "scripts/b_loss.py",
+      "source_sha256": "74e1dc9e7dd36d2681cd091c734e72dc86820c7ac0954b0e444f4b6c383f22f9",
+      "sha256": "5d4ae3dd0e8514dfd28381ababa00866982938ba6d7da446570728855c9539d4"
+    },
+    {
+      "file": "scripts/b_progress.py",
+      "source_sha256": null,
+      "sha256": "1bb75827d96a66e3fa34fc0a41794590c217a7b7e6ab7a98111a6a5edb07be86"
+    },
+    {
+      "file": "scripts/b_report.py",
+      "source_sha256": "fdacbb06555e7bdda458e567c9e37bcce626f8e1dc2093020947659be64b49d9",
+      "sha256": "4b32ee8a396fabb1e90ec520764a6bc704cd34de9ff5a32832389f391d1794e9"
+    },
+    {
+      "file": "scripts/b_report_helpers.py",
+      "source_sha256": "d266d3a14b35cd66bec761476438270b313ac0b3473bd283b642c7c589d92e27",
+      "sha256": "4916f010776a43a92449998ab76e90fb41e860f45835c10c062eb7fc5b101d64"
+    },
+    {
+      "file": "scripts/b_retention.py",
+      "source_sha256": "259a3ba2b83d96f74c8637624a0f706db91244d74cc685557d6756f1d7ab2182",
+      "sha256": "a950fe3a869ecf762b14aa5c31ada92e86ec41d66b24dd9c89a824d7c6f86b26"
+    },
+    {
+      "file": "scripts/b_supervise.py",
+      "source_sha256": "8f0f74a0dd6f52b5c8d01e4bd2df312ecde7a13a38fc723276d1f3de455ad93b",
+      "sha256": "6abe4a2a35e6662818f5383a597689eac817b3aaf06555d2da156dd8ccdd37b4"
+    }
+  ],
+  "retention": {
+    "user_authorized_model_retention": true,
+    "keep_full_batches": [],
+    "keep_latest_batches": 1,
+    "eligible_model_files": [
+      "state.pt",
+      "adapters/student/adapter_model.safetensors"
+    ],
+    "scope": "This cosine experiment only. Keep latest full resume state and best evaluated epoch; never delete previous experiment files.",
+    "keep_best_evaluated_epoch": true,
+    "best_epoch_selection": [
+      "successes_desc",
+      "macro_test_pass_fraction_desc",
+      "earliest_epoch_on_tie"
+    ]
+  },
+  "free_disk_gib": 72.2596321105957,
+  "wall_time_limit": null
+}
